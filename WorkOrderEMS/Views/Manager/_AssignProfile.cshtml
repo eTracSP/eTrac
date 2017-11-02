@@ -1,0 +1,70 @@
+﻿@model WorkOrderEMS.Models.UserModel
+
+@using (Ajax.BeginForm("_AssignProfilEmployee", "Manager", new AjaxOptions()
+{
+
+    HttpMethod = "POST",
+    OnSuccess = "success"
+
+}))
+{
+    <label id="popupmessage"> </label>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-10 col-md-6 col-sm-12  col-xs-12">
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        @Html.ValidationSummary(true)
+                        @Html.HiddenFor(model => model.UserId)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-5" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(model => model.FirstName, new { @Placeholder = "First Name", @class = "form-control", @readonly = true })
+                            @Html.ValidationMessageFor(model => model.FirstName)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.UserEmail, new { @class = "control-label col-md-5" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(model => model.UserEmail, new { @Placeholder = "User Email", @class = "form-control", @readonly = true })
+                            @Html.ValidationMessageFor(model => model.UserEmail)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.EmployeeCategory, new { @class = "col-sm-5 control-label" })
+                        <div class="col-sm-7">
+                            @Html.DropDownListFor(model => model.EmployeeCategory, new SelectList(ViewBag.EmployeeProfile, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control requiredselect" })
+                            @Html.ValidationMessageFor(model => model.EmployeeCategory)
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.HiringDate, new { @class = "col-sm-5 control-label" })
+                        <div class="col-sm-7">
+                            @Html.TextBoxFor(model => model.HiringDate, new { @Placeholder = "Hiring Date", @class = "form-control", @id = "dHiringDate" })
+                            @Html.ValidationMessageFor(model => model.HiringDate)
+                        </div>
+                    </div>
+
+                    <div class="col-sm-offset-10 col-sm-8">
+                        <button class="btn btn-default bluebutton" type="submit">Assign</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function success(data) {
+        if (data != "") {
+            $("#popupmessage").html(data.Message);
+            $('#popupmessage').addClass(data.AlertMessageClass);
+            jQuery("#tbl_EmployeeList").jqGrid().trigger("reloadGrid");
+            //$("#updateDialog1").dialog('close');
+        }
+        else {
+            $("#mediumeditpopup").html(data);
+        }
+    }
+
+</script>

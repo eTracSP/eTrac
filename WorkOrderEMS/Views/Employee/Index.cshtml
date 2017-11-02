@@ -1,0 +1,454 @@
+﻿@{
+    ViewBag.Title = "Dashbord";
+    ViewBag.TitleDesc = "Statistics Overview";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+}
+
+@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel
+
+<script src="~/Scripts/UserDefine/Dashboard.js"></script>
+@if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+{
+    <a id="AllLocation" class="btn btn-default bluebutton pull-right" style="margin-top: -53px;position:relative;">View All Location</a>
+}
+<script src="~/Scripts/Morris/raphael.min.js"></script>
+<script src="~/Scripts/Morris/morris.min.js"></script>
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i>Employee Status</h3>
+            </div>
+            <div class="panel-body donutchart">
+                <div id="morris-donut-chart"></div>
+                <div class="text-right">
+                    @*<a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+
+        <div class="col-lg-12 col-md-12">
+            <div class="panel panel-gray">
+                <div class="panel-heading workcompleted">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-list fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge-large" id="CompletedWorkAssignment"></div>
+                            <div class="title title-2">Completed Work</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-12 col-md-12">
+            <div class="panel panel-gray">
+                <div class="panel-heading workcompleted">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-th-list fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge-large">@ViewBag.AllAssignedWorkOrder</div>
+                            <div class="title title-2">Assigned Workorder</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+@*<div class="row">
+
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/emp.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.EmployeeCount</div>
+                            <div class="title">Employee</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/client.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ClientCount</div>
+                            <div class="title">Clients</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>*@
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="In Progress"})">
+                    <i class="fa fa-edit"></i> <span>In Progress Work Request</span> <small>Assignments</small>
+                </a>
+            </li>
+
+
+            <a class="pull-right" id="ViewAll_pendingTbl">View All</a>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row scrollUpDown" id="Pending_Section_Of_WorkOrder" style="height:270px;">
+    @*<div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>*@
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="Pending"})">
+                    <i class="fa fa-file-text-o"></i> <span>Pending Work Request</span> <small>Assignments</small>
+                </a>
+            </li>
+
+
+            <a class="pull-right" id="ViewAll_LastWeekHistoryTbl">View All</a>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row" id="lastweekHistoryAssignments" style="height:210px;overflow-y:auto;">
+    @*<div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="col-lg-3 col-md-6">
+            <div class="graybox">
+                <ul>
+                    <li><span class="left">Location Name</span><span class="right">Temp</span></li>
+                    <li><span class="left">Priority Level</span><span class="right">Level 2</span></li>
+                    <li><span class="left">WorkRequest Status</span><span class="right">Pending</span></li>
+                    <li><span class="left">Assign To User</span></li>
+                    <li><span class="left">Project Type</span><span class="right">Work Request</span></li>
+                </ul>
+            </div>
+        </div>*@
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+
+            <li>
+
+                <i class="fa fa-file-text-o"></i> <span>Work Order Request</span> <small>By Client (Un-Assigned)</small>
+
+            </li>
+
+
+            <a class="pull-right" id="ViewAll_WorkOrderAssigntByClient">View All</a>
+        </ol>
+    </div>
+</div>
+
+<div class="row" id="WorkorderCreatedByClient" style="max-height: 210px; height: auto;">
+</div>
+<div class="row">
+    <div class="clearfix"></div>
+    <div class="col-sm-12">
+        <div class="graybg">
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="colorbox blue">
+                        <div class="heading">@*<a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="All"})">*@<i class="fa fa-user"></i> Total WorkOrder Status@*</a>*@ <span> <a href=""></a></span></div>
+                        <div class="content">
+                            <ul id="TotalStatus"></ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="colorbox red">
+
+                        <div class="heading">@*<a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="Select All"})">*@<i class="fa fa-list-ol"></i>Client Work List @*</a>*@<span> <a id="ViewAll_AllWorkTbl">View All</a></span></div>
+                        <div class="content">
+                            <ul id="Box_DisplayAllWorkAssignment" class="scrollUpDown height100">
+                                @*<li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                    <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                    <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="colorbox green">
+                        @{
+                            List<WorkOrderEMS.Models.UserLocations> obj_LocationsCount = (List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"];
+
+                        }
+                        <div class="heading"><i class="fa fa-map-marker"></i>Total Location (@obj_LocationsCount.Count())<span> <a id="ViewAll_TotalLocTbl">View All</a></span></div>
+                        <div class="content">
+                            <ul class="scrollUpDown height100">
+                                @{
+                                    List<WorkOrderEMS.Models.UserLocations> obj_Locations = (List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"];
+                                    foreach (var res in obj_Locations)
+                                    {
+                                        <li><i class="fa fa-angle-double-right"></i><span class="">@res.LocationName</span> </li>
+                                    }
+                                }
+
+                                @*<li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                    <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                    <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>*@
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="clearfix"></div>
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <!-- /.row -->
+                        @*<div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-info alert-dismissable >
+                                            <button type=" button" class="close" data-dismiss="alert" aria-hidden="true">
+                                        &times;</button>
+                                        <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                                    </div>
+                                </div>
+                            </div>*@
+                        <!-- /.row -->
+                        @{
+                            string[] Settings = ((string[])Session["eTrac_DashboardSetting"]);
+
+                            <script src="~/GridListing/JqGridScript/PendingWorkRequest.js"></script>
+                            <script src="~/GridListing/JqGridScript/WorkOrderWeekHistory.js"></script>
+                            <script type="text/javascript">
+                                $_UserID = 0;
+                                $_isEdit = true;
+                                $(window).bind('resize', function () {
+                                    var width = $('#jqGrid_container').width();
+                                    $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+                                    $('#tbl_HistoryWorkRequestAssignmentList').setGridWidth(width);
+                                });
+                            </script>
+
+                            <script>
+                                var DashboardUrl = { "AllEmployeesList": '@Url.Action("GetUserByManager", "Manager")' }
+
+                                $(document).ready(function () {
+                                    //-----To Set the Location Selected By The User----//
+                                    //Created By Manoj Jaswal
+                                    Dashboard.CompletedAssignment();
+                                    Dashboard.WorkOrderTotalCounts();
+                                    Dashboard.AllInprogressAssignedWorkToEmployee();
+                                    Dashboard.AllPendingAssignedWorkToEmployee();
+                                    Dashboard.GetAllWorkRequestCreatedByClientToEmployee();
+                                    //// To get Live Information call after 20 seconds
+                                    //setInterval(function () {
+                                    //    Dashboard.CompletedAssignment();
+                                    //    Dashboard.WorkOrderTotalCounts();
+                                    //    Dashboard.AllInprogressAssignedWorkToEmployee();
+                                    //    Dashboard.AllPendingAssignedWorkToEmployee();
+                                    //    Dashboard.GetAllWorkRequestCreatedByClientToEmployee();
+                                    //}, 40000);
+
+
+                                    $("#AllLocation").click(function () {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '@Url.Action("SetUserDashboardLocation", "GlobalAdmin")',
+                                            data: '',
+                                            beforeSend: function () {
+                                                //new fn_showMaskloader('please wait...Deleting');
+                                            },
+                                            success: function (Data) {
+
+                                            },
+                                            error: function () {
+                                                alert("Error:")
+                                            },
+                                            complete: function () {
+                                                window.location.reload();
+                                            }
+                                        })
+                                        //------END------//
+                                    })
+                                    $("#SingleLocation").click(function () {
+                                        var LocationID = $("#drp_MasterLocation").val();
+                                        var LocationName = $("#drp_MasterLocation option:selected").text();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                                            data: { LocationID: LocationID, LocationName: LocationName },
+                                            beforeSend: function () {
+                                                //new fn_showMaskloader('please wait...Deleting');
+                                            },
+                                            success: function (Data) {
+
+                                            },
+                                            error: function () {
+                                                alert("Error:")
+                                            },
+                                            complete: function () {
+                                                window.location.reload();
+                                            }
+                                        })
+                                    })
+                                })
+
+                            </script>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@*<div class="progressbar" data-perc="100"><div class="bar"><span></span></div><div class="label"><span></span></div></div>
+    <div class="progressbar" data-perc="75">
+        <div class="bar color2"><span></span></div>
+        <div class="label"><span></span></div>
+    </div>
+    <div class="progressbar" data-perc="50">
+        <div class="bar color3"><span></span></div>
+        <div class="label"><span></span></div>
+    </div>
+    <div class="progressbar" data-perc="25">
+        <div class="bar color4"><span></span></div>
+        <div class="label"><span></span></div>
+    </div>*@
+<script>
+    //$(function () {
+
+    //    $('.progressbar').each(function () {
+    //        var t = $(this),
+    //            dataperc = t.attr('data-perc'),
+    //            barperc = t.css("width");
+    //        barperc=parseInt(parseInt(barperc) + 40);
+    //        // barperc = Math.round(dataperc * 5.56);
+    //        //var daat = parseInt(parseInt(barperc * parseInt(dataperc) )/ 100);
+    //        var daat = dataperc;
+    //        t.find('.bar').animate({ width: daat + "%" });
+    //       // t.find('.bar').animate({ width: barperc }, dataperc * 10);
+    //        t.find('.label').append('<div class="perc"></div>');
+
+    //        function perc() {
+    //            var length = t.find('.bar').css('width'),
+    //                perc = Math.round(parseInt(length) / barperc*100),
+    //                labelpos = (parseInt(length) - 2);
+    //            t.find('.label').css('left', labelpos);
+    //            t.find('.perc').text(perc + '%');
+    //        }
+    //        perc();
+    //        setInterval(perc, 0);
+    //    });
+    //});
+
+</script>

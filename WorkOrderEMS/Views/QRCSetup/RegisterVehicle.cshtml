@@ -1,0 +1,285 @@
+﻿@model WorkOrderEMS.Models.QRCModel
+
+@{
+    //ViewBag.Title = "QRC Setup";
+    ViewBag.Title = "Register Vehicle";
+    //Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        ViewBag.Title = "Update Vehicle";
+    }
+}
+
+<script>
+    $.validator.setDefaults({
+        ignore: [],
+        // any other default options and/or rules
+    });
+</script>
+
+@using (Html.BeginForm("Index", "QRCSetup", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 commBox">
+        <div class="accordion-container">
+            <div id="accordion" class="panel-group">
+                <div class="panel panel-default first-mar10">
+                    <div class="panel-heading">
+
+                        <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                            <h4 class="panel-title">
+                                Item <span>Details</span>
+                            </h4>
+                        </a>
+
+                    </div>
+                    <div class="panel-collapse collapse in" id="collapseOne">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="">
+                                    <div class="form-horizontal">
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.ValidationSummary(true)
+                                            @Html.HiddenFor(model => model.QRCId)
+                                            @Html.HiddenFor(model => model.UpdateMode)
+                                            <input type="hidden" id="@Model.UpdateMode" value="@ViewBag.UpdateMode" />
+
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.QRCTYPE, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.QRCTypeList != null && Model.QRCTypeList.Count > 0)
+                                                { @Html.DropDownListFor(model => model.QRCTYPE, new SelectList(Model.QRCTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCType", @class = "form-control", @onchange = "tooglevehicletype();" })}
+                                                else
+                                                {<select id="QRCType" class="form-control"><option>--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.QRCTYPE)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.QRCDefaultSize, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.QRCSize != null && Model.QRCSize.Count > 0)
+                                                {@Html.DropDownListFor(model => model.QRCDefaultSize, new SelectList(Model.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "DefaultSize", @class = "form-control" })}
+                                                else
+                                                {<select id="DefaultSize" class="form-control"><option>--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.QRCDefaultSize)
+                                            </div>
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="form-group VehicleType col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.VehicleType, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.VehicleTypeList != null && Model.VehicleTypeList.Count > 0)
+                                                {@Html.DropDownListFor(model => model.VehicleType, new SelectList(Model.VehicleTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "VehicleType", @class = "form-control" });
+                                                }
+                                                else
+                                                { <select id="VehicleType" class="form-control"><option>--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.VehicleType)
+                                            </div>
+                                        </div>
+                                        <div class="form-group VehicleType col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.MotorType, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.MotorTypeList != null && Model.MotorTypeList.Count > 0)
+                                                {@Html.DropDownListFor(model => model.MotorType, new SelectList(Model.MotorTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "MotorType", @class = "form-control" })}
+                                                else
+                                                {<select id="MotorType" class="form-control"><option>--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.MotorType)
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.QRCName, new { @id = "lblQRCName", @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.QRCName, new { @Placeholder = "Item Name", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.QRCName)
+                                                <input type="hidden" id="hiddnlblQRCName" />
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            @Html.LabelFor(model => model.SpecialNotes, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextAreaFor(model => model.SpecialNotes, new { @Placeholder = "Item Special Notes", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.SpecialNotes)
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default first-mar10 VehicleType">
+                    <div class="panel-heading">
+
+                        <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                            <h4 class="panel-title">
+                                Personal <span>Details</span>
+                            </h4>
+                        </a>
+
+                    </div>
+                    <div class="panel-collapse collapse collapse" id="collapseTwo">
+                        <div class="panel-body">
+                            <div class="row">
+                                @Html.Partial("_Registration", @Model)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel panel-default first-mar10 VehicleType">
+                    <div class="panel-heading">
+
+                        <a href="#collapseThree" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                            <h4 class="panel-title">
+                                Ownership <span>Type</span>
+                            </h4>
+                        </a>
+
+                    </div>
+                    <div class="panel-collapse collapse collapse" id="collapseThree">
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="form-horizontal">
+                                    <div class="">
+
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                                            <label for="Address" class="col-sm-4 control-label">Select Type</label>
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.VehicleModel != null && Model.VehicleModel.ClientType != null && Model.VehicleModel.ClientType.Count > 0)
+                                                {@Html.DropDownListFor(model => model.ClientTypeID, new SelectList(Model.VehicleModel.ClientType, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ClientType", @class = "form-control", @onchange = "disablevendordetail();" });
+                                                }
+                                                else
+                                                { <select id="ClientType" class="form-control"><option>Select</option></select>}
+                                                @Html.ValidationMessageFor(model => model.ClientTypeID)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="selectvendor">
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <label for="Address" class="col-sm-4 control-label">Select Vendor</label>
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.VendorDetail != null && Model.VendorDetail.Count > 0)
+                                                {@Html.DropDownListFor(model => model.VendorID, new SelectList(Model.VendorDetail, "VendorID", "ContactName"), "--Select--", new { @id = "VendorDetail", @class = "form-control", @onchange = "loadvendordetails()", @disabled = "disabled" });
+                                                }
+                                                else
+                                                { <select id="VendorDetail" class="form-control" disabled="disabled"><option value="-1">--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.VendorID)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    @if (Model != null && Model.VendorDetail != null)
+                                    {
+                                        foreach (var item in Model.VendorDetail)
+                                        {
+                                            string VendorAddress1 = item.Address1 + " " + item.Address2;
+                                            //string VendorAddress2 = item.City + " " + item.StateCode + ", " + item.CountryName;
+                                            string VendorAddress2 = item.City + " " + item.State + ", " + item.Country;
+
+                                            <div id="@item.VendorID" class="vendor">
+                                                <div class="">
+                                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                        <label for="ContactName" class="col-sm-4 control-label">Vendor Name</label>
+                                                        <div class="col-sm-8">
+                                                            @item.ContactName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                        <label for="Address" class="col-sm-4 control-label">Address</label>
+                                                        <div class="col-sm-8">
+                                                            @VendorAddress1
+                                                            <div class="clear"></div>
+                                                            @VendorAddress2
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    }
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default first-mar10 VehicleType">
+                    <div class="panel-heading">
+
+                        <a href="#collapseFour" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                            <h4 class="panel-title">
+                                Vehicle <span>Informations</span>
+                            </h4>
+                        </a>
+
+                    </div>
+                    <div class="panel-collapse collapse collapse" id="collapseFour">
+                        <div class="panel-body">
+                            <div class="row">
+                                @if (Model != null && Model.VehicleModel != null)
+                                {
+                                    @Html.Partial("_Vehicle", new WorkOrderEMS.Models.VehiclesModel { VehicleModel = Model.VehicleModel })
+                                }
+                                @*@Html.Partial("_Vehicle", new WorkOrderEMS.Models.VehicleModel {  Model.VehicleModel })*@
+                                    @*@Html.Partial("_Vehicle", new (WorkOrderEMS.Models.VehicleModel()) Model.VehicleModel)*@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="marbottom"></div>
+                <div class="pull-right">
+                    <button class="btn btn-default bluebutton" type="submit">Save</button>
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {<a href="/QRCSetup/QRCList" class="btn btn-default bluebutton">Cancel</a>}
+                    else
+                    {<a href="/QRCSetup/Index" class="btn btn-default bluebutton">Cancel</a>}
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.VehicleType').hide();
+            $('.vendor').hide();
+            tooglevehicletype();
+            disablevendordetail();
+        });
+        function loadvendordetails() {
+          
+            $('.vendor').hide();
+            var val = $('#VendorDetail').val();
+
+            if (val != undefined && val != '' && parseInt(val) > 0) {
+                $('#' + val).show();
+            }
+        }
+
+        function disablevendordetail() {
+     
+            var clienttype = $('#ClientType option:selected').val();
+            if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 100) {
+                $('#VendorDetail').prop('disabled', false);
+            }
+            else { $('#VendorDetail').prop('disabled', true); $('.vendor').hide(); $('#VendorDetail').val(-1); }
+        }
+
+    </script>
+}

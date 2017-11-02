@@ -1,0 +1,278 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel
+
+<script src="~/Scripts/UserDefine/Dashboard.js"></script>
+
+@*@if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+    {
+        <a id="AllLocation" class="btn btn-default bluebutton pull-right" style="margin-top: -53px;position:relative;">View All Location</a>
+    }*@
+<script src="~/Scripts/Morris/raphael.min.js"></script>
+<script src="~/Scripts/Morris/morris.min.js"></script>
+
+<div class="row">
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Vendor Status</h3>
+            </div>
+            <div class="panel-body">
+                <div id="morris-donut-chart"></div>
+                <div class="text-right">
+                    @*<a href="#">View Details <i class="fa fa-arrow-circle-right"></i></a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title"><i class="fa fa-long-arrow-right fa-fw"></i> Pending Vendor Verification</h3>
+            </div>
+            <div class="panel-body Pending-Vendor">
+                <table class="table panel-default" sstyle="height:347px;overflow-y:auto">
+
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Company Name</th>
+                            <th>Business No</th>
+                            <th>UserEmail</th>
+                        </tr>
+
+                    </thead>
+                    <tbody id="PendingVerificationtable"></tbody>
+                </table>
+            </div>
+        </div>
+        
+        @*<div class="panel panel-default ">
+                <div class="heading "><i class="fa fa-edit"></i><a>Pending vendors list</a><span> <a id="ViewAll_AssignedAssignTbl">View All</a></span></div>
+                <div class="content">
+                    <ul id="PendingVendorList" class="scrollUpDown height100">
+
+                    </ul>
+                </div>
+            </div>*@
+    </div>
+
+</div>
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="In Progress"})">
+                    <i class="fa fa-edit"></i> <span>In Progress Work Request</span> <small>Assignments</small>
+                </a>
+            </li>
+
+
+            <a class="pull-right" id="ViewAll_pendingTbl">View All</a>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row scrollUpDown" id="Pending_Section_Of_WorkOrder" style="height:315px;">
+
+</div>
+
+
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+            <li>
+                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="Pending"})">
+                    <i class="fa fa-file-text-o"></i> <span>Pending Work Request</span> <small>Assignments</small>
+                </a>
+            </li>
+
+
+            <a class="pull-right" id="ViewAll_LastWeekHistoryTbl">View All</a>
+        </ol>
+    </div>
+</div>
+
+
+<div class="row" id="lastweekHistoryAssignments" style="height:210px;">
+
+
+</div>
+<div class="row">
+    <div class="col-lg-12">
+
+        <ol class="breadcrumb">
+
+            <li>
+                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter = "Pending" })">
+                    <i class="fa fa-file-text-o"></i> <span>Work Order Request</span> <small>By Client (Un-Assigned) </small>
+                    </a>
+</li>
+
+
+            <a class="pull-right" id="ViewAll_WorkOrderAssigntByClient">View All</a>
+        </ol>
+    </div>
+</div>
+
+<div class="row" id="WorkorderCreatedByClient" style="height:210px;">
+</div>
+<div class="row">
+    <div class="clearfix"></div>
+    <div class="col-sm-12">
+        <div class="graybg">
+            <div class="row">
+                @*<div class="col-lg-4 col-md-6">
+                        <div class="colorbox blue">
+                            <div class="heading"><i class="fa fa-user"></i> Total WorkOrder Status <span> <a href=""></a></span></div>
+                            <div class="content">
+                                <ul id="TotalStatus"></ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox red">
+
+                            <div class="heading"><i class="fa fa-list-ol"></i>Client Work List <span> <a id="ViewAll_AllWorkTbl">View All</a></span></div>
+                            <div class="content">
+                                <ul id="Box_DisplayAllWorkAssignment" class="scrollUpDown height100">
+
+                                </ul>
+                            </div>
+                        </div>
+                    </div>*@
+
+
+
+                <div class="row">
+                    <div class="clearfix"></div>
+                    <div class="container-fluid">
+                        <!-- Page Heading -->
+                        <!-- /.row -->
+                        @*<div class="row">
+                                <div class="col-lg-12">
+                                    <div class="alert alert-info alert-dismissable >
+                                            <button type=" button" class="close" data-dismiss="alert" aria-hidden="true">
+                                        &times;</button>
+                                        <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                                    </div>
+                                </div>
+                            </div>*@
+                        <!-- /.row -->
+                        @{
+                            string[] Settings = ((string[])Session["eTrac_DashboardSetting"]);
+
+                            <script src="~/GridListing/JqGridScript/PendingWorkRequest.js"></script>
+                            <script src="~/GridListing/JqGridScript/WorkOrderWeekHistory.js"></script>
+                            <script type="text/javascript">
+                                $_UserID = 0;
+                                $_isEdit = true;
+                                $(window).bind('resize', function () {
+                                    var width = $('#jqGrid_container').width();
+                                    $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+                                    $('#tbl_HistoryWorkRequestAssignmentList').setGridWidth(width);
+                                });
+                            </script>
+
+                            <script>
+                                var DashboardUrl = { "AllEmployeesList": '@Url.Action("GetUserByManager", "Manager")' }
+
+                                $(document).ready(function () {
+                                    //-----To Set the Location Selected By The User----//
+                                    //Created By Manoj Jaswal
+                                    Dashboard.Client_GetVendorTotalCounts();
+                                    Dashboard.Client_CreatedWorkOrder();
+                                    Dashboard.Client_PendingWorkOrder("Pending", "lastweekHistoryAssignments");
+                                    Dashboard.Client_InProgressWorkOrder("In Progress", "Pending_Section_Of_WorkOrder");
+                                    Dashboard.Client_GetAllVendor("Pending", "PendingVendorList");
+
+                                    //setInterval(function () {
+                                    //    Dashboard.Client_GetVendorTotalCounts();
+                                    //    Dashboard.Client_CreatedWorkOrder();
+                                    //    Dashboard.Client_PendingWorkOrder("Pending", "lastweekHistoryAssignments");
+                                    //    Dashboard.Client_PendingWorkOrder("In Progress", "Pending_Section_Of_WorkOrder");
+                                    //    Dashboard.Client_GetAllVendor("Pending", "PendingVendorList");
+                                    //}, 40000);
+
+                                    $("#AllLocation").click(function () {
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '@Url.Action("SetUserDashboardLocation", "GlobalAdmin")',
+                                            data: '',
+                                            beforeSend: function () {
+                                                //new fn_showMaskloader('please wait...Deleting');
+                                            },
+                                            success: function (Data) {
+
+                                            },
+                                            error: function () {
+                                                alert("Error:")
+                                            },
+                                            complete: function () {
+                                                window.location.reload();
+                                            }
+                                        })
+                                        //------END------//
+                                    })
+                                    $("#SingleLocation").click(function () {
+                                        var LocationID = $("#drp_MasterLocation").val();
+                                        var LocationName = $("#drp_MasterLocation option:selected").text();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                                            data: { LocationID: LocationID, LocationName: LocationName },
+                                            beforeSend: function () {
+                                                //new fn_showMaskloader('please wait...Deleting');
+                                            },
+                                            success: function (Data) {
+
+                                            },
+                                            error: function () {
+                                                alert("Error:")
+                                            },
+                                            complete: function () {
+                                                window.location.reload();
+                                            }
+                                        })
+                                    })
+                                })
+
+                            </script>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    //$(document).ready(function () {
+    //    Morris.Donut({
+    //        element: 'morris-donut-chart',
+    //        data: [{
+    //            label: "Verified Vendor",
+    //            value: 12
+    //        }, {
+    //            label: "Rejected Vendor",
+    //            value: 30
+    //        }
+    //            , {
+    //                label: "Pending Verification",
+    //                value: 20
+    //            }
+    //        ],
+    //        resize: true
+    //    });
+
+    //})
+</script>

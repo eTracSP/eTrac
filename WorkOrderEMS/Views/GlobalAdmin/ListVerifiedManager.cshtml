@@ -1,0 +1,20 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+    ViewBag.Title = "List Manager";
+}
+@section scripts{
+   
+<script src="~/GridListing/JqGridScript/VerifiedMnagaerList.js"></script>
+
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_ManagerList').setGridWidth(width);
+        });
+    </script>
+}
+
+<div id="jqGrid_container">
+    <table id="tbl_ManagerList" border="0" cellpadding="0" cellspacing="0"></table><div id="divManagerListPager"></div>
+</div>

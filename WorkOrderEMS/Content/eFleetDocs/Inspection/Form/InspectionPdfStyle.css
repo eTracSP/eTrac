@@ -1,0 +1,60 @@
+﻿
+p {
+    font-size: 13px;
+}
+
+label {
+    font-size: 13px;
+}
+
+h3 {
+    margin-left: 34%;
+}
+
+.reportedby {
+    margin-left: 22%;
+}
+
+.marginleft {
+    margin-left: 44%;
+    margin-top: -38px;
+}
+
+table {
+    border: 0px;
+    margin-left: 22%;
+    margin-top: -60px;
+}
+
+.secondlabel {
+    margin-left: -80%;
+}
+
+p {
+    padding: 8px 0 0 0;
+}
+
+.secondPcss {
+    margin-left: -80%;
+}
+
+.secondTD {
+    width: 40%;
+    vertical-align: top;
+    margin-left: 60%;
+}
+
+.TrforSecondleft {
+    margin-left: 18%;
+}
+
+.td-After-td {
+    font-size: 0;
+    line-height: 0;
+    width: 20px;
+}
+
+.firstTD {
+    width: 600px;
+    vertical-align: top;
+}

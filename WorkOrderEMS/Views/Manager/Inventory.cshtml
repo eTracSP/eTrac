@@ -1,0 +1,91 @@
+﻿@model WorkOrderEMS.Models.InventoryMasterModel
+@{
+    ViewBag.Title = "Inventory";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    ViewBag.Title = "New Inventory";
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        ViewBag.Title = "Update Inventory";
+    }
+}
+
+@using (Html.BeginForm("Inventory", "Manager"))
+{
+    @Html.HiddenFor(model => model.InventoryID)
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Inventory Details
+        </div>
+
+        <div class="panel-body">
+            <div class="row">
+                <div class="">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ItemName, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.ItemName, new { @Placeholder = "Item Name", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ItemName)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ItemCode, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.ItemCode, new { @Placeholder = "Item Serial Number", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ItemCode)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ItemType, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.ItemType, new SelectList(ViewBag.ItemTypeDrop, "Value", "Text"), "--Select--", new { @class = "form-control requiredselect", @id = "ItemType" })
+                                @Html.ValidationMessageFor(model => model.ItemType)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.Quantity, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.TextBoxFor(model => model.Quantity, new { @Placeholder = "Quantity", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Quantity)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.TextAreaFor(model => model.Description, new { @Placeholder = "Description", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            @Html.LabelFor(model => model.ItemOwnership, new { @class = "col-sm-4 control-label star" })
+                            <div class="col-sm-8">
+                                @Html.DropDownListFor(model => model.ItemOwnership, new SelectList(ViewBag.PurchType, "Value", "Text"), "--Select--", new { @class = "form-control requiredselect", @id = "ddlItemOwnership" })
+                                @Html.ValidationMessageFor(model => model.ItemOwnership)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button class="btn btn-default bluebutton" type="submit">Save</button>
+                                @if (Model != null && Model.InventoryID != null && Model.InventoryID > 0)
+                                {
+                                    <a href="~/Manager/ListInventory" class="btn btn-default bluebutton">Cancel</a>
+                                }
+                                else
+                                {
+                                    <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+

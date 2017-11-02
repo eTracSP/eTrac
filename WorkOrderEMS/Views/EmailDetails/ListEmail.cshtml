@@ -1,0 +1,35 @@
+﻿@{
+    ViewBag.Title = "Email Details";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+
+<script src="~/GridListing/JqGridScript/ListEmail.js"></script>
+
+<script type="text/javascript">
+
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_EmailList').setGridWidth(width);
+    });
+</script>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="jqGrid_container">
+                <table id="tbl_EmailList" border="0" cellpadding="0" cellspacing="0"></table>
+                <div id="divEmailListPager"></div>
+            </div>
+        </div>
+        <div class="marbottom"></div>
+    </div>
+</div>
+<style>
+    .ViewAllButton {
+        /*height: 18px;
+    margin: -10px 10px 0 0;
+    padding: 1px;*/
+        position: absolute;
+        right: 4%;
+    }
+</style>

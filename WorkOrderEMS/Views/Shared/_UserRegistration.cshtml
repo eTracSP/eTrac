@@ -1,0 +1,157 @@
+﻿@model WorkOrderEMS.Models.UserModel
+@{
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty, controller = string.Empty;
+
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        {
+            var myaction = ViewContext.RouteData.GetRequiredString("action");
+            actionName = myaction;
+            //var myarea = ViewContext.RouteData.DataTokens["Area"];
+            //var myid = ViewContext.RouteData.DataTokens["area"];
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            //controller = routeValues["controller"].ToString();
+            var mycontroller = ViewContext.RouteData.GetRequiredString("controller");
+            controller = mycontroller;
+        }
+    }
+
+
+    List<Object> PermissionLevel = new List<Object>{
+                       new { value = 2 , text = "Location Manager"  },
+                       new { value = 3 , text = "Employee" }
+                    };
+
+
+}
+<!-- /.panel -->
+
+
+<div class="row">
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.UserId)
+    <div class="form-horizontal">
+        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            @Html.LabelFor(model => model.FirstName, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.FirstName, new { @Placeholder = "First Name", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.FirstName)
+            </div>
+        </div>
+        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-4" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.LastName, new { @Placeholder = "Last Name", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.LastName)
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        @if (actionName != "ClientRegistration")
+        {
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => model.EmployeeID, new { @class = "control-label col-md-4" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.EmployeeID, new { @Placeholder = "EmployeeID", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.EmployeeID)
+                </div>
+            </div>
+        }
+        else if (actionName == "ClientRegistration" && controller == "GlobalAdmin")
+        {
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => model.CompanyName, new { @class = "control-label col-md-4" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.CompanyName, new { @Placeholder = "Company Name", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.CompanyName)
+                </div>
+            </div>
+        }
+        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            @Html.LabelFor(model => model.UserEmail, new { @class = "control-label col-md-4" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.UserEmail, new { @Placeholder = "User Email", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.UserEmail)
+            </div>
+        </div>
+        <div class="clearfix"></div>
+
+
+        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            @Html.LabelFor(model => model.Address.Mobile, new { @class = "col-sm-4 control-label" })
+            <div class="col-sm-8">
+                @Html.TextBoxFor(model => model.Address.Mobile, new { @Placeholder = "Mobile no", @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.Address.Mobile)
+            </div>
+        </div>
+        @if (actionName != "ClientRegistration")
+        {
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => model.UserType, new { @class = "control-label col-md-4" })
+                <div class="col-sm-8">
+                    @Html.DropDownListFor(model => model.UserType, new SelectList(PermissionLevel, "Value", "Text"), "--Select--", new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.UserType)
+                </div>
+            </div>
+        }
+        <div class="clearfix"></div>
+
+        @if (actionName == "ClientRegistration" && controller == "GlobalAdmin")//)ViewBag.Caller == "clientregistration" || (
+        {
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => model.Address.Address1, new { @class = "control-label col-md-4" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.Address.Address1, new { @Placeholder = "Address", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Address.Address1)
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => model.Address.Address2, new { @class = "control-label col-md-4" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => model.Address.Address2, new { @Placeholder = "Location Code", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.Address.Address2)
+                </div>
+            </div>
+            <div class="clearfix"></div>
+
+
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => Model.Address.CountryId, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-8">
+                    @if (ViewBag.Country != null)
+                    { @Html.DropDownListFor(model => Model.Address.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), "--Select--", new { @class = "form-control requiredselect", @id = "Country", @onchange = "BindState()" })}
+                    else
+                    {<select class="form-control requiredselect" id="Country"><option>--Select--</option></select>}
+                    @Html.ValidationMessageFor(model => Model.Address.CountryId)
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => Model.Address.StateId, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-8">
+                    <select id="States" name="Address.StateId" class="form-control required requiredselect"><option value="0">--Select--</option></select>
+                    @Html.ValidationMessageFor(model => Model.Address.StateId)
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => Model.Address.City, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => Model.Address.City, new { @Placeholder = "City", @class = "form-control" })
+                    @Html.ValidationMessageFor(model => Model.Address.City)
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                @Html.LabelFor(model => Model.Address.ZipCode, new { @class = "col-sm-4 control-label" })
+                <div class="col-sm-8">
+                    @Html.TextBoxFor(model => Model.Address.ZipCode, new { @Placeholder = "ZipCode", @class = "Postal form-control" })
+                    @Html.ValidationMessageFor(model => Model.Address.ZipCode)
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        }
+    </div>
+
+</div>

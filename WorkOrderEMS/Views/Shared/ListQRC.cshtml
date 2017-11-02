@@ -1,0 +1,210 @@
+﻿@{
+    ViewBag.Title = "List QRC";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+
+    long locationId = 0;
+    long userType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+}
+<script type="text/javascript">
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_QRCList').setGridWidth(width);
+    });
+    $(function () {
+        //*********** Hide Display Message*********/
+        setInterval(hideDisplayMessage, 10000); //30000 MS == 30 Sec
+
+        function hideDisplayMessage() {
+            if ($('#message').is(':hidden')) {
+                $('#message').hide();
+            }
+        }
+    });
+
+</script>
+<script src="~/GridListing/JqGridScript/ListQRC.js"></script>
+<script src="~/Scripts/JqGrid/grid.common.js"></script>
+<script src="~/Scripts/JqGrid/jquery.jqGrid.min.js"></script>
+<script src="~/Scripts/JqGrid/i18n/grid.locale-en.js"></script>
+<script src="~/Scripts/QRCode/generateQRC.js"></script>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <input type="hidden" id="hddnQRCType" name="QRCType" value="@ViewBag.QRCType" />
+    <div id="jqGrid_container">
+        <table id="tbl_QRCList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divQRCListPager"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="modal fade bs-example-modal-lg" id="myModalFORQR">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
+                <h4 id="heading1" class="modal-title">
+                    QRC Item <span>Details</span>
+                </h4>
+            </div>
+            <div class="panel-body">
+                <div id="tblToPrint" class="">
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group">
+                            <label>QRC Type</label>
+                            <div id="txtQrcType" class=""></div>
+                            @*<input type="text" id="txtQrcType" readonly="readonly" class="form-control" />*@
+                        </div>
+                        <div class="form-group">
+                            <label>QRC Name</label>
+                            <div id="qrcNameTxt" class=""></div>
+                            @*<input type="text" id="qrcNameTxt" readonly="readonly" class="form-control" />*@
+                        </div>
+                        <div class="form-group">
+                            <label>QRC ID</label>
+                            <div id="lblQRCId" class=""></div>
+                            @*<input type="lab"  readonly="readonly" class="form-control" />*@
+                        </div>
+                        <div class="form-group">
+                            <label id="labelSpecialNotes">Special Notes</label>
+                            <div id="txtSpecialNotes" class=""></div>
+                            @*<input type="text" id="txtSpecialNotes" readonly="readonly" class="form-control" />*@
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <div class="form-group VehicleTypeDisplay">
+                            <label id="VehicleType">Vehicle Type</label>
+                            <div id="lblVehicleType" class=""></div>
+                            @*<input type="text" id="lblVehicleType" readonly="readonly" class="form-control" />*@
+                            @*<div class="form-control-static" id=""></div>*@
+                        </div>
+                        <div class="form-group VehicleTypeDisplay">
+                            <label id="MotorType">Motor Type</label>
+                            <div id="lblMotorType" class=""></div>
+                            @* <input type="text" id="lblMotorType" readonly="readonly" class="form-control" />*@
+                        </div>
+                        <div class="form-group">
+                            <label id="Location">Location</label>
+                            <div id="divLocation" class=""></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lblCreatedBy" class="">Created By</label>
+                            <div id="divCreatedBy"></div>
+                        </div>
+                        <div class="form-group">
+                            <label for="lblCreatedOn" class="">Created On</label>
+                            <div id="divCreatedOn"></div>
+                        </div>
+                        <div class="form-group">
+                            <label id="lblMake" for="lblMake" class="">Make</label>
+                            <div id="divMake"></div>
+                        </div>
+
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+                        <label>QRC Code</label>
+                        <div id="container2" class="">
+                            <canvas class="img-thumbnail"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <hr />
+                <div class="clear clearfix"></div>
+                <div class="">
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+
+                        <div class="form-group">
+                            <label id="lblVendorName" for="VendorName" class="">Vendor Name</label>
+                            <div id="VendorName"></div>
+                            @*<input type="text" value="" name="VendorName" id="VendorName" class="form-control" placeholder="Vendor Name">*@
+                        </div>
+
+                        <div class="form-group">
+                            <label id="lblPointOfContact" for="PointOfContact" class="">Point Of Contact</label>
+                            <div id="PointOfContact"></div>
+                            @*<input type="text" value="" name="PointOfContact" id="PointOfContact" class="form-control" placeholder="Point Of Contact">*@
+
+                        </div>
+                        <div class="form-group">
+                            <label id="lblTelephoneNo" for="TelephoneNo" class="">Telephone No</label>
+                            <div id="TelephoneNo"></div>
+                            @*<input type="text" value="" name="TelephoneNo" id="TelephoneNo" class="Phone form-control" placeholder="Telephone No">*@
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="form-group ">
+                            <label id="lblEmialAdd" for="EmialAdd" class="">Email Address</label>
+                            <div id="EmialAdd"></div>
+                            @*<input type="text" value="" name="EmialAdd" id="EmialAdd" data-val-email="The Email Address field is not a valid e-mail address." data-val="true" class="form-control required requiredselect" placeholder="Email Address">*@
+                        </div>
+                        <div class="form-group">
+                            <label id="lblWebsite" for="Website" class="">Website</label>
+                            <div id="Website"></div>
+                            @* <input type="text" value="" name="Website" id="Website" data-val-regex-pattern="(http(s)?://)?([\w-]+\.)+[\w-]+(/[\w- ;,./?%&amp;=]*)?" data-val-regex="Invalid URL" data-val="true" class="form-control" placeholder="Website">*@
+                        </div>
+                        <div class="form-group">
+                            <label id="lblInsuranceExpDate" for="InsuranceExpDate" class="">Insurance Exp. Date</label>
+                            <div id="InsuranceExpDate"></div>
+                            @*<input type="text" value="" name="InsuranceExpDate" id="InsuranceExpDate" data-val-date="The field Insurance Exp. Date must be a date." data-val="true" class="form-control hasDatepicker" placeholder="Insurance Expiry Date">*@
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                        <div class="form-group">
+                            <label id="lblWarrantyEndDate" for="WarrantyEndDate" class="">Warranty End Date</label>
+                            <div id="WarrantyEndDate"></div>
+                            @*<input type="text" value="" name="WarrantyEndDate" id="WarrantyEndDate" data-val-date="The field Warranty End Date must be a date." data-val="true" class="form-control hasDatepicker" placeholder="Warranty End Date">*@
+                        </div>
+                        <div class="form-group">
+                            <label id="PurchaseType" for="PurchaseType" class="">Purchase Type</label>
+                            @*<select name="PurchaseType" id="ddlPurchaseType" data-val-number="The field Purchase Type must be a number." data-val="true" class="form-control requiredselect" disabled="disabled">
+                                    <option value="">Select</option>
+                                    <option value="130">Company Owned</option>
+                                    <option value="131">Client Owned</option>
+                                    <option value="132">Other</option>
+                                </select>*@
+                            <div id="ddlPurchaseType"></div>
+                        </div>
+                        <div class="form-group remark">
+                            <label id="lblPurchaseTypeRemark" for="lblPurchaseTypeRemark" class="">Remark</label>
+                            <div id="PurchaseTypeRemark"></div>
+                            @* <textarea rows="2" name="PurchaseTypeRemark" id="PurchaseTypeRemark" cols="20" class="form-control" placeholder="Remark"></textarea>*@
+                        </div>
+                    </div>
+                </div>
+                <div class="clear clearfix"></div>
+                <div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+
+                        <div class="form-group">
+                            <label id="Model">Model</label>
+                            <div id="txtModel" class=""></div>
+                            @*<input type="text" id="txtModel" readonly="readonly" class="form-control" />*@
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-6 col-sm-6 col-xs-12">
+
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="panel-footer clearfix">
+                    <div class="text-right">
+                        <button type="button" class="btn btn-default bluebutton text-right" onclick="return PrintDivIndexForLicence('tblToPrint');" data-dismiss="modal">Print QRC Details</button>
+                        <button id="printQRC_btn" type="button" onclick="PrintQRCButton();" class=" btn btn-default bluebutton" formnovalidate="formnovalidate">Print QRC</button>
+                        <button id="btnCancelqwe" class="btn btn-default bluebutton" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+

@@ -1,0 +1,61 @@
+﻿@model WorkOrderEMS.Models.CheckWorkRequestforDeleteUser
+@if (Model.ContinuousList.Count > 0 || Model.NormalList.Count > 0)
+{
+    <style>
+        p.Star::before {
+            content: "*";
+            float: left;
+            color: red;
+        }
+    </style>
+
+    <p class="Star">&nbsp;Not able to delete User, below work order assigned</p>
+    <br><br>
+    <div class="panel-body">
+        <div class="row">
+            <div class="">
+                <div class="form-horizontal">
+                    <table class="table" style="font-size: 12px">
+                        <tr>
+                            <th>Code No.</th>
+                            <th>Work Order Type Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Created Date</th>
+                        </tr>
+                        @if (Model.ContinuousList.Count > 0)
+                        {
+                            foreach (var data in Model.ContinuousList)
+                            {
+                                <tr>
+                                    <td>@data.WorkOrderCode@data.WorkOrderCodeID</td>
+                                    <td>@data.WorkRequestProjectTypeName</td>
+                                    <td>@data.StartDate</td>
+                                    <td>@data.EndDate</td>
+                                    <td>@data.CreatedDate</td>
+                                </tr>
+                            }
+                        }
+                        @if (Model.NormalList.Count > 0)
+                        {
+                            foreach (var data in Model.NormalList)
+                            {
+                                <tr>
+                                    <td>@data.WorkOrderCode@data.WorkOrderCodeID</td>
+                                    <td>@data.WorkRequestProjectTypeName</td>
+                                    <td>N/A</td>
+                                    <td>N/A</td>
+                                    <td>@data.CreatedDate</td>
+                                </tr>
+                            }
+                        }
+                    </table>
+                    <button id="" data-dismiss="modal" class="btn btn-default bluebutton pull-right">Close</button>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+}
+
+

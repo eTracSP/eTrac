@@ -1,0 +1,456 @@
+﻿@model WorkOrderEMS.Models.eMaintenance_M.eMaintenanceSurvey_M
+
+@{
+    Layout = null;
+    string userid = string.Empty;
+    string workid = string.Empty;
+    string emailid = string.Empty;
+    if (ViewBag.userId != null && ViewBag.workId != null && ViewBag.SurveyEmailID != null)
+    {
+        userid = @ViewBag.userId;
+        workid = @ViewBag.workId;
+        emailid = @ViewBag.SurveyEmailID;
+    }
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Customer Assistance Survey</title>
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+
+    <script type='text/javascript'>
+              @{string hostPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];};
+        var $_HostPrefix = '@hostPrefix';
+        jQuery(document).ready(function () {
+
+            //$('input:radio[name="optradio"]').click(function () {
+            //    $('input[name=optradio]').parents('div:eq(1)').css('color', '#333');
+
+            //    if ($(this).val() == '0') {
+            //        //alert("test");
+            //        document.getElementById('Ques2Explain').style.display = "block";
+            //    }
+            //    else { document.getElementById('Ques2Explain').style.display = "none"; }
+            //});
+
+            $('input:radio[name="optradio2"]').click(function () {
+
+                $('input[name=optradio2]').parents('div:eq(1)').css('color', '#333');
+                if ($(this).val() == '0') {
+
+                    document.getElementById('Ques2Explain').style.display = "block";
+                }
+                else { document.getElementById('Ques2Explain').style.display = "none"; }
+
+            });
+
+            $('input:radio[name="optradio3"]').click(function () {
+                $('input[name=optradio3]').parents('div:eq(1)').css('color', '#333');
+                if ($(this).val() == '1') {
+
+                    document.getElementById('Ques3Explain').style.display = "block";
+                }
+                else { document.getElementById('Ques3Explain').style.display = "none"; }
+
+            });
+
+            $('input:radio[name="optradio4"]').click(function () {
+                $('input[name=optradio4]').parents('div:eq(1)').css('color', '#333');
+                if ($(this).val() == '1') {
+                    //alert("test");
+                    document.getElementById('Ques4Explain').style.display = "block";
+                }
+                else { document.getElementById('Ques4Explain').style.display = "none"; }
+
+            });
+
+            $('input:radio[name="optradio5"]').click(function () {
+                $('input[name=optradio5]').parents('div:eq(1)').css('color', '#333');
+            });
+
+            $('input:radio[name="optradio6"]').click(function () {
+                $('input[name=optradio6]').parents('div:eq(1)').css('color', '#333');
+            });
+        });
+
+        function submitSurvey() {
+
+            @*$_userid = '@ViewBag.userId';
+            $_workid = '@ViewBag.workId';*@
+
+            var obj = {};
+             obj.UserIds = '@ViewBag.userId'; //window.location.toString().split('&')[0].split('work=')[1];;
+            obj.WorkAssignmentIds ='@ViewBag.workId';
+            obj.SurveyEmailIDs = '@ViewBag.SurveyEmailID';
+            //obj.UserIds = $_userid; //window.location.toString().split('&')[0].split('work=')[1];;
+            //obj.WorkAssignmentIds = $_workid; //window.location.toString().split('&')[1].split('work=')[1];
+            //Checking Value
+            obj.ans1 = $('input[name=optradio]:checked').val();
+            obj.ans2 = $('input[name=optradio2]:checked').val();
+            obj.ans3 = $('input[name=optradio3]:checked').val();
+            obj.ans4 = $('input[name=optradio4]:checked').val();
+            obj.ans5 = $('input[name=optradio5]:checked').val();
+            obj.ans6 = $('input[name=optradio6]:checked').val();
+
+            //#region Obj.Ans check
+            if (obj.ans1 == undefined ||
+                obj.ans2 == undefined ||
+                obj.ans3 == undefined ||
+                obj.ans4 == undefined ||
+                obj.ans5 == undefined ||
+                obj.ans6 == undefined) {
+                var res = 1;
+                //#region Validation
+                if (obj.ans1 == undefined) {
+                    $('input[name=optradio]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                    res = 0;
+                }
+                else {
+                    $('input[name=optradio]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+                if (obj.ans2 == undefined) {
+                    $('input[name=optradio2]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                    res = 0;
+                }
+                else {
+                    $('input[name=optradio2]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+                if (obj.ans3 == undefined) {
+                    $('input[name=optradio3]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                    res = 0;
+                }
+                else {
+                    $('input[name=optradio3]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+                if (obj.ans4 == undefined) {
+                    $('input[name=optradio4]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                    res = 0;
+                }
+                else {
+                    $('input[name=optradio4]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+                if (obj.ans5 == undefined) {
+                    $('input[name=optradio5]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                    res = 0;
+                }
+                else {
+                    $('input[name=optradio5]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+
+                if (obj.ans6 == undefined) {
+                    res = 0;
+                    $('input[name=optradio6]').parents('div:eq(1)').find('label').css('color', '#CD0606');
+                }
+                else {
+                    $('input[name=optradio6]').parents('div:eq(1)').find('label').css('color', '#007EA4');
+                }
+                //#region Validation
+                alert('All fields are mandatory!')
+                return false;
+            }
+            else {
+
+                obj.Ques2Comment = $("#Ques2Comment").val();
+                obj.Ques3Comment = $("#Ques3Comment").val();
+                obj.Ques5Comment = $("#Ques4Comment").val();
+                obj.Ques4Comment = $("#Ques5Comment").val();
+                $('input[name=optradio]:checked').val() == 1 ? $("label[for='lblquestion1']").html("Introduced - Yes") : $("label[for='lblquestion1']").html("Introduced - No");
+
+                if ($('input[name=optradio2]:checked').val() == 0) {
+                    $("label[for='lblquestion2']").html("Accomplished - No");
+                    $("label[for='txtquestion2']").html($("#Ques2Comment").val());
+
+                } else {
+                    $("label[for='lblquestion2']").html("Accomplished - Yes");
+                    //$("label[for='txtquestion2']").html('No Need');
+                    $("label[for='txtquestion2']").html(' ');
+                }
+
+                if ($('input[name=optradio3]:checked').val() == 1) {
+                    $("label[for='lblquestion3']").html("Scale - "+ $('input[name=optradio3]:checked').val());
+                    $("label[for='txtquestion3']").html($("#Ques3Comment").val());
+                } else {
+                    $("label[for='lblquestion3']").html("Scale - " + $('input[name=optradio3]:checked').val());
+                    $("label[for='txtquestion3']").html(' ');
+                    //$("label[for='txtquestion3']").html('Not Need');
+                }
+
+
+                if ($('input[name=optradio4]:checked').val() == 1) {
+                    $("label[for='lblquestion4']").html("Scale - " + $('input[name=optradio4]:checked').val());
+                    $("label[for='txtquestion4']").html($("#Ques4Comment").val());
+                } else {
+                    $("label[for='lblquestion4']").html("Scale - " + $('input[name=optradio4]:checked').val());
+                    //$("label[for='txtquestion4']").html('Not Need');
+                    $("label[for='txtquestion4']").html(' ');
+                }
+
+                $("label[for='lblquestion5']").html("Scale - " + $('input[name=optradio5]:checked').val());
+                $("label[for='txtquestion5']").html($("#Ques5Comment").val());
+
+                $('input[name=optradio6]:checked').val() == 1 ? $("label[for='lblquestion6']").html("Feedback Call - Yes") : $("label[for='lblquestion6']").html("Feedback Call - No");
+                $('.radio').remove();
+                $('#btnSubmitSurvey').remove();
+
+                var Preview = $("#htmlData").html();
+                obj.HtmlData = Preview;
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SubmitSurveyFormNew", "eMaintenanceDisclaimer")',
+                    data: { obj: obj },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...Loading');
+                    },
+                    success: function (Data) {
+
+                        if (Data.length > 10) {
+                            alert("We thank you for taking the time to complete this survey.");
+                            window.close();
+                        }
+                        else {
+                            if (Data.isExist != null && Data.isExist == false) {
+                                alert("We thank you for taking the time to complete this survey.");
+
+                                window.close();
+                            }
+                                //else if (Data.re != null && Data.re != "" && Data.re == true) {
+                                //    alert("Record doesn't exist.");
+                                //    window.close()
+                                //}
+                            else {
+                                alert("You have already submitted this survey.");
+
+                                window.close();
+                            }
+                        }
+                    },
+                    error: function (err, errr, errrr) {
+
+                        console.log(errrr);
+                    }
+                });
+
+            }
+            //#endregion  Obj.Ans check
+
+        }//button click event
+
+
+        function fn_notify() {
+            var funthis = this;
+            this.maskloader = {
+                start: function (setting) {
+                    setting.ob.find('.eliteMask').remove();
+                    var div = $('<Span></Span>')
+                        .css({
+                            'height': setting.height,
+                            'width': setting.width,
+                            'position': (!!setting.position) ? setting.position : 'absolute',
+                            'background-color': '#000000',
+                            'filter': 'alpha(opacity=20)',
+                            'opacity': (!!setting.opacity) ? setting.opacity : '0.6',
+                            'text-align': 'center',
+                            'z-index': '20000000',
+                            'top': '0px'
+
+                        }).html('<span class="eliteMask_Span" style=" position: absolute; text-align: center; color: white;' +
+                        '  padding: 6px 9px 3px 7px;  height: 33px; border-right-width: 16px;  border-bottom-width: 0px;left:'
+                        + setting.left + ' ;color:  White;position: ' +
+                        'absolute; text-align: center; top: 45%;border-radius:' + (!!setting.textbrad ? setting.textbrad : '2px') + ';">' + '<span>' + setting.text + '</span>' + ((setting.requireloader == undefined) ?
+                            ('<img style="margin-right: 3px;top:44%;" src="' + $_HostPrefix + 'Content/images/constant/Loader.gif">')
+                            : ((setting.requireloader == undefined) ? '<img style="margin-right: 3px;top:44%;width=200px;" src="' + $_HostPrefix + 'Content/images/constant/Loader.gif">'
+                                : '')) + '</span>')
+                        .addClass('eliteMask')
+                        .prependTo(setting.ob);
+                    if (!!setting.ctop) {
+                        div.css({
+                            top: setting.ctop
+                        });
+                    }
+                    return funthis;
+                },
+                hide: function (setting) {
+                    setting.ob.find('.eliteMask').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                    return funthis;
+                }
+            }
+        };
+
+
+        function fn_showMaskloader(text) {                     //fn_showMaskloader
+            new fn_notify().maskloader.start({                //fn_hideMaskloader
+                ob: $('body'),
+                position: 'fixed',
+                height: '100%',
+                text: '&nbsp;&nbsp;&nbsp;&nbsp;' + text + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                left: "40%",
+                textbackcolor: 'Blue',
+                textbrad: '10px',
+                zindex: $('body').css('z-index') + 1,
+                width: '100%'
+            });
+        }
+
+        function fn_hideMaskloader() {
+            new fn_notify().maskloader.hide({
+                ob: $('body')
+            });
+        }
+    </script>
+    <style>
+        .bluebutton {
+            background-color: #0aa0cd;
+            border-color: #357ebd;
+            color: #ffffff;
+        }
+
+            .bluebutton:hover {
+                background-color: #0792bc;
+                border-color: #357ebd;
+                color: #ffffff;
+            }
+
+        .form-ui {
+            padding: 18px;
+            background-color: #ffffff;
+            border: 1px solid #F5F6F7;
+        }
+
+        .br_hr {
+            border-bottom: 1px solid #D4E6EC;
+        }
+
+        .form-group.br_hr > span {
+            color: #007EA4;
+        }
+        #Ques2Explain > span {
+            color: #007EA4;
+        }
+        #Ques3Explain > span {
+            color: #007EA4;
+        }
+
+        #Ques4Explain > span {
+            color: #007EA4;
+        }
+
+        label {
+            color: #007EA4;
+        }
+    </style>
+</head>
+<body>
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <div class="container">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-lg-6 col-lg-offset-5 col-md-6 col-md-offset-5 col-sm-6 col-sm-offset-5 col-xs-12">
+                    <img src="@hostPrefix/Images/logo-etrac.png" style="margin: 0px 0px 0px 0px; height:100px;width:200px" />
+
+
+                </div>
+
+            </div>
+        </div>
+        <div style="border: 1px solid #D4E6EC;">
+            <h3 style="margin: 0; text-align: center; background-color: #007EA4; color: #ffffff; padding: 14px 0;">Customer Assistance Survey Form</h3>
+        </div>
+        <form role="form" id="htmlData" class="table-responsive form-ui">
+            <div style="margin: 10px 6px">
+                <div class="form-group  br_hr">
+                    @Html.LabelFor(model => model.question1)<br />
+                    <div class="radio" id="#question1">
+                        <label style="margin-right:20px"><input type="radio" value="1" name="optradio">Yes</label>
+                        <label style="margin-right:20px"><input type="radio" value="0" name="optradio">No</label>
+                    </div>
+                    <label for="lblquestion1" style="margin-left:5px"></label><br />
+                </div>
+
+                <div class="form-group  br_hr">
+                    @Html.LabelFor(model => model.question2)<br />
+
+                    <div class="radio" id="#question2">
+                        <label style="margin-right:20px"><input type="radio" id="Ques2Yes" name="optradio2" value="1">Yes</label>
+                        <label style="margin-right:20px"><input type="radio" id="Ques2No" name="optradio2" value="0">No</label>
+                    </div>
+                    <label for="lblquestion2" style="margin-left:17px"></label><br />
+                    <div id="Ques2Explain" style="display:none">
+                        <span>Please explain:</span>
+                        <textarea class="form-control" rows="2" id="Ques2Comment"></textarea>
+                        <label for="txtquestion2" style="margin-left:5px"></label><br />
+                    </div>
+                </div>
+
+                <div class="form-group  br_hr">
+                    @Html.LabelFor(model => model.question3)<br />
+                    <div class="radio" id="#question3">
+                        <label style="margin-right:20px"><input type="radio" value="1" id="Ques3one" name="optradio3" value="one3">1</label>
+                        <label style="margin-right:20px"><input type="radio" value="2" id="Ques3tow" name="optradio3">2</label>
+                        <label style="margin-right:20px"><input type="radio" value="3" id="Ques3three" name="optradio3">3</label>
+                        <label style="margin-right:20px"><input type="radio" value="4" id="Ques3four" name="optradio3">4</label>
+                        <label style="margin-right:20px"><input type="radio" value="5" id="Ques3five" name="optradio3">5</label>
+                    </div>
+                    <label for="lblquestion3" style="margin-left:5px"></label><br />
+                    <div id="Ques3Explain" style="display:none">
+                        <span>Please explain:</span>
+                        <textarea class="form-control textarea" rows="2" id="Ques3Comment"></textarea>
+                        <label for="txtquestion3" style="margin-left:5px"></label><br />
+                    </div>
+                </div>
+
+                <div class="form-group  br_hr">
+                    @Html.LabelFor(model => model.question4)<br />
+                    <div class="radio" id="#question4">
+                        <label style="margin-right:20px"><input type="radio" value="1" id="Ques4one" name="optradio4" value="one4">1</label>
+                        <label style="margin-right:20px"><input type="radio" value="2" id="Ques4two" name="optradio4">2</label>
+                        <label style="margin-right:20px"><input type="radio" value="3" id="Ques4three" name="optradio4">3</label>
+                        <label style="margin-right:20px"><input type="radio" value="4" id="Ques4four" name="optradio4">4</label>
+                        <label style="margin-right:20px"><input type="radio" value="5" id="Ques4five" name="optradio4">5</label>
+                    </div>
+                    <label for="lblquestion4" style="margin-left:5px"></label><br />
+                    <div id="Ques4Explain" style="display:none">
+                        <span>Please explain:</span>
+                        <textarea class="form-control textarea" rows="2" id="Ques4Comment"></textarea>
+                        <label for="txtquestion4" style="margin-left:5px"></label><br />
+                    </div>
+                </div>
+
+                <div class="form-group  br_hr">
+                    @Html.LabelFor(model => model.question5)<br />
+                    <div class="radio" id="#question5">
+                        <label style="margin-right:20px"><input type="radio" value="1" id="Ques5one" name="optradio5">1</label>
+                        <label style="margin-right:20px"><input type="radio" value="2" id="Ques5two" name="optradio5">2</label>
+                        <label style="margin-right:20px"><input type="radio" value="3" id="Ques5three" name="optradio5">3</label>
+                        <label style="margin-right:20px"><input type="radio" value="4" id="Ques5four" name="optradio5">4</label>
+                        <label style="margin-right:20px"><input type="radio" value="5" id="Ques5five" name="optradio5">5</label>
+                    </div>
+                    <label for="lblquestion5" style="margin-left:5px"></label><br />
+                    <span>Comments:</span>
+                    <textarea class="form-control textarea" rows="2" id="Ques5Comment"></textarea>
+                    <label for="txtquestion5" style="margin-left:5px"></label><br />
+                </div>
+
+                <div class="form-group  ">
+                    @Html.LabelFor(model => model.question6)<br />
+                    <div class="radio" id="#question6">
+                        <label style="margin-left:20px"><input type="radio" value="1" name="optradio6">Yes</label>
+                        <label style="margin-left:20px"><input type="radio" value="0" name="optradio6">No</label>
+                    </div>
+                    <label for="lblquestion6" style="margin-left:5px"></label><br />
+                    <button id="btnSubmitSurvey" type="button" class="btn bluebutton" onclick="return submitSurvey();">Submit</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

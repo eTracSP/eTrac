@@ -1,0 +1,190 @@
+﻿@model WorkOrderEMS.Models.ProjectMasterModel
+
+@{
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+    ViewBag.Title = "New Project";
+    string ServiceId = string.Empty, ImageName = string.Empty;
+    if (Model != null)
+    { ImageName = string.IsNullOrEmpty(Model.ProjectLogoName) ? "no-profile-pic.jpg" : Model.ProjectLogoName; }
+    else { ImageName = "no-profile-pic.jpg"; }
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        ViewBag.Title = "Update Project";
+        ServiceId = ViewBag.ServicesID;
+    }
+
+}
+<!--FOLLOWING  files are used for Bootstrap multiselect-->
+@**@
+
+
+
+@using (Html.BeginForm("Project", "GlobalAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+
+        <!-- /.panel -->
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                Project Details
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+                    <div class="">
+                        <div class="form-horizontal">
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.ValidationSummary(true)
+                                @Html.HiddenFor(model => model.ProjectID)
+                                @*@if (Model.QRCID.HasValue)*@
+                                @Html.HiddenFor(model => model.QRCID)
+                                @Html.Hidden("LogoName", ImageName)
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.LabelFor(model => model.Location, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.Location, new { @Placeholder = "Project Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Location)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextAreaFor(model => model.Description, new { @Placeholder = "Project Description", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.LabelFor(model => model.LocationID, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(model => model.LocationID, new SelectList(ViewBag.Location, "LocationId", "LocationName"), "--Select--", new { @id = "ddlLocation", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.LocationID)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.LabelFor(model => model.ProjectCategory, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownListFor(model => model.ProjectCategory, new SelectList(ViewBag.Category, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlCategory", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProjectCategory)
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <img id="LocationImage" src="@Url.Content("~/Content/Images/LocationLogo/" + ImageName)" class="img-rounded" alt="Rounded Image" style="width:200px; height:200px;">
+                                    <input type="file" id="image" name="image" onchange="readURL(this);" value=" upload image">
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                @Html.Label("Project Services", new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.DropDownList("Services", new SelectList(ViewBag.Services, "ServiceID", "ServiceName"), new { @id = "ddlServices", @multiple = "multiple", @class = "form-control" })
+                                    @Html.Hidden("ServicesID")
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            @*<div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <input type="hidden" id="EncryptQRC" value="@ViewBag.Project" />
+                                <div class="col-sm-8 col-sm-offset-4">
+                                    <div id="container" class="hide">
+                                        <canvas width="200" height="200"></canvas>
+                                    </div>
+                                </div>
+                                </div><div class="clearfix"></div>*@
+                        </div>
+                        <div class="form-horizontal">
+                            <div class="col-sm-offset-8 col-sm-8">
+                                <button class="btn btn-default bluebutton" type="submit">Save</button>
+                                @*@Html.ActionLink("Cancel", "Dashboard", "GlobalAdmin", new { @class = "btn btn-default bluebutton" })*@
+                                <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                                @*<button class="btn btn-default bluebutton" type="submit">Cancel</button>*@
+                                <div class="clearfix">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+    <!--FOLLOWING  files are used for Image Upload-->
+    @*<script src="~/Scripts/bootstrap.min.js"></script>*@
+    @*<script src="~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js"></script>*@
+
+    <script src="~/Scripts/QRCode/jquery.qrcode-0.9.5.js"></script>
+    <script src="~/Scripts/QRCode/generateQRC.js"></script>
+    <script src="~/Scripts/ImageUpload/FileUpload.js"></script>
+    <script type="text/javascript">
+        $_imagePath = '@Url.Action("UploadImage", "GlobalAdmin")';
+        $(document).ready(function () {
+            $_ServiceID = '@ServiceId';
+
+            $('#ddlServices').multiselect({
+                maxHeight: '300',
+                onChange: function (element, checked) {
+
+                    var Services = $('#ddlServices option:selected');
+                    var selected = [];
+                    $(Services).each(function (index, Services) {
+                        //if (index > 0) {
+                        var ss = $(Services).val();
+                        if (ss != undefined && parseInt(ss) > 0) {
+                            //alert(parseInt(ss));// found
+                            selected.push([$(this).val()]);
+                        }
+                        //}
+                    });
+                    $("#ServicesID").val(selected);
+                }
+            });
+            var Arr = $_ServiceID.split(',');
+
+            for (var i = 0; i < Arr.length; i++) {
+                $("#ddlServices").multiselect("select", $.trim(Arr[i]));
+            }
+            $("#ddlServices").multiselect('rebuild');
+            ////==========================
+
+        });
+        function readURL(input) {
+            var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+            if (input.files && input.files[0]) {
+                var LoadImage = false;
+                var FileExtension = input.value.split(".")[1];
+                for (var v = 0; v < FType.length; v++) {
+                    if (FType[v] == FileExtension) {
+                        LoadImage = true;
+                    }
+                }
+                if (LoadImage == true) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#LocationImage')
+                            .attr('src', e.target.result)
+                            .width(150)
+                            .height(150);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $(input).val("");
+                    alert("Please select image to upload!")
+                    return false;
+                }
+            }
+        }
+
+    </script>
+}

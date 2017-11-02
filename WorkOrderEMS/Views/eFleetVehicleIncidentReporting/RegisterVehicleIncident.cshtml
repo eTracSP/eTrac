@@ -1,0 +1,443 @@
+﻿@model WorkOrderEMS.Models.eFleetVehicleIncidentModel
+@{
+    ViewBag.Title = "Register Vehicle Incident" ;
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long locationId = 0;
+    long userType = 0;
+    //string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+   // string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+   // string file = "XYZ.DOC";
+}
+<script src="~/Scripts/dropzone/dropzone.min.js"></script>
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
+@*<script src="~/Scripts/bootstrap.min.js"></script>*@
+<script src="~/Scripts/eFleetVehicle/jdb_popup.min.js"></script>
+<link href="~/Scripts/dropzone/dropzone.min.css" rel="stylesheet" />
+<link href="~/Scripts/dropzone/basic.css" rel="stylesheet" />
+<link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
+<link href="~/Content/eFleetVehicle/jdb_popup.min.css" rel="stylesheet" />
+@*<link href="~/Content/eFleetVehicle/style.css" rel="stylesheet" />*@
+<style type="text/css">
+    .errorspace {
+        margin-top: -5px
+    }
+</style>
+@section scripts{
+    <script type="text/javascript">
+        debugger
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script type="text/javascript">
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_QRCList').setGridWidth(width);
+    });
+    $('#btnMyModalFORQRC').live("click", function () {
+        $('#myModalLicence').modal('show');
+    });
+    </script>
+}
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+@using (Html.BeginForm("Index", "eFleetVehicleIncidentReporting", FormMethod.Post, new { enctype = "multipart/form-data", @id = "vehicleIncident_form" }))
+{
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create Vehicle Incident&nbsp;&nbsp;&nbsp;&nbsp;<span class="pull-right"><a href="~/Images/spoke_card_side_2.gif" title="Image Caption" id="demo"><img src="~/Images/question.png" /></a></span>                 
+            </div>
+            <div class=" clearfix"></div>
+            <div class="form">
+                <div class="tab-content">
+                    @*<form action="/" method="post" id="vehicle_form">*@
+                    <div class="top-row">
+                        <div class="field-wrap">     
+                            @Html.HiddenFor(model => model.VehicleID, new { @id = "VehicleID" })
+                            @Html.HiddenFor(model => model.QRCodeID, new { @id = "QRCodeID" })
+                            @Html.HiddenFor(model => model.IncidentID, new { @id = "IncidentID" })
+                            @Html.HiddenFor(model => model.CreatedBy, new { @id = "CreatedBy" })
+                            <label>
+                                Vehicle Number<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.VehicleNumber != null)
+                            {
+                                <select name="@Html.NameFor(model => model.VehicleNumber)"
+                                        id="@Html.IdFor(model => model.VehicleNumber)"
+                                        onchange="BindVehicleID()">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.VehicleNumber)
+                                    {
+                                        <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID" data-codeid="@Vn.QRCodeID"
+                                                @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
+                                                                                                                                                                                                                                                    }>
+                                            @Vn.VehicleNumber
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {<select id="VehicleNumber"><option value="-1">@ViewBag.VehicleNumber</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleNumber)
+                            </div>                         
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Accident Date<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.AccidentDate, "{0:MM/dd/yyyy}", new { @id = "AccidentDate" , @onkeydown = "return false;" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.AccidentDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                 State<span class="req">*</span>
+                            </label>
+                           @if (ViewBag.StateList != null)// This is temorary need to use Razor
+                           {
+                            <select name="@Html.NameFor(model => model.StateId)"
+                                    id="@Html.IdFor(model => model.StateId)">
+                                <option>--Select--</option>
+                                @foreach (var sl in ViewBag.StateList)
+                                {
+                                    <option value="@sl.StateId" text="@sl.StateName"
+                                            @if (sl.StateId == Model.StateId) { @: selected="selected"
+                                                                                                                                                                }>
+                                        @sl.StateName
+                                    </option>
+                                }
+                            </select>
+                           }
+                           else
+                           {<select id="StateId"><option value="-1">@ViewBag.StateList</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.StateId)
+                            </div>         
+                        </div>                      
+                        <div class="field-wrap">
+                            <label>
+                                City<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.City, new { @id = "City" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.City)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Name of Driver<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.DriverName, new { @id = "DriverName" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.DriverName)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Number of Injuries<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.NumberOfInjuries,  new { @id = "NumberofInjuries" , @maxLength = "2"})
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.NumberOfInjuries)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label style="margin-left:-13px;margin-top:-5px;">
+                                Preventability<span class="req">*</span>
+                            </label>
+                            <div style="margin-left:150px;">
+                                @Html.RadioButtonFor(model => model.Preventability, true, new { @class = "yes" })Regular &nbsp; @Html.RadioButtonFor(model => model.Preventability, false, new { @class = "no"})Event
+                            </div>
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Preventability)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Incident Description<span class="req">*</span>
+                            </label>
+                            @Html.TextAreaFor(model => model.Description, new { @id = "Description" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Description)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label style="margin-top:-30px;margin-left:-13px;">
+                                Incident Image<span class="req"></span>
+                            </label>
+                            <div class="dropzone" id="dropzoneJsForm" name="IncidentImageFile">
+
+                            </div>
+
+                            @*@if (Model.IncidentImage != null && Model.IncidentImage != "")
+                            {
+                                Image = Model.IncidentImage;
+
+                               
+                            }*@
+                           @*<input id="fileuploadVehicle" type="file" style="margin-left:auto;" name="IncidentImageFile" multiple="multiple" />
+                <div id="dvPreview"></div>*@
+                <div class="errorspace">
+                    @Html.ValidationMessageFor(model => model.IncidentImageFile)
+                </div>
+            </div>
+            @*<div class="field-wrap">
+                <label style="margin-left:-13px;">
+                    Vehicle Image<span class="req"></span>
+                </label>
+
+                @if (Model.IncidentImage != null && Model.IncidentImage != "")
+                {
+                    Image = Model.IncidentImage;
+
+                    @*<img id='imgVehicleImage' name='imgVehicleImage' src="@Url.Content(Image)"
+                         class="img-rounded" alt="No Image " style="width:110px; height:110px; margin-left:45%;">*@
+                            @* } *@
+                            @*<input id="fileuploadVehicle" type="file" style="margin-left:auto;" name="IncidentImageFile" multiple="multiple" />
+                <div id="dvPreview"></div>
+                <div class="errorspace">
+                    @Html.ValidationMessageFor(model => model.IncidentImageFile)
+                </div>
+            </div>*@
+                        </div>                 
+                    @*</form>*@
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveIncident">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveIncident">Submit</button>
+                    }
+                </div><!-- tab-content -->
+            </div> <!-- /form -->
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@* Validation when no fields are filled then text box border will red *@
+<script>
+    Dropzone.autoDiscover = false;
+    $(document).ready(function () {
+        
+        $('#dropzoneJsForm').dropzone({
+            url: '../eFleetVehicleIncidentReporting/Index/',
+            method: 'post'
+        });
+            //Attach change event to textbox
+            $("#AccidentDate").change(function () {
+                //Check if value is empty or not
+                if ($(this).val() == "") {
+                    //if empty then assign the border
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#StateId").change(function () {
+                if ($(this).val() == "--Select--") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#City").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#DriverName").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#Preventability").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#Description").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#VehicleNumber").change(function () {
+                if ($(this).val() == "--Select--") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#NumberofInjuries").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+        });
+    function validatetextbox()
+    {
+        var txtvalvehiclenumber = $("#VehicleNumber").val();
+        var txtAccidentDate = $("#AccidentDate").val();
+        var txtvalState = $("#StateId").val();
+        var txtvalCity = $("#City").val();
+        var txtvalDriverName = $("#DriverName").val();
+        var txtvalPreventability = $("#Preventability").val();
+        var txtvalNumberofInjuries = $("#NumberofInjuries").val();
+        var txtvalDescription = $("#Description").val();
+      //Check if value is empty or not
+        if (txtAccidentDate == "")
+        {
+            //if empty then assign the border
+            $("#AccidentDate").css("border", "1px solid #bc3838");
+        }
+        else
+        {
+            $("#AccidentDate").css("border", "1px solid #4475b5");
+        }
+        if (txtvalNumberofInjuries == "") {
+            //if empty then assign the border
+            $("#NumberofInjuries").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#NumberofInjuries").css("border", "1px solid #4475b5");
+        }
+        if (txtvalState == "--Select--") {
+            $("#StateId").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#StateId").css("border", "1px solid #4475b5");
+        }
+        if (txtvalCity == "") {
+            $("#City").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#City").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDriverName == "") {
+            $("#DriverName").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#DriverName").css("border", "1px solid #4475b5");
+        }
+        if (txtvalPreventability == "") {
+            $("#Preventability").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Preventability").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDescription == "") {
+            $("#Description").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Description").css("border", "1px solid #4475b5");
+        }
+        if (txtvalvehiclenumber == "--Select--") {
+            $("#VehicleNumber").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#VehicleNumber").css("border", "1px solid #4475b5");
+        }
+    }
+</script>
+@*//File Upload script//*@
+<script language="javascript" type="text/javascript">
+    Dropzone.options.dropzoneForm =
+        {
+        init: function () {
+            debugger
+                this.on("complete", function (data) {
+                    //var res = eval('(' + data.xhr.responseText + ')');
+                    var res = JSON.parse(data.xhr.responseText);
+                });
+            }
+        };
+    //$(function () {
+    //    $("#fileuploadVehicle").change(function () {
+    //        $("#dvPreview").html("");
+    //        var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp|.pdf|.doc|.txt)$/;
+    //        if (regex.test($(this).val().toLowerCase())) {
+    //            if ($.browser.msie && parseFloat(jQuery.browser.version) <= 9.0) {
+    //                $("#dvPreview").show();
+    //                $("#dvPreview")[0].filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = $(this).val();
+    //            }
+    //            else {
+    //                if (typeof (FileReader) != "undefined") {
+    //                    $("#dvPreview").show();
+    //                    $("#dvPreview").append("<img />").width(100).height(100);
+    //                    var reader = new FileReader();
+    //                    reader.onload = function (e) {
+    //                        $("#dvPreview img").attr("src", e.target.result);
+    //                    }
+    //                    reader.readAsDataURL($(this)[0].files[0]);
+    //                } else {
+    //                    alert("This browser does not support FileReader.");
+    //                }
+    //            }
+    //        } else {
+    //            alert("Please upload a valid image file.");
+    //        }
+    //    });
+    //});
+    function BindVehicleID() {
+        debugger
+        var vid = $('#VehicleNumber').find('option:selected').attr('data-vid');
+        var codeId = $('#VehicleNumber').find('option:selected').attr('data-codeid');
+        // var vid = $(this).find('selected').attr('data-vid');
+        $('#VehicleID').val(parseInt(vid));
+        $('#QRCodeID').val(codeId);
+        
+    }
+    $(function () {
+        debugger
+        $("#AccidentDate").datepicker();
+
+           // $("input[type='text']").focus();
+            $("select").blur();
+            $('textarea').blur();
+           // $("input[id='vehicleNumber']").focus();
+            //$("input[id='AccidentDate']").focus();[hoto]
+            $("input[id='State']").blur();
+            $("input[id='City']").blur();
+            $("input[id='DriverName']").blur();
+            $("input[id='Preventability']").blur();
+            $("input[id='Description']").blur();
+            $("input[id='NumberofInjuries']").blur();
+            $("input[id='vehicleNumber']").blur();
+            $("input[id='AccidentDate']").blur();
+        });
+</script>
+<script src="~/Scripts/eFleetVehicle/reg.js"></script>

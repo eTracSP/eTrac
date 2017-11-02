@@ -1,0 +1,178 @@
+﻿@{
+
+    bool _flag = false;
+    int icount = 1;
+    long? ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator);
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty, controller = string.Empty, baseController = string.Empty, adduser = string.Empty;
+    bool _isRoles = false;
+
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        {
+            var myaction = ViewContext.RouteData.GetRequiredString("action");
+            actionName = myaction.ToLower();
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            var mycontroller = ViewContext.RouteData.GetRequiredString("controller");
+            controller = mycontroller;
+            controller = controller.ToLower();
+            baseController = routeValues["controller"].ToString();
+            baseController = baseController.ToLower();
+        }
+    }
+
+    if (controller == "globaladmin") { Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml"; }
+    else { Layout = "~/Views/Shared/_ManagerLayout.cshtml"; }
+
+
+    ////////if (baseController == "globaladmin" && actionName == "listitadministrator") //controller == "ITAdministrator" &&
+    ////////{ adduser = "IT Administrator"; ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator); }
+    ////////else if (baseController == "globaladmin" && actionName == "listadministrator") //controller == "ITAdministrator" &&
+    ////////{ adduser = "Administrator"; ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator); }
+    ////////else if (baseController == "globaladmin" && actionName == "listclient") //controller == "ITAdministrator" &&
+    ////////{ adduser = "Client"; ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client); }
+    ////////else if (baseController == "globaladmin" && actionName == "listmanager") //controller == "ITAdministrator" &&
+    ////////{ adduser = "Manager"; ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Manager); }
+    ////////else //if (baseController == "globaladmin" && actionName == "listemployee") //controller == "ITAdministrator" &&
+    ////////{
+    ////////    if (baseController == "globaladmin")
+    ////////    { _flag = true; }
+    ////////    adduser = "Employee"; ITAdminUseType = null;
+    ////////}
+    ///////Comment by vijay sahu
+
+    ViewBag.Title = "List User";
+
+}
+
+
+@section scripts{
+
+    <script type="text/javascript">
+         @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];}
+        var $Login_UserType = '@ObjLogin2.UserRoleId';
+        var $_controllerName = '@controller';
+        var $_mycolflag = '@_flag';
+        var $_controllerUserType = '@ITAdminUseType';
+        var $_isRoles = '@_isRoles';
+        var UserListUrl = {
+            "DeleteUser": '@Url.Action("DeleteUser", "Common")',
+            "GlobalAdminEdit": '@Url.Action("Index", "GLobalAdmin")',
+            "ITAdminEdit": '@Url.Action("Create", "ITAdministrator")',
+            "AdminEdit": '@Url.Action("Create", "Administrator")',
+            "ManagerEdit": '@Url.Action("Index", "Manager")',
+            "EmployeeEdit": '@Url.Action("CreateEmployee", "Employee")',
+            "ClientEdit": '@Url.Action("create", "Client")',
+        }
+    </script>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.0/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.0/js/bootstrap-toggle.min.js"></script>
+    @*<script src="~/GridListing/JqGridScript/VerifiedMnagaerList.js"></script>*@
+    <script src="~/GridListing/JqGridScript/UserList.js"></script>
+
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_ManagerList').setGridWidth(width);
+        });
+    </script>
+}
+</div>
+</section>
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+    <div id="jqGrid_container">
+
+        @*<a href="#" id="adduser" style="float:right;" class="btn btn-default bluebutton">Add New  @adduser</a>*@
+        @{
+
+        WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+        bool isAdminFlag = false; string TargetController = "";
+        long loginUserType = 0;
+
+        if (ObjLogin != null)
+        {
+            loginUserType = ObjLogin.UserRoleId;
+            switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+            {
+                case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                    isAdminFlag = true;
+                    TargetController = "GlobalAdmin";
+                    break;
+                case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                    isAdminFlag = true;
+                    TargetController = "ITAdministrator";
+                    break;
+                case WorkOrderEMS.Helper.UserType.Administrator:
+                    isAdminFlag = true;
+                    TargetController = "Administrator";
+                    break;
+                default:
+                    isAdminFlag = false;
+                    break;
+            }
+        }
+        }
+
+        <div class="text-right">
+            @if (isAdminFlag && actionName.Contains("admin"))
+        {
+        @*@Html.ActionLink(adduser, "Create", TargetController, null, new { @class = "btn btn-default bluebutton", @id = "adduser" })*@
+        }
+        @*else
+            {
+                @Html.DropDownListFor(a => icount, new SelectList(new WorkOrderEMS.BusinessLogic.Managers.CommonMethodManager().GetUserTypeList("UserType", loginUserType), "GlobalCodeId", "CodeName"), "Select", new { @class = "form-control requiredselect", @style = "display: inline-block;", @id = "AddUserType" })
+                <button id="adduser" class="btn btn-default bluebutton">
+                    Add New
+                </button>
+            }*@
+    </div>
+    <input type="hidden" id="hiddnListUserType" value="@ViewBag.ListUserType" />
+    @*<div class="clearfix"></div>
+    <div class="marbottom"></div>*@
+    <table id="tbl_ManagerList" border="0" cellpadding="0" cellspacing="0"></table>
+    <div id="divManagerListPager" ></div>
+</div>
+    </div>
+<div class="clearfix"></div>
+<div class="modal fade" id="ContinuousModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:50%">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="ConinuousTitle">Assigned Work Order To User</h4>
+
+            </div>
+            <div class="modal-body " id="ContinuousWorkData">
+
+            </div>
+            <div class="modal-footer">
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .ViewAllButton {
+        /*height: 18px;
+    margin: -10px 10px 0 0;
+    padding: 1px;*/
+        position: absolute;
+        right: 4%;
+        height: 30px !important;
+        min-height: 30px !important;
+        min-width: 59px !important;
+        padding: 2px !important;
+        top: 13px;
+    }
+    #divManagerListPager {
+   
+        display:block;
+         }
+
+</style>
+
+<script>
+    $('#divManagerListPager *').off();
+</script>

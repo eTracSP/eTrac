@@ -1,0 +1,151 @@
+﻿@model WorkOrderEMS.Models.LocationMasterModel
+
+@{
+    ViewBag.Title = "New Location";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+    string StateID = string.Empty;
+    if (Model != null)
+    { StateID = Convert.ToString(Model.StateId); }
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    { ViewBag.Title = "Update Location"; }
+}
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+<script src="~/Scripts/common/Masking.js"></script>
+
+@using (Html.BeginForm("Location", "GlobalAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+
+        <!-- /.panel -->
+        <div class="panel panel-default">
+
+            <div class="panel-heading">
+                Location Details
+            </div>
+
+            <div class="panel-body">
+                <div class="row">
+
+                    <div class="">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(model => model.LocationId)
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.LocationName, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.LocationName, new { @Placeholder = "Location Name", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.LocationName)
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextAreaFor(model => model.Description, new { @Placeholder = "Location Description", @class = "form-control resize" })
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Address1, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.Address1, new { @Placeholder = "Location Address", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Address1)
+                                </div>
+                            </div>
+
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Address2, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.Address2, new { @Placeholder = "Location Code", @class = "form-control" })
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.CountryId, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @*@if (Model != null && ViewBag.Country != null && Model.CountryId != null && Model.CountryId > 0)*@
+                                    @if (ViewBag.Country != null)
+                                    {@Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), "--Select--", new { @class = "form-control requiredselect", @id = "Country", @onchange = "BindState()" })}
+                                    else
+                                    {<select id="Country" class="form-control requiredselect"><option value="-1">--Select--</option></select>}
+                                    @Html.ValidationMessageFor(model => model.CountryId)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.StateId, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    <select id="States" name="StateId" class="form-control required requiredselect"><option value="0">--Select--</option></select>
+                                    @Html.ValidationMessageFor(model => model.StateId)
+                                </div>
+                            </div>
+
+                            <div class="clearfix"></div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.ZipCode, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.ZipCode, new { @Placeholder = "Location Zip Code", @class = "Postal form-control" })
+                                    @Html.ValidationMessageFor(model => model.ZipCode)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.City, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.City, new { @Placeholder = "Location City", @maxLength = "100", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.City)
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                            @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.Mobile, new { @class = "col-sm-4 control-label" })
+                                    <div class="col-sm-8">
+                                        @Html.TextBoxFor(model => model.Mobile, new { @Placeholder = "Location Mobile", @class = "Mobile form-control" })
+                                        @Html.ValidationMessageFor(model => model.Mobile)
+                                    </div>
+                                </div>*@
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.PhoneNo, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.PhoneNo, new { @Placeholder = "Location Phone no", @class = "Phone form-control" })
+                                    @Html.ValidationMessageFor(model => model.PhoneNo)
+                                </div>
+                            </div>
+
+
+
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+                            <div class="form-horizontal">
+                                <div class="col-sm-offset-8 col-sm-8">
+                                    <button class="btn btn-default bluebutton" type="submit">Save</button>
+                                    <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+
+    <script src="~/Scripts/QRCode/jquery.qrcode-0.9.5.js"></script>
+    <script src="~/Scripts/QRCode/generateQRC.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+            $_StateID = '@StateID';
+            //do not remove will use in future if ($("#Country").val() != '') { BindState(); }
+            BindState(); // if above comment line will use then comment this line.
+        });
+    </script>
+}

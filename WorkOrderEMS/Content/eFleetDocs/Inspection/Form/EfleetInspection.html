@@ -1,0 +1,146 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body>
+    <h3 style="padding-left:180px;"> Inspection Report for [Status]</h3><br><!--<h4 class="reportedby" style="padding-left:40px;font-size:11px"> Reported By :[UserName]<h4 style="padding-left:300px;font-size:11px">Date & Time : [DATETIME]</h4></h4>-->
+    <br>
+    <table>
+        <tr>
+            <td>
+                <label style="padding-left:90px;"><p style="padding-left:40px;font-size:11px"> Reported By :[UserName]</p></label>               
+            </td>
+            <td>
+                <label><p style="padding-left:25px;font-size:11px">Date & Time : [DATETIME]</p></label>          
+            </td>          
+        </tr>
+        <tr>
+            <td>
+                  <label style="padding-left:90px;"><p style="padding-left:40px;font-size:11px"> QRCodeID :[QRCodeID]</p></label>
+              </td>
+              <td>
+                  <label><p style="padding-left:25px;font-size:11px">Vehicle Number : [VehicleNumber]</p></label>
+              </td>
+        </tr>
+        <tr>
+             <td>
+                <label><b style="padding-left:40px;font-size:11px"> Damage:</b></label>
+                <p style="padding-left:40px;font-size:11px">
+                    1 ) Is Damage : [IsDamage]<br><br>
+                    <!--<img src="C:\Users\BHUSHAN\Desktop\cshtml file.jpg" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\cshtml file.jpg" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;"><br><br>
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;">&nbsp;&nbsp;
+                    <img src="C:\Users\BHUSHAN\Desktop\Audi.png" width="17%;" height="17%;">-->
+                </p>
+            </td>
+            <td>
+                <label><b style="padding-left:25px;font-size:11px">Mileage:</b></label>
+                <p style="padding-left:25px;font-size:11px">
+                    1 ) Change Mileage : [ChShuttleMileage]<br>
+                    2 ) Old : [OldChShDescription] kmph<br>
+                    3 ) New : [ChShDescription] kmph
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><b style="padding-left:40px;font-size:11px;">Tires :</b></label>
+                <br>
+                <p style="padding-left:40px;font-size:11px">
+                    <label><b>Front -</b></label><br>
+                    1) Tires Condition : [FrontTireCondition]<br>
+                    2) Rim : [FrontRim]<br>
+                    3) Wheel Assembly : [IsFrontWheelAssembly]<br><br>
+                    <label><b>Rear -</b></label><br>
+                    1) Tires Condition : [RearTireCondition]<br>
+                    2) Rim : [RearRim]<br>
+                    3) Wheel Assembly : [IsRearWheelAssembly]<br><br>
+                    <label><b>Tire Damage -</b></label><br>
+                    1) Flat : [Flat]<br>
+                    2) Low Air Pressure : [LowAirPressue]<br>
+                    3) Marginal Thread : [MarginalTread]<br>
+                    4) Loose Lug Nuts : [LooseLugNuts]<br>
+                    5) Creacks or Cuts : [CracksCuts]<br>
+                    6) Grease Leaks : [GreaseLeaks]<br>
+                    7) Other Damage : [OtherDamage]<br>
+                </p>
+            </td>
+            <td>
+                <label><b style="padding-left:25px;font-size:11px">Interior :</b></label>
+                <p style="padding-left:25px;font-size:11px">
+                    1) Switches : [Switches]<br>
+                    2) Horn : [Horn]<br>
+                    3) Fans & Defrosters : [FansDefrosters]<br>
+                    4) Break Padal & Warning Light: [BreakWarningLight]<br>
+                    5) Entrance Steps : [Entrance]<br>
+                    6) Cleanliness : [IsClean]<br>
+                    7) Seat Coushiners : [SeatCoushin]<br>
+                    8) Seat Belts : [SeatBelts]<br><br><br>
+                    <label><b>Driver's Cabin :</b></label> <br> <br>              
+                    1) Seats & Belt : [SeatBeltsDC] <br />
+                    2) Directional Lights : [DirectionalLights]<br>
+                    3) Parking & Service Brakes : [ServiceBreak]<br>
+                    4) Clutch: [Clutch]<br>
+                    5) Steering : [Steering]
+                </p>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <label><b style="padding-left:40px;font-size:11px">Exterior :</b></label>
+                <p style="padding-left:40px;font-size:11px">
+                    1) HeadLights : [Headlights]<br>
+                    2) 4-Way Flashers : [IsFlashers]<br>
+                    3) Reflector : [IsReflectors]<br>
+                    4) Windows : [Window]<br>
+                    5) Exhaust System: [IsExhaust]<br>
+                    6) Tail Pipe : [IsTailPipe]<br>
+                    7) Wind Shields : [IsWindShields]
+                </p>
+            </td>
+            <td>
+                <label><b style="padding-left:25px;font-size:11px">Engine:</b></label>
+                <p style="padding-left:25px;font-size:11px">
+                    1) Fluid Leak Under Bus : [IsFluidLeak]<br>
+                    2) Loose Wires, Hose Connection : [IsLooseWire]<br>
+                    3) Belts in Engine Compartment : [BeltCondition]<br>
+                    4) Oil Level : [OilLevel]<br>
+                    5) Radiator Coolent : [IsRadiator]<br>
+                    6) Unusual Engine Noise : [IsEngineNoise]
+                </p>
+            </td>          
+        </tr>
+        <tr>
+            <td style="padding-top:40px;">
+                <label><b style="padding-left:40px;font-size:11px">Accessories :</b></label>
+                <p style="padding-left:40px;font-size:11px">
+                    1) Wheelchair Lift : [Wheelchair] <br>
+                    2) Special Service Door : [SpecialServiceDoor]<br>
+                    3) Manual Pump Handle : [PumpHandle]<br>
+                    4) 2-Way Radio Check : [RadioCheck]
+                </p>
+            </td>
+            <td>
+                <label><b style="padding-left:25px;font-size:11px">Emergency:</b></label>
+                <p style="padding-left:25px;font-size:11px">
+                    1) Lift Operation : [IsLiftOperation] <br>
+                    2) Emergency Equipment : [Equipment]<br>
+                    3) Emergency Door & Buzzers : [Buzzers]<br>
+                    4) First Aid Kit : [FirstAidRequired]<br>
+                    5) Door Warning : [IsDoorWarning]<br>
+                    6) Posted Decals : [IsPostedDecals]<br>
+                    7) Control Mechanism : [ControlMechanism]<br>
+                    8) Flares :[IsFlares]<br>
+                    9) Fire Extinguisher : [IsFireExtinguisher]<br>
+                    10) Protective padding : [IsProtectivePadding]
+                </p>
+            </td>            
+        </tr>
+    </table>
+</body>
+</html>

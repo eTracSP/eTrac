@@ -1,0 +1,241 @@
+﻿@{
+    ViewBag.Title = "List Work Request";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+    long UserType = 0; bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    int isEdit = 0;
+
+    long UserID = 0;
+    if (ViewBag.UserID != null)
+    {
+        UserID = Convert.ToInt32(ViewBag.UserID);
+    }
+
+    if (ObjLogin != null)
+    {
+        UserType = Convert.ToInt32(ObjLogin.UserRoleId);
+
+
+        /*Get Active User Type Flag*/
+
+        switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+        {
+            case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                GloblaAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                ITAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Administrator:
+                OnlyAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Manager:
+                ManagerUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Employee:
+                EmployeeUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Client:
+                ClientUser = true;
+                break;
+            default:
+                GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+                break;
+        }
+
+    }
+    if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+    {
+        isEdit = 1;
+    }
+}
+<script>
+    var $_userType = "";
+    $_userType = '@UserType';
+</script>
+<script src="~/GridListing/JqGridScript/WorkRequestAssignment.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+
+    $_UserID = '@UserID';
+    $_isEdit = '@isEdit';
+
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+    });
+
+
+</script>
+<style>
+    .custom-size img {
+        width: 150px !important;
+        height: 140px !important;
+    }
+</style>
+</div>
+</section>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div id="jqGrid_container">
+        <table id="tbl_WorkRequestAssignmentList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divWorkRequestAssignmentListPager"></div>
+    </div>
+</div>
+<div class="clearfix"></div>
+
+<div class="modal fade preview" id="ModalDetailPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+                <h4 class="modal-title" id="myModalLabel">Work Order Details</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="divDetailPreview" class="">
+
+                    <div class="row">
+
+                        <div class="" id="DivWorkDetailsIndex">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label> Project Type</label>
+                                    <div id="lblProjectType" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labelWorkRequestType">Work Request Type</label>
+                                    <div id="lblWorkRequestType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority Level</label>
+                                    <div id="lblPriorityLevel" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group" id="divWoimg">
+                                    <label id="labellAssignedWorkImage">Work Order Image</label>
+                                    <div id="lblAssignedWorkImage" class="custom-size">
+                                        <canvas style="width: 200px!important; height: 200px!important;"></canvas>
+                                    </div>
+                                </div>
+                                <p>&nbsp;</p>
+                                <div class="form-group">
+                                    <label id="labellWorkRequestStatus">Work Request Status</label>
+                                    <div id="lblWorkRequestStatus" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Submitted On</label>
+                                    <div id="lblSubmittedOn" class="form-control-static"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label id="labellProblemDescription"> Problem Description</label>
+                                    <div id="lblProblemDescription" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellProjectDescription"> Project Description</label>
+                                    <div id="lblProjectDescription" class="form-control-static"></div>
+                                </div>
+                                <label>Code No</label>
+                                <div class="form-group">
+                                    <div id="lblCodeNo" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group" id="divEmpAssigned">
+                                    <label>Employee Assigned</label>
+                                    <div id="lblAssignToUser" class="form-control-static"></div>
+                                    <div id="lblProfile" class="custom-size">
+                                        <canvas style="width: 200px!important; height: 200px!important;"></canvas>
+                                    </div>
+                                </div>
+                                <label>Location</label>
+                                <div class="form-group">
+                                    <div id="lblLocationName" class="form-control-static"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label id="labellStartDate"> Start Date</label>
+                                    <div id="lblStartDate" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellEndDate"> End Date</label>
+                                    <div id="lblEndDate" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellTimeAssigned"> Time Assigned</label>
+                                    <div id="lblTimeAssigned" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellVehicleMake"> Vehicle Make</label>
+                                    <div id="lblVehicleMake" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellVehicleModel"> Vehicle Model</label>
+                                    <div id="lblVehicleModel" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellVehicleYear"> Vehicle Year</label>
+                                    <div id="lblVehicleYear" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellVehicleColor"> Vehicle Color</label>
+                                    <div id="lblVehicleColor" class="form-control-static"></div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label id="labellStartTime"> Start Time</label>
+                                    <div id="lblStartTime" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellWeekdays"> Weekdays</label>
+                                    <div id="lblWeekdays" class="form-control-static"></div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label id="labellCustomerName"> Customer Name</label>
+                                    <div id="lblCustomerName" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellCustomerContact"> Customer Contact</label>
+                                    <div id="lblCustomerContact" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellDriverLicenseNo"> Driver License No</label>
+                                    <div id="lblDriverLicenseNo" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labelTotalTimeTaken"> Total Time Taken</label>
+                                    <div id="lblTotalTimeTaken" class="form-control-static"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">
+                    <button type="button" class="btn btn-default bluebutton text-right" onclick="return PrintDivForWorkDetails('DivWorkDetailsIndex');" data-dismiss="modal">Print Details</button>
+                    <button data-dismiss="modal" class="btn btn-default bluebutton" id="btnCancelqwe">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function success(data) {
+         
+        if (data != "") {
+            $("#myModallarge").modal('hide');
+            toastr.success(data.Message)
+        }
+    }
+</script>
+
+@*style="background-color: #33ccff;"*@
+

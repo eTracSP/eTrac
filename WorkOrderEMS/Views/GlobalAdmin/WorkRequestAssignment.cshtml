@@ -1,0 +1,190 @@
+﻿@{
+    ViewBag.Title = "Work Request";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+}
+
+@Html.Partial("_WorkRequestAssignment");
+
+@*@using (Ajax.BeginForm("WorkRequestAssignment", "GlobalAdmin", new AjaxOptions()
+                       {
+                           HttpMethod = "POST",
+                           OnBegin = "fn_showMaskloader(' &nbsp;&nbsp;&nbsp;&nbsp; Please Wait... &nbsp;&nbsp;&nbsp;&nbsp;');",
+                           UpdateTargetId = "divResultSubscription",
+                           OnSuccess = "WorkRequestAssignment",
+                           OnComplete = "fn_hideMaskloader();"
+
+                       }))
+    {
+        @Html.Partial("_WorkRequestAssignment");
+    }*@
+
+<script>
+    //$(document).ready(function () {
+    //     ;
+    //    if ($_userType == "3" || $_userType == "4") {
+    //        $("#ddlWorkRequestProjectType option[value=256]").remove();
+    //        $("#ddlWorkRequestProjectType option[value=279]").remove();
+    //    }
+    //});
+   
+    function WorkRequestAssignment(data) {
+ 
+        if (data.WorkRequestAssignmentID > 0) {
+            $("#myModalLabel").html("Assigned Workorder Detail");
+            var ProjectType = $("#ddlWorkRequestProjectType :selected").text();
+            var InnerHtml = ' <div class="license">                                             ';
+            InnerHtml = InnerHtml + '     <div class="row" >                                   ';
+            InnerHtml = InnerHtml + '         <div class="license-back2">                               ';
+            //InnerHtml =InnerHtml+ '             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">    ';
+            //InnerHtml =InnerHtml+ '                                                                   ';
+            //InnerHtml =InnerHtml+ '             </div>                                                ';
+            //InnerHtml =InnerHtml+ '             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">    ';
+            //InnerHtml =InnerHtml+ '                                                                   ';
+            //InnerHtml =InnerHtml+ '             </div>                                                ';
+            //InnerHtml =InnerHtml+ '                                                                   ';
+            //InnerHtml =InnerHtml+ '             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> ';
+            //InnerHtml = InnerHtml + '                <H5> WorkOrderID &nbsp;:&nbsp;      ' + data.WorkRequestAssignmentID;
+            //InnerHtml = InnerHtml + '<br>Project Type&nbsp;:&nbsp;          ' + $("#ddlWorkRequestProjectType :selected").text();
+            //InnerHtml = InnerHtml + '<br>                 Priority Level&nbsp;:&nbsp;             ' + $("#ddlPriorityLevel :selected").text();
+            //InnerHtml = InnerHtml + '             </h5></div>                                                ';
+            //InnerHtml = InnerHtml + ' <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">        ';
+            //InnerHtml =InnerHtml+ '             <div id="container2">    ' + $("#ddlAssignToEmployee :selected").text() ;
+            //InnerHtml =InnerHtml+ '                 <img src="' + $("#EmployeeImage").attr("src") + '" style="width: 200px; height: 200px;"/>' ;
+            //InnerHtml =InnerHtml+ '             </div>                                                 ' ;
+            //InnerHtml =InnerHtml+ '         </div>   ';
+            //InnerHtml =InnerHtml+ '         </div>                                                    ' ;
+            //InnerHtml =InnerHtml+ '     </div>                                                        ' ;
+            //InnerHtml = InnerHtml + ' </div>                                                            ';
+
+            InnerHtml = InnerHtml + '<div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">';
+            InnerHtml = InnerHtml + ' <label class="col-sm-6 control-label" for="">Assigned WorkOrder ID:</label>';
+            InnerHtml = InnerHtml + ' <div class="col-md-2">' + data.WorkRequestAssignmentID;
+            InnerHtml = InnerHtml + ' </div>';
+            InnerHtml = InnerHtml + '</div>';
+            if (ProjectType != "Special Project ") {
+                InnerHtml = InnerHtml + '<div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">';
+                InnerHtml = InnerHtml + ' <label class="col-sm-6 control-label" for="">Project Type:</label>';
+                InnerHtml = InnerHtml + ' <div class="col-md-4">' + $("#ddlWorkRequestProjectType :selected").text();
+                InnerHtml = InnerHtml + ' </div>';
+                InnerHtml = InnerHtml + '</div>';
+            }
+            InnerHtml = InnerHtml + '<div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">';
+            InnerHtml = InnerHtml + ' <label class="col-sm-6 control-label" for="">Priority Level:</label>';
+            InnerHtml = InnerHtml + ' <div class="col-md-2">' + $("#ddlPriorityLevel :selected").text();
+            InnerHtml = InnerHtml + ' </div>';
+            InnerHtml = InnerHtml + '</div>';
+            InnerHtml = InnerHtml + '<div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">';
+            InnerHtml = InnerHtml + ' <label class="col-sm-6 control-label" for="">Assigned Employee: </label>';
+            InnerHtml = InnerHtml + ' <div class="col-md-2">' + $("#ddlAssignToEmployee :selected").text();
+            InnerHtml = InnerHtml + ' </div>';
+            InnerHtml = InnerHtml + '</div>';
+            InnerHtml = InnerHtml + '<div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11  ">';
+            InnerHtml = InnerHtml + ' <label class="col-sm-6 control-label" for=""> </label>';
+            InnerHtml = InnerHtml + ' <div class="col-md-6"><img src="' + $("#EmployeeImage").attr("src") + '" style="width: 200px; height: 200px;"/>';
+            InnerHtml = InnerHtml + ' </div>';
+            InnerHtml = InnerHtml + '         </div> ';
+            InnerHtml = InnerHtml + '     </div>  ';
+            InnerHtml = InnerHtml + ' </div>   ';
+            InnerHtml = InnerHtml + '</div>';
+
+            $("#myModalLabel").html("Work Request Details");
+            $("#mediumeditpopup").html(InnerHtml);
+            $("#myModalmedium").modal("show");
+            //data
+        }
+    }
+</script>
+</div>
+</section>
+<div class="clearfix"></div>
+<!-- Modal Confirumation Preview-->
+<div class="modal fade preview" id="ModalDetailPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+                <h4 class="modal-title" id="myModalLabel">Work Order Details</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="divDetailPreview" class="">
+
+                    <div class="row">
+
+                        <div class="" id="DivWorkDetailsIndex">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                               
+                                <div class="form-group">
+                                    <label> Project Type</label>
+                                    <div id="lblProjectType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label id="labelWorkRequestType">WorkRequestType</label>
+                                    <div id="lblWorkRequestType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority Level</label>
+                                    <div id="lblPriorityLevel" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>WorkRequestImage</label>
+                                    <div id="lblWorkRequestImage" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>WorkRequestStatus</label>
+                                    <div id="lblWorkRequestStatus" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>AssignToUser</label>
+                                    <div id="lblAssignToUser" class="form-control-static"></div>
+
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label>Location</label>
+                                <div class="form-group">
+                                    <div id="lblLocationName" class="form-control-static">@((WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"]).Location</div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label>AssignedWorkImage</label>
+                                <div id="container2">
+                                    <canvas style="width: 200px; height: 200px;"></canvas>
+                                </div>
+                                <p>&nbsp;</p>
+                                <div class="form-group">
+                                    <label>Time Assigned</label>
+                                    <div id="lblTimeAssigned" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Submitted On</label>
+                                    <div id="lblSubmittedOn" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellProblemDescription"> Problem Description</label>
+                                    <div id="lblProblemDescription" class="form-control-static"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divDetailFooter">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

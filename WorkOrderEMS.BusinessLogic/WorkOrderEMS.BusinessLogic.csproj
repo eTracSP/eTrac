@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{9ACE1C33-0A91-43B2-951E-1425A07039F3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WorkOrderEMS.BusinessLogic</RootNamespace>
+    <AssemblyName>WorkOrderEMS.BusinessLogic</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\NewProjects.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AutoMapper, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="AutoMapper.Net4, Version=3.2.1.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
+      <HintPath>..\packages\AutoMapper.3.2.1\lib\net40\AutoMapper.Net4.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.Extended, Version=6.0.0.0, Culture=neutral, PublicKeyToken=05b7e29bdd433584, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.Extended.6.1.0.168\lib\net45\EntityFramework.Extended.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.4.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.4\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.1.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.1.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="TimeZoneConverter, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TimeZoneConverter.2.0.0\lib\net45\TimeZoneConverter.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BusinessHelpers\AuthorizationChecking.cs" />
+    <Compile Include="BusinessHelpers\InspectionPDFCreator.cs" />
+    <Compile Include="ExceptionHandel\Exception_B.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetDriver.cs" />
+    <Compile Include="Interfaces\eFleet\IEFleetFuelingManager.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetIncident.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetMaintenance.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetPassengerTracking.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetPM.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetVehicleIncidentReport.cs" />
+    <Compile Include="Interfaces\eFleet\IHoursOfServices.cs" />
+    <Compile Include="Interfaces\eFleet\IMaintenanceManager.cs" />
+    <Compile Include="Interfaces\eFleet\IPassengerTracking.cs" />
+    <Compile Include="Interfaces\IAddressManager.cs" />
+    <Compile Include="Interfaces\IClientManager.cs" />
+    <Compile Include="Interfaces\ICommonMethod.cs" />
+    <Compile Include="Interfaces\ICommonMethodAdmin.cs" />
+    <Compile Include="Interfaces\IDARManager.cs" />
+    <Compile Include="Interfaces\IDashboardWidgetSettingManager.cs" />
+    <Compile Include="Interfaces\eFleet\IEfleetVehicle.cs" />
+    <Compile Include="Interfaces\IEmailDetail.cs" />
+    <Compile Include="Interfaces\IEmployeeManager.cs" />
+    <Compile Include="Interfaces\ILogin.cs" />
+    <Compile Include="Interfaces\IManageManager.cs" />
+    <Compile Include="Interfaces\IPushNotification.cs" />
+    <Compile Include="Interfaces\IQRCSetup.cs" />
+    <Compile Include="Interfaces\IReportManager.cs" />
+    <Compile Include="Interfaces\IRuleManager.cs" />
+    <Compile Include="Interfaces\ISearch.cs" />
+    <Compile Include="Interfaces\IGlobalAdmin.cs" />
+    <Compile Include="Interfaces\IUser.cs" />
+    <Compile Include="Interfaces\IWorkRequestAssignment.cs" />
+    <Compile Include="Managers\AddressManager.cs" />
+    <Compile Include="Managers\ClientManager.cs" />
+    <Compile Include="Managers\Common.cs" />
+    <Compile Include="Managers\CommonMethodAdmin.cs" />
+    <Compile Include="Managers\CommonMethodManager.cs" />
+    <Compile Include="Managers\DARManager.cs" />
+    <Compile Include="Managers\DashboardWidgetSettingManager.cs" />
+    <Compile Include="Managers\eFleet\DriverManager.cs" />
+    <Compile Include="Managers\eFleet\eFleetCommonManager.cs" />
+    <Compile Include="Managers\eFleet\HoursOfServicesManager.cs" />
+    <Compile Include="Managers\eFleet\MaintenanceManager.cs" />
+    <Compile Include="Managers\eFleet\PassengerTrackingManager.cs" />
+    <Compile Include="Managers\eFleet\PreventativeMaintenaceManager.cs" />
+    <Compile Include="Managers\eFleet\VehicleIncidentManager.cs" />
+    <Compile Include="Managers\eFleet\VehicleManager.cs" />
+    <Compile Include="Managers\EmailDetailManager.cs" />
+    <Compile Include="Managers\EmployeeManager.cs" />
+    <Compile Include="Managers\GlobalAdminManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Managers\HubManager.cs" />
+    <Compile Include="Managers\LoginManager.cs" />
+    <Compile Include="Managers\ManageManager.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Managers\PushNotificationManager.cs" />
+    <Compile Include="Managers\QRCSetupManager.cs" />
+    <Compile Include="Managers\ReportManager.cs" />
+    <Compile Include="Managers\RuleManager.cs" />
+    <Compile Include="Managers\SearchManager.cs" />
+    <Compile Include="Managers\UserManager.cs" />
+    <Compile Include="Managers\WorkRequestManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WorkOrderEMS.Data\WorkOrderEMS.Data.csproj">
+      <Project>{ad61bc48-89fc-4811-99bf-c96fcafa5e1b}</Project>
+      <Name>WorkOrderEMS.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorkOrderEMS.Helper\WorkOrderEMS.Helper.csproj">
+      <Project>{e9e7b445-9a09-4309-96fd-28b0c46b59c0}</Project>
+      <Name>WorkOrderEMS.Helper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WorkOrderEMS.Models\WorkOrderEMS.Models.csproj">
+      <Project>{a0e73362-382c-43c4-bb5c-19704aaf5ace}</Project>
+      <Name>WorkOrderEMS.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets" Condition="Exists('..\packages\AutoMapper.3.2.1\tools\AutoMapper.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

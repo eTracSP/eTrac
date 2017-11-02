@@ -1,0 +1,38 @@
+﻿@{
+    ViewBag.Title = "Create Client";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty;
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        { actionName = routeValues["action"].ToString(); }
+    }
+}
+
+@using (Html.BeginForm("CreateClient", "Client", new { ActionName = ViewBag.ActionName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        @*<div>
+            <label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>
+        </div>*@
+        <div class="panel-heading">
+            Personal Details
+        </div>
+        @{ViewBag.myModelprefixName = "UserModel."; ViewBag.ActionSection = "client";}
+        @*@{ViewBag.myModelprefixName = "ClientModel."; ViewBag.ActionSection = "client"; }*@
+        @Html.Partial("_myRegistration")
+        <div class="col-sm-offset-9">
+            <button class="btn btn-default bluebutton" type="submit">Save</button>
+            <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+            @*<a class="btn btn-default bluebutton" href="@System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"]">Cancel</a>*@
+            <div class="clearfix"></div>
+        </div>
+        <div class="marbottom"></div>
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

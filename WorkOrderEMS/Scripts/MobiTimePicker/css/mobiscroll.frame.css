@@ -1,0 +1,187 @@
+
+.dw, .dwo {
+}
+.dw {
+    -moz-user-select: none;
+    font-size: 12px;
+    left: 0;
+    max-width: 98%;
+    position: absolute;
+    text-shadow: none;
+    top: 0;
+    z-index: 2;
+}
+.dw:focus {
+    outline: medium none;
+}
+.dw-rtl {
+    direction: rtl;
+}
+.dw, .dwbc {
+    box-sizing: border-box;
+}
+.dwwr {
+    font-family: arial,verdana,sans-serif;
+    min-width: 170px;
+    overflow: hidden;
+    text-align: center;
+}
+.dw-persp, .dwo {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;
+}
+.dw-persp {
+    z-index: 99998;
+}
+.dwo {
+    background: none repeat scroll 0 0 rgba(0, 0, 0, 0.7);
+    z-index: 1;
+}
+.dw-liq .dw {
+    max-width: 100%;
+}
+.dw-top .dw, .dw-bottom .dw {
+    max-width: 100%;
+    width: 100%;
+}
+.dw-inline .dw {
+    display: inline-block;
+    max-width: 100%;
+    position: static;
+}
+.dw-inline.dw-liq .dw-persp .dw {
+    display: block;
+}
+.dw-inline .dw-persp {
+    position: static;
+}
+.dw-bubble .dw {
+    margin: 20px 0;
+}
+.dw-bubble .dw-arrw {
+    left: 0;
+    position: absolute;
+    width: 100%;
+}
+.dw-bubble-top .dw-arrw {
+    bottom: -36px;
+}
+.dw-bubble-bottom .dw-arrw {
+    top: -36px;
+}
+.dw-bubble .dw-arrw-i {
+    height: 36px;
+    margin: 0 30px;
+    position: relative;
+}
+.dw-bubble .dw-arr {
+    display: block;
+}
+.dw-arr {
+    border-style: solid;
+    border-width: 18px;
+    display: none;
+    height: 0;
+    left: 0;
+    margin-left: -18px;
+    position: absolute;
+    width: 0;
+}
+.dw-bubble-bottom .dw-arr {
+    top: 0;
+}
+.dw-bubble-top .dw-arr {
+    bottom: 0;
+}
+.dw-hidden {
+    border: 0 none;
+    height: 0;
+    margin: 0;
+    overflow: hidden;
+    padding: 0;
+    width: 0;
+}
+.dwv {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.dwb {
+    display: block;
+    overflow: hidden;
+    text-decoration: none;
+    text-overflow: ellipsis;
+    vertical-align: top;
+    white-space: nowrap;
+}
+.dwb-e {
+    cursor: pointer;
+}
+.dwb-d {
+    cursor: default;
+}
+.dwbc {
+    display: table;
+    text-align: center;
+    width: 100%;
+}
+.dwbw {
+    display: table-cell;
+    position: relative;
+    vertical-align: top;
+    z-index: 5;
+}
+.dwbw .dwb::before {
+    padding: 0.375em;
+}
+.mbsc-wdg .dwcc {
+    font-size: 14px;
+    padding: 0.5em 1em;
+    text-align: left;
+    white-space: normal;
+}
+.mbsc-mobiscroll .dwwr {
+    background: none repeat scroll 0 0 #f7f7f7;
+    color: #454545;
+    font-size: 16px;
+    min-width: 220px;
+}
+.mbsc-mobiscroll .dwv {
+    color: #4eccc4;
+    font-size: 0.75em;
+    line-height: 2em;
+    min-height: 2em;
+    padding: 0.6666em 0.6666em 0;
+    text-transform: uppercase;
+}
+.mbsc-mobiscroll .dwbc {
+    display: block;
+    overflow: hidden;
+    padding: 0 0.5em 0.5em;
+    text-align: right;
+}
+.mbsc-mobiscroll .dwbw {
+    display: block;
+    float: right;
+}
+.mbsc-mobiscroll .dw-rtl .dwbw {
+    float: left;
+}
+.mbsc-mobiscroll .dwb {
+    color: #4eccc4;
+    height: 2.5em;
+    line-height: 2.5em;
+    padding: 0 1em;
+    text-transform: uppercase;
+}
+.mbsc-mobiscroll .dwb-a {
+    background: none repeat scroll 0 0 rgba(78, 204, 196, 0.3);
+}
+.mbsc-mobiscroll .dw-bubble-bottom .dw-arr {
+    border-color: transparent transparent #f7f7f7;
+}
+.mbsc-mobiscroll .dw-bubble-top .dw-arr {
+    border-color: #f7f7f7 transparent transparent;
+}

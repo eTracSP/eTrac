@@ -1,0 +1,144 @@
+﻿@model WorkOrderEMS.Models.PermissionDetailsModel
+
+@using (Ajax.BeginForm("SavePermissions", "RolesAndPermissions", new AjaxOptions()
+{
+    HttpMethod = "POST",
+    OnSuccess = "success",
+    OnBegin = "new fn_showMaskloader('Please wait...')",
+    OnComplete = "fn_hideMaskloader",
+    OnFailure = "fn_hideMaskloader",
+}))
+{
+    <script src="~/Scripts/bootstrap-checkbox.js"></script>
+    <label id="popupmessage"> </label>
+
+    <div class="panel-body">
+        <div class="" style="border-radius:10px;padding-left:0px;margin-top:-20px;">
+            <div class="">
+                <div class="form-horizontal">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.UserIds)
+                    @Html.HiddenFor(model => model.UserIdToSave)
+                    <div id="chkboxdiv" style="min-height:250px;overflow:auto;">
+                        @foreach (var per in Model.GetPermission)
+                        {
+                            if (Model.GetAssignedPermission.Exists(x => x.PermissionId == per.PermissionId))
+                            {
+                                <div class="checkbox squaredTwo">
+
+                                    <input type="checkbox" class="large" id='@per.PermissionId' checked="checked" name="checkboxPermissions" />&nbsp;<span>@per.PermissionName</span>
+                                    <label for="squaredTwo"></label>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="checkbox squaredTwo">
+
+                                    <input type="checkbox" class="large" id='@per.PermissionId' name="checkboxPermissions" />&nbsp;<span>@per.PermissionName</span>
+                                    <label for="squaredTwo"></label>
+                                </div>
+
+                            }
+                        }
+                    </div>
+
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="pull-right margintop10">
+            <div class="">
+                <button onclick="return UpdateRole();" class="btn btn-default bluebutton" type="submit">Save</button>
+                <button id="CloseModel" class="btn btn-default bluebutton" type="button">Cancel</button>
+                @*<a href="" class="btn btn-default bluebutton">Cancel</a>*@
+            </div>
+        </div>
+    </div>
+
+    @*</div>*@
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$("input[type='checkbox']:checked ").each(function () {
+        //    $("input[type='checkbox']:checked").siblings("label").each(function () { $(this).css("opacity", "1"); })
+        //})
+        $('input[type="checkbox"]').checkbox({
+            buttonStyle: 'btn-link fa-1x',
+            buttonStyleChecked: 'btn-link fa-1x',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty',
+            constructorCallback: null,
+            defaultState: true,
+            defaultEnabled: true,
+
+            checked: true,
+            enabled: true
+
+        });
+        $('input[type="checkbox"].large').checkbox({
+            buttonStyle: 'btn-link btn-large',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty'
+        });
+    });
+
+
+    function success(data) {
+    
+
+        $(".close").trigger("click");
+        if (data != "") {
+           
+           
+        
+            if (data == "NotRegistered")
+            { bootbox.alert("This user is not registered for '" + $("#drp_MasterLocation :selected").text() + "' location."); }
+            else
+            {
+                toastr.success(data)
+            }
+
+
+        }
+        else {
+            $("#largeeditpopup").html(data);
+        }
+    }
+
+    function UpdateRole() {
+        var id = "";
+        $('#chkboxdiv input:checkbox').each(function () {
+
+            if (this.checked) {
+                var ChkBoxId = this.id;
+                if (id == "") {
+                    id += ChkBoxId
+                }
+                else {
+                    id += "," + ChkBoxId
+                }
+            }
+
+        });
+        $('#UserIds').val(id);
+
+        return true;
+    }
+
+    $("#CloseModel").click(function () {
+        $('.modal').modal('hide');
+    });
+
+    function Test() { alert("w"); }
+</script>
+
+<style>
+    /*.btn-link, .btn-link:active, .btn-link[disabled], fieldset[disabled] .btn-link {
+        background-color: transparent;
+        box-shadow: 10px 10px 10px 0;
+    }*/
+    .checkbox {
+        padding: 0px !important;
+    }
+</style>

@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "QRC List";
+    //ViewBag.Title = "List Register Vehicle";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+}
+<script src="~/GridListing/JqGridScript/QRCList.js"></script>
+
+<script type="text/javascript">
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_QRCList').setGridWidth(width);
+    });
+</script>
+</div>
+</section>
+<div class="row">
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 listPadding">
+        <div id="jqGrid_container">
+            <table id="tbl_QRCList" border="0" cellpadding="0" cellspacing="0"></table>
+            <div id="divQRCListPager"></div>
+        </div>
+    </div>
+</div>
+    <div class="clearfix"></div>
+

@@ -1,0 +1,1912 @@
+﻿@{
+    string eTracScriptVersion = System.Configuration.ConfigurationManager.AppSettings["eTracScriptVersion"];
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
+    long loginUserType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    long viewallloc = (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]));
+    if (ObjLogin != null)
+    {
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+
+    bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    switch ((WorkOrderEMS.Helper.UserType)loginUserType)
+    {
+        case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+            GloblaAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.ITAdministrator:
+            ITAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Administrator:
+            OnlyAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Manager:
+            ManagerUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Employee:
+            EmployeeUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Client:
+            ClientUser = true;
+            break;
+        default:
+            GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+            break;
+    }
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/Images/logo.png" type="image/gif" sizes="16x16">
+    <title>@ViewBag.Title - eTrac</title>
+
+    @*<@Styles.Render("~/Content/css")*@
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    @Scripts.Render("~/bundles/modernizr")
+    <!-- Bootstrap 3.3.5 -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/bootstrap.min.css")">
+    @*<link href="~/Content/bootstrap.min.css" rel="stylesheet" />*@
+    @*<link href="~/Content/common/admin.css" rel="stylesheet" />*@
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome/css/font-awesome.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/font-awesome.min.css")" />
+
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="@Url.Content("~/Content/common/plugins/morris/morris-0.4.3.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/common/plugins/timeline/timeline.css")" rel="stylesheet" />
+    <!-- SB Admin CSS - Include with every page -->
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.theme.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.core.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/ui.jqgrid.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/DilogPopup.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css")" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/formwizard.css")" />
+    <link href="@Url.Content("~/Content/SuperAdmin/sb-admin.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" />
+    @*<link href="~/Content/common/plugins/simple-sidebar.css" rel="stylesheet" />*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <link href="@Url.Content("~/Content/nanoscroller.css")" rel="stylesheet" />
+
+    <!-- NEWLY ADDED CSS FOR DASHBOARD -->
+    <!-- Ionicons -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/ionicons.min.css")" />
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.css")" />
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.css")" />
+    <!-- Select2 -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/select2/select2.min.css")" />
+    <!-- Theme style -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/AdminLTE.min.css")" />
+
+    <!-- AdminLTE Skins. Choose a skin from the css/skins
+             folder instead of downloading all of them to reduce the load. -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/skins/_all-skins.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/component.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/flipcss.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/style.css")" />
+    <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
+    <!-- User Mini Chart-->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/components.css")" />
+    @*<link href="@Url.Content("~/Content/Dashboard/bootstrap/css/devstyle.css")" rel="stylesheet" />*@
+    <link href="@Url.Content("~/Content/Dashboard/bootstrap/css/devstyle.css?v=" + eTracScriptVersion)" rel="stylesheet" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    <!-- NEWLY ADDED CSS FOR DASHBOARD END HERE-->
+    <!--FOLLOWING  files are used for JqGrid Javascript-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/grid.common.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/DilogPopUP.js")"></script>
+
+    <!--Validation-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
+    <!--DatePicker Javascript-->
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+
+    <!--File Upload-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+    @*<script src="~/Scripts/ImageUpload/FileUpload.js"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js")"></script>
+    <!-- SB Admin Scripts - Include with every page -->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/sb-admin.js")"></script>
+
+    <script src="~/Scripts/toastr.js"></script>
+    <!--DatePicker Javascript-->
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+    @*<script src="~/Content/common/plugins/Loader/maskLoader.js"></script>
+        <script src="~/Scripts/jquery.nanoscroller.min.js"></script>*@
+    <script src="@Url.Content("~/Content/common/plugins/Loader/maskLoader.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.nanoscroller.min.js")"></script>
+    @Styles.Render("~/Scripts/ClockPickerCss")
+    @Scripts.Render("~/Scripts/ClockPickerJs")
+
+    <!--Moment Javascript-->
+    <script src="@Url.Content("~/Scripts/moment.js")"></script>
+    <script src="@Url.Content("~/Scripts/moment-timezone-with-data.js")"></script>
+    <!--Assign Timer & Continuous timer-->
+    <link href="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/DurationFlipbox/jquery.mousewheel.min.js"></script>
+    <script src="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.js"></script>
+
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    @RenderSection("scripts", required: false)
+
+
+    <script type="text/javascript">
+
+        @{string hostPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];};
+        $_JqueryLoader = '@hostPrefix';
+        $_HostPrefix = '@hostPrefix';
+        $(function () {
+            fn_showMaskloader('Please wait...Loading');
+        })
+        $(window).bind(function () {
+            fn_showMaskloader('Please wait...Loading');
+        });
+    </script>
+
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+    <div class="wrapper" id="wrapper">
+
+        <header class="main-header">
+            @if (GloblaAdminUser || ITAdminUser)
+            {
+                            <!-- Logo -->
+                <a class="logo" href="~/GlobalAdmin">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>Elite</b></span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><img src="@Url.Content("~/images/logo.png")" alt="" /></span>
+                </a>
+            }
+            @if (OnlyAdminUser)
+            {
+
+                <a class="logo" href="~/Administrator">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>Elite</b></span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><img src="@Url.Content("~/images/logo.png")" alt="" /></span>
+                </a>
+            }
+            @if (ManagerUser)
+            {
+                <a class="logo" href="~/Manager/Dashboard">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>Elite</b></span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><img src="@Url.Content("~/images/logo.png")" alt="" /></span>
+                </a>
+            }
+            @if (EmployeeUser)
+            {
+                <a class="logo" href="~/Employee/Dashboard">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>Elite</b></span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><img src="@Url.Content("~/images/logo.png")" alt="" /></span>
+                </a>
+            }
+            @if (ClientUser)
+            {
+                <a class="logo" href="~/Client">
+                    <!-- mini logo for sidebar mini 50x50 pixels -->
+                    <span class="logo-mini"><b>Elite</b></span>
+                    <!-- logo for regular state and mobile devices -->
+                    <span class="logo-lg"><img src="@Url.Content("~/images/logo.png")" alt="" /></span>
+                </a>
+            }
+
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button"> <span class="sr-only">Toggle navigation</span> </a>
+                <div class="navbar-custom-menu">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <div class="drpLocation">
+                                @if (Session != null)
+                                {
+                                    if (Session["eTrac_UserLocations"] != null)
+                                    {
+
+                                        @Html.DropDownList("drp_MasterLocation", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), null, new { @class = "form-control", @id = "drp_MasterLocation" })
+
+                                    }
+                                }
+                                <i class="fa fa-map-marker location"></i>
+                            </div>
+                        </li>
+                        @Html.Partial("_ControlMenu1")
+
+
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        @Html.Partial("_SideMenu1")
+
+        <div id="page-wrapper" class="content-wrapper">
+            <!-- Content Header (Page header) -->
+            <section class="content-header dashboardCountpanel">
+                <div class="headerBg ">
+                    <h1> @ViewBag.Title <small>@ViewBag.TitleDesc</small> </h1>
+
+                    @*<label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>*@
+                    @*@Html.RenderFlashMessages()*@
+                    @RenderBody()
+                </div>
+                <!-- Modal -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Printing QR-Code</h4>
+                                <input type="hidden" id="StateByCountryIDUrl" />
+                            </div>
+                            <div class="modal-body ">
+                                @*<label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>*@
+                                <div class="clearfix"></div>
+                                <div id="divToPrint" class="hide">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        @* <div class="panel panel-default" style="background:#eee">*@
+                                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            <div class=" form-group">
+                                                <input type="hidden" id="EncryptQRC" value="@ViewBag.EncryptQRC" />
+                                                @*<div class="col-sm-8 col-sm-offset-4">*@
+                                                <label id="QRCName" class="col-sm-4 control-label">QRC Name:</label>
+                                                <div class="col-sm-8">
+                                                    <div id="QRCDetails" class="show">
+                                                        <div id="QRCName"> @ViewBag.QRCName </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            <div class="form-group">
+                                                <label id="QRCName" class="col-sm-4 control-label">Special Notes:</label>
+                                                <div class="col-sm-8">
+                                                    <div id="QRCNote">@ViewBag.SpecialNote </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                            <div class="form-group">
+                                                <label id="QRCName" class="col-sm-4 control-label">QRC Size:</label>
+                                                <div class="col-sm-8">
+                                                    <div class="noprint">
+                                                        @{int iz = 1;}
+                                                        @{if (ViewBag.QRCSize != null)
+                                                            {@Html.DropDownListFor(x => iz, new SelectList(ViewBag.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCSize", @class = "form-control requiredselect", @onchange = "loadsizeselection()" });
+                                                            }
+                                                            else
+                                                            {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
+                                                        }
+                                                    </div>
+                                                    <div id="lblQRCSize" class="col-sm-4 control-label onlyforprint" style="display:none;"></div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+
+                                        </div>
+                                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            <div class="form-group">
+                                                <div class="col-sm-8">
+                                                    <div id="container">
+                                                        <canvas style="width: 200px; height: 200px;"></canvas>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label id="QRCName" class="col-sm-4 control-label"></label>
+                                                <div class="noprint col-sm-8">
+                                                    <button id="printQRC" type="button" onclick="PrintDiv();" class="btn btn-default bluebutton h5">Print</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*   </div>*@
+                                        <div class="clearfix"></div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myModalmedium" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Assign Project</h4>
+                            </div>
+                            <div class="modal-body" id="mediumeditpopup">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade" id="myAssignedWorkOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                <h4 class="modal-title" id="myModalLabel">Assigned Work Order Detail</h4>
+                            </div>
+                            <div class="modal-body" id="AssignedWorkorderBody">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               
+                @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+                    <div class="modal fade" id="UserRegistrationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999999999;">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Create User</h4>
+                                </div>
+                                <div class="modal-body clearfix RegistrationUserSelect" id="UserRegisterModel">
+                                    <div class="row of-bar transparent-deepsea">
+                                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin))
+                                        {
+                                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                                <div class="form-group of-barcontainer">
+                                                    <div class="col-sm-12">
+                                                        <a href="@Url.Action("Create", "ITAdministrator")">
+                                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-apps">
+                                                                <span class="of-bt-icon">
+                                                                    <i class="fa icon-user  fa-5x "></i>
+                                                                </span>
+                                                                <span class="of-bt-title ">IT Administrator</span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator))
+                                        {
+                                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <a href="@Url.Action("Create", "Administrator")">
+                                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-settings">
+                                                                <span class="of-bt-icon">
+                                                                    <i class="fa icon-user  fa-5x "></i>
+                                                                </span>
+                                                                <span class="of-bt-title">Administrator</span>
+                                                            </div>
+                                                        </a>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator))
+                                        {
+                                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <a href="@Url.Action("Index", "Manager")">
+                                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-storage">
+                                                                <span class="of-bt-icon ">
+                                                                    <i class="fa icon-user fa-5x"></i>
+                                                                </span>
+                                                                <span class="of-bt-title ">Manager</span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                        @if (ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) || ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client))
+                                        {
+                                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                                <div class="form-group">
+                                                    <div class="col-sm-12">
+                                                        <a href="@Url.Action( "CreateEmployee","Employee")">
+                                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-social">
+                                                                <span class="of-bt-icon">
+                                                                    <i class="fa fa-group fa-5x "></i>
+                                                                </span>
+                                                                <span class="of-bt-title ">Employee</span>
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+                <script src="@Url.Content("~/Scripts/respond.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-multiselect.js")"></script>
+                @*<script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-tooltip.js")"></script>*@
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-confirmation.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootbox.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js")"></script>
+
+                <script type="text/javascript">
+
+                    $("#menu-toggle").click(function (e) {
+                        e.preventDefault();
+                        $("#wrapper").toggleClass("toggled");
+                    });
+                    $(".nano").nanoScroller();
+                    function validateClientEmail(sEmail) {
+
+                        var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
+if (filter.test(sEmail)) {
+return true;
+}
+else {
+return false;
+}
+}
+
+                    function PrintDiv() {
+                        $('.noprint').hide();
+                        $('.onlyforprint').show();
+                        var divToPrint = document.getElementById('divToPrint');
+                        $('.modal-body').html(divToPrint.innerHTML);
+                        var popupWin = window.open('', '_blank', 'width=400,height=400');
+                        popupWin.document.open();
+                        popupWin.document.write("<html><link href='/Content/bootstrap.css' rel='stylesheet'/><body onload='window.print();window.close();'><div style='width:300px;height:300px;'>" + divToPrint.innerHTML + "</html>");
+                        //popupWin.document.write("<html><link href='/Content/bootstrap.css' rel='stylesheet'/><body onload='window.print();'><div style='width:400px;height:400px;'>" + divToPrint.innerHTML + "</html>");
+
+                        if (popupWin.closed == false)
+                            popupWin.document.close();
+                        $('.noprint').show();
+                        $('.onlyforprint').hide();
+                    }
+
+                    function loadsizeselection() {
+                        if ($('#QRCSize').select().val() != undefined && $('#QRCSize').select().val() != '' && parseInt($('#QRCSize').select().val()) > 0) {
+                            //alert($('#QRCSize').select().val());
+                            $('#lblQRCSize').text($('#QRCSize option:selected').html());
+                        }
+                        else { $('#lblQRCSize').text = ""; }
+                    }
+
+                    $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+                    $(window).load(function () { fn_hideMaskloader(); })
+                    $(document).ready(function () {
+                        fn_showMaskloader('Please wait...Loading');
+                        @{long Location = ((WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"]).LocationID;}
+                        if ('@Location' != undefined || '@Location' > '0' || '@Location' != '') {
+
+                            $("#drp_MasterLocation").val(@Location);
+                        }
+                        var ismychk = false;
+
+                        $('#StateByCountryIDUrl').val('@Url.Action("GetStateByCountryID", "Dropdown")');
+                        var data = "@ViewBag.EncryptQRC";
+                        if (data != null && data != "") {
+                            //$("#printQRC").trigger("click");
+                        }
+
+                        //-----To Set the Location Selected By The User----//
+                        //Created By Manoj Jaswal
+                        $("#drp_MasterLocation").change(function () {
+                            var LocationID = $(this).val();
+                            var LocationName = $("#drp_MasterLocation option:selected").text();
+                            $.ajax({
+                                type: "POST",
+                                url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                                data: { LocationID: LocationID, LocationName: LocationName },
+                                beforeSend: function () {
+                                    //new fn_showMaskloader('please wait...Deleting');
+                                },
+                                success: function (Data) {
+
+                                },
+                                error: function () {
+
+                                },
+                                complete: function () {
+                                    window.location.reload();
+                                }
+                            })
+                            //------END------//
+                        })
+
+                    });
+
+                </script>
+                @Html.Partial("_ControlSideBar")
+        </div>
+
+
+        <!-- Page script -->
+        <script>
+
+                    $(function () {
+                        //Initialize Select2 Elements
+                        $(".select2").select2();
+
+                        //Datemask dd/mm/yyyy
+                        $("#datemask").inputmask("dd/mm/yyyy", { "placeholder": "dd/mm/yyyy" });
+                        //Datemask2 mm/dd/yyyy
+                        $("#datemask2").inputmask("mm/dd/yyyy", { "placeholder": "mm/dd/yyyy" });
+                        //Money Euro
+                        $("[data-mask]").inputmask();
+
+                        //Date range picker
+                        $('#reservation1').daterangepicker();
+                        //Date range picker with time picker
+                        $('#reservationtime').daterangepicker({ timePicker: true, timePickerIncrement: 30, format: 'MM/DD/YYYY h:mm A' });
+                        //Date range as a button
+                        $('#daterange-btn').daterangepicker(
+                            {
+                                ranges: {
+                                    'Today': [moment(), moment()],
+                                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                                },
+                                startDate: moment().subtract(29, 'days'),
+                                endDate: moment()
+                            },
+                            function (start, end) {
+                                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+                            }
+                        );
+
+                        //iCheck for checkbox and radio inputs
+                        $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+                            checkboxClass: 'icheckbox_minimal-blue',
+                            radioClass: 'iradio_minimal-blue'
+                        });
+                        //Red color scheme for iCheck
+                        $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+                            checkboxClass: 'icheckbox_minimal-red',
+                            radioClass: 'iradio_minimal-red'
+                        });
+                        //Flat red color scheme for iCheck
+                        $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+                            checkboxClass: 'icheckbox_flat-green',
+                            radioClass: 'iradio_flat-green'
+                        });
+
+                        //Colorpicker
+                        $(".my-colorpicker1").colorpicker();
+                        //color picker with addon
+                        $(".my-colorpicker2").colorpicker();
+
+                        //Timepicker
+                        $(".timepicker").timepicker({
+                            showInputs: false
+                        });
+                    });
+        </script>
+        <script>
+                    $(document).ready(function () {
+                        var i = 0;
+                        $(".marqueeElement").last().addClass("last");
+                        $(".marqueeElement").each(function () {
+                            var $this = $(this);
+                            $this.css("top", i);
+                            i += $this.height();
+                            doScroll($this);
+                        });
+                    });
+
+                    function doScroll($ele) {
+                        var top = parseInt($ele.css("top"));
+                        if (top < -80) { //bit arbitrary!
+                            var $lastEle = $(".last");
+                            $lastEle.removeClass("last");
+                            $ele.addClass("last");
+                            var top = (parseInt($lastEle.css("top")) + $lastEle.height());
+                            $ele.css("top", top);
+                        }
+                        $ele.animate({ top: (parseInt(top) - 60) }, 2000, 'linear', function () { doScroll($(this)) });
+                    }</script>
+        <!--NEWLY ADDED JS FOR DASHBOARD-->
+        <!-- DataTables -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/jquery.dataTables.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/dataTables.bootstrap.min.js")"></script>
+        <!-- Select2 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/select2/select2.full.min.js")"></script>
+        <!-- InputMask -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.date.extensions.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.extensions.js")"></script>
+        <!-- daterangepicker -->
+
+        <script src="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+        <!-- bootstrap color picker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.js")"></script>
+        <!-- bootstrap time picker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.js")"></script>
+        <!-- Slimscr"oll -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/slimScroll/jquery.slimscroll.min.js")"></script>
+        <!-- iCheck 1.0.1 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/iCheck/icheck.min.js")"></script>
+        <!-- FastClick -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/fastclick/fastclick.min.js")"></script>
+        <!-- AdminLTE App -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/app.min.js")"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/demo.js")"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/flip.js")"></script>
+
+        <!-- jQuery UI 1.11.4 -->
+        <script src="@Url.Content("~/Content/Dashboard/bootstrap/js/jquery-ui.min.js")"></script>
+
+        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+        <script>
+                    $.widget.bridge('uibutton', $.ui.button);
+        </script>
+        <!-- Sparkline -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/sparkline/jquery.sparkline.min.js")"></script>
+        <!-- jvectormap -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-world-mill-en.js")"></script>
+        <!-- jQuery Knob Chart -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/knob/jquery.knob.js")"></script>
+        <!-- datepicker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datepicker/bootstrap-datepicker.js")"></script>
+        <!-- Bootstrap WYSIHTML5 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
+        <!--Auto Draggable/Droppable JS -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/pages/dashboard.js")"></script>
+        <!-- USER Mini-chart-list -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/jRespond.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/jquery_002.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/smart-resize.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/layout.js")"></script>
+
+        <!-- AmChart (Work Order Status) -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/amcharts.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/pie.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/light.js")"></script>
+
+        <script src="@Url.Content("~/Scripts/bootstrap-checkbox.js")"></script>
+        <!--NEWLY ADDED JS FOR DASHBOARD END HERE-->
+        <!--Moment Javascript-->
+        <script src="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js")"></script>
+        <script src="@Url.Content("~/Scripts/moment-timezone-with-data.js")"></script>
+        <script src="@Url.Content("~/Scripts/jstz.min.js")"></script>
+        <script src="@Url.Content("~/Scripts/jquery.cookie.min.js")"></script>
+
+        <script>
+            var viewloc = '@viewallloc';
+            var UserType = '@loginUserType';
+            var refreshIntervalId = 0;
+            var Values = [];
+            var storedValues;
+            var timer = 0;
+            $(document).ready(function () {
+                if ($_HostPrefix + 'GlobalAdmin' == location.href || $_HostPrefix + 'GlobalAdmin#' == location.href
+                    || $_HostPrefix + 'GlobalAdmin/Index' == location.href || $_HostPrefix + 'GlobalAdmin/Index#' == location.href
+                    || $_HostPrefix + 'ITAdministrator' == location.href || $_HostPrefix + 'ITAdministrator#' == location.href
+                    || $_HostPrefix + 'Administrator' == location.href || $_HostPrefix + 'Administrator#' == location.href
+                    || $_HostPrefix + 'Manager/Dashboard' == location.href || $_HostPrefix + 'Manager/Dashboard#' == location.href
+                    || $_HostPrefix + 'GlobalAdmin/ITAdministrator' == location.href || $_HostPrefix + 'GlobalAdmin/ITAdministrator#' == location.href) {
+                    $('#control-sidebar').show();
+                } else {
+                    $('#control-sidebar').hide();
+                }
+                //*********** Hide Display Message*********/
+                setInterval(hideDisplayMessage, 10000); //30000 MS == 30 Sec
+
+                function hideDisplayMessage() {
+                    if ($('#message').is(':hidden')) {
+                        $('#message').hide();
+                    }
+                }
+                //This Function update dashboard details in every 40 sec
+                refreshIntervalId = setInterval(function () {
+                    getAllDashboardData(true);
+                }, 40000);
+
+                //************************************--- THIS SCRIPT COPY FROM _MANAGERLAYOUT ---******************************************************//
+
+                if (UserType == 2 || UserType == "2") {
+                    //Comment due to performance issue. Later implemented of GT we need to uncomment
+                    //setInterval(function () {
+                    //    getDetailsForInfractionNotification();
+                    //}, 40000);
+
+                    setInterval(function () {
+                        getEmployeeStatus();
+                    }, 50000);
+
+                    setInterval(function () {
+                        getFacilityRequestStatus();
+                    }, 30000);
+
+                    setInterval(function () {
+                        sendPushNotificationforCheckInNotPerformed();
+                    }, 35000);
+                }
+                $("#btnTimeAssign").click(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'Manager/ExtendEmployeeTimeLimit',
+                        async: false,
+                        data: { "id": $('#alertUserId').val(), "time": $('#txtTimeLimit').val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...Loading');
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                            $('#myModalTimeSpan').modal('hide');
+                        },
+
+                        success: function (Data) {
+
+                            if (Data != null) {
+                                if (Data.re == 1 || Data.re == true) {
+                                    $('#myModalTimeSpan').modal('hide');
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            $('#myModalTimeSpan').modal('show');
+                        }
+
+                    });//ajax end block for btnTimeAssign
+
+                });
+
+                $("#menu-toggle").click(function (e) {
+                    e.preventDefault();
+                    $("#wrapper").toggleClass("toggled");
+                });
+                //************************************--- _MANAGERLAYOUT SCRIPT END HERE ---******************************************************//
+
+                function closeRightCornerPopUP(e) {
+                    $(e).parent("div").hide();
+                }
+
+                // Method 1 - uses 'data-toggle' to initialize
+                $('[data-toggle="myToolTip"]').tooltip();
+
+                // Method 2 - uses the id, class or native tag, could use .btn as class
+
+                $('button').tooltip();
+
+                // options set in JS by class
+                $(".tip-top").tooltip({
+                    placement: 'top'
+                });
+                $(".tip-right").tooltip({
+                    placement: 'right'
+                });
+                $(".tip-bottom").tooltip({
+                    placement: 'bottom'
+                });
+                $(".tip-left").tooltip({
+                    placement: 'left',
+                    html: true
+                });
+
+                $(".tip-auto").tooltip({
+                    placement: 'auto',
+                    html: true
+                });
+
+                $(".img-tip").tooltip({
+                    placement: 'top',
+                    html: true
+                });
+
+                $('.daterangepicker').each(function (i) {
+                    this.id = 'daterangepicker' + i;
+                });
+
+                $('#daterangepicker0 .applyBtn').click(function () {
+                    RenderDashboardData(false);
+                });
+
+                $('.breadcrumb #RefreshDashboard').click(function () {
+                    RenderDashboardData(true);
+                    var date = new Date();
+                    var todaysDate = (date.toLocaleString("en-us", { month: "long" }) + ' ' + date.getDate() + ', ' + date.getFullYear());
+                    $('#daterangepicker0 .daterangepicker_start_input .input-mini').val(todaysDate);
+                    $('#daterangepicker0 .daterangepicker_end_input .input-mini').val(todaysDate);
+                    $('#reservation1').val(todaysDate + ' - ' + todaysDate);
+                });
+
+                function RenderDashboardData(IsRefresh) {
+                    try {
+                        var data;
+                        if (IsRefresh) {
+                            data = {};
+                            clearInterval(refreshIntervalId);
+                            refreshIntervalId = setInterval(function () {
+                                getAllDashboardData(true);
+                            }, 40000);//30 Second
+                        }
+                        else {
+                            var fromDate = $('#daterangepicker0 .daterangepicker_start_input .input-mini').val();
+                            var toDate = $('#daterangepicker0 .daterangepicker_end_input .input-mini').val();
+                            data = { "fromDate": fromDate, "toDate": toDate };
+                            clearInterval(refreshIntervalId);
+                            //refreshIntervalId = setInterval(function () {
+                            //    getAllDashboardData(true);
+                            //}, 60000);//60 Second
+                        }
+                        $.ajax({
+                            url: '@Url.Action("GetDashboardHeadCount", "GlobalAdmin")',
+                            // url: $_HostPrefix + 'GlobalAdmin/GetDashboardHeadCount',
+                            data: data,
+                            type: 'GET',
+                            contentType: "application/json",
+                            beforeSend: function () {
+                                new fn_showMaskloader('Loading...');
+                            },
+                            success: function (elementJSON) {
+                                if (elementJSON != null && elementJSON != "" && elementJSON.dataJson.trim() != "") {
+                                    // Disabled as clock refreshed by client side timer above instead of server timer, but left for example
+                                    dataJSON = JSON.parse(elementJSON.dataJson);
+                                    //*******************Count panel*******************************//
+                                    $('#divCountPanel #QrcCount').text(dataJSON.CountPanel[0]['QrcCount']);
+                                    $('#divCountPanel #WorkRequestCount').text(dataJSON.CountPanel[0]['WorkRequestCount']);
+                                    $('#divCountPanel #UserCount').text(dataJSON.CountPanel[0]['UserCount']);
+                                    $('#divCountPanel #VendorsVehicleCount').text(dataJSON.CountPanel[0]['VendorsVehicleCount']);
+                                    $('#divPieUserGraph #pieEmpCount').data('percent', (dataJSON.CountPanel[0]['EmpCount']));
+
+                                    $('#divPieUserGraph #EmpCount').html(dataJSON.CountPanel[0]['EmpCount']);
+                                    $('#divPieUserGraph #AdminCount').html(dataJSON.CountPanel[0]['AdminCount']);
+                                    $('#divPieUserGraph #ManagerCount').html(dataJSON.CountPanel[0]['ManagerCount']);
+                                    $('#divPieUserGraph #ClientCount').html(dataJSON.CountPanel[0]['ClientCount']);
+                                    $('#diveCashAndInfraction #eCash').text('$' + dataJSON.CountPanel[0]['eCash']);
+                                    $('#diveCashAndInfraction #eCashLastAmt').text('$' + dataJSON.CountPanel[0]['eCashLastAmt']);
+                                    $('#diveCashAndInfraction #PaidBy').text(dataJSON.CountPanel[0]['PaidBy']);
+                                    $('#diveCashAndInfraction #AcceptedBy').text(dataJSON.CountPanel[0]['AcceptedBy']);
+                                    $('#diveCashAndInfraction #InfractionCount').text(dataJSON.CountPanel[0]['InfractionCount']);
+                                    $('#diveCashAndInfraction #Declined').text(dataJSON.CountPanel[0]['Declined']);
+                                    $('#diveCashAndInfraction #Approved').text(dataJSON.CountPanel[0]['Approved']);
+                                    $('#divScannedByPanel #PhoneSystems').text(dataJSON.CountPanel[0]['PhoneSystems']);
+                                    $('#divScannedByPanel #Devices').text(dataJSON.CountPanel[0]['Devices']);
+                                    $('#divScannedByPanel #TrashCan').text(dataJSON.CountPanel[0]['TrashCan']);
+                                    $('#divScannedByPanel #Elevator').text(dataJSON.CountPanel[0]['Elevator']);
+                                    $('#divScannedByPanel #Equipment').text(dataJSON.CountPanel[0]['Equipment']);
+                                    $('#divScannedByPanel #TicketSpitter').text(dataJSON.CountPanel[0]['TicketSpitter']);
+                                    $('#divScannedByPanel #Vehicle').text(dataJSON.CountPanel[0]['Vehicle']);
+                                    $('#divScannedByPanel #BusStation').text(dataJSON.CountPanel[0]['BusStation']);
+                                    $('#divScannedByPanel #MovingWalkway').text(dataJSON.CountPanel[0]['MovingWalkway']);
+                                    $('#divScannedByPanel #Escalators').text(dataJSON.CountPanel[0]['Escalators']);
+                                    $('#divScannedByPanel #Bathroom').text(dataJSON.CountPanel[0]['Bathroom']);
+                                    $('#divScannedByPanel #ParkingFacility').text(dataJSON.CountPanel[0]['ParkingFacility']);
+                                    $('#divScannedByPanel #ShuttleBus').text(dataJSON.CountPanel[0]['ShuttleBus']);
+                                    $('#divScannedByPanel #GateArm').text(dataJSON.CountPanel[0]['GateArm']);
+
+
+                                    //******************* Work Order Pie Chart ***********************************//
+
+                                    if ($("#divWOProgress #dtWOProgress").length > 0) {
+
+                                        $('#dtWOProgress').dataTable().fnDestroy();
+                                        $('#dtWOProgress').remove();
+                                        //*******************WO Progress data table*******************************//
+                                        var WOProgressBody = '';
+                                        WOProgressBody = "<div class='table-responsive'><table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
+                                        if (dataJSON.Progress.length > 0) {
+
+                                            for (i = 0; (i < dataJSON.Progress.length) ; i++) {
+                                                var ProgressTD = '';
+                                                var progress = dataJSON.Progress[i]['ProgressBar'];
+                                                if (progress != 296 && progress != 295) {
+                                                    var progbar = progress
+                                                } if (dataJSON.Progress[i]['PauseStatus'] == 330 || dataJSON.Progress[i]['PauseStatus'] == null) {
+                                                    switch (parseInt(progress)) {
+                                                        case (296):
+                                                            ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
+                                                            break;
+                                                        case (295):
+                                                            ProgressTD = '<td><div class="text-green">No Limit</div></td>';
+                                                            break;
+                                                        case (progbar):
+
+                                                                if (progress > 75 && progress < 90) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
+                                                                else if (progress > 90 && progress <= 99) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
+                                                                else if (true) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
+
+                                                            break;
+                                                        default:
+                                                            ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
+                                                            break
+                                                    }
+                                                }
+                                                else {
+                                                    ProgressTD = '<td><div class="text-green">Pause</div></td>';
+                                                }
+                                                //var now = getStatusTime();
+                                                WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
+                                            }
+                                            WOProgressBody += "</tbody></table></div>";
+                                        }
+                                        $('#divWOProgress').html(WOProgressBody);
+                                        $("#dtWOProgress").DataTable({
+                                            "order": [[0, "desc"]]
+                                        });
+
+                                        updateProgressTime();
+                                        //*******************WO Progress data table End*******************************//
+
+                                    }
+                                    if ($("#divWOPending #dtWOPending").length > 0) {
+                                        $('#dtWOPending').dataTable().fnDestroy();
+                                        $('#dtWOPending').remove();
+                                        //*******************WO Pending data table*******************************//
+                                        var WOPendingBody = '';
+                                        WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
+                                        if (dataJSON.Pending.length > 0) {
+                                            for (i = 0; (i < dataJSON.Pending.length) ; i++) {
+                                                WOPendingBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Pending[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Pending[i]['CodeID'] + '</td> <td>' + dataJSON.Pending[i]['LocationName'] + '</td><td>' + dataJSON.Pending[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Pending[i]['PriorityColor'] + '">' + dataJSON.Pending[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Pending[i]['AssignToUserName'] + '</td><td>' + dataJSON.Pending[i]['CreatedDate'] + '</td></tr>';
+                                            }
+                                            WOPendingBody += "</tbody></table>";
+                                        }
+                                        $('#divWOPending').html(WOPendingBody);
+                                        $("#dtWOPending").DataTable({
+                                            "order": [[0, "desc"]]
+                                        });
+                                        //*******************WO Pending data table End*******************************//
+                                    }
+                                    if ($("#divWOComplete #dtWOComplete").length > 0) {
+                                        $('#dtWOComplete').dataTable().fnDestroy();
+                                        $('#dtWOComplete').remove();
+                                        //*******************WO Completed data table*******************************//
+                                        var WOCompleteBody = '';
+                                        WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
+                                        if (dataJSON.Completed.length > 0) {
+                                            for (i = 0; (i < dataJSON.Completed.length) ; i++) {
+                                                WOCompleteBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Completed[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Completed[i]['CodeID'] + '</td> <td>' + dataJSON.Completed[i]['LocationName'] + '</td><td><span class="' + dataJSON.Completed[i]['PriorityColor'] + '">' + dataJSON.Completed[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Completed[i]['AssignToUserName'] + '</td><td>' + dataJSON.Completed[i]['CreatedDate'] + '</td><td>' + dataJSON.Completed[i]['EndTimeFull'] + '</td></tr>';
+                                            }
+                                            WOCompleteBody += "</tbody></table>";
+                                        }
+                                        $('#divWOComplete').html(WOCompleteBody);
+                                        $("#dtWOComplete").DataTable({
+                                            "order": [[0, "desc"]]
+                                        });
+                                        //*******************WO Completed data table End*******************************//
+                                    }
+                                    if (dataJSON.WorkProjectType.length > 0 || dataJSON.WorkStatus.length > 0) {
+                                        var arrData = [];
+                                        if (dataJSON.WorkStatus.length > 0) {
+                                            for (i = 0; i < dataJSON.WorkStatus.length; i++) {
+                                                arrData.push({
+                                                    title: dataJSON.WorkStatus[i].Title,
+                                                    value: parseInt(dataJSON.WorkStatus[i].Value)
+                                                });
+                                            }
+                                        }
+
+                                        if (dataJSON.WorkProjectType.length > 0) {
+                                            for (i = 0; i < dataJSON.WorkProjectType.length; i++) {
+
+                                                if (dataJSON.WorkProjectType[i].Title == 'Continuous Request')
+                                                    dataJSON.WorkProjectType[i].Title = 'CR';
+                                                if (dataJSON.WorkProjectType[i].Title == 'Facility Request')
+                                                    dataJSON.WorkProjectType[i].Title = 'FR';
+                                                if (dataJSON.WorkProjectType[i].Title == 'Special Project')
+                                                    dataJSON.WorkProjectType[i].Title = 'SP';
+                                                if (dataJSON.WorkProjectType[i].Title == 'Work Request')
+                                                    dataJSON.WorkProjectType[i].Title = 'WR';
+                                                arrData.push({
+                                                    title: dataJSON.WorkProjectType[i].Title,
+                                                    value: parseInt(dataJSON.WorkProjectType[i].Value)
+                                                });
+                                            }
+                                        }
+                                        var chart = AmCharts.makeChart("workOrderChart", {
+                                            "type": "pie",
+                                            "theme": "light",
+                                            "radius": "20%",
+                                            "innerRadius": "45%",
+                                            "gradientRatio": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, 0, 0.1, 0.2, 0.1, 0, -0.2, -0.5],
+                                            "dataProvider": arrData,
+                                            "labelText": "[[title]]",
+                                            "balloonText": "[[value]]",
+                                            "valueField": "value",
+                                            "titleField": "title",
+                                            "balloon": {
+                                                "drop": true,
+                                                "adjustBorderColor": false,
+                                                "color": "#FFFFFF",
+                                                "fontSize": 16
+                                            },
+                                            "export": {
+                                                "enabled": true
+                                            }
+                                        });
+                                        var title;
+                                        var html;
+                                        // populate our custom legend when chart renders
+                                        if (chart.dataProvider.length > 0) {
+                                            $('#legend').html('');
+                                            html = '<div class="legend-item"><ul>';
+                                            // populate our custom legend when chart renders
+                                            // chart.customLegend = document.getElementById('legend');
+                                            for (var i in chart.dataProvider) {
+                                                var row = chart.dataProvider[i];
+                                                if (row.title == 'CR')
+                                                    title = 'CR-Continuous Request';
+                                                if (row.title == 'FR')
+                                                    title = 'FR-Facility Request';
+                                                if (row.title == 'SP')
+                                                    title = 'SP-Special Project';
+                                                if (row.title == 'WR')
+                                                    title = 'WR-Work Request';
+                                                if (row.title == 'Complete')
+                                                    title = 'Complete';
+                                                if (row.title == 'In Progress')
+                                                    title = 'In Progress';
+                                                if (row.title == 'Pending')
+                                                    title = 'Pending';
+                                                // var title = row.title;
+                                                var color = chart.colors[i];
+                                                var value = row.value;
+                                                html += '<li><div class="legend-marker" style="background: ' + color + '"></div>' + title + '<span>' + value + '</span></li>';
+
+                                            }
+                                            html += '</ul></div>';
+                                            $('#legend').append(html);
+                                        }
+                                    }
+                                    else {
+                                        $('#workOrderChart').html('');
+                                        $('#legend').html('No Work Order generated today.');
+                                    }
+                                    //******************* Work Order Pie Chart End *******************************//
+
+                                    //*******************DAR Marquee*******************************//
+                                    var DARBody = '';
+                                    $('#divDarDetails #darDetail').append('');
+                                    if (dataJSON.DarDetail.length > 0) {
+                                        for (i = 0; (i < dataJSON.DarDetail.length) ; i++) {
+                                            DARBody += '<tr><td><div class="zoomin"><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.DarDetail[i]['ProfileImage'] + '></div> <div class="dailyActRp"><strong>' + dataJSON.DarDetail[i]['TaskType'] + '</strong><br>' + dataJSON.DarDetail[i]['ActivityDetails'] + '</div></td></tr>';
+                                        }
+                                    }
+                                    $('#divDarDetails #darDetail').html(DARBody);
+                                    //*******************DAR Marquee End*******************************//
+
+                                    //*******************UnAssigned WO Section*******************************//
+                                    var UnAssignedWOBody = '';
+                                    $('#divUnAssignedWODetails #UnAssignedDetails').append('');
+
+                                    //This condition for client created WO on top of the list
+                                    if (parseInt(UserType) == parseInt(2) || parseInt(UserType) == parseInt(6)) {
+                                        if (dataJSON.UnAssignedWOClientCreated.length > 0) {
+                                            for (i = 0; (i < dataJSON.UnAssignedWOClientCreated.length) ; i++) {
+                                                UnAssignedWOBody += '<tr id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + ' class="ClientCreatedWO"><td> <strong>' + dataJSON.UnAssignedWOClientCreated[i]['CodeID'] + '</strong><br>' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevelName'] + '<br>' + dataJSON.UnAssignedWOClientCreated[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestProjectTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevelName'] + '</td><td style="display:none;"><img style="height: 150px !important;width: 150px !important;" src=' + $_HostPrefix + 'Content/Images/WorkRequest/' + dataJSON.UnAssignedWOClientCreated[i]['AssignedWorkOrderImage'] + '></td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestStatusName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['CreatedDate'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['CodeID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['LocationName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['LocationID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevel'] + '</td><td class="vertibalM" align="center"><a class="editBtn assign" id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + '><i class="fa fa-pencil"></i></a> <a class="editBtn view" id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + '><i class="fa fa-eye"></i></a></td></tr>';
+                                            }
+                                        }
+                                    }
+                                    if (dataJSON.UnAssignedWO.length > 0) {
+                                        for (i = 0; (i < dataJSON.UnAssignedWO.length) ; i++) {
+                                            UnAssignedWOBody += '<tr id=' + dataJSON.UnAssignedWO[i]['ID'] + '><td> <strong>' + dataJSON.UnAssignedWO[i]['CodeID'] + '</strong><br>' + dataJSON.UnAssignedWO[i]['PriorityLevelName'] + '<br>' + dataJSON.UnAssignedWO[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestProjectTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['PriorityLevelName'] + '</td><td style="display:none;"><img style="height: 150px !important;width: 150px !important;" src=' + $_HostPrefix + 'Content/Images/WorkRequest/' + dataJSON.UnAssignedWO[i]['AssignedWorkOrderImage'] + '></td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestStatusName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['CreatedDate'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['CodeID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['LocationName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['LocationID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['PriorityLevel'] + '</td><td class="vertibalM" align="center" style="width: 100px;"><a class="editBtn assign" id=' + dataJSON.UnAssignedWO[i]['ID'] + '><i class="fa fa-pencil"></i></a> <a class="editBtn view" id=' + dataJSON.UnAssignedWO[i]['ID'] + '><i class="fa fa-eye"></i></a></td></tr>';
+                                        }
+                                    }
+                                    $('#divUnAssignedWODetails #UnAssignedDetails').html(UnAssignedWOBody);
+                                    var dynamicScript = "<script type='text/javascript'>$('#divUnAssignedWODetails #UnAssignedDetails .view').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var WorkRequestProjectTypeName = row.find('td').eq(1).html(); var WorkRequestTypeName = row.find('td').eq(2).html(); var PriorityLevelName = row.find('td').eq(3).html(); var AssignedWorkOrderImage = row.find('td').eq(4).html(); var WorkRequestStatusName = row.find('td').eq(5).html(); var Submittedon = row.find('td').eq(6).html(); var ProblemDesc = row.find('td').eq(7).html(); var CodeId = row.find('td').eq(8).html(); var LocationName = row.find('td').eq(9).html(); $('#lblProjectType').html(WorkRequestProjectTypeName); $('#lblWorkRequestType').html(WorkRequestTypeName); $('#lblAssignedWorkImage').html(AssignedWorkOrderImage); $('#lblPriorityLevel').html(PriorityLevelName); $('#lblWorkRequestStatus').html(WorkRequestStatusName); $('#lblSubmittedOn').html(Submittedon); if (ProblemDesc == null || ProblemDesc == '') { $('#labellProblemDescription').hide(); $('#lblProblemDescription').hide(); } else { $('#lblProblemDescription').html(ProblemDesc); $('#labellProblemDescription').show(); $('#lblProblemDescription').show(); } $('#lblCodeNo').html(CodeId); $('#lblLocationName').html(LocationName); if(WorkRequestProjectTypeName == 'Special Project'){$('#labelWorkRequestType').hide();$('#lblWorkRequestType').hide()}else{$('#labelWorkRequestType').show();$('#lblWorkRequestType').show()}  $('.modal-title').text('Work Order Details');$('#ModalDetailPreview').modal('show'); }); $('#divUnAssignedWODetails #UnAssignedDetails .assign').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var ProblemDesc = row.find('td').eq(7).html(); var PriorityLevel = row.find('td').eq(11).html(); var ProjectDesc = row.find('td').eq(7).html(); var locationId = row.find('td').eq(10).html(); var WorkRequestType = row.find('td').eq(1).html(); if (PriorityLevel == null || PriorityLevel == '' || PriorityLevel == 'undefined') { PriorityLevel = 0; } $.ajax({ type: 'GET', data: { 'id': id, 'ProblemDesc': ProblemDesc, 'PriorityLevel': PriorityLevel, 'ProjectDesc': ProjectDesc, 'WorkRequestType': WorkRequestType, 'locationId': locationId }, url: '" + $_HostPrefix + "GlobalAdmin/_AssignWorkAssignmentRequest/', contentType: 'application/json; charset=utf-8', error: function (xhr, status, error) { }, success: function (result) { $('.modal-title').text('Assign Work Order'); $('#largeeditpopup').html(result); $('#myModallarge').modal('show'); } }); });<\/script>";
+                                    $('#divUnAssignedWODetails').append(dynamicScript);
+                                    //*******************UnAssigned WO Section End*******************************//
+
+                                    //******************* All Active User*******************************//
+                                    var AllActiveUser = '';
+                                    $('#divAllActiveUser #AllActiverUser').append('');
+                                    if (dataJSON.AllActiveUser.length > 0) {
+                                        for (i = 0; (i < dataJSON.AllActiveUser.length) ; i++) {
+                                            AllActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.AllActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.AllActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.AllActiveUser[i]['UserType'] + '</span></td></tr>';
+                                        }
+                                    }
+                                    $('#divAllActiveUser #AllActiverUser').html(AllActiveUser);
+                                    //*******************All Active User End*******************************//
+
+                                    //******************* WEB Active User*******************************//
+                                    var WebActiveUser = '';
+                                    $('#divWebActiveUser #WebActiverUser').append('');
+                                    if (dataJSON.WebActiveUser.length > 0) {
+                                        for (i = 0; (i < dataJSON.WebActiveUser.length) ; i++) {
+                                            WebActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.WebActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.WebActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.WebActiveUser[i]['UserType'] + '</span></td></tr>';
+                                        }
+                                    }
+                                    $('#divWebActiveUser #WebActiverUser').html(WebActiveUser);
+                                    //*******************WEB Active User End*******************************//
+
+                                    //******************* MOBILE Active User*******************************//
+                                    var MobActiveUser = '';
+                                    $('#divMobActiveUser #MobActiverUser').append('');
+                                    if (dataJSON.MobActiveUser.length > 0) {
+                                        for (i = 0; (i < dataJSON.MobActiveUser.length) ; i++) {
+                                            MobActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.MobActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.MobActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.MobActiveUser[i]['UserType'] + '</span></td></tr>';
+                                        }
+                                    }
+                                    $('#divMobActiveUser #MobActiverUser').html(MobActiveUser);
+                                    //*******************MOBILE Active User End*******************************//
+
+                                }
+
+                            },
+                            complete: function () {
+                                fn_hideMaskloader();
+                            },
+                            error: function (er) {
+                                fn_hideMaskloader();
+                            }
+                        });//ajax end block
+                    } catch (e) {
+                        console.log('RenderDashboardData-', e);
+                    }
+
+                }
+                function getAllDashboardData(isInterval) {
+
+                    try {
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("GetDashboardHeadCount", "GlobalAdmin")',
+                            // url: $_HostPrefix + '/GlobalAdmin/GetDashboardHeadCount',
+                            async: true,
+                            data: {},
+                        }).success(function (dataItems) {
+
+                            if (dataItems.dataJson != null && dataItems.dataJson != "") {
+
+                                dataJSON = JSON.parse(dataItems.dataJson);
+                                //*******************Count panel*******************************//
+                                $('#divCountPanel #QrcCount').text(dataJSON.CountPanel[0]['QrcCount']);
+                                $('#divCountPanel #WorkRequestCount').text(dataJSON.CountPanel[0]['WorkRequestCount']);
+                                $('#divCountPanel #UserCount').text(dataJSON.CountPanel[0]['UserCount']);
+                                $('#divCountPanel #VendorsVehicleCount').text(dataJSON.CountPanel[0]['VendorsVehicleCount']);
+                                $('#divPieUserGraph #pieEmpCount').data('percent', (dataJSON.CountPanel[0]['EmpCount']));
+
+                                $('#divPieUserGraph #EmpCount').html(dataJSON.CountPanel[0]['EmpCount']);
+                                $('#divPieUserGraph #AdminCount').html(dataJSON.CountPanel[0]['AdminCount']);
+                                $('#divPieUserGraph #ManagerCount').html(dataJSON.CountPanel[0]['ManagerCount']);
+                                $('#divPieUserGraph #ClientCount').html(dataJSON.CountPanel[0]['ClientCount']);
+                                $('#diveCashAndInfraction #eCash').text('$' + dataJSON.CountPanel[0]['eCash']);
+                                $('#diveCashAndInfraction #eCashLastAmt').text('$' + dataJSON.CountPanel[0]['eCashLastAmt']);
+                                $('#diveCashAndInfraction #PaidBy').text(dataJSON.CountPanel[0]['PaidBy']);
+                                $('#diveCashAndInfraction #AcceptedBy').text(dataJSON.CountPanel[0]['AcceptedBy']);
+                                $('#diveCashAndInfraction #InfractionCount').text(dataJSON.CountPanel[0]['InfractionCount']);
+                                $('#diveCashAndInfraction #Declined').text(dataJSON.CountPanel[0]['Declined']);
+                                $('#diveCashAndInfraction #Approved').text(dataJSON.CountPanel[0]['Approved']);
+                                $('#divScannedByPanel #PhoneSystems').text(dataJSON.CountPanel[0]['PhoneSystems']);
+                                $('#divScannedByPanel #Devices').text(dataJSON.CountPanel[0]['Devices']);
+                                $('#divScannedByPanel #TrashCan').text(dataJSON.CountPanel[0]['TrashCan']);
+                                $('#divScannedByPanel #Elevator').text(dataJSON.CountPanel[0]['Elevator']);
+                                $('#divScannedByPanel #Equipment').text(dataJSON.CountPanel[0]['Equipment']);
+                                $('#divScannedByPanel #TicketSpitter').text(dataJSON.CountPanel[0]['TicketSpitter']);
+                                $('#divScannedByPanel #Vehicle').text(dataJSON.CountPanel[0]['Vehicle']);
+                                $('#divScannedByPanel #BusStation').text(dataJSON.CountPanel[0]['BusStation']);
+                                $('#divScannedByPanel #MovingWalkway').text(dataJSON.CountPanel[0]['MovingWalkway']);
+                                $('#divScannedByPanel #Escalators').text(dataJSON.CountPanel[0]['Escalators']);
+                                $('#divScannedByPanel #Bathroom').text(dataJSON.CountPanel[0]['Bathroom']);
+                                $('#divScannedByPanel #ParkingFacility').text(dataJSON.CountPanel[0]['ParkingFacility']);
+                                $('#divScannedByPanel #ShuttleBus').text(dataJSON.CountPanel[0]['ShuttleBus']);
+                                $('#divScannedByPanel #GateArm').text(dataJSON.CountPanel[0]['GateArm']);
+
+                                //This condition for when interval hit we need to clear data table.
+                                if (isInterval) {
+                                    $('#dtWOProgress').dataTable().fnDestroy();
+                                    $('#dtWOProgress').remove();
+                                    //*******************WO Progress data table*******************************//
+                                    var WOProgressBody = '';
+                                    WOProgressBody = "<table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
+                                    if (dataJSON.Progress.length > 0) {
+
+                                        for (i = 0; (i < dataJSON.Progress.length) ; i++) {
+                                            var ProgressTD = '';
+                                            var progress = dataJSON.Progress[i]['ProgressBar'];
+                                            if (progress != 296 && progress != 295) {
+                                                var progbar = progress
+                                            } if (dataJSON.Progress[i]['PauseStatus'] == 330 || dataJSON.Progress[i]['PauseStatus'] == null) {
+                                                switch (parseInt(progress)) {
+                                                    case (296):
+                                                        ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
+                                                        break;
+                                                    case (295):
+                                                        ProgressTD = '<td><div class="text-green">No Limit</div></td>';
+                                                        break;
+                                                    case (progbar):
+
+                                                            if (progress > 75 && progress < 90) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (progress > 90 && progress <= 99) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (true) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+
+                                                        break;
+                                                    default:
+                                                        ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
+                                                        break
+                                                }
+                                            }
+                                            else {
+                                                ProgressTD = '<td><div class="text-green">Pause</div></td>';
+                                            }
+                                            //var now = getStatusTime();
+                                            WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
+                                        }
+                                        WOProgressBody += "</tbody></table>";
+                                    }
+                                    $('#divWOProgress').html(WOProgressBody);
+                                    $("#dtWOProgress").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+
+                                    updateProgressTime();
+                                    //*******************WO Progress data table End*******************************//
+
+
+
+                                    $('#dtWOPending').dataTable().fnDestroy();
+                                    $('#dtWOPending').remove();
+                                    //*******************WO Pending data table*******************************//
+                                    var WOPendingBody = '';
+                                    WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
+                                    if (dataJSON.Pending.length > 0) {
+                                        for (i = 0; (i < dataJSON.Pending.length) ; i++) {
+                                            WOPendingBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Pending[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Pending[i]['CodeID'] + '</td> <td>' + dataJSON.Pending[i]['LocationName'] + '</td><td>' + dataJSON.Pending[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Pending[i]['PriorityColor'] + '">' + dataJSON.Pending[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Pending[i]['AssignToUserName'] + '</td><td>' + dataJSON.Pending[i]['CreatedDate'] + '</td></tr>';
+                                        }
+                                        WOPendingBody += "</tbody></table>";
+                                    }
+                                    $('#divWOPending').html(WOPendingBody);
+                                    $("#dtWOPending").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+                                    //*******************WO Pending data table End*******************************//
+
+
+                                    $('#dtWOComplete').dataTable().fnDestroy();
+                                    $('#dtWOComplete').remove();
+                                    //*******************WO Completed data table*******************************//
+                                    var WOCompleteBody = '';
+                                    WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
+                                    if (dataJSON.Completed.length > 0) {
+                                        for (i = 0; (i < dataJSON.Completed.length) ; i++) {
+                                            WOCompleteBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Completed[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Completed[i]['CodeID'] + '</td> <td>' + dataJSON.Completed[i]['LocationName'] + '</td><td><span class="' + dataJSON.Completed[i]['PriorityColor'] + '">' + dataJSON.Completed[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Completed[i]['AssignToUserName'] + '</td><td>' + dataJSON.Completed[i]['CreatedDate'] + '</td><td>' + dataJSON.Completed[i]['EndTimeFull'] + '</td></tr>';
+                                        }
+                                        WOCompleteBody += "</tbody></table>";
+                                    }
+                                    $('#divWOComplete').html(WOCompleteBody);
+                                    $("#dtWOComplete").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+                                    //*******************WO Completed data table End*******************************//
+
+                                }
+                                    //This condition when first time data render.
+                                else {
+                                    //*******************WO Pending data table*******************************//
+                                    var WOPendingBody = '';
+                                    $('#divWOPending #dtWOPendingbody').append('');
+                                    if (dataJSON.Pending.length > 0) {
+                                        for (i = 0; (i < dataJSON.Pending.length) ; i++) {
+                                            WOPendingBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Pending[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Pending[i]['CodeID'] + '</td> <td>' + dataJSON.Pending[i]['LocationName'] + '</td><td>' + dataJSON.Pending[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Pending[i]['PriorityColor'] + '">' + dataJSON.Pending[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Pending[i]['AssignToUserName'] + '</td><td>' + dataJSON.Pending[i]['CreatedDate'] + '</td></tr>';
+                                        }
+                                    }
+                                    $('#divWOPending #dtWOPendingbody').html(WOPendingBody);
+                                    $("#dtWOPending").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+                                    //*******************WO Pending data table End*******************************//
+
+                                    //*******************WO Completed data table*******************************//
+                                    var WOCompleteBody = '';
+                                    $('#divWOComplete #dtWOCompletebody').append('');
+                                    if (dataJSON.Completed.length > 0) {
+                                        for (i = 0; (i < dataJSON.Completed.length) ; i++) {
+                                            WOCompleteBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Completed[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Completed[i]['CodeID'] + '</td> <td>' + dataJSON.Completed[i]['LocationName'] + '</td><td><span class="' + dataJSON.Completed[i]['PriorityColor'] + '">' + dataJSON.Completed[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Completed[i]['AssignToUserName'] + '</td><td>' + dataJSON.Completed[i]['CreatedDate'] + '</td><td>' + dataJSON.Completed[i]['EndTimeFull'] + '</td></tr>';
+                                        }
+                                    }
+                                    $('#divWOComplete #dtWOCompletebody').html(WOCompleteBody);
+                                    $("#dtWOComplete").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+                                    //*******************WO Completed data table End*******************************//
+
+                                    //*******************WO Progress data table*******************************//
+                                    var WOProgressBody = '';
+                                    $('#divWOProgress #dtWOProgressbody').append('');
+                                    if (dataJSON.Progress.length > 0) {
+
+                                        for (i = 0; (i < dataJSON.Progress.length) ; i++) {
+                                            var ProgressTD = '';
+                                            var progress = dataJSON.Progress[i]['ProgressBar'];
+                                            if (progress != 296 && progress != 295) {
+                                                var progbar = progress
+                                            }
+                                            if (dataJSON.Progress[i]['PauseStatus'] == 330 || dataJSON.Progress[i]['PauseStatus'] == null) {
+                                                switch (parseInt(progress)) {
+                                                    case (296):
+                                                        ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
+                                                        break;
+                                                    case (295):
+                                                        ProgressTD = '<td><div class="text-green">No Limit</div></td>';
+                                                        break;
+                                                    case (progbar):
+
+                                                            if (progress > 75 && progress < 90) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (progress > 90 && progress <= 99) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (true) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+
+                                                        break;
+                                                    default:
+                                                        ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
+                                                        break
+                                                }
+                                            }
+                                            else {
+                                                ProgressTD = '<td><div class="text-green">Pause</div></td>';
+                                            }
+                                            WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
+                                        }
+                                    }
+                                    $('#divWOProgress #dtWOProgressbody').html(WOProgressBody);
+                                    $("#dtWOProgress").DataTable({
+                                        "order": [[0, "desc"]]
+                                    });
+
+                                    updateProgressTime();
+                                    //*******************WO Progress data table End*******************************//
+                                }
+                                //******************* Work Order Pie Chart ***********************************//
+                                if (dataJSON.WorkProjectType.length > 0 || dataJSON.WorkStatus.length > 0) {
+                                    var arrData = [];
+                                    if (dataJSON.WorkStatus.length > 0) {
+                                        for (i = 0; i < dataJSON.WorkStatus.length; i++) {
+                                            arrData.push({
+                                                title: dataJSON.WorkStatus[i].Title,
+                                                value: parseInt(dataJSON.WorkStatus[i].Value)
+                                            });
+                                        }
+                                    }
+
+                                    if (dataJSON.WorkProjectType.length > 0) {
+                                        for (i = 0; i < dataJSON.WorkProjectType.length; i++) {
+
+                                            if (dataJSON.WorkProjectType[i].Title == 'Continuous Request')
+                                                dataJSON.WorkProjectType[i].Title = 'CR';
+                                            if (dataJSON.WorkProjectType[i].Title == 'Facility Request')
+                                                dataJSON.WorkProjectType[i].Title = 'FR';
+                                            if (dataJSON.WorkProjectType[i].Title == 'Special Project')
+                                                dataJSON.WorkProjectType[i].Title = 'SP';
+                                            if (dataJSON.WorkProjectType[i].Title == 'Work Request')
+                                                dataJSON.WorkProjectType[i].Title = 'WR';
+                                            arrData.push({
+                                                title: dataJSON.WorkProjectType[i].Title,
+                                                value: parseInt(dataJSON.WorkProjectType[i].Value)
+                                            });
+                                        }
+                                    }
+                                    var chart = AmCharts.makeChart("workOrderChart", {
+                                        "type": "pie",
+                                        "theme": "light",
+                                        "radius": "20%",
+                                        "innerRadius": "45%",
+                                        "gradientRatio": [-0.4, -0.4, -0.4, -0.4, -0.4, -0.4, 0, 0.1, 0.2, 0.1, 0, -0.2, -0.5],
+                                        "dataProvider": arrData,
+                                        "labelText": "[[title]]",
+                                        "balloonText": "[[value]]",
+                                        "valueField": "value",
+                                        "titleField": "title",
+                                        "balloon": {
+                                            "drop": true,
+                                            "adjustBorderColor": false,
+                                            "color": "#FFFFFF",
+                                            "fontSize": 16
+                                        },
+                                        "export": {
+                                            "enabled": true
+                                        }
+                                    });
+                                    var title;
+                                    var html;
+                                    // populate our custom legend when chart renders
+                                    if (chart.dataProvider.length > 0) {
+                                        $('#legend').html('');
+                                        html = '<div class="legend-item"><ul>';
+                                        // populate our custom legend when chart renders
+                                        // chart.customLegend = document.getElementById('legend');
+                                        for (var i in chart.dataProvider) {
+                                            var row = chart.dataProvider[i];
+                                            if (row.title == 'CR')
+                                                title = 'CR-Continuous Request';
+                                            if (row.title == 'FR')
+                                                title = 'FR-Facility Request';
+                                            if (row.title == 'SP')
+                                                title = 'SP-Special Project';
+                                            if (row.title == 'WR')
+                                                title = 'WR-Work Request';
+                                            if (row.title == 'Complete')
+                                                title = 'Complete';
+                                            if (row.title == 'In Progress')
+                                                title = 'In Progress';
+                                            if (row.title == 'Pending')
+                                                title = 'Pending';
+                                            // var title = row.title;
+                                            var color = chart.colors[i];
+                                            var value = row.value;
+                                            html += '<li><div class="legend-marker" style="background: ' + color + '"></div>' + title + '<span>' + value + '</span></li>';
+
+                                        }
+                                        html += '</ul></div>';
+                                        $('#legend').append(html);
+                                    }
+                                }
+                                else {
+                                    $('#workOrderChart').html('');
+                                    $('#legend').html('No Work Order generated today.');
+                                }
+                                //******************* Work Order Pie Chart End *******************************//
+
+                                //*******************DAR Marquee*******************************//
+                                var DARBody = '';
+                                $('#divDarDetails #darDetail').append('');
+                                if (dataJSON.DarDetail.length > 0) {
+                                    for (i = 0; (i < dataJSON.DarDetail.length) ; i++) {
+                                        DARBody += '<tr><td><div class="zoomin"><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.DarDetail[i]['ProfileImage'] + '></div> <div class="dailyActRp"><strong>' + dataJSON.DarDetail[i]['TaskType'] + '</strong><br>' + dataJSON.DarDetail[i]['ActivityDetails'] + '</div></td></tr>';
+                                    }
+                                }
+                                $('#divDarDetails #darDetail').html(DARBody);
+                                //*******************DAR Marquee End*******************************//
+
+                                //*******************UnAssigned WO Section*******************************//
+                                var UnAssignedWOBody = '';
+                                $('#divUnAssignedWODetails #UnAssignedDetails').append('');
+
+                                //This condition for client created WO on top of the list
+                                if (parseInt(UserType) == parseInt(2) || parseInt(UserType) == parseInt(6)) {
+                                    if (dataJSON.UnAssignedWOClientCreated.length > 0) {
+                                        for (i = 0; (i < dataJSON.UnAssignedWOClientCreated.length) ; i++) {
+                                            UnAssignedWOBody += '<tr id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + ' class="ClientCreatedWO"><td> <strong>' + dataJSON.UnAssignedWOClientCreated[i]['CodeID'] + '</strong><br>' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevelName'] + '<br>' + dataJSON.UnAssignedWOClientCreated[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestProjectTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevelName'] + '</td><td style="display:none;"><img style="height: 150px !important;width: 150px !important;" src=' + $_HostPrefix + 'Content/Images/WorkRequest/' + dataJSON.UnAssignedWOClientCreated[i]['AssignedWorkOrderImage'] + '></td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['WorkRequestStatusName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['CreatedDate'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['CodeID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['LocationName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['LocationID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWOClientCreated[i]['PriorityLevel'] + '</td><td class="vertibalM" align="center"><a class="editBtn assign" id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + '><i class="fa fa-pencil"></i></a> <a class="editBtn view" id=' + dataJSON.UnAssignedWOClientCreated[i]['ID'] + '><i class="fa fa-eye"></i></a></td></tr>';
+                                        }
+                                    }
+                                }
+                                if (dataJSON.UnAssignedWO.length > 0) {
+                                    for (i = 0; (i < dataJSON.UnAssignedWO.length) ; i++) {
+                                        UnAssignedWOBody += '<tr id=' + dataJSON.UnAssignedWO[i]['ID'] + '><td> <strong>' + dataJSON.UnAssignedWO[i]['CodeID'] + '</strong><br>' + dataJSON.UnAssignedWO[i]['PriorityLevelName'] + '<br>' + dataJSON.UnAssignedWO[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestProjectTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestTypeName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['PriorityLevelName'] + '</td><td style="display:none;"><img style="height: 150px !important;width: 150px !important;" src=' + $_HostPrefix + 'Content/Images/WorkRequest/' + dataJSON.UnAssignedWO[i]['AssignedWorkOrderImage'] + '></td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['WorkRequestStatusName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['CreatedDate'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['ProblemDesc'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['CodeID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['LocationName'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['LocationID'] + '</td><td style="display:none;">' + dataJSON.UnAssignedWO[i]['PriorityLevel'] + '</td><td class="vertibalM" align="center"><a class="editBtn assign" id=' + dataJSON.UnAssignedWO[i]['ID'] + '><i class="fa fa-pencil"></i></a> <a class="editBtn view" id=' + dataJSON.UnAssignedWO[i]['ID'] + '><i class="fa fa-eye"></i></a></td></tr>';
+                                    }
+                                }
+                                $('#divUnAssignedWODetails #UnAssignedDetails').html(UnAssignedWOBody);
+                                var dynamicScript = "<script type='text/javascript'>$('#divUnAssignedWODetails #UnAssignedDetails .view').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var WorkRequestProjectTypeName = row.find('td').eq(1).html(); var WorkRequestTypeName = row.find('td').eq(2).html(); var PriorityLevelName = row.find('td').eq(3).html(); var AssignedWorkOrderImage = row.find('td').eq(4).html(); var WorkRequestStatusName = row.find('td').eq(5).html(); var Submittedon = row.find('td').eq(6).html(); var ProblemDesc = row.find('td').eq(7).html(); var CodeId = row.find('td').eq(8).html(); var LocationName = row.find('td').eq(9).html(); $('#lblProjectType').html(WorkRequestProjectTypeName); $('#lblWorkRequestType').html(WorkRequestTypeName); $('#lblAssignedWorkImage').html(AssignedWorkOrderImage); $('#lblPriorityLevel').html(PriorityLevelName); $('#lblWorkRequestStatus').html(WorkRequestStatusName); $('#lblSubmittedOn').html(Submittedon); if (ProblemDesc == null || ProblemDesc == '') { $('#labellProblemDescription').hide(); $('#lblProblemDescription').hide(); } else { $('#lblProblemDescription').html(ProblemDesc); $('#labellProblemDescription').show(); $('#lblProblemDescription').show(); } $('#lblCodeNo').html(CodeId); $('#lblLocationName').html(LocationName); if(WorkRequestProjectTypeName == 'Special Project'){$('#labelWorkRequestType').hide();$('#lblWorkRequestType').hide()}else{$('#labelWorkRequestType').show();$('#lblWorkRequestType').show()} $('.modal-title').text('Work Order Details'); $('#ModalDetailPreview').modal('show'); }); $('#divUnAssignedWODetails #UnAssignedDetails .assign').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var ProblemDesc = row.find('td').eq(7).html(); var PriorityLevel = row.find('td').eq(11).html(); var ProjectDesc = row.find('td').eq(7).html(); var locationId = row.find('td').eq(10).html(); var WorkRequestType = row.find('td').eq(1).html(); if (PriorityLevel == null || PriorityLevel == '' || PriorityLevel == 'undefined') { PriorityLevel = 0; } $.ajax({ type: 'GET', data: { 'id': id, 'ProblemDesc': ProblemDesc, 'PriorityLevel': PriorityLevel, 'ProjectDesc': ProjectDesc, 'WorkRequestType': WorkRequestType, 'locationId': locationId }, url: '" + $_HostPrefix + "GlobalAdmin/_AssignWorkAssignmentRequest/', contentType: 'application/json; charset=utf-8', error: function (xhr, status, error) { }, success: function (result) { $('.modal-title').text('Assign Work Order'); $('#largeeditpopup').html(result); $('#myModallarge').modal('show'); } }); });<\/script>";
+                                $('#divUnAssignedWODetails').append(dynamicScript);
+                                //*******************UnAssigned WO Section End*******************************//
+
+                                //******************* All Active User*******************************//
+                                var AllActiveUser = '';
+                                $('#divAllActiveUser #AllActiverUser').append('');
+                                if (dataJSON.AllActiveUser.length > 0) {
+                                    for (i = 0; (i < dataJSON.AllActiveUser.length) ; i++) {
+                                        AllActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.AllActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.AllActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.AllActiveUser[i]['UserType'] + '</span></td></tr>';
+                                    }
+                                }
+                                $('#divAllActiveUser #AllActiverUser').html(AllActiveUser);
+                                //*******************All Active User End*******************************//
+
+                                //******************* WEB Active User*******************************//
+                                var WebActiveUser = '';
+                                $('#divWebActiveUser #WebActiverUser').append('');
+                                if (dataJSON.WebActiveUser.length > 0) {
+                                    for (i = 0; (i < dataJSON.WebActiveUser.length) ; i++) {
+                                        WebActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.WebActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.WebActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.WebActiveUser[i]['UserType'] + '</span></td></tr>';
+                                    }
+                                }
+                                $('#divWebActiveUser #WebActiverUser').html(WebActiveUser);
+                                //*******************WEB Active User End*******************************//
+
+                                //******************* MOBILE Active User*******************************//
+                                var MobActiveUser = '';
+                                $('#divMobActiveUser #MobActiverUser').append('');
+                                if (dataJSON.MobActiveUser.length > 0) {
+                                    for (i = 0; (i < dataJSON.MobActiveUser.length) ; i++) {
+                                        MobActiveUser += '<tr><td><img src=' + $_HostPrefix + 'Content/Images/ProfilePic/' + dataJSON.MobActiveUser[i]['ProfileImage'] + '><strong>' + dataJSON.MobActiveUser[i]['UserName'] + '</strong><br> <span class="text-green">' + dataJSON.MobActiveUser[i]['UserType'] + '</span></td></tr>';
+                                    }
+                                }
+                                $('#divMobActiveUser #MobActiverUser').html(MobActiveUser);
+                                //*******************MOBILE Active User End*******************************//
+                                var date = new Date();
+                                var todaysDate = (date.toLocaleString("en-us", { month: "long" }) + ' ' + date.getDate() + ', ' + date.getFullYear());
+                                $('#reservation1').val(todaysDate + ' - ' + todaysDate);
+                            }
+                        }).error(function (xhr) {
+                        });
+                    } catch (e) {
+                        console.log('getAllDashboardData-', e);
+                    }
+                }
+            });
+
+            //************************************--- THIS SCRIPT COPY FROM _MANAGERLAYOUT ---******************************************************//
+            function getDetailsForInfractionNotification() {
+                try {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'Manager/InfractionDetailsForPushNotificaiton',
+                        async: false,
+                        data: { "id": $("#drp_MasterLocation").val(), "userType": 2 },
+                        success: function (Data) {
+                            if (Data != null) {
+                                if (Data.re != null) {
+                                    if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
+                                        storedValues = JSON.parse(localStorage["Values"]);
+
+                                        if ($("#pushNotificationForInfractionM").is(':visible') == true) {
+                                            var locid = storedValues[4]; // localStorage.getItem("INFLoc");
+                                            var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+
+                                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+
+                                                } else {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                                }
+
+                                                $("#pushNotificationForInfractionM").show();
+                                            }
+                                        }
+                                        else {
+                                            $("#messageForPushNotificationM").html("");
+                                            if (storedValues != null || storedValues != undefined) {
+                                                var locid = storedValues[4]; //localStorage.getItem("INFLoc");
+                                                var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                            }
+                                            $("#messageForPushNotificationM").empty();
+
+                                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+
+                                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+
+                                                } else {
+                                                    //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                                }
+
+                                                $("#pushNotificationForInfractionM").show();
+                                            }
+                                        }
+                                    }
+
+                                    localStorage.clear();
+                                    if (localStorage.length === 0) {
+                                        Values[4] = JSON.stringify(Data.re.LocationId);
+                                        Values[5] = JSON.stringify(Data.re.InfractionId);
+                                        localStorage["Values"] = JSON.stringify(Values);
+
+                                        //localStorage.setItem("INFLoc", Data.re.LocationId);
+                                        //localStorage.setItem("INFInfractionId", Data.re.InfractionId);
+                                    }
+                                }
+                            }
+
+
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+
+                    });//ajax end block for getDetailsForWorkOrderDetailsNotification
+                } catch (e) {
+                    console.log('catch', e);
+                }
+
+            }
+
+            function getEmployeeStatus() {
+                try {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'Manager/EmployeeIdleStatusAlertManager',
+                        async: false,
+                        data: { "id": $("#drp_MasterLocation").val() },
+                        success: function (Data) {
+                            if (Data != null) {
+
+                                if (Data.re != null) {
+                                    if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
+                                        storedValues = JSON.parse(localStorage["Values"]);
+                                        if ($("#pushNotificationForIdleEmployeeM").is(':visible') == true) {
+
+                                            var locaid = storedValues[0];//localStorage.getItem("ETSLoc");
+                                            var trackId = storedValues[1];// localStorage.getItem("ETSTrackId");
+                                            if (parseInt(trackId) === parseInt(Data.re.TrackId)) {
+
+                                            } else if (parseInt(trackId) < parseInt(Data.re.TrackId)) {
+
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+
+                                                    $("#messageForPushNotificationEmployeeM").append("<br><br><div id='" + Data.re.EmployeeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.TrackId + "'>&times;</a>Employee:" + Data.re.FirstName + ' ' + Data.re.LastName + '(' + Data.re.EmployeeID + ')' + " is idle at  '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.<br/><a id='" + Data.re.UserID + "' href='javascript:void(0)' data-toggle = 'modal' data-target = '#myModalTimeSpan'>Click here</a>  to extend time limit. <br/> Please check the email inbox for more details.</div>");
+
+                                                } else {
+                                                    //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
+                                                    $("#messageForPushNotificationEmployeeM").append("<br><br><div id='" + Data.re.EmployeeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.TrackId + "'>&times;</a>Employee:" + Data.re.FirstName + ' ' + Data.re.LastName + '(' + Data.re.EmployeeID + ')' + " is idle for current location.<br/><a id='" + Data.re.UserID + "' href='javascript:void(0)' data-toggle = 'modal' data-target = '#myModalTimeSpan'>Click here</a>  to extend time limit.</div>");
+                                                }
+
+                                                $("#pushNotificationForIdleEmployeeM").show();
+                                            }
+                                        }
+                                        else {
+                                            $("#messageForPushNotificationEmployeeM").html("");
+                                            if (storedValues != null || storedValues != undefined) {
+                                                var locaid = storedValues[0]; //localStorage.getItem("ETSLoc");
+                                                var trackId = storedValues[1]; //localStorage.getItem("ETSTrackId");
+                                            }
+                                            $("#messageForPushNotificationEmployeeM").empty();
+
+                                            if (parseInt(trackId) === parseInt(Data.re.TrackId)) {
+
+                                            } else if (parseInt(trackId) < parseInt(Data.re.TrackId)) {
+
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+
+                                                    $("#messageForPushNotificationEmployeeM").html("<br/><div id='" + Data.re.EmployeeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.TrackId + "'>&times;</a>Employee:" + Data.re.FirstName + ' ' + Data.re.LastName + '(' + Data.re.EmployeeID + ')' + " is idle at  '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.<br/><a id='" + Data.re.UserID + "' href='javascript:void(0)' data-toggle = 'modal' data-target = '#myModalTimeSpan'>Click here</a>  to extend time limit. <br/> Please check the email inbox for more details.</div>");
+                                                } else {
+                                                    //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
+                                                    $("#messageForPushNotificationEmployeeM").html("<br/><div id='" + Data.re.EmployeeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.TrackId + "'>&times;</a>Employee:" + Data.re.FirstName + ' ' + Data.re.LastName + '(' + Data.re.EmployeeID + ')' + " is idle for current location.<br/><a id='" + Data.re.UserID + "' href='javascript:void(0)' data-toggle = 'modal' data-target = '#myModalTimeSpan'>Click here</a>  to extend time limit.</div>");
+                                                }
+
+                                                $("#pushNotificationForIdleEmployeeM").show();
+                                            }
+                                            $("#pushNotificationForIdleEmployeeM").append("<script type='text/javascript'>$('#messageForPushNotificationEmployeeM a').click(function () {$('#alertUserId').val($(this).attr('id'));});<\/script><style>#pushNotificationForIdleEmployeeM {z-index: 100;}</style>");
+                                        }
+                                    }
+
+                                    localStorage.clear();
+                                    if (localStorage.length === 0) {
+                                        Values[0] = JSON.stringify(Data.re.LocationId);
+                                        Values[1] = JSON.stringify(Data.re.TrackId);
+                                        localStorage["Values"] = JSON.stringify(Values);
+                                        //localStorage.setItem("ETSLoc", Data.re.LocationId);
+                                        //localStorage.setItem("ETSTrackId", Data.re.TrackId);
+                                    }
+
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+
+                    });//ajax end block for getDetailsForWorkOrderDetailsNotification
+                } catch (e) {
+                    console.log('getEmployeeStatus -', e);
+                }
+
+            }
+
+            function getFacilityRequestStatus() {
+                try {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'Manager/FacilityRequest30SecPushNotificaiton',
+                        async: false,
+                        data: { "id": $("#drp_MasterLocation").val() },
+                        success: function (Data) {
+                            if (Data != null) {
+                                if (Data.re != null) {
+                                    console.log(localStorage["Values"]);
+                                    if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
+                                        storedValues = JSON.parse(localStorage["Values"]);
+                                        if ($("#pushNotificationForFacilityReqM").is(':visible') == true) {
+
+                                            var frlocid = storedValues[2];//JSON.parse(localStorage.getItem("FRLoc"));
+                                            var frId = storedValues[3];//JSON.parse(localStorage.getItem("FRId"));
+
+                                            if (parseInt(frId) === parseInt(Data.re.WorkRequestAssignmentID)) {
+
+                                            } else if (parseInt(frId) < parseInt(Data.re.WorkRequestAssignmentID)) {
+
+                                                if (parseInt(Data.re.LocationID) != parseInt($("#drp_MasterLocation").val())) {
+                                                    $("#messageForPushNotificationFacilityReqM").append("<br><div id='" + Data.re.WorkOrderCodeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.WorkOrderCodeID + "'>&times;</a>Facility request: '<strong>" + Data.re.WorkOrderCode + Data.re.WorkOrderCodeID + "</strong>' is not accepted by any employee at Location: '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>'.<br/> Kindly change your location if you want to see details.</div>");
+                                                } else {
+                                                    $("#messageForPushNotificationFacilityReqM").append("<br><div id='" + Data.re.WorkOrderCodeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.WorkOrderCodeID + "'>&times;</a>Facility request: '<strong>" + Data.re.WorkOrderCode + Data.re.WorkOrderCodeID + "</strong>' is not accepted by any employee at Location:  '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>'. <a href= '" + $_HostPrefix + "GlobalAdmin/WorkAssignmentList'>Click here</a> for more details.</div>");
+                                                }
+
+                                                $("#pushNotificationForFacilityReqM").show();
+                                            }
+                                        }
+                                        else {
+                                            $("#messageForPushNotificationFacilityReqM").html("");
+                                            if (storedValues != null || storedValues != undefined) {
+                                                var frlocid = storedValues[2];// JSON.parse(localStorage.getItem("FRLoc"));
+                                                var frId = storedValues[3]; //JSON.parse(localStorage.getItem("FRId"));
+
+                                            }
+                                            $("#messageForPushNotificationFacilityReqM").empty();
+
+                                            if (parseInt(frId) === parseInt(Data.re.WorkRequestAssignmentID)) {
+
+                                            } else if (parseInt(frId) < parseInt(Data.re.WorkRequestAssignmentID)) {
+
+                                                if (parseInt(Data.re.LocationID) != parseInt($("#drp_MasterLocation").val())) {
+
+                                                    $("#messageForPushNotificationFacilityReqM").append("<br><div id='" + Data.re.WorkOrderCodeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.WorkOrderCodeID + "'>&times;</a>Facility request: '<strong>" + Data.re.WorkOrderCode + Data.re.WorkOrderCodeID + "</strong>' is not accepted by any employee at Location: '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>'.<br/> Kindly change your location if you want to see details.</div>");
+                                                } else {
+                                                    $("#messageForPushNotificationFacilityReqM").append("<br><div id='" + Data.re.WorkOrderCodeID + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.WorkOrderCodeID + "'>&times;</a>Facility request: '<strong>" + Data.re.WorkOrderCode + Data.re.WorkOrderCodeID + "</strong>' is not accepted by any employee at Location:  '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>'.<a href= '" + $_HostPrefix + "GlobalAdmin/WorkAssignmentList'> Click here</a> for more details.</div>");
+                                                }
+
+                                                $("#pushNotificationForFacilityReqM").show();
+                                            }
+                                        }
+                                    }
+                                    localStorage.clear();
+                                    if (localStorage.length === 0) {
+                                        Values[2] = JSON.stringify(Data.re.LocationID);
+                                        Values[3] = JSON.stringify(Data.re.WorkRequestAssignmentID);
+                                        localStorage["Values"] = JSON.stringify(Values);
+                                        //localStorage.setItem("FRLoc", Data.re.LocationID);
+                                        //localStorage.setItem("FRId", Data.re.WorkRequestAssignmentID);
+                                    }
+                                }
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+
+                    });//ajax end block for getDetailsForWorkOrderDetailsNotification
+                } catch (e) {
+                    console.log('getFacilityRequestStatus -', e);
+                }
+
+            }
+
+            function sendPushNotificationforCheckInNotPerformed() {
+                try {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'GlobalAdmin/QRCDetailsForCheckOutStatus',
+                        async: false,
+                        data: { "id": $("#drp_MasterLocation").val() },
+                        success: function (Data) {
+
+                            if (Data.re != null && Data.re != "" && Data.re == true) {
+                                clearInterval(sendPushNotificationforCheckInNotPerformed);
+                            }
+
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+
+                    });//ajax end block for getDetailsForWorkOrderDetailsNotification
+                } catch (e) {
+                    console.log('sendPushNotificationforCheckInNotPerformed -', e);
+                }
+
+            }
+
+            //************************************---SCRIPT _MANAGERLAYOUT END HERE ---******************************************************//
+        </script>
+        <div id="pushNotificationForInfractionM" class="alert alert-info">
+            <a href="#" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
+            <strong>Infraction Submitted</strong> <p id="messageForPushNotificationM">.</p>
+        </div>
+
+        <div id="pushNotificationForIdleEmployeeM" class="alert alert-info">
+            <a href="#" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
+            <strong>EMPLOYEE IDLE ALERT !</strong> <p id="messageForPushNotificationEmployeeM"></p>
+        </div>
+
+        <div id="pushNotificationForFacilityReqM" class="alert alert-info">
+            <a href="#" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
+            <strong>FACILITY REQUEST !</strong> <p id="messageForPushNotificationFacilityReqM"></p>
+        </div>
+
+        <style>
+            #pushNotificationForInfractionM, #pushNotificationForIdleEmployeeM, #pushNotificationForFacilityReqM {
+                display: none;
+                height: auto;
+                opacity: 20.2;
+                /*padding: 18px;*/
+                position: fixed;
+                right: 0 !important;
+                top: 86px !important;
+                width: auto;
+                z-index: 2147483647 !important;
+            }
+        </style>
+</body>
+</html>
+@*<script type="text/javascript">
+        $("#txtTimeLimit").focusin(function () {
+            $("#txtTimeLimit").clockpicker('show');
+        });
+
+        $("#txtTimeLimit").focusout(function () {
+            $("#txtTimeLimit").clockpicker('hide');
+        });
+
+        $("#txtAssignedTime").focusin(function () {
+            $("#txtAssignedTime").clockpicker('show');
+        });
+        $("#txtAssignedTime").focusout(function () {
+            $("#txtAssignedTime").clockpicker('hide');
+        });
+
+        $("#ContinuesStartTime").focusin(function () {
+            $("#ContinuesStartTime").clockpicker('show');
+        });
+
+        $("#ContinuesStartTime").focusout(function () {
+            $("#ContinuesStartTime").clockpicker('hide');
+        });
+    </script>*@
+<style>
+    .popover {
+        z-index: 3000;
+    }
+</style>
+
+@if (ViewBag.Message != null)
+{
+    <script>
+           var a = '@ViewBag.Message';
+    toastr.success(a);
+    </script>
+}
+<script type="text/javascript" src="@Url.Content("~/Scripts/UserDefine/JobTitleChange.js")"></script>

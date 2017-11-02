@@ -1,0 +1,9 @@
+﻿@{
+    ViewBag.Title = "Work Request";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+}
+
+@using (Html.BeginForm("WorkRequestAssignment", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.Partial("_WorkRequestAssignment");
+}

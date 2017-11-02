@@ -1,0 +1,261 @@
+﻿@{
+
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
+    long loginUserType = 0;
+    bool isEmp = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+
+    bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    switch ((WorkOrderEMS.Helper.UserType)loginUserType)
+    {
+        case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+            GloblaAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.ITAdministrator:
+            ITAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Administrator:
+            OnlyAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Manager:
+            ManagerUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Employee:
+            EmployeeUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Client:
+            ClientUser = true;
+            break;
+        default:
+            GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+            break;
+    }
+}
+
+<div class="collapse navbar-collapse navbar-ex1-collapse">
+    <ul class="nav navbar-nav side-nav">
+        <li class="active">
+            @if (GloblaAdminUser || ITAdminUser)
+            {
+                <a href="~/GlobalAdmin"><i class="fa fa-home"></i>Home</a>
+            }
+            @if (OnlyAdminUser)
+            {
+                <a href="~/Administrator"><i class="fa fa-home"></i>Home</a>
+            }
+            @if (ManagerUser)
+
+            {
+                <a href="~/Manager/Dashboard"><i class="fa fa-home"></i>Home</a>
+            }
+            @if (EmployeeUser)
+            {
+                <a href="~/Employee/Dashboard"><i class="fa fa-home"></i>Home</a>
+            }
+            @if (ClientUser)
+            {
+                <a href="~/Client"><i class="fa fa-home"></i>Home</a>
+                isEmp = true;
+            }
+        </li>
+
+        @{
+            List<string> UserRoles = (List<string>)Session["eTrac_UserRoles"];
+            List<string> LocationServices = (List<string>)Session["eTrac_LocationServices"];
+
+
+            if (UserRoles != null)
+            {
+                @*Create Locations*@
+        if (UserRoles.Contains("Location Setup") || UserRoles.Contains("Location"))
+        {
+            //if (GloblaAdminUser || ITAdminUser)// commented by vijay sahu on 2 may 2015
+            if (true)                                                            //added by vijay sahu on 2 may 2015
+            {
+                <li>
+                    <a data-toggle="collapse" data-target="#demo"><i class="fa fa-map-marker"></i>Location<span class="fa fa-fw fa-caret-down"></span></a>
+                    <ul id="demo" class="collapse">
+                        <li>@Html.ActionLink("Create Location", "LocationSetup", "GlobalAdmin")</li>
+
+                        <li>@Html.ActionLink("List Location", "ListLocation", "GlobalAdmin")</li>
+                    </ul>
+                </li>
+            }
+        }
+
+
+        if (UserRoles.Contains("Manage Users"))
+        {
+            // if (GloblaAdminUser || ITAdminUser)// commented by vijay sahu on 2 may 2015
+            if (true)                                                            //added by vijay sahu on 2 may 2015
+            {
+                <li>
+                    <a data-toggle="collapse" data-target="#ManageUser"><i class="fa fa-user"></i>Manage User<span class="fa fa-fw fa-caret-down"></span></a>
+                    <ul id="ManageUser" class="collapse">
+                        <li> <a href="@Url.Action("listclient", "GlobalAdmin")"><i class="fa fa-list-alt"></i>All User List</a></li>
+                        @if (Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) != ObjLogin.UserRoleId && Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client) != ObjLogin.UserRoleId)//WorkOrderEMS.Helper.UserType.Employee
+                        {
+                            <li>
+                                <a href="javascript:void(0)" onclick="CallSideMenuRegUser();"><i class="fa fa-user-plus "></i>Register User</a>
+                            </li>
+                        }
+                        @if (GloblaAdminUser || ITAdminUser)
+                        {
+                            <li>
+                                <a href="@Url.Action( "NotAssignedUsers", "GlobalAdmin")"><i class="fa fa-user"></i>UnAssigned User</a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                    }
+
+                    // if (OnlyAdminUser || ManagerUser)// commented by vijay sahu on 2 may 2015
+
+                }
+
+                if (UserRoles.Contains("eScanner"))
+                {
+                    //  if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)// commented by vijay sahu on 2 may 2015
+                    if (true)                                                            //added by vijay sahu on 2 may 2015
+                    {
+                        <li>
+                            <a data-toggle="collapse" data-target="#demoescan"><i class="fa fa-print"></i>eScanner<span class="fa fa-fw fa-caret-down"></span></a>
+                            <ul id="demoescan" class="collapse">
+                                @if(isEmp){
+                                <li>@Html.ActionLink("QR Code Setup", "", "QRCSetup")</li>
+                                }
+
+                                <li>@Html.ActionLink("QR Code List", "ListQRC", "QRCSetup")</li>
+
+
+                                @if (EmployeeUser != true && ClientUser != true)
+                                {
+                                    <li>@Html.ActionLink("Reports", "EscannerReport", "QRCSetup")</li>
+                                }
+
+                            </ul>
+                        </li>
+                    }
+                }
+                //}
+
+
+                if (UserRoles.Contains("eMaintenance"))
+                {
+                    //if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser) // commented by vijay sahu on 2 may 2015
+                    if (true)                                //added by vijay sahu on 2 may 2015
+                    {
+                        <li>
+                            <a data-toggle="collapse" data-target="#demoeman"><i class="fa fa-wrench"></i>eMaintenance<span class="fa fa-fw fa-caret-down"></span></a>
+                            <ul id="demoeman" class="collapse">
+                                @if (!EmployeeUser || !ClientUser)
+                                {
+                                    <li>@Html.ActionLink("Create New", "WorkRequestAssignment", "GlobalAdmin")</li>
+                                }
+                                <li>@Html.ActionLink("List Work Request", "WorkAssignmentList", "GlobalAdmin")</li>
+
+                                @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                {
+                                    <li>@Html.ActionLink("Reports", "WorkOrderReport", "GlobalAdmin")</li>
+                                }
+
+
+
+
+                            </ul>
+                        </li>
+                    }
+                }
+
+
+                //if (UserRoles.Contains("Inventory Tracker"))
+                //{
+                @*if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)// commented by vijay sahu on 2 may 2015
+
+                    {
+                        <li>
+                            <a data-toggle="collapse" data-target="#demoInvTrac"><i class="fa fa-calendar"></i>Inventory Tracker <span class="fa fa-fw fa-caret-down"></span></a>
+                            <ul id="demoInvTrac" class="collapse">
+                                <li>@Html.ActionLink("Create Inventory", "Inventory", "Manager")</li>
+                                <li>@Html.ActionLink("List Inventory", "ListInventory", "Manager")</li>
+                            </ul>
+
+                        </li>
+                    }*@
+                //}
+
+
+
+                if (UserRoles.Contains("Daily Activity Reports"))
+                {
+                    <li>
+                        <a data-toggle="collapse" data-target="#DARList"><i class="fa fa-list"></i>Daily Activity Report<span class="fa fa-fw fa-caret-down"></span></a>
+                        <ul id="DARList" class="collapse">
+                            <li>@Html.ActionLink("List DAR Details", "ListDAR", "DAR")</li>
+
+                            @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                            {
+                                <li>@Html.ActionLink("Reports", "DARReport", "DAR")</li>
+                            }
+
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                }
+
+
+
+                if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser || ClientUser)
+                {
+                    @Html.Partial("_NotificationAlert");
+                }
+
+                if (GloblaAdminUser || ITAdminUser)
+                {
+                    <li>
+                        <a data-toggle="collapse" data-target="#demoViewList"><i class="fa fa-list"></i>Other Lists<span class="fa fa-fw fa-caret-down"></span></a>
+                        <ul id="demoViewList" class="collapse">
+
+                            <li>@Html.ActionLink("List Email", "ListEmail", "EmailDetails")</li>
+                        </ul>
+                        <!-- /.nav-second-level -->
+                    </li>
+                }
+            }
+            else
+            {
+                Response.Redirect("~/Login/Index");
+
+            }
+            @*Manager View*@
+
+        }
+    </ul>
+    <!-- /#side-menu -->
+</div>
+
+
+<script>
+    function CallSideMenuRegUser() {
+        $("#UserRegistrationModel").modal('show');
+    }
+    $(".showTooltip").focusin(function () {
+        $(this).tooltip('show');
+
+    })
+    $(".showTooltip").focusout(function () {
+        $(this).tooltip('hide');
+    })
+    $(document).ready(function () {
+        $(".showTooltip").tooltip();
+    })
+</script>

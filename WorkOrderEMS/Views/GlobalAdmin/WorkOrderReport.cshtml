@@ -1,0 +1,129 @@
+﻿@{
+    ViewBag.Title = "Work Order Report";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+
+}
+<script src="~/Content/Report-NavBar/jquery.smooth-scroll.js"></script>
+<script src="~/Content/Report-NavBar/run_prettify.js"></script>
+<!-- stylesheets-->
+<link href="http://fonts.googleapis.com/css?family=Lustria|Lato:300,400,700,400italic" rel="stylesheet" type="text/css">
+<link href="~/Content/Report-NavBar/ohover.css" rel="stylesheet" />
+<link href="~/Content/Report-NavBar/main.css" rel="stylesheet" />
+<style>
+    #ReportBar li a {
+        border-radius: 4px 4px 0 0 !important;
+        border-color: lightgray;
+    }
+
+    .active a {
+        background-color: #0aa0cd !important;
+        color: white !important;
+    }
+</style>
+<div class="clearfix"></div>
+<div class="content-header ">
+    <div class="panel">
+        <div data-example-id="simple-nav-justified" class="bs-example">
+            <div class="row-2">
+                <div class="item-hover circle effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Work Order Issued">*@
+                        <a href="@Url.Action("IssuedWorkOrder","Report")">
+                            <div class="img"><img src="~/Content/Images/Report/WorkOrderIssued.png"></div>
+                            <div class="info">
+                                <h5>Work Order Issued</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Assigned Work Order">*@
+                    <a href="@Url.Action("AssignedWorkOrder", "Report")">
+                        <div class="img"><img src="~/Content/Images/Report/Assignedworkorder.png"></div>
+                        <div class="info">
+                            <h5>Work Order Assigned</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Work Order Completed">*@
+                        <a href="@Url.Action("CompletedWorkOrder", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/workordericon.jpg"></div>
+                            <div class="info">
+                                <h5>Work Order Completed</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Work Order Fixed Time">*@
+                        <a href="@Url.Action("WorkOrderFixedTime", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/icon-savetime.png"></div>
+                            <div class="info">
+                                <h5>Fixed Time</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+
+            @*<div class="row-2">
+                    <div class="item-hover circle colored effect3 left_to_right">
+                        <a href="../Report/Reports?ReportName=Trash Level">
+                            <div class="img"><img src="~/Content/Images/Report/TrashLevel.png"></div>
+                            <div class="info">
+                                <h5>Issued Item</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>*@
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Assets Work Order">*@
+                        <a href="@Url.Action("AssetsWorkOrder", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/checklist-3.png"></div>
+                            <div class="info">
+                                <h5>Assets Work Order</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            @*<div class="row-2">
+                    <div class="item-hover circle colored effect3 left_to_right">
+                        <a href="../Report/Reports?ReportName=Trash Picked Up Details">
+                            <div class="img"><img src="~/Content/Images/Report/safetyhzd.jpg" alt="img"></div>
+                            <div class="info">
+                                <h5>Safety Hazzard</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>*@
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                   @* <a href="../Report/Reports?ReportName=Work Order In Progress">*@
+                        <a href="@Url.Action("WorkOrderInProgress", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/WorkOrderFixedTime.jpg" alt="img"></div>
+                            <div class="info">
+                                <h5>In Progress</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Work Order Missed Time">*@
+                        <a href="@Url.Action("WorkOrderMissedTime", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/fixedtime.png" alt="img"></div>
+                            <div class="info">
+                                <h5>Timing Missed</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

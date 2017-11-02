@@ -1,0 +1,576 @@
+﻿@{
+
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
+    long loginUserType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+
+    bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    switch ((WorkOrderEMS.Helper.UserType)loginUserType)
+    {
+        case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+            GloblaAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.ITAdministrator:
+            ITAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Administrator:
+            OnlyAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Manager:
+            ManagerUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Employee:
+            EmployeeUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Client:
+            ClientUser = true;
+            break;
+        default:
+            GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+            break;
+    }
+
+}
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+
+        <!-- /.search form -->
+        <!-- sidebar menu: : style can be found in sidebar.less -->
+        <ul class="sidebar-menu">
+
+            <li>
+                @if (GloblaAdminUser || ITAdminUser)
+                {
+                    <a href="~/GlobalAdmin"><i class="fa fa-home"></i><span>Home</span></a>
+                }
+                @if (OnlyAdminUser)
+                {
+                    <a href="~/Administrator"><i class="fa fa-home"></i><span>Home</span></a>
+                }
+                @if (ManagerUser)
+                {
+                    <a href="~/Manager/Dashboard"><i class="fa fa-home"></i><span>Home</span></a>
+                }
+                @if (EmployeeUser)
+                {
+                    <a href="~/Employee/Dashboard"><i class="fa fa-home"></i><span>Home</span></a>
+                }
+                @if (ClientUser)
+                {
+                    <a href="~/Client"><i class="fa fa-home"></i><span>Home</span></a>
+                }
+            </li>
+            @{
+                List<string> UserRoles = (List<string>)Session["eTrac_UserRoles"];
+                List<string> LocationServices = (List<string>)Session["eTrac_LocationServices"];
+                WorkOrderEMS.Models.CommonModels.WidgetList DashboardWidget = (WorkOrderEMS.Models.CommonModels.WidgetList)Session["eTrac_DashboardWidget"];
+                if (DashboardWidget != null && Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+                {
+                    if (UserRoles != null)
+                    {
+                        @*Create Locations*@
+                        if (UserRoles.Contains("Location Setup") || UserRoles.Contains("Location"))
+                        {
+                            if (true)//added by Bhushan Dod on 08 April 2016
+                            {
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"><i class="fa fa-map-marker"></i><span>Location</span> <i class="fa fa-angle-left pull-right"></i></a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="@Url.Action("LocationSetup", "GlobalAdmin")"><i class="fa fa-location-arrow"></i>Create Location</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListLocation", "GlobalAdmin")"><i class="fa fa-list-alt"></i>List Location</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                        } //Location Setup End here
+
+                        if (UserRoles.Contains("Manage Users"))
+                        {
+                            if (true)
+                            {
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-user"></i> <span>Manage User</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li> <a href="@Url.Action("listclient", "GlobalAdmin")"><i class="fa fa-list-alt"></i>All User List</a></li>
+                                        <li> <a href="@Url.Action("CreateUser", "Common")"><i class="fa fa-user-plus"></i>Register User</a></li>
+                                        @*@if (Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) != ObjLogin.UserRoleId && Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client) != ObjLogin.UserRoleId)//WorkOrderEMS.Helper.UserType.Employee
+                                            {
+                                                <li><a href="#" onclick="CallSideMenuRegUser();"><i class="fa fa-users"></i>Register User Type</a></li>
+                                            }*@
+                                        @if (GloblaAdminUser || ITAdminUser)
+                                        {
+                                            <li><a href="@Url.Action( "NotAssignedUsers", "GlobalAdmin")"><i class="fa fa-users"></i>UnAssigned User</a></li>
+                                        }
+                                        @if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+                                        {
+                                            <li><a href="@Url.Action( "UnVerifiedUsers", "GlobalAdmin")"><i class="fa fa-user-times"></i>UnVerified User</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+
+                        if (UserRoles.Contains("eScanner"))
+                        {
+                            if (true)
+                            {
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-print"></i> <span>eScanner</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="@Url.Action("", "QRCSetup")"><i class="fa fa-qrcode"></i>QR Code Setup</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListQRC", "QRCSetup")"><i class="fa fa-list-alt"></i>QR Code List</a>
+                                        </li>
+                                        @if (EmployeeUser != true && ClientUser != true)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("EscannerReport", "QRCSetup")"><i class="fa fa-area-chart"></i>Reports</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+
+                        if (UserRoles.Contains("eMaintenance"))
+                        {
+                            if (true)
+                            {
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-wrench"></i> <span>eMaintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        @if (!EmployeeUser || !ClientUser)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")"><i class="fa fa-file-o"></i>Create New</a>
+                                            </li>
+                                        }
+                                        <li>
+                                            <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin")"><i class="fa fa-list-alt"></i>List Work Request</a>
+                                        </li>
+                                        @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("WorkOrderReport", "GlobalAdmin")"><i class="fa fa-area-chart"></i>Reports</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        }
+                        if (UserRoles.Contains("Daily Activity Reports"))
+                        {
+                            <li class="treeview">
+                                <a href="javascript:void(0)"> <i class="fa fa-list"></i> <span>Daily Activity Report</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="@Url.Action("ListDAR", "DAR")"><i class="fa fa-list-alt"></i>List DAR Details</a>
+                                    </li>
+                                    @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                    {
+                                        <li>
+                                            <a href="@Url.Action("DARReport", "DAR")"><i class="fa fa-area-chart"></i>Reports</a>
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        }
+                        if (GloblaAdminUser || ITAdminUser)
+                        {
+                            <li class="treeview">
+                                <a href="javascript:void(0)"> <i class="fa fa-envelope-o"></i> <span>Other Lists</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                <ul class="treeview-menu">
+                                    <li>
+                                        <a href="@Url.Action("ListEmail", "EmailDetails")"><i class="fa fa-list-alt"></i>List Email</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        //if (UserRoles.Contains("eFleet"))
+                        //{
+                        if (true)
+                        {
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-taxi"></i> <span>eFleet </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-clock-o"></i> <span>Driver </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "eFleetDriver")"><i class="fa fa-user-plus"></i>Create Driver</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("ListDriver", "eFleetDriver")"><i class="fa fa-list-alt"></i>List Driver</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="treeview">
+                                            <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Vehicle </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "eFleetVehicle")"><i class="fa fa-bus"></i>Register Vehicle</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("ListVehicle", "eFleetVehicle")"><i class="fa fa-list-alt"></i>List Vehicle</a>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-clock-o"></i> <span>Preventative Maintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "eFleetPreventativeMaintenance")"><i class="fa fa-user-plus"></i>Create PM</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("ListeFleetPM", "eFleetPreventativeMaintenance")"><i class="fa fa-user-plus"></i>List eFleetsPM</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>   
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-truck"></i> <span>Vehicle Incident</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "eFleetVehicleIncidentReporting")"><i class="fa fa-user-plus"></i>Create Incident</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("ListeFleetVehicleIncident", "eFleetVehicleIncidentReporting")"><i class="fa fa-list-alt"></i>List Incident</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-truck"></i> <span>Maintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("Index", "eFleetMaintenance")"><i class="fa fa-user-plus"></i>Create maintenance</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("ListeFleetMaintenance", "eFleetMaintenance")"><i class="fa fa-list-alt"></i>List Maintenace</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-truck"></i> <span>Passenger Tracking</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("create", "passenger")"><i class="fa fa-user-plus"></i>Create Route</a>
+                                                </li>
+                                                <li>
+                                                    <a href="@Url.Action("listpassengerroute", "passenger")"><i class="fa fa-list-alt"></i>List Passenger Route</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
+                                        @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                        {
+                                            <li>
+                                                <a href="@Url.Action("GtTrackerReport", "QRCSetup")"><i class="fa fa-area-chart"></i>Reports</a>
+                                            </li>
+                                        }                            
+                                    </ul>
+                                </li>
+                        }
+                        //}
+
+                        if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser || ClientUser)
+                        {
+                            @Html.Partial("_NotificationAlert");
+                        }
+                    }
+                    else
+                    {
+                        Response.Redirect("~/Login/Index");
+                    }
+                }
+                else
+                {
+                    <li class="treeview">
+                        <a href="javascript:void(0)"><i class="fa fa-map-marker"></i><span>Location</span> <i class="fa fa-angle-left pull-right"></i></a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="@Url.Action("LocationSetup", "GlobalAdmin")"><i class="fa fa-location-arrow"></i>Create Location</a>
+                            </li>
+                            <li>
+                                <a href="@Url.Action("ListLocation", "GlobalAdmin")"><i class="fa fa-list-alt"></i>List Location</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="javascript:void(0)"> <i class="fa fa-user"></i> <span>Manage User</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                        <ul class="treeview-menu">
+                            <li> <a href="@Url.Action("listclient", "GlobalAdmin")"><i class="fa fa-list-alt"></i>All User List</a></li>
+                            <li> <a href="@Url.Action("CreateUser", "Common")"><i class="fa fa-user-plus"></i>Register User</a></li>
+                            @*@if (Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) != ObjLogin.UserRoleId && Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client) != ObjLogin.UserRoleId)//WorkOrderEMS.Helper.UserType.Employee
+                                {
+                                    <li><a href="#" onclick="SidemenuNotAllowed();"><i class="fa fa-users"></i>Register User Type</a></li>
+                                }*@
+                            @if (GloblaAdminUser || ITAdminUser)
+                            {
+                                <li><a href="@Url.Action( "NotAssignedUsers", "GlobalAdmin")"><i class="fa fa-user"></i>UnAssigned User</a></li>
+                            }
+                            @if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+                            {
+                                <li><a href="@Url.Action( "UnVerifiedUsers", "GlobalAdmin")"><i class="fa fa-user-times"></i>UnVerified User</a></li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="javascript:void(0)"> <i class="fa fa-print"></i> <span>eScanner</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                        <ul class="treeview-menu">
+                            <li><a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-qrcode"></i>QR Code Setup</a></li>
+                            <li>
+                                <a href="@Url.Action("ListQRC", "QRCSetup")"><i class="fa fa-list-alt"></i>QR Code List</a>
+                            </li>
+                            @if (EmployeeUser != true && ClientUser != true)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-area-chart"></i>Reports</a>
+                                </li>
+
+                            }
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="javascript:void(0)"> <i class="fa fa-wrench"></i> <span>eMaintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                        <ul class="treeview-menu">
+                            @if (!EmployeeUser || !ClientUser)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="SidemenuNotAllowed(this);"><i class="fa fa-file-o"></i>Create New</a>
+                                </li>
+                            }
+                            <li>
+                                <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin")"><i class="fa fa-list-alt"></i>List Work Request</a>
+                            </li>
+                            @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-area-chart"></i>Reports</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="treeview">
+                        <a href="javascript:void(0)"> <i class="fa fa-list"></i> <span>Daily Activity Report</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                        <ul class="treeview-menu">
+                            <li>
+                                <a href="@Url.Action("ListDAR", "DAR")"><i class="fa fa-list-alt"></i>List DAR Details</a>
+                            </li>
+                            @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                            {
+                                <li>
+                                    <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-area-chart"></i>Reports</a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                    if (GloblaAdminUser || ITAdminUser)
+                    {
+                        <li class="treeview">
+                            <a href="javascript:void(0)"> <i class="fa fa-envelope-o"></i> <span>Other Lists</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                            <ul class="treeview-menu">
+                                <li>
+                                    <a href="@Url.Action("ListEmail", "EmailDetails")"><i class="fa fa-list-alt"></i>List Email</a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+
+                    //if (UserRoles.Contains("Location Setup") || UserRoles.Contains("Location"))
+                    //{
+                    if (true)//added by Bhushan Dod on 04 August 2017
+                    {
+                        <li class="treeview">
+                            <a href="javascript:void(0)"> <i class="fa fa-taxi"></i> <span>eFleet </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                            <ul class="treeview-menu">
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-clock-o"></i> <span>Drivers </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-user-plus"></i>Create Driver</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListDriver", "eFleetDriver")"><i class="fa fa-list-alt"></i>List Driver</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Vehicle </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Register Vehicle</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListVehicle", "eFleetVehicle")"><i class="fa fa-list-alt"></i>List Vehicle</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Preventative Maintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create PM</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListeFleetPM", "eFleetPreventativeMaintenance")"><i class="fa fa-list-alt"></i>List eFleetsPM</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Vehicle Incident</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create Incident</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListeFleetVehicleIncident", "eFleetVehicleIncidentReporting")"><i class="fa fa-list-alt"></i>List Incident</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Maintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create maintenance</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListeFleetMaintenance", "eFleetMaintenance")"><i class="fa fa-list-alt"></i>List Maintenace</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Passenger Tracking</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create Route</a>
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("listpassengerroute", "passenger")"><i class="fa fa-list-alt"></i>List Passenger Route</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                {
+                                    <li>
+                                        <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-area-chart"></i>Reports</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    //} //Location Setup End here
+
+                    //if (UserRoles.Contains("eFleet"))
+                    //{
+                    if (true)
+                    {
+                        <li class="treeview">
+                            <a href="javascript:void(0)"> <i class="fa fa-taxi"></i> <span>eFleet </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                            <ul class="treeview-menu">
+                                <li class="treeview">
+                                    <a href="#"> <i class="fa fa-clock-o"></i> <span>Driver </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-user-plus"></i>Create Driver</a>                                           
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListDriver", "eFleetDriver")"><i class="fa fa-list-alt"></i>List Driver</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="javascript:void(0)"> <i class="fa fa-truck"></i> <span>Vehicle </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Register Vehicle</a>
+                                          
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListVehicle", "eFleetVehicle")"><i class="fa fa-list-alt"></i>List Vehicle</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="#"> <i class="fa fa-clock-o"></i> <span>Preventative Maintenance</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create PM</a>                                          
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListeFleetPM", "eFleetPreventativeMaintenance")"><i class="fa fa-user-plus"></i>List eFleetsPM</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
+                                <li class="treeview">
+                                    <a href="#"> <i class="fa fa-clock-o"></i> <span>Driver </span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="javascript:void(0)" onclick="SidemenuNotAllowed();"><i class="fa fa-bus"></i>Create Driver</a>                                          
+                                        </li>
+                                        <li>
+                                            <a href="@Url.Action("ListDriver", "eFleetDriver")"><i class="fa fa-list-alt"></i>List Driver</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
+                                {
+                                    <li>
+                                        <a href="@Url.Action("GtTrackerReport", "QRCSetup")"><i class="fa fa-area-chart"></i>Reports</a>
+                                    </li>
+                                }
+                            </ul>
+                        </li>
+                    }
+                    //}
+                    if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser || ClientUser)
+                    {
+                        @Html.Partial("_NotificationAlert");
+                    }
+                }
+            }
+        </ul>
+    </section>
+    <!-- /.sidebar -->
+</aside>
+<script>
+    function CallSideMenuRegUser() {
+        $("#UserRegistrationModel").modal('show');
+    }
+
+    function SidemenuNotAllowed(e) {
+        bootbox.alert("Please disable view all location and select location to register.");
+    }
+    $(".showTooltip").focusin(function () {
+        $(this).tooltip('show');
+
+    })
+    $(".showTooltip").focusout(function () {
+        $(this).tooltip('hide');
+    })
+    $(document).ready(function () {
+        $(".showTooltip").tooltip();
+    })
+</script>

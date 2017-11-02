@@ -1,0 +1,34 @@
+﻿@{
+    //Layout = null;
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+    ViewBag.Title = "List Project";
+}
+@*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+
+
+@*<link href="~/Content/themes/base/jquery.ui.theme.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.core.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.all.css" rel="stylesheet" />
+    <link href="~/Content/JqGridCSS/ui.jqgrid.css" rel="stylesheet" />
+    <link href="~/Content/JqGridCSS/DilogPopup.css" rel="stylesheet" />*@
+<!--FOLLOWING  files are used for JqGrid Javascript-->
+@*<script src="~/Scripts/JqGrid/jquery.js"></script>
+    <script src="~/Scripts/JqGrid/grid.common.js"></script>
+    <script src="~/Scripts/JqGrid/jquery.jqGrid.min.js"></script>
+    <script src="~/Scripts/JqGrid/i18n/grid.locale-en.js"></script>
+    <script src="~/Scripts/JqGrid/DilogPopUP.js"></script>*@
+@section scripts{
+    <script src="~/GridListing/JqGridScript/ProjectList.js"></script>
+
+
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_ProjectList').setGridWidth(width);
+        });
+    </script>
+}
+
+<div id="jqGrid_container">
+    <table id="tbl_ProjectList" border="0" cellpadding="0" cellspacing="0"></table><div id="divProjectListPager"></div>
+</div>

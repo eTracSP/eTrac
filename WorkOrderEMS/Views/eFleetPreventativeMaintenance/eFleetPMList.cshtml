@@ -1,0 +1,254 @@
+﻿@model WorkOrderEMS.Models.eFleetPMModel
+@{
+    ViewBag.Title = "eFleet Preventative Maintanance List";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+    long locationId = 0;
+    long userType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+}
+@section scripts{
+    <script type="text/javascript">
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script src="~/GridListing/JqGridScript/ListeFleetPM.js"></script>
+    <script type="text/javascript">
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_eFleetPMList').setGridWidth(width);
+    });
+    $('#btnMyModalFORQRC').live("click", function () {
+        $('#myModalLicence').modal('show');
+    });
+
+    </script>
+}
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+    <div id="jqGrid_container">
+        <table id="tbl_eFleetPMList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divQRCListPager"></div>
+    </div>
+</div>
+<div id="myModalFORQRC" class="modal fade bs-example-modal-lg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Vehicle QR-Code</h4>
+
+            </div>
+            <div class="modal-body">
+
+                <div id="divConfirumationPreview" class="">
+
+                    @{
+                        WorkOrderEMS.Models.PrintQRCModel MyPrintModel = null;
+                        if (ViewBag.EncryptQRC != null)
+                        {
+                            MyPrintModel = ViewBag.QRCModel;
+                        }
+                    }
+
+                    <div class="row">
+                        <div class="col-sm-8 hide">
+                            @if (MyPrintModel == null)
+                            {
+                                <div id="lblSizeCaption"></div>}
+                            else
+                            {
+                                <div id="lblSizeCaption"></div>}
+                        </div>
+                        <div class="" id="DivQRCIndex">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label>Company Name</label>
+                                    <div id="lblCompanyName" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Business No.</label>
+                                    <div id="lblBusinessNo" class="form-control-static"></div>
+                                </div>
+
+                                @*<div class="form-group">
+                                        <label>QRC Type</label>
+                                        <div id="lblQRCTYPE" class="form-control-static"></div>
+                                    </div>*@
+                                <div class="form-group">
+                                    <label>Driver Name</label>
+                                    <div id="lblDriverName" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>License No.</label>
+                                    <div id="lblLicenseNo" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Vehicle Identification No.</label>
+                                    <div id="lblVehicleIdentificationNo" class="form-control-static"></div>
+                                </div>
+                                @*<div class="form-group">
+                                        <label>W9 Form</label>
+                                        <div id="lblW9Form" class="form-control-static"></div>
+                                    </div>*@
+
+                                @*<div class="form-group">
+                                        <label>QRC Name</label>
+                                        <div id="lblQRC" class="form-control-static"></div>
+
+                                    </div>*@
+                                <div class="form-group VehicleTypeDisplay">
+                                    <label>Vehicle Type</label>
+                                    <div id="lblVehicleType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group VehicleTypeDisplay">
+                                    <label>Motor Type</label>
+                                    <div id="lblMotorType" class="form-control-static"></div>
+
+                                </div>
+
+                                <div class="form-group ">
+                                    <label>Permit Type</label>
+                                    <div id="lblPermitType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group ">
+                                    <label>Vehicle Model</label>
+                                    <div id="lblVehicleModel" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group ">
+                                    <label>Vehicle Tag No</label>
+                                    <div id="lblVehicleTagNo" class="form-control-static"></div>
+
+                                </div>
+                                @*<div class="form-group">
+                                    <label>Special Notes</label>
+                                    <div id="lblSpecialNotes" class="form-control-static"></div> </div>*@
+
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label>Location</label>
+
+                                <div class="form-group">
+                                    <div id="lblLocationName" class="form-control-static"></div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label>QRC Code&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <div id="container2" class="img-thumbnail">
+                                        <canvas class="img-thumbnail"></canvas>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Vehicle Images &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                    <div id="lblVehicleImage" class="img-thumbnail">
+                                        <img id="imgVehicleImagePic34" class="" style="align-content:center; width:120px; height:120px;" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Driver Profile Images</label>
+                                    <div id="lblDriverProfilePic" class="img-thumbnail">
+                                        <img id="imgDriverProfilePic" class="" style="align-content:center;" />
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="">
+                    <button type="button" class="btn btn-default bluebutton" id="btnMyModalFORQRC" data-dismiss="modal">Generate Licence</button>
+                    <button type="button" class="btn btn-default bluebutton" id="#" data-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+
+<div id="myModalLicence" class="modal fade bs-example-modal-lg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview QR-Code</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="tblToPrint" style="text-align:center;">
+
+                    <div class="" style=" " id="ttere">
+                        <table cellpadding="6" cellspacing="0" style="margin-left: 120px; text-align: center; font-size: 12px;">
+                            <tbody>
+                                <tr>
+                                    <td><b>Client Logo</b></td>
+                                    <td><b>Driver</b></td>
+                                    <td><b style="margin-left:27px">QRC Code</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="" id="imgClinetLogo" class="img-thumbnail" />
+
+                                    </td>
+
+                                    <td>
+
+                                        <img id="imgDriverProfilePic2" class="img-thumbnail" />
+
+                                    </td>
+                                    <td>
+                                        <div id="container3" style="width:80px;height:80px;margin-left:46px">
+                                            <canvas id="qrcprint" style="width:80px;"></canvas>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="3" style="align-items:center;">
+                                        <center>
+                                            <p id="pDriverName" style="margin-right:132px"></p>
+
+
+                                            <p id="pCompanyName" style="margin-right:182px"></p>   @*Company Name*@
+
+                                        </center>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+
+                @*</div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default bluebutton" onclick="return PrintDivIndexForLicence('tblToPrint');" data-dismiss="modal">Print Licence</button>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>

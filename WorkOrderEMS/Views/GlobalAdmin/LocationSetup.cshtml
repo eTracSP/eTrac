@@ -1,0 +1,1135 @@
+﻿@model WorkOrderEMS.Models.LocationMasterModel
+
+@{
+    //    bool validEmail = Regex.IsMatch(Email, @"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))" + @"(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$", RegexOptions.IgnoreCase);
+
+    ViewBag.Title = "Location Setup";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+    string StateID = string.Empty, LocationTypeID = string.Empty;
+    string ServiceId = string.Empty;
+    if (Model != null)
+    {
+        StateID = Convert.ToString(Model.StateId);
+        LocationTypeID = Convert.ToString(Model.LocationType);
+    }
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        ViewBag.Title = "Update Location"; ServiceId = ViewBag.ServicesID;
+    }
+    string hostingPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];
+}
+
+<link href="~/Content/formwizard.css" rel="stylesheet" />
+<script type="text/javascript" src="~/Scripts/BindDropDown/DropDownList.js"></script>
+<script type="text/javascript" src="~/Scripts/common/Masking.js"></script>
+
+@Html.AntiForgeryToken()
+</div>
+</section>
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+
+    <div class="panel panel-default">
+
+        <div class="panel-heading">
+            Set Up Location
+        </div>
+
+        @using (Html.BeginForm("LocationSetup", "GlobalAdmin", FormMethod.Post, new { enctype = "multipart/form-data", id = "msform" }))
+        {
+                <!-- progressbar -->
+            <ul id="progressbar">
+                <li class="active"><span>Location<p>Details to setup Location</p></span></li>
+                <li><span>Manager<p>Manager Information</p></span></li>
+                <li><span>Client<p>Client Information</p></span></li>
+                <li><span>Location Services<p>Configure Services for Location</p></span></li>
+            </ul>
+                <!-- fieldsets -->
+            <fieldset id="LocationSetUp">
+                <div class="row">
+                    <div class="panel-body">
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+                            @Html.HiddenFor(model => model.LocationId)
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.LocationName, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.LocationName, new { @Placeholder = "Location Name", @class = "form-control required isValidLocationName" })
+                                    <span style="display:none;" data-valmsg-replace="true" class="field-validation-error"><span class="">Location Name already exists.</span></span>
+                                    @Html.ValidationMessageFor(model => model.LocationName)
+                                </div>
+                            </div>
+                                                   
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Address1, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.Address1, new { @Placeholder = "Location Address", @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.Address1)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Address2, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.Address2, new { @Placeholder = "Location Code", @class = "form-control isValidLocationName", @maxLength = "20" })
+                                    @Html.ValidationMessageFor(model => model.Address2)
+                                </div>
+                            </div>
+                         
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.CountryId, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @*@if (Model != null && ViewBag.Country != null && Model.CountryId != null && Model.CountryId > 0)*@
+                                    @if (ViewBag.Country != null)
+                                    {@Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control requiredselect", @id = "Country", @onchange = "BindState()" })}
+                                    else
+                                    {<select id="Country" class="form-control requiredselect"><option value="-1">--Select--</option></select>}
+                                    @Html.ValidationMessageFor(model => model.CountryId)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.StateId, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    <select id="States" name="StateId" class="form-control required requiredselect locationstate"><option value="0">Select</option></select>
+                                    @Html.ValidationMessageFor(model => model.StateId)
+                                </div>
+                            </div>
+
+                         
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.ZipCode, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.ZipCode, new { @Placeholder = "Location Zip Code", @maxLength = "5", @class = "Postal form-control", onkeypress = "return isNumberKey(event) " })
+                                    @Html.ValidationMessageFor(model => model.ZipCode)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.City, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.City, new { @Placeholder = "Location City", @maxLength = "100",@class = "form-control required LetterOnlyFr" })
+                                    @Html.ValidationMessageFor(model => model.City)
+                                </div>
+                            </div>
+                           
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.PhoneNo, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextBoxFor(model => model.PhoneNo, new { @Placeholder = "Location Phone no", @class = "Phone  form-control" })
+                                    @Html.ValidationMessageFor(model => model.PhoneNo)
+                                </div>
+                            </div>
+                        
+
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.LocationType, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+
+                                    @if (ViewBag.Country != null)
+                                    {@Html.DropDownListFor(model => model.LocationType, new SelectList(ViewBag.LocationTypeList, "Value", "Text"), "--Select--", new { @class = "form-control requiredselect", @id = "LocationType", @onchange = "BindLocationType()" })}
+                                    else
+                                    {<select id="Country" class="form-control requiredselect"><option value="-1">--Select--</option></select>}
+                                    @Html.ValidationMessageFor(model => model.LocationType)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.LocationSubType, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    <select id="LocationSubType" name="LocationSubType" class="form-control required requiredselect" onchange="DisplayDescription();">
+                                        <option value="0">Select</option>
+                                    </select>
+                                    @Html.ValidationMessageFor(model => model.LocationSubType)
+                                </div>
+                            </div>
+                          
+
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.LocationSubTypeDesc, new { @class = "col-sm-4 control-label star" })
+                                <div class="col-sm-8">
+                                    @Html.TextAreaFor(model => model.LocationSubTypeDesc, new { @Placeholder = "Location sub type description", @class = "form-control resize required" })
+                                    @Html.ValidationMessageFor(model => model.LocationSubTypeDesc)
+                                </div>
+                            </div>
+                            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label" })
+                                <div class="col-sm-8">
+                                    @Html.TextAreaFor(model => model.Description, new { @Placeholder = "Location Description", @class = "form-control resize" })
+                                    @Html.ValidationMessageFor(model => model.Description)
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+                <input type="button" id="LocationNext" name="next" class="btn btn-default bluebutton next  nxt-btn" value="Next" />
+                <input type="button" onclick="callCancel();" class="btn btn-default bluebutton nxt-btn" formnovalidate="formnovalidate" value="Cancel" />
+
+            </fieldset>
+
+            <fieldset id="ManagerInformation">
+                @{ViewBag.myModelprefixName = "ManagerModel."; ViewBag.ActionSection = "manager";}
+                <div id="divManager">
+
+                    @Html.Partial("_myRegistration")
+                </div>
+
+                @*<input type="button" name="next" class="btn btn-default bluebutton next  nxt-btn" value="Next" />
+                <input type="button" name="previous" class="btn btn-default bluebutton previous prv-btn mrgL5" value="Previous" />
+                <input type="button" onclick="callCancel();" class="btn btn-default bluebutton nxt-btn" formnovalidate="formnovalidate" value="Cancel" />*@
+
+                <input type="button" name="next" class="btn btn-default bluebutton next  nxt-btn" value="Next" />&nbsp; &nbsp;
+                <input type="button" name="previous" class="btn btn-default bluebutton previous prev_btn" value="Previous" />&nbsp; &nbsp;
+                <input type="button" onclick="callCancel();" class="btn btn-default bluebutton nxt-btn" formnovalidate="formnovalidate" value="Cancel" />
+
+            </fieldset>
+
+            <fieldset id="ClientInformation">
+            
+                @{ViewBag.myModelprefixName = "ClientModel."; ViewBag.ActionSection = "client"; }
+                @*@{Html.RenderPartial("_myRegistration", Model != null ? Model.ClientModel : new WorkOrderEMS.Models.UserModel());}*@
+                @Html.Partial("_myRegistration");
+                @*  with azam
+                    @Html.Action("ClientRegistration", "Client", new { WorkOrderEMS.Models.UserModel = Model.ClientModel })*@
+
+
+                <input type="button" name="next" class="btn btn-default bluebutton next  nxt-btn" onclick="GetEmployeesOnLoactionBases();" value="Next" />
+                <input type="button" name="previous" class="btn btn-default bluebutton previous prev_btn" value="Previous" />
+                <input type="button" onclick="callCancel();" class="btn btn-default bluebutton nxt-btn" formnovalidate="formnovalidate" value="Cancel" />
+
+            </fieldset>
+
+            <fieldset id="LocationServices">
+                @*<div class="row">
+                    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12">*@
+                @*@Html.HiddenFor(model => model.EmployeeListModel)*@
+                <div class="col-sm-12">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        @Html.Label("Location Services", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            @Html.DropDownList("Services", new SelectList(ViewBag.Services, "ServiceID", "ServiceName", "Description"), new { @id = "ddlServices", @multiple = "multiple", @class = "form-control" })
+                            <span style="display: none; color:red;" class="">Select at least one service for this location.</span>
+                            @Html.Hidden("ServicesID")
+                        </div>
+                    </div>
+                        
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right text-right">
+                        @*<input type="button" name="next" class="btn btn-default bluebutton nxt-btn" value="Add New" id="btnAddNewEmployee" data-target="ModalConfirumationPreview" data-toggle="modal" />*@
+                        <input data-toggle="modal" data-target="#ModalConfirumationPreview" id="btnAddNewEmployee" type="button" class="btn btn-default bluebutton h5" value="Add Location Employee" />
+                    </div>
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                        <div id="jqGrid_container">
+                            <table id="tbl_EmployeeList" border="0" cellpadding="0" cellspacing="0"></table>
+                            <div id="divEmployeeListPager"></div>
+
+                        </div>
+                    </div>
+                </div>
+
+                @Html.HiddenFor(m => m.EmployeeList)
+
+
+                <div class="clearfix"></div>
+                @*<div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12 text-right">*@
+                <input type="button" name="previous" class="btn btn-default bluebutton previous prv-last-btn pull-right marginright10 marginbottom10 LRmar" value="Previous" />
+                <button type="submit" onclick="return validateCustomFields(this);" class="btn btn-success pull-right marginright10 marginbottom10 Lmar10">Save &amp; Update </button>
+                @*<a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>*@
+                <input type="button" onclick="callCancel();" class="btn btn-default bluebutton pull-right marginright10 marginbottom10 Lmar10" formnovalidate="formnovalidate" value="Cancel" />
+
+            </fieldset>
+            <style>
+                .modal-dialog {
+                    left: 0;
+                }
+            </style>
+            @*<input type="button" onclick="callCancel();" style="top:-44px; right:155px;" class="btn btn-default bluebutton next nxt-btn" formnovalidate="formnovalidate" value="Cancel" />*@
+            <div class="modal fade" id="ModalConfirumationPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Add New Employee</h4>
+                        </div>
+
+                        <div class="modal-body">
+                            <strong>
+
+                            </strong>
+                            <div id="divConfirumationPreview" class="">
+
+                                @{ViewBag.myModelprefixName = ""; ViewBag.ActionSection = "employee"; }
+                                @Html.Partial("_myRegistration");
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12 " id="divPintFooter">
+                                <button type="button" id="btnSaveEmployee" class="btn btn-default bluebutton ">Add Employee</button>
+                                <button type="button" id="btnCloseEmpPopup" class=" btn btn-default bluebutton" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+   
+</div>
+
+
+<div class="clearfix"></div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript" src="~/Scripts/QRCode/jquery.qrcode-0.9.5.js"></script>
+    <script type="text/javascript" src="~/Scripts/QRCode/generateQRC.js"></script>
+    <script src="~/GridListing/JqGridScript/NewEmployeeList.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery-easing/jquery.easing.min.js"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+    <script type="text/javascript">
+
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#gview_tbl_EmployeeList').setGridWidth(width);
+        });
+        $_ListUserUrl = '@Url.Action("GetEmployeeByLocDetailed","GlobalAdmin")';
+        var LocationSubTypeDesc = '@Html.ValueFor(model => model.LocationSubTypeDesc)';
+        var ismychk = false;
+        var EmployeeListModel = [];
+        var empdata = [];
+        var curEmp;
+        var $_JqueryLoader = '@hostingPrefix';
+        var $_hostingPrefix = '@hostingPrefix';
+        new fn_showMaskloader('Please wait...');
+        $(document).ready(function () {
+
+
+            $("[name^='ZipCode']").on("keypress", function (e) {
+                $(this).val($(this).val().replace(/[^0-9]+/g, ''));
+            }); //End
+
+            $(window).bind('resize', function () {
+                var width = $('#jqGrid_container').width();
+                $('#tbl_LocationList').setGridWidth(width);
+            });
+            setInterval(function () { $("#message").html(""); }, 20000);
+            $("#ClientModel_EmployeeID").parent("div").parent("div").hide();
+            $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+            $_GetLocationSubTypeByLocationTypeIdUrl = '@Url.Action("GetLocationSubType", "Dropdown")';
+            $_StateID = '@StateID';
+            $_LocationTypeID = '@Html.ValueFor(model => model.LocationSubType)';
+
+            BindLocationType();
+            //do not remove will use in future if ($("#Country").val() != '') { BindState(); }
+            BindState(); // if above comment line will use then comment this line.
+            //chkisexistingmanager();
+
+            DisplayDescription();
+
+            //$('input[name=IsExistingManager]').on('click', function () {
+            //    chkisexistingmanager();
+            //});
+
+            /*/*Project Services*/
+            $_ServiceID = '@ServiceId';
+
+            $('#ddlServices').multiselect({
+                maxHeight: '300',
+                onChange: function (element, checked) {
+
+                    var Services = $('#ddlServices option:selected');
+                    var selected = [];
+                    $(Services).each(function (index, Services) {
+                        //if (index > 0) {
+                        var ss = $(Services).val();
+                        if (ss != undefined && parseInt(ss) > 0) {
+                            //alert(parseInt(ss));// found
+                            selected.push([$(this).val()]);
+                        }
+                        //}
+                    });
+                    $("#ServicesID").val(selected);
+                }
+            });
+            var Arr = $_ServiceID.split(',');
+
+            for (var i = 0; i < Arr.length; i++) {
+                $("#ddlServices").multiselect("select", $.trim(Arr[i]));
+            }
+            $("#ddlServices").multiselect('rebuild');
+            ////==========================
+            /*Project Services end*/
+
+
+            //-------------Add By Manoj Jaswal to remove Update Location Errors------------------//
+            $(".isValidLocationName").keydown(function (e) {
+                var reg = new RegExp("^([a-zA-Z0-9-_ ])*$");
+                return reg.test(e.key);
+            })
+            $(".LetterOnlyFr").keydown(function (e) {
+                var reg = new RegExp("^[a-zA-Z ]+$");
+                return reg.test(e.key);
+            })
+
+            var LoctionId = $("#LocationId").val();
+            if (LoctionId == undefined || LoctionId == "" || LoctionId == 0 || LoctionId == "0") {
+                jQuery("[id*='Password']").removeAttr("disabled");
+
+            }
+            else {
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetUsersByLocation","GlobalAdmin")',
+                    data: { "loc": LoctionId },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        $("#ddlManager").html("<option value=''>--Select--</option>");
+                        if (Data.length > 0) {
+                            for (var i = 0; i < Data.length; i++) {
+                                $("#ddlManager").append("<option value=" + Data[i].UserId + ">" + Data[i].Name + "</option>")
+                            }
+                            $("#ddlManager")[0].selectedIndex = 1;
+                            $("#ddlAdministrator")[0].selectedIndex = 1;
+                            chkisexistingmanager();
+                        }
+
+                    },
+                    error: function () {
+
+                    },
+                    complete: function () {
+                        $("#page-wrapper div div ol li i").addClass();
+                        $("#page-wrapper div div ol li span").html("Update Location");
+                        $("#page-wrapper div div ol li small").html("");
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+            $(".UpdateUserInfo").hide();
+            var resmgr = $("#rdNewManager").is(":checked");
+            if (resmgr) {
+                $("#ManagerModel_UserId").val("");
+            }
+            $("[name='IsExistingManager']").click(function () {
+          
+                $(".UpdateUserInfo").hide();
+                var res = $("#rdNewManager").is(":checked");
+                if (res) {
+                    $("#ManagerModel_UserId").val("");
+                }
+            })
+
+            $("#btnAddNewEmployee").click(function () {
+                $("#AlternateEmail").removeAttr("disabled");
+                $("#EmployeeID").removeAttr("disabled");
+                $("#Password").removeAttr("disabled");
+            });
+            //-------------------------END------------------------------//
+
+
+            // check UserEmail already exists or not
+            //$("#ClientModel_UserEmail,#ClientModel_AlternateEmail,#ManagerModel_UserEmail,#ManagerModel_AlternateEmail,#UserEmail,#AlternateEmail").focusout(function () {
+
+
+            //    if ($(this).val() != "") {
+
+            //        var emai = "", altemai = "";
+            //        if ($(this).attr("type") == "email") {
+            //            emai = $(this).val();
+            //            altemai = "";
+            //        }
+            //        else if ($(this).attr("type") == "text") {
+            //            emai = "";
+            //            altemai = $(this).val();
+            //        }
+
+            //        if (emai == "" && altemai == "") {
+
+            //        }
+            //        else {
+            //             ;
+            //            var result = isEmailAlreadyExists(emai, altemai);
+            //            if (result > 0) {
+            //                $(this).addClass("form-control input-validation-error");
+            //                $(this).siblings('span').html("");
+
+            //                $(this).siblings("span").addClass("input-validation-error");
+            //                if (emai != "") {
+            //                    $(this).siblings('span').html("Email already exists.");
+            //                }
+            //                else {
+            //                    $(this).siblings('span').html("Username already exists.");
+            //                }
+            //                $(this).siblings('span').show();
+            //                setInterval(function () { $(this).val(''); }, 5000);
+            //                $(this).focus();
+            //            }
+            //        }
+            //    }
+            //    else {
+            //        $(this).focus();
+            //    }
+            //});//end block
+
+
+            $("#LocationName").focusout(function () {
+                if ($("#LocationName").val().trim() != "") {
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("isLocationNameExists","GlobalAdmin")',
+                        data: { "locationName": $("#LocationName").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+
+                            if (Data.status > 0) {
+                                $("#LocationName").addClass("form-control input-validation-error");
+                                $("#LocationName").siblings('span').show();
+                                $("#LocationName").val("");
+                                $("#LocationName").focus();
+                            }
+                            else {
+                                $("#LocationName").removeClass("input-validation-error");
+                                $("#LocationName").siblings('span').hide();
+                            }
+
+                        },
+                        error: function () {
+
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#LocationName").focus();
+                }
+            });// focusOut end.
+
+            $("#drp_MasterLocation").hide();//.attr("display", "none");
+
+            $("#LocationNext").click(function () {
+                $('#ManagerModel_Address_Address1').val($('#Address1').val());
+                $('#ManagerModel_Address_City').val($('#City').val());
+                $('#ManagerModel_Address_ZipCode').val($('#ZipCode').val());
+                $('#ManagerModel_Address_Phone').val($('#PhoneNo').val());
+
+                $('#CompanyStates,#EmployeeStates').val($('#States').val());
+                $("[name='ManagerModel.Gender']").prop('disabled', true);
+                $("#ManagerModel_ProfileImage").hide();
+                chkisexistingmanager();
+                $("#ddlManager")[0].selectedIndex = 1;
+
+                //Added By Bhushan Dod on 25/07/2016 for when click on loc next button and new manager select click on previous but again click next then new manager doesn't get selected.
+                if ($("input[name='ManagerModel.IsExistingManager']:checked").val() == 'true') { 
+                    FillManagerDetails();
+                }
+            });
+
+            //jQuery time
+            var current_fs, next_fs, previous_fs; //fieldsets
+            var left, opacity, scale; //fieldset properties which we will animate
+            var animating; //flag to prevent quick multi-click glitches
+
+            //$('#divexistingmanager').prop('disabled', true);
+
+
+
+            $('input:radio[name="ManagerModel.IsExistingManager"]').change(function () {
+             
+                if ($("input[name='ManagerModel.IsExistingManager']:checked").val() == 'true') {
+
+                    $("#ManagerModel_ProfileImage").hide();
+
+                    //$("[name^='ManagerModel']").prop("disabled", "disabled");
+
+                    $("[id^='ManagerModel']").each(function () {
+                        var selected = this.type;
+                        if (selected == "radio" || selected == "select") {
+
+                        }
+                        else {
+                            $(this).prop("disabled", "disabled");
+                        }
+                    })
+
+                    $('#ddlManager,#BillingCountry,#BillingStates').prop('disabled', false);
+
+                    $('#BillingStates').prop("disabled", true);
+                    $('#BillingCountry').prop("disabled", true);
+
+
+                    $("[name='ManagerModel.IsExistingManager']").removeAttr("disabled");
+
+                    $("#UserModel_myProfileImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg")
+                    $("#divexistingmanager").show();
+                    $('#ddlManager').prop('disabled', false);
+                    jQuery("[id='ManagerModel_Password']").each(function () { $(this).parent("div").parent("div").hide(); })
+                    jQuery("[id*='ManagerModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").hide(); })
+                    //jQuery("[id*='ManagerModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").hide(); });
+
+                    $("[id*='ManagerModel_EmployeeID']").attr("disabled", true);
+
+                    $('#BillingStates').val($('#States').val());
+                }
+                else {
+
+                    $('#BillingStates,#CompanyStates,#EmployeeStates').val($('#States').val());
+                    $("#ManagerModel_ProfileImage").show();
+                    $("[name^='ManagerModel']").removeAttr("disabled");
+                    $("#divexistingmanager").hide();
+                    $('#ddlManager').prop('disabled', true);
+                    jQuery("[id='ManagerModel_Password']").each(function () { $(this).parent("div").parent("div").show(); })
+                    jQuery("[id*='ManagerModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").show(); })
+                    //jQuery("[id*='ManagerModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").show(); })
+                    $("#ManagerModel_myProfileImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg")
+                    $("[id^='ManagerModel']").each(function () {
+                        var selected = this.type;
+                        if (selected == "radio" || selected == "select") {
+
+                        }
+                        else {
+                            $(this).val("");
+                        }
+                    })
+
+
+                    $('#ddlManager').val(-1);
+                }
+            });
+
+            $(".next").click(function () {
+                if ($("#msform").valid()) {
+                    if (animating) return false;
+                    animating = true;
+
+                    current_fs = $(this).parent();
+                    next_fs = $(this).parent().next();
+
+                    //activate next step on progressbar using the index of next_fs
+                    $("#progressbar li").eq($("fieldset").index(next_fs)).addClass("active");
+                    //CopyLocationDetails();
+                    //show the next fieldset
+                    next_fs.show();
+                    //hide the current fieldset with style
+                    current_fs.animate({ opacity: 0 }, {
+                        step: function (now, mx) {
+                            //as the opacity of current_fs reduces to 0 - stored in "now"
+                            //1. scale current_fs down to 80%
+                            scale = 1 - (1 - now) * 0.2;
+                            //2. bring next_fs from the right(50%)
+                            left = (now * 50) + "%";
+                            //3. increase opacity of next_fs to 1 as it moves in
+                            opacity = 1 - now;
+                            current_fs.css({ 'transform': 'scale(' + scale + ')' });
+                            next_fs.css({ 'left': left, 'opacity': opacity });
+                        },
+                        duration: 800,
+                        complete: function () {
+                            current_fs.hide();
+                            animating = false;
+
+                        },
+                        //this comes from the custom easing plugin
+                        easing: 'easeInOutBack'
+                    });
+                }
+            });
+
+            $(".previous").click(function () {   
+                if (animating) return false;
+                animating = true;
+
+                current_fs = $(this).parent();
+                previous_fs = $(this).parent().prev();
+
+                //de-activate current step on progressbar
+                $("#progressbar li").eq($("fieldset").index(current_fs)).removeClass("active");
+
+
+
+                //show the previous fieldset
+                previous_fs.show();
+                //hide the current fieldset with style
+                current_fs.animate({ opacity: 0 }, {
+                    step: function (now, mx) {
+                        //as the opacity of current_fs reduces to 0 - stored in "now"
+                        //1. scale previous_fs from 80% to 100%
+                        scale = 0.8 + (1 - now) * 0.2;
+                        //2. take current_fs to the right(50%) - from 0%
+                        left = ((1 - now) * 50) + "%";
+                        //3. increase opacity of previous_fs to 1 as it moves in
+                        opacity = 1 - now;
+                        current_fs.css({ 'left': left });
+                        previous_fs.css({ 'transform': 'scale(' + scale + ')', 'opacity': opacity });
+                    },
+                    duration: 800,
+                    complete: function () {
+                        current_fs.hide();
+                        animating = false;
+                    },
+                    //this comes from the custom easing plugin
+                    easing: 'easeInOutBack'
+                });
+            });
+
+            $(".submit").click(function () {
+                return false;
+            });
+
+            $("#btnAddNewEmployee").click(function () {
+                curEmp = "";
+                clearallfieldsLocation();
+            });
+
+            function insertArrayAt(array, index, arrayToInsert) {
+                Array.prototype.splice.apply(array, [index, 0].concat(arrayToInsert));
+                return array;
+            }
+
+
+            $("#btnSaveEmployee").click(function () {
+
+                if ($("#msform").valid()) {
+                    
+                    //if (search($("#UserEmail").val(), EmployeeListModel) == true) {
+                    var _EmployeeListModel = {};
+                    var _Emp = {};
+                    _EmployeeListModel.UserEmail = $("#UserEmail").val();
+                    _EmployeeListModel.JobTitle = $("#JobTitle").val();
+                    _EmployeeListModel.FirstName = $("#FirstName").val();
+                    _EmployeeListModel.LastName = $("#LastName").val();
+                    _EmployeeListModel.AlternateEmail = $("#AlternateEmail").val();
+                    _EmployeeListModel.Password = $("#Password").val();
+                    _EmployeeListModel.JobTitle = $("#JobTitle").val();
+                    _EmployeeListModel.FirstName = $("#FirstName").val();
+                    _EmployeeListModel.LastName = $("#LastName").val();
+                    _EmployeeListModel.Gender = $("#Gender").val();
+                    _EmployeeListModel.UserType = 3;//For Employee
+                    _EmployeeListModel.UserID = $("#UserId").val();
+                    if (_EmployeeListModel.UserID == "" || _EmployeeListModel.UserID == undefined || _EmployeeListModel.UserID == null) {
+                        _EmployeeListModel.UserID = 0;
+                    }
+                    // new Date(Date.parse($("#DOB").val(), "yyyy/MM/dd HH:mm z")) == null ? "" :;
+                    //if (_EmployeeListModel.UserID != undefined || _EmployeeListModel.UserID != null || _EmployeeListModel.UserID != 0) {
+                    //    _EmployeeListModel.DOB = $("#DOB").val();
+                    //}
+                    //else{
+                    if ($("#DOB").val() != '' || $("#DOB").val() != null) {
+                        var dd = "";
+                        //dd = $("#DOB").val().split('/')[1] + '-' + $("#DOB").val().split('/')[0] + '-' + $("#DOB").val().split('/')[2];
+
+                        dd = $("#DOB").val().replace('/', '-');
+                        dd = dd.replace('/', '-');
+                        _EmployeeListModel.DOB = dd;
+                    }
+                    //}
+                    _EmployeeListModel.EmployeeID = $("#EmployeeID").val();
+                    var img = $("#ProfileImage").val();
+                    if (img == "" || img == undefined || img == null) {
+                        _EmployeeListModel.ProfileImageFile = "";
+                    }
+                    else {
+                        var ImageFile = "";
+                        file_data = $("#ProfileImage").prop("files")[0]; // Getting the properties of file from file field
+                        form_data = new FormData(); // Creating object of FormData class
+                        form_data.append("file", file_data) // Appending parameter named file with properties of file_field to form_data
+                        form_data.append("CallID", 11) // Adding extra parameters to form_data
+                        if (file_data != undefined) {
+                            $.ajax({
+                                url: '@Url.Action("UploadedWebImage", "Common")',
+                                dataType: 'script',
+                                cache: false,
+                                contentType: false,
+                                processData: false,
+                                async: false,
+                                beforeSend: function () {
+                                    new fn_showMaskloader('Please wait...');
+                                },
+                                data: form_data, // Setting the data attribute of ajax with file_data
+                                type: 'post',
+                                success: function (data) {
+                                    ImageFile = data;
+                                    // return data;
+
+                                },
+                                error: function (e) { alert("error:" + e); },
+                                complete: function () {
+                                    fn_hideMaskloader();
+
+                                }
+                            });
+                        }
+                        if (ImageFile == null || ImageFile == "") { } else {
+                            _EmployeeListModel.ProfileImageFile = JSON.parse(ImageFile);
+                        }
+                    }
+                    _Emp.UserEmail = $("#UserEmail").val();
+                    _Emp.FirstName = $("#FirstName").val();
+                    _Emp.LastName = $("#LastName").val();
+                    _Emp.Mobile = $("#Address_Mobile").val();
+                    _Emp.EmployeeID = $("#EmployeeID").val();
+                    var _EmployeeListModel_Address = {};
+                    var AddressMAsterID = $("#AddressMasterId").val();
+                    if (AddressMAsterID == undefined || AddressMAsterID == null || AddressMAsterID == "") {
+                        AddressMAsterID = 0;
+                    }
+                    _EmployeeListModel_Address.AddressMasterId = AddressMAsterID;
+                    _EmployeeListModel_Address.Address1 = $("#Address_Address1").val();
+                    _EmployeeListModel_Address.Address2 = $("#Address_Address2").val();
+                    _EmployeeListModel_Address.CountryId = $("#Country").val();
+                    _EmployeeListModel_Address.StateId = $("#States").val();
+                    _EmployeeListModel_Address.City = $("#Address_City").val();
+                    _EmployeeListModel_Address.ZipCode = $("#Address_ZipCode").val();
+                    _EmployeeListModel_Address.Mobile = $("#Address_Mobile").val();
+                    _EmployeeListModel_Address.Phone = $("#Address_Phone").val();
+
+                    _EmployeeListModel.Address = _EmployeeListModel_Address;
+                    if (curEmp != "") {
+                        EmployeeListModel[curEmp] = _EmployeeListModel;
+                        empdata[curEmp] = _Emp;
+
+                    }
+                    else {
+                        EmployeeListModel.push(_EmployeeListModel);
+                        empdata.push(_Emp);
+                    }
+                    $("#btnCloseEmpPopup").trigger('click');
+                    $("#EmployeeList").val(JSON.stringify(EmployeeListModel));
+
+
+
+                    console.log(JSON.stringify(EmployeeListModel));
+
+                    jQuery("#tbl_EmployeeList")
+                         .jqGrid('setGridParam',
+                             {
+                                 datatype: 'local',
+                                 data: empdata
+                             })
+                         .trigger("reloadGrid");
+                    //}
+                    //else {
+                    //    $("#diverrormessage").html("Duplicate Entry");
+                    //}
+                }
+            });
+
+        }); // document ready end block
+
+        function isEmailAlreadyExists(Email, AlternateEmail) {
+            var result = 0;
+            
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("isEmailExists","GlobalAdmin")',
+                async: false,
+                data: { "Email": Email, "AlternateEmail": AlternateEmail },
+                beforeSend: function () {
+                    new fn_showMaskloader('Please wait...');
+                },
+                success: function (Data) {
+
+                    console.log(Data.status);
+                    result = Data.status;
+
+                },
+                error: function (err) {
+                    console.log(err);
+                },
+                complete: function () {
+                    fn_hideMaskloader();
+                }
+            });
+            console.log(result);
+
+            return result;
+        }
+
+
+
+        function validateCustomFields(form) {
+
+            if ($("#ServicesID").val() === "" || $("#ServicesID").val() === null || $("#ServicesID").val() === undefined) {
+
+                $("#ServicesID").siblings('span').css("display", "block");
+
+
+                return false;
+            }
+            else {
+
+                $("#ServicesID").siblings('span').css("display", "none");
+
+                return true;
+            }
+
+
+        }
+        function search(nameKey, myArray) {
+
+            for (var i = 0; i < myArray.length; i++) {
+                if (myArray[i].UserEmail === nameKey) {
+                    //return myArray[i];
+                    return false;
+                }
+            }
+            return true;
+        }
+        function clearallfieldsLocation() {
+
+            $("#UserEmail,#AlternateEmail").removeClass("input-validation-error");
+            $(this).siblings('span').html("");
+
+            $.each($('#divConfirumationPreview input'), function (index, value) {
+
+                if (value.type == 'text' || value.type == 'email' || value.name == 'DOB') {
+                    $('#' + value.id).val('');
+                }
+            });
+            $.each($('#divConfirumationPreview select'), function (index, valuee) {
+                $('#' + valuee.id).val('-1');
+            });
+        }
+
+        function callCancel() {
+
+            bootbox.confirm("Are you sure you want to cancel?", function (result) {
+                if (result) {
+                    var vars = [], hash;
+                    var hashes = window.location.href.slice(window.location.href.indexOf('?') + 1).split('&');
+                    for (var i = 0; i < hashes.length; i++) {
+                        hash = hashes[i].split('=');
+                        vars.push(hash[0]);
+                        vars[hash[0]] = hash[1];
+                    }
+                    var Loc = decodeURIComponent(vars.loc);
+                    if (Loc == undefined || Loc == null || Loc == "undefined") {
+                        window.location.href = "../GlobalAdmin/Index";
+                    }
+                    else {
+                        window.location.href = "../../GlobalAdmin/ListLocation";
+                    }
+                    //console.log(history.go(-1));
+                }
+            });
+        }
+
+        function DisplayDescription() {
+            if ($("#LocationSubType").val() == 146) {
+                $("#LocationSubTypeDesc").attr("disabled", false);
+                $("#LocationSubTypeDesc").css("style", "block");
+                $("#LocationSubTypeDesc").parent("div").parent("div").show();
+            }
+            else {
+                $("#LocationSubTypeDesc").attr("disabled", true);
+                $("#LocationSubTypeDesc").css("style", "none");
+                $("#LocationSubTypeDesc").parent("div").parent("div").hide();
+            }
+            $("#LocationSubTypeDesc").val('');
+        }
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        $(document).on('focusout', '#Address2', function () {
+            if ($(this).val() != "" || $(this).val() != null || $(this).val() != undefined) {
+
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("isLocationCodeExists","GlobalAdmin")',
+                    async: false,
+                    data: { "LocationCode": $(this).val() },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        if (Data.status > 0) {
+
+                            $("#Address2").addClass("form-control field-validation-error");
+                            $("#Address2").siblings('span').html("");
+                            $("#Address2").siblings('span').addClass("field-validation-error");
+
+                            $("#Address2").siblings('span :eq(1)').html("Location code is already exists");
+
+
+                            $("#Address2").siblings('span').show();
+                            $("#Address2").val('');
+                            $("#Address2").focus();
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    }
+
+                });
+            }
+        });//location Code
+
+
+
+
+        $(window).load(function () {
+            FillManagerDetails();
+            var LocationId = $("#LocationId").val();
+            if (LocationId == "" || LocationId == undefined || LocationId == "0" || LocationId == 0) { } else {
+
+                $("#page-wrapper div div ol li i").addClass();
+                $("#page-wrapper div div ol li span").html("Update Location");
+                $("#page-wrapper div div ol li small").html("");
+            }
+
+        });
+
+    </script>
+    <script type="text/javascript" src="~/Scripts/jquery-easing/jquery.easing.min.js"></script>
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+
+    <!--File Upload-->
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+}
+<!-- Modal Confirumation Preview-->
+<div class="modal fade preview" id="ModalEmployeeViewPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Employee Information</h4>
+            </div>
+            <div class="modal-body" style="height:600px;overflow-y:auto;">
+                <span id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</span>
+
+                <span id="diverrormessage" class="text-danger"></span>
+                <div id="divConfirumationPreview" class="">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Employee ID</label>
+                                <div id="View_EmployeeID"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>User Email</label>
+                                <div id="View_UserEmail"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Job Title</label>
+                                <div id="View_JobTitle"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>First Name</label>
+                                <div id="View_FirstName"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Last Name</label>
+                                <div id="View_LastName"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Gender</label>
+                                <div id="View_Gender"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Profile Picture</label>
+                                <div></div>
+                                <img id="View_myProfileImage" name='View_myProfileImage' src="@Url.Content("~/Content/Images/ProjectLogo/no-profile-pic.jpg")"
+                                     class="img-rounded" alt="No Image " style="width:110px; height:110px;">
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>DOH</label>
+                                <div id="View_DOB"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Address 1 </label>
+                                <div id="View_Address_Address1"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Address 2</label>
+                                <div id="View_Address_Address2"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Country</label>
+                                <div id="View_EmployeeCountry"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>State</label>
+                                <div id="View_EmployeeStates"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>City</label>
+                                <div id="View_Address_City"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Zip Code</label>
+                                <div id="View_Address_ZipCode"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Mobile</label>
+                                <div id="View_Address_Mobile"></div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="form-group">
+                                <label>Phone</label>
+                                <div id="View_Address_Phone"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divPintFooter">
+                    @*<button id="printQRCIndex" type="button"  class="btn btn-default bluebutton h5" formnovalidate="formnovalidate">Print QRC with details</button>
+                        <button id="printQRC_btn" type="button"  class=" btn btn-default bluebutton" formnovalidate="formnovalidate">Print QRC</button>*@
+                    <button id="Close_btn" type="button" class=" btn btn-default bluebutton" data-dismiss="modal" formnovalidate="formnovalidate">Ok</button>
+                    @*<a class="btn btn-default bluebutton">Close</a>*@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Confirumation Preview-->

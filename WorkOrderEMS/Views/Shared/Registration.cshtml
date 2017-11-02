@@ -1,0 +1,1521 @@
+﻿@model WorkOrderEMS.Models.VehicleRegistrationModel
+
+@{
+    ViewBag.Title = "Register Vehicle";    //Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+
+    long locationId = 0;
+    long userId = 0;
+    long cookieLocationId = 0;
+
+    var update = ViewBag.UpdateMode;
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    { ViewBag.Title = "Update Vehicle"; }
+
+    string StateID = string.Empty, Image = "defaultImage.png", InsurancePlanID = string.Empty;
+    if (Model != null)
+    {
+        //if (Model.InsurancePlanID.HasValue)
+        //{ InsurancePlanID = Convert.ToString(Model.InsurancePlanID.Value); }
+        //if (Model._VendorDetailModel.)
+        //{ StateID = Convert.ToString(Model.StateId.Value); }
+        Image = string.IsNullOrEmpty(Model.VehicleImage) ? "defaultImage.png" : Model.VehicleImage; //no-profile-pic.jpg
+        cookieLocationId = Model.CookieLocationId;
+    }
+    string imgaeserverpath = Url.Content("~/Content/Images/constant/");
+
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userId = ObjLogin.UserId;
+    }
+
+}
+@{ Html.EnableClientValidation(true); }
+<script type="text/javascript">
+    //$(function () {
+    //    $.validator.setDefaults({
+    //        ignore: ""
+    //    });
+    //});
+
+    var $_locationId = '@locationId';
+    var $_userId = '@userId';
+    var $_cookieLocId = '@cookieLocationId';
+    $_GetInsurancePlanByInsuranceIdUrl = '@Url.Action("GetInsurancePlanByInsurance", "Dropdown")';
+
+</script>
+@*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+@using (Html.BeginForm("VehicleRegistration", "QRCSetup", FormMethod.Post, new { enctype = "multipart/form-data", id = "msform" }))
+{    @Html.ValidationSummary(true)
+
+    @*@Html.AntiForgeryToken()*@
+    <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 commBox">
+
+        <div class="row">
+            <div class="accordion-container">
+                <div id="accordion" class="panel-group">
+                    <div class="panel panel-default first-mar10 DriverDetails">
+                        <div class="panel-heading">
+                            <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-minus"></i></span>
+                                    Driver Details
+                                        
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse collapse in" id="collapseOne">
+                            <div class="panel-body">
+                                <div class="row">
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.PermitType, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @if (Model != null && Model.PermitTypeList != null && Model.PermitTypeList.Count > 0)
+                                            {@Html.DropDownListFor(model => model.PermitType, new SelectList(Model.PermitTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ClientType", @class = "form-control required requiredselect", @onchange = "disablevendordetail();" });
+                                            }
+                                            else
+                                            { <select id="ClientType" class="form-control required requiredselect star"><option>Select</option></select>}
+                                            @Html.ValidationMessageFor(model => model.PermitType)
+                                        </div>
+                                    </div>
+
+                                    @*<div class="clearfix"></div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label for="Address" class="col-sm-4 control-label star">Select Vendor</label>
+                                        <div class="col-sm-8 vendorValidation">
+                                            @if (Model != null && Model.Vendor != null && Model.Vendor.Count > 0)
+                                            {@Html.DropDownListFor(model => model.VendorUserID, new SelectList(Model.Vendor, "VendorID", "CompanyName"), "--Select--", new { @id = "VendorDetail", @class = "form-control", @onchange = "loadvendordetails();", @disabled = "disabled", @autofocus = "true" });
+                                                @*{@Html.DropDownListFor(model => model.VendorUserID, new SelectList(Model.Vendor, "VendorUserID", "ContactName"), "Select", new { @id = "VendorDetail", @class = "form-control", @onchange = "loadvendordetails()", @disabled = "disabled" });*@
+                                            }
+                                            else
+                                            { <select id="VendorDetail" class="form-control" disabled="disabled"><option>--Select--</option></select>}
+                                            @Html.ValidationMessageFor(model => model.VendorUserID)
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.FirstName, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.FirstName, new { @Placeholder = "Driver First Name", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.FirstName)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.LastName, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.LastName, new { @Placeholder = "Driver Last Name", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.FirstName)
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.DriverName, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.DriverName, new { @Placeholder = "Driver Name", @class = "form-control required" })
+                                                @Html.ValidationMessageFor(model => model.DriverName)
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12" id="DriverEmailContainer">
+                                        @Html.LabelFor(model => model.DriverEmail, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.DriverEmail, new { @Placeholder = "Driver Email ID", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.DriverEmail)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.LicenseNo, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.LicenseNo, new { @Placeholder = "Driver License No.", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.LicenseNo)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.LicenseExpiryDate, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.LicenseExpiryDate, "{0:MM/dd/yyyy}", new { @Placeholder = "License Expiration Date", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.LicenseExpiryDate)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.LicenseProofDoc, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            <input type="file" id="imagevi" name="LicenseProof" onchange="readDoc(this);" value=" Upload License Proof of Document">
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.DriverProfilePic, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8 col-sm-offset-4">
+
+                                            @if (@Model.DriverPPic != "" && @Model.DriverPPic != null)
+                                            {
+                                                <img id="ProfileImageog" src="@Url.Content("~/Content/Images/ProjectLogo/" + @Model.DriverPPic)" class="img-rounded" alt="Rounded Image" style="width: 75px; height: 75px;">
+                                            }
+                                            else
+                                            {
+                                                <img id="ProfileImageog" src="@Url.Content("~/Content/Images/ProjectLogo/no-profile-pic.jpg")" class="img-rounded" alt="Rounded Image" style="width: 75px; height: 75px;">
+                                            }
+                                            <input type="file" id="imageog" name="DriverProfile" onchange="readURL(this);" value=" Upload Driver Profile Image">
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Company Name</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.CompanyName, new { @Placeholder = "Company Name", @class = "form-control specialpermit", @id = "CompanyName", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.CompanyName)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label">DBA</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.DBA, new { @Placeholder = "DBA", @class = "form-control specialpermit", @id = "DBA", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.DBA)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label">Owner or Registerd Agent</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.OwnerRegisterdAgent, new { @Placeholder = "Owner or Registerd Agent", @class = "form-control specialpermit", @id = "OwnerRegisterdAgent", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.OwnerRegisterdAgent)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Company Tax ID No.</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.TaxIdNumber, new { @Placeholder = "Company Tax ID No.", @class = "form-control specialpermit", @id = "TaxIdNumber", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.TaxIdNumber)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Point Of Contact Name</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.ContactName, new { @Placeholder = "Point Of Contact Name", @class = "form-control specialpermit", @id = "ContactName", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.ContactName)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label for="ContactName" class="col-sm-4 control-label">Email ID</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.POCEmail, new { @Placeholder = "Email ID", @class = "form-control specialpermit", @id = "POCEmail", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.POCEmail)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Point Of Contact Cell/Phone No.</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.MobilePOC, new { @Placeholder = "Point Of Contact Cell/Phone No.", @class = "Phone form-control specialpermit", @id = "MobilePOC", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.MobilePOC)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="">
+                                                <label class="col-sm-4 control-label">Buisness Number</label>
+                                                <div class="col-sm-8">
+                                                    @Html.TextBoxFor(model => model._VendorDetailModel.BusinessNo, new { @Placeholder = "Business Number", @class = "form-control specialpermit", @id = "BusinessNo", @disabled = true })
+                                                </div>
+                                            </div>
+                                        </div>*@
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Address 1</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.CompanyAddress.Address1, new { @Placeholder = "Address 1", @class = "form-control specialpermit", @id = "Address1", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.CompanyAddress.Address1)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label">Address 2</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.CompanyAddress.Address2, new { @Placeholder = "Address 2", @class = "form-control specialpermit", @id = "Address2", @disabled = true })
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label">Country</label>
+                                            <div class="col-sm-8">
+                                                @if (ViewBag.Country != null)
+                                                { @Html.DropDownListFor(model => model._VendorDetailModel.CompanyAddress.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control required requiredselect specialpermit", @id = "Country", @onchange = "BindState()", @disabled = true })}
+                                                else
+                                                {<select class="form-control required requiredselect specialpermit" id="Country" disabled="disabled"><option>Select</option></select>}
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">State</label>
+                                            <div class="col-sm-8 vendorStateValidation">
+                                                <select class="form-control required requiredselect specialpermit" id="States" disabled="disabled" onchange="StateValidation()"><option>Select</option></select>
+                                                @Html.Hidden("Stateid", @Model._VendorDetailModel)
+                                                <span class="field-validation-error">This field is required.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">City</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.CompanyAddress.City, new { @class = "form-control specialpermit", @id = "City", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.CompanyAddress.City)
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label star">Zip Code</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model._VendorDetailModel.CompanyAddress.ZipCode, new { @Placeholder = "Zip Code", @class = "form-control specialpermit", @maxLength = 5, @min = 11111, @max = 99999, @id = "ZipCode", @disabled = true })
+                                                @Html.ValidationMessageFor(model => model._VendorDetailModel.CompanyAddress.ZipCode)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default first-mar10 Vehicledetails">
+                        <div class="panel-heading">
+                            <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapseFour">
+
+                                <h4 class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    Vehicle Details
+                                </h4>
+                            </a>
+
+                        </div>
+                        <div class="panel-collapse collapse" id="collapseFour">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.HiddenFor(model => model.QRCID)
+                                        @Html.HiddenFor(model => model.VehicleID)
+                                        @Html.HiddenFor(model => model.UpdateMode)
+                                        @Html.HiddenFor(model => model.CookieLocationId)
+                                        <input type="hidden" id="@Model.UpdateMode" value="@ViewBag.UpdateMode" />
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                            <div class="vendor">
+                                                <label for="ContactName" class="col-sm-4 control-label">Vendor Name</label>
+                                                <div class="col-sm-8" id="vendorname">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+
+                                            <div class="vendor">
+                                                <label for="Address" class="col-sm-4 control-label">Address</label>
+                                                <div class="col-sm-8" id="vendoraddress">
+
+                                                </div>
+                                            </div>
+
+
+                                        </div>*@
+
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.PermitDetailsType, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @if (Model != null && Model.PermitDetailsTypeList != null && Model.PermitDetailsTypeList.Count > 0)
+                                            {@Html.DropDownListFor(model => model.PermitDetailsType, new SelectList(Model.PermitDetailsTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control", @onchange = "PermitDetailsTypeChange();" });
+                                            }
+                                            else
+                                            { <select id="ClientType" class="form-control"><option>Select</option></select>}
+                                            @Html.ValidationMessageFor(model => model.PermitDetailsType)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleType, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            <div class="row">
+                                            <div class="col-sm-6 col-xs-6">
+                                                @if (Model != null && Model.VehicleTypeList != null && Model.VehicleTypeList.Count > 0)
+                                                {@Html.DropDownListFor(model => model.VehicleType, new SelectList(Model.VehicleTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "VehicleType", @class = "form-control", @onchange = "showvehicletypeimage(this);" });
+                                                }
+                                                else
+                                                { <select id="VehicleType" class="form-control"><option>Select</option></select>}
+                                                @Html.ValidationMessageFor(model => model.VehicleType)
+                                            </div>
+                                            <div class="col-sm-6 col-xs-6"><div class="col-sm-1 col-xs-3 dollar_sign"><p style="font-size: 16px; margin-top: 5px; margin-left: -10px; font-weight: 600;">$</p></div><div class="col-sm-9 col-xs-9 ">@Html.TextBoxFor(model => model.PermitTypePrice, new { @id = "PermitTypePrice", @class = "form-control", @readonly = true }) @Html.ValidationMessageFor(model => model.PermitTypePrice) </div></div>
+                                           
+                                            <div class="col-sm-2 "><img id="imgvehicletype" src="" class="img-rounded" alt="" style=" padding-left: 10px; left: 0px; "></div>
+                                            @*<div class="col-sm-2 "><div id="vechicleTypePrice" class="img-rounded col-sm-4" style="padding-top: 10px;  padding-left: 10px; left: 0px; "></div></div>*@
+                                            <input type="hidden" id="hddnimgaeserverpath" value="@imgaeserverpath">
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleTagNo, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.VehicleTagNo, new { @Placeholder = "Vehicle Tag No.", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.VehicleTagNo)
+                                        </div>
+                                    </div>
+                                    @*<div class="clearfix"></div>*@
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleMake, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.VehicleMake, new { @Placeholder = "Vehicle Make Year", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.VehicleMake)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleModel, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.VehicleModel, new { @Placeholder = "Vehicle Model", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.VehicleModel)
+                                        </div>
+                                    </div>
+                                    @*<div class="clearfix"></div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleIdentificationNo, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.VehicleIdentificationNo, new { @Placeholder = "Vehicle Identification No.", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.VehicleIdentificationNo)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleRegistratoinExpiry, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.VehicleRegistratoinExpiry, "{0:MM/dd/yyyy}", new { @Placeholder = "Registration Expiration Date", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.VehicleRegistratoinExpiry)
+                                        </div>
+                                    </div>
+                                    @*<div class="clearfix"></div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.VehicleRegistratoinProofDoc, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            <input type="file" id="imagevi" name="VehicleRegistratoinProof" onchange="readDoc(this);" value=" Upload Vehicle Registratoin Proof of Document">
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.VehicleImage, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8 col-sm-offset-4">
+                                            <img id="ProfileImageog1" src="@Url.Content("~/Content/Images/ProjectLogo/" + Image)"
+                                                 class="img-rounded" alt="Rounded Image" style="width: 75px; height: 75px;">
+                                            <input type="file" id="imageog1" name="VehicleImageFile" onchange="readURL(this);" value=" upload image">
+                                        </div>
+                                    </div>
+
+
+                                    <div class="clearfix"></div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default first-mar10 permitdetails">
+                        <div class="panel-heading">
+                            <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    Permit Details
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse collapse" id="collapseTwo">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="clearfix"></div>
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12" style="display:none;">
+                                            @Html.LabelFor(model => model.PermitBillingCode, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.PermitBillingCode, new { @Placeholder = "Permit Billing Code", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.PermitBillingCode)
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 citypermit">
+                                        <label class="col-sm-3 control-label">City Permit</label>
+                                        @*@Html.LabelFor(model => model.CityPermitNo, new { @class = "col-sm-4 control-label star" })*@
+                                        <div class="col-sm-8">
+                                            <input type="checkbox" checked class="col-sm-4 control-label" id="chkCityPermit" />
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 citypermit permited">
+                                        @Html.LabelFor(model => model.CityPermitNo, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.CityPermitNo, new { @Placeholder = "City Permit No.", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.CityPermitNo)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 permited">
+                                        @Html.LabelFor(model => model.PermitDuration, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.PermitDuration, new { @Placeholder = "Permit Duration", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.PermitDuration)
+                                        </div>
+                                    </div>
+                                    @*<div class="clearfix"></div>*@
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.CompanyTaxIdNo, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.CompanyTaxIdNo, new { @Placeholder = "City Permit No", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.CompanyTaxIdNo)
+                                            </div>
+                                        </div>*@
+
+
+                                    @*<div class="clearfix"></div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 citypermit permited">
+                                        @Html.LabelFor(model => model.CityPermitExpiryDate, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CityPermitExpiryDate, "{0:MM/dd/yyyy}", new { @Placeholder = "City Permit Expiration Date", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.CityPermitExpiryDate)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.FeeFrequency, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @if (Model != null && Model.FeeFrequencyList != null && Model.FeeFrequencyList.Count > 0)
+                                            {@Html.DropDownListFor(model => model.FeeFrequency, new SelectList(Model.FeeFrequencyList, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control" });
+                                            }
+                                            else
+                                            { <select id="ClientType" class="form-control"><option>Select</option></select>}
+                                            @Html.ValidationMessageFor(model => model.FeeFrequency)
+                                        </div>
+                                    </div>
+
+
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            {@Html.DropDownListFor(model => model.PermitDetailsTypeList, new SelectList(Model.PermitDetailsTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control" });
+
+                                           @Html.Label("Permit Type", new {@class = "col-sm-4 control-label star"  })
+                                            @Html.DropDownList("PermitTypeNew", new SelectList(new List<string>() { "TaxiCab", "Offsite Vendors", "Hotel/Motel Permit","Ture Operation Permit","Vehicle For Hire Permit" }), new { @class = "form-control " })
+                                        </div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.AcknowledgementForm, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            <input type="file" id="imagevi" name="AcknowledgementFormDoc" onchange="readDoc(this);" value=" upload Acknowledgement Form">
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default first-mar10">
+                        <div class="panel-heading">
+                            <a href="#collapseThree" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    Insurance Details
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse collapse" id="collapseThree">
+                            <div class="panel-body">
+                                <div class="row">
+
+                                    <div class="clearfix"></div>
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.InsuranceCompanyID, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && ViewBag.InsuranceCompany != null)
+                                                { @Html.DropDownListFor(model => model.InsuranceCompanyID, new SelectList(ViewBag.InsuranceCompany, "InsuranceId", "InsuranceCompany"), "--Select--", new { @id = "InsuranceCompanyID", @class = "form-control", @onchange = "BindInsurancePlan();" })}
+                                                else
+                                                {<select id="InsuranceCompanyID" class="form-control"><option>--Select--</option></select>}
+                                                @Html.ValidationMessageFor(model => model.InsuranceCompanyID)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.InsurancePlanID, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @if (Model != null && Model.InsurancePlanID != null && Model.InsurancePlanID > 0 && ViewBag.InsurancePlanList != null)
+                                                { @Html.DropDownListFor(model => model.InsurancePlanID, new SelectList(ViewBag.InsurancePlanList, "InsurancePlanID", "InsurancePlan"), "Select", new { @id = "InsurancePlan", @name = "InsurancePlanID", @class = "form-control required requiredselect" })}
+                                                else
+                                                {
+                                                    <select id="InsurancePlan" name="InsurancePlanID" class="form-control required requiredselect "><option>--Select--</option></select>
+                                                }
+                                                @Html.ValidationMessageFor(model => model.InsurancePlanID)
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>*@
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.InsurancePlan, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.InsurancePlan, new { @Placeholder = "Insurance Carrier", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.InsurancePlan)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.PolicyNo, new { @class = "col-sm-4 control-label  star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.PolicyNo, new { @Placeholder = "Policy No.", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.PolicyNo)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.PolicyExpiration, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.PolicyExpiration, "{0:MM/dd/yyyy}", new { @Placeholder = "Policy Expiration Date", @class = "form-control required", @autocomplete = "off" })
+                                            @Html.ValidationMessageFor(model => model.PolicyExpiration)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.InsuranceProofDoc, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-12 col-sm-offset-4">
+                                            <input type="file" id="imagevi" name="InsuranceProof" onchange="readDoc(this);" value=" Upload Insurance Proof Of Document">
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-default first-mar10 ExtraDetails">
+                        <div class="panel-heading">
+                            <a href="#collapseFive" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    Extra Details
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse collapse" id="collapseFive">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => model.PickUpDateTime, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.PickUpDateTime, "{0:MM/dd/yyyy}", new { @Placeholder = "Pick Up Date and Time", @class = "form-control required" })
+                                            @Html.ValidationMessageFor(model => model.PickUpDateTime)
+                                        </div>
+                                    </div>
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.W9Form, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                <input type="file" id="imagevi" name="W9FormDoc" onchange="readDoc(this);" value="Upload W9 Form">
+                                            </div>
+                                        </div>*@
+
+                                    <div class="clearfix"></div>
+                                    <div id="divSpecialNotes" class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 specialpermit" style="display:none;">
+                                        @Html.LabelFor(model => model.SpecialNotes, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextAreaFor(model => model.SpecialNotes, new { @Placeholder = "Special Notes", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.SpecialNotes)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.ManagerDenialReason, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.ManagerDenialReason, new { @Placeholder = "Manager Denial Reason", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.ManagerDenialReason)
+                                            </div>
+                                        </div>
+                                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => model.ClientDenialReason, new { @class = "col-sm-4 control-label" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => model.ClientDenialReason, new { @Placeholder = "Client Denial Reason", @class = "form-control" })
+                                                @Html.ValidationMessageFor(model => model.ClientDenialReason)
+                                            </div>
+                                        </div>
+                                        <div class="clearfix"></div>*@
+                                    @if (Model.VehicleID != null)
+                                    {
+                                        @Html.Hidden("VehicleIDValue", Model.VehicleID)
+                                        @Html.Hidden("PermitTypeValue", Model.PermitDetailsType)
+                                        @Html.Hidden("VehicleTypeValue", Model.VehicleType)
+                                        @Html.Hidden("PermitTypePriceValue", Model.PermitTypePrice)
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="marbottom"></div>
+            <div class="pull-right">
+                <button id="btnRegisterVehicle" class="btn btn-default bluebutton submit" type="submit">Submit for Approval</button>
+                @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                {<a href="~/Vehicle" class="btn btn-default bluebutton">Cancel</a>}
+                else
+                {<a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>}
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <div class="marbottom"></div>
+    </div>
+    @Html.HiddenFor(model => model.PermitType)
+}
+<script src="~/Scripts/common/Masking.js"></script>
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+    <script type="text/javascript">
+
+        $.validator.defaults.ignore = "";
+        $(document).ready(function () {
+   
+            $('.col-sm-8.vendorStateValidation > span').hide();
+            if ($_cookieLocId != $_locationId && '@ViewBag.UpdateMode' == "True") {
+                //bootbox.alert("Vehicle is registered for " + $("#drp_MasterLocation option[value='" + $_cookieLocId + "']").text() + " location.Please select "+ $("#drp_MasterLocation option[value='" + $_cookieLocId + "']").text() + " location.");
+                //-----To Set the Location Selected By The User----//
+                //Created By Bhushan Dod on 08/10/2015 for selected vehicle loc in drop down
+
+                $("#drp_MasterLocation").val(parseInt($_cookieLocId));
+                var LocationID = parseInt($_cookieLocId);
+                var LocationName = $("#drp_MasterLocation option:selected").text();
+                try {
+                 
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                        data: { LocationID:  LocationID, LocationName: LocationName },
+                        beforeSend: function () {                           
+                        },
+                        success: function (Data) {                           
+                        },
+                        error: function () {                
+                        },
+                        complete: function () {
+                            window.location.href = $(location).attr('href');
+                        }
+                    });
+
+                } catch (e) {
+
+                }
+                //------END------//
+            }
+
+            $("#VehicleMake").on("keypress,keyup,keydown", function (e) {
+                $(this).val($(this).val().replace(/[^0-9]+/g, ''));
+            }); //End
+            //Added 2 years in current date : kartik
+            var d = new Date();
+            d.setFullYear(d.getFullYear() + 2);
+
+            $("#VehicleMake").datepicker({
+                format: "yyyy",
+                viewMode: "year",
+                minViewMode: "years",
+                endDate: d,
+                autoclose: true
+            });
+
+
+
+            $("#POCEmail").focusout(function () {
+                 
+                if ($(this).val() != "" && validateEmail($(this).val())) {
+                    var emai = $(this).val(), altemai = "";
+                    if (1) {
+                        var result = isEmailAlreadyExists(emai, altemai);
+                        if (result > 0) {
+
+                            $(this).siblings('span').html("");
+
+                            if (emai != "") {
+                                $("#POCEmail").siblings('span').html("Email already exists.");
+                            }
+
+                            $("#POCEmail").addClass("input-validation-error");
+                            $("#POCEmail").siblings("span").addClass("field-validation-error");
+                            $("#POCEmail").siblings('span').show();
+                            setInterval(function () { $(this).val(''); }, 5000);
+                            $(this).focus();
+
+                        }
+                    }
+                }
+                else {
+                    $(this).focus();
+                }
+            });//end block
+
+
+
+            $(".submit").click(function () {
+                if ($("#msform").valid()) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
+            });
+            $('.vendor').css('visibility', 'hidden');
+            tooglevehicletype();
+            //disablevendordetail();
+
+            //$_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+            $_StateID = '@StateID';
+            BindState();
+            $('#States').prop('disabled', ($('#Country').prop('disabled')));
+            $('#States').val(1);
+            $_InsurancePlanID = '@InsurancePlanID';
+            //if ($("#Country").val() != '') { BindState(); }
+            //if ($("#InsuranceCompanyID").val() != '') { BindInsurancePlan(); }
+
+            //date picker
+            var d = new Date();
+            var curr_year = d.getFullYear();
+
+            //$("#CityPermitExpiryDate").datepicker({ dateFormat: 'MM/dd/yy',  changeMonth: true, changeYear: true });
+
+            //$("#LicenseExpiryDate").datepicker({ dateFormat: 'dd/mm/yy', maxDate: new Date, changeMonth: true, changeYear: true });
+
+            //$("#PolicyExpiration").datepicker({ dateFormat: 'MM/dd/yy',  changeMonth: true, changeYear: true });
+
+
+            //$("#PolicyExpiration").datepicker({ dateFormat: 'MM/dd/yyyy', changeMonth: true, changeYear: true, minDate: new Date() }).on('changeDate', function (e) {
+            //    $(this).datepicker('hide');
+            //});
+
+            $("#PolicyExpiration,#LicenseExpiryDate,#PickUpDateTime,#CityPermitExpiryDate,#VehicleRegistratoinExpiry,#PermitDuration").datepicker({ format: 'mm/dd/yyyy', startDate: new Date() }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });;
+
+            ////$("#LicenseExpiryDate").datepicker({ dateFormat: 'MM/dd/yyyy', changeMonth: true, changeYear: true, minDate: new Date() }).on('changeDate', function (e) {
+            ////    $(this).datepicker('hide');
+            ////});
+            ////$("#PickUpDateTime").datepicker({ dateFormat: 'MM/dd/yyy', changeMonth: true, changeYear: true }).on('changeDate', function (e) {
+            ////    $(this).datepicker('hide');
+            ////});
+            ////$("#CityPermitExpiryDate").datepicker({ dateFormat: 'MM/dd/yyyy', changeMonth: true, changeYear: true, minDate: new Date() }).on('changeDate', function (e) {
+            ////    $(this).datepicker('hide');
+            ////});
+
+            ////$("#VehicleRegistratoinExpiry").datepicker({ dateFormat: 'MM/dd/yyyy', changeMonth: true, changeYear: true, minDate: new Date() });
+        });
+
+        function isEmailAlreadyExists(Email, AlternateEmail) {
+            var result = 0;
+
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("isVendorEmailExists", "Common")',
+                async: false,
+                data: { "vendorEmail": Email },
+                beforeSend: function () {
+                    new fn_showMaskloader('Please wait...');
+                },
+                success: function (Data) {
+
+                    console.log(Data.status);
+                    result = Data.status;
+
+                },
+                error: function (err) {
+                    console.log(err);
+                },
+                complete: function () {
+                    fn_hideMaskloader();
+                }
+            });
+            console.log(result);
+
+            return result;
+        }
+
+
+
+        function readDoc(input) {
+
+            var FType = ["xls", "xlsx", "doc", "docx", "jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+            if (input.files && input.files[0]) {
+                var DocFile = false;
+                var FileExtension = input.value.split(".")[1];
+                for (var v = 0; v < FType.length; v++) {
+                    if (FType[v] == FileExtension) {
+                        DocFile = true;
+                    }
+                }
+                if (DocFile == true) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $(input).val("");
+                    bootbox.alert("Please select Doc file only to Upload!")
+                    return false;
+                }
+            }
+
+        }
+        function readURL(input) {
+
+            var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+            if (input.files && input.files[0]) {
+                var LoadImage = false;
+                var FileExtension = input.value.split(".")[1];
+                for (var v = 0; v < FType.length; v++) {
+                    if (FType[v] == FileExtension) {
+                        LoadImage = true;
+                    }
+                }
+                if (LoadImage == true) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        if ($(input).prop('id') == 'imageog') {
+                            $('#ProfileImageog')
+                                .attr('src', e.target.result);
+                            //.width(150)
+                            //.height(150);
+                        } else if ($(input).prop('id') == 'imageog1') {
+                            $('#ProfileImageog1')
+                                .attr('src', e.target.result);
+                            //.width(150)
+                            //.height(150);
+                        }
+                        else if ($(input).prop('id') == 'imagevi') {
+                            $('#ProfileImagevi')
+                                .attr('src', e.target.result);
+                            //.width(150)
+                            //.height(150);
+                        }
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $(input).val("");
+                    //alert("Please select image to upload!")
+                    bootbox.alert("Please select image to upload!")
+                    return false;
+                }
+            }
+        }
+
+        function loadvendordetails_old() {
+            //$('.vendor').hide();
+            $('.vendor').css('visibility', 'hidden');
+            var selecttedvendorval = $('#VendorDetail').val();
+
+            if (selecttedvendorval != undefined && selecttedvendorval != '' && parseInt(selecttedvendorval) > 0) {
+                $('#' + selecttedvendorval).show();
+                //$('#' + selecttedvendorval);
+
+                //$.each($('.vendor'), (function (index, vall) {
+                //    if ($(vall).id == $('#' + selecttedvendorval).id) {
+                //        $('#' + ($(vall).id)).show();
+                //        //$('#' + ($(vall).prop('id'))).show();
+
+                //    }
+                //}));
+            }
+        }
+
+        function disablevendordetail() {
+
+            $(".ExtraDetails").children("input[type=text]").hide();
+            var clienttype = $('#ClientType option:selected').val();
+            if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 104) {
+                $('#VendorDetail').prop('disabled', false);
+                 
+                if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 104 && $('#VendorDetail option:selected').val() == '') {
+                    $('.vendorValidation').find('span').show();
+                }
+                else {
+                    $('.vendorValidation').find('span').hide();
+                }                  
+                $("input.specialpermit ").attr("disabled", true);
+                $("select.specialpermit").attr("disabled", true);
+                ////$('.permitdetails').show();//$('.permitdetails').css('visibility', 'visible');
+                $('.DriverDetails').show();
+                //$('.citypermit').css('visibility', 'visible');
+                $("#divSpecialNotes").css("display", "none");
+                $(".ExtraDetails").addClass('hide');
+                //$(".ExtraDetails").children("input['text']").prop("disabled", true);
+                $(".ExtraDetails").find("input").prop("disabled", true);
+
+            }
+            else if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 105) {
+                       
+         
+                $(".ExtraDetails").removeClass('hide');
+                $(".ExtraDetails").find("input[type=text]").show();
+                $(".ExtraDetails").find("input[type=text]").prop("disabled", false);
+                //$('#VendorDetail').prop('disabled', true); $('#VendorDetail').val(-1);
+                $("input.specialpermit ").attr("disabled", false);
+                $("select.specialpermit").attr("disabled", false);
+                $("input.specialpermit ").val('');
+                $("select.specialpermit").val(0);
+                ////$('.permitdetails').hide();//$('.permitdetails').css('visibility', 'hidden');
+                //$('.DriverDetails').hide();
+                //$('.citypermit').css('visibility', 'hidden');
+                $("#divSpecialNotes").css("display", "block");
+                $(".ExtraDetails").find("input").prop("disabled", false);
+                $('#PolicyExpiration,#PermitBillingCode,#PermitDuration,#CityPermitNo,#CityPermitExpiryDate,').removeClass("required");
+                $('.vendorValidation').find('span').hide();
+            }
+
+            $('.vendor').css('visibility', 'hidden');//$('.vendor').hide();
+
+
+        }
+
+        function StateValidation() {
+            if ($("#States").val() == '') {
+                $('.col-sm-8.vendorStateValidation > span').show();
+            }
+            else {          
+                $('.col-sm-8.vendorStateValidation > span').hide();
+            }
+        }
+
+        //////function disablevendordetail() {
+        //////    $(".ExtraDetails").children("input['text']").hide();
+        //////    var clienttype = $('#ClientType option:selected').val();
+        //////    if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 104) {
+        //////        $('#VendorDetail').prop('disabled', false);
+        //////        $("input.specialpermit ").attr("disabled", true);
+        //////        $("select.specialpermit").attr("disabled", true);
+        //////        $('.permitdetails').show();//$('.permitdetails').css('visibility', 'visible');
+        //////        $('.DriverDetails').show();
+        //////        $('.citypermit').css('visibility', 'visible');
+        //////        $("#divSpecialNotes").css("display", "none");
+
+        //////    }
+        //////    else {
+        //////        $(".ExtraDetails").children("input['text']").show();
+        //////        $('#VendorDetail').prop('disabled', true); $('#VendorDetail').val(-1);
+        //////        $("input.specialpermit ").attr("disabled", false);
+        //////        $("select.specialpermit").attr("disabled", false);
+        //////        $("input.specialpermit ").val('');
+        //////        $("select.specialpermit").val(0);
+        //////        $('.permitdetails').hide();//$('.permitdetails').css('visibility', 'hidden');
+        //////        //$('.DriverDetails').hide();
+        //////        $('.citypermit').css('visibility', 'hidden');
+        //////        $("#divSpecialNotes").css("display", "block");
+        //////        $('#PolicyExpiration,#PermitBillingCode,#PermitDuration,#CityPermitNo,#CityPermitExpiryDate,').removeClass("required");
+        //////    }
+        //////    $('.vendor').css('visibility', 'hidden');//$('.vendor').hide();
+
+
+        //////}
+        function clearfields() {
+            //$("#CompanyName").val('');
+            //$("#ContactName").val('');
+            //$("#POCEmail").val('');
+            //$("#MobilePOC").val('');
+            //$("#BusinessNo").val('');
+            //$("#Address1").val('');
+            //$("#Address2").val('');
+            //$("#Country").val('');
+            ////$("#States").text(result.rows[0].cell[8]);
+            //$("#City").val('');
+            //$("#ZipCode").val('');
+            //$("#DBA").val('');
+            //$("#OwnerRegisterdAgent").val('');
+            //$("#TaxIdNumber").val('');
+            //$("#MobilePOC").val('');
+            //$("#States").val('');
+        }
+        function loadvendordetails() {
+            clearfields();
+            //hidevendordetails();
+            if ($('#VendorDetail option:selected').val() != undefined && $('#VendorDetail option:selected').val() != '') {
+
+                var id = $('#VendorDetail option:selected').val();
+                $.ajax({
+                    type: "POST",
+                    data: "{'VendorId':'" + id + "' ,'NumberOfRows':'" + 20 + "' ,'NumberOfRows':'" + 20 + "' ,'PageIndex':'" + 1 + "' ,'SortOrderBy':'desc' ,'SortColumnName':'CreatedDate ' ,'status':'" + 244 + "' ,'userId':'" + $_userId + "', 'locationId':'" + $_locationId + "'}",
+                    url: '@Url.Action("GetVendorList", "Manager")', //'../Manager/GetVendorList/',
+                    async: false,
+                    dataType: "json",
+                    contentType: "application/json; charset=utf-8",
+                    error: function (xhr, status, error) {
+                        closeAjaxProgress();
+                        alert(error);
+                        alert(xhr);
+                        alert(status);
+                        console.log(xhr);
+                        console.log(status);
+                        console.log(error);
+                    },
+                    beforeSend: function () {
+                        showAjaxProgress();
+                        //alert("befor send");
+                    },
+                    success: function (result) {
+                        console.log("Vendor Deatils binding");
+                        //alert("result");
+                        //alert(result.rows[0].cell[6]);
+                        //alert(JSON.stringify(result));
+                        //$("#message").html(result.Message);
+                        //$("#message").addClass(result.AlertMessageClass);
+                        //$('#vendorname').html(result.rows[0].cell[0]);
+                        //$('#vendoraddress').html(result.rows[0].cell[5] + "</br> " + result.rows[0].cell[6]);
+
+                        $("#CompanyName").val(result.rows[0].cell[2]);
+                        $("#ContactName").val(result.rows[0].cell[0]);
+                        $("#POCEmail").val(result.rows[0].cell[1]);
+                        $("#MobilePOC").val(result.rows[0].cell[12]);
+                        $("#BusinessNo").val(result.rows[0].cell[11]);
+                        $("#Address1").val(result.rows[0].cell[5]);
+                        $("#Address2").val(result.rows[0].cell[6]);
+                        $("#Country").val(result.rows[0].cell[9]);
+                        //$("#States").text(result.rows[0].cell[8]);
+                        $("#City").val(result.rows[0].cell[7]);
+                        $("#ZipCode").val(result.rows[0].cell[10]);
+                        $("#DBA").val(result.rows[0].cell[13]);
+                        $("#OwnerRegisterdAgent").val(result.rows[0].cell[14]);
+                        $("#TaxIdNumber").val(result.rows[0].cell[16]);
+                        $("#MobilePOC").val(result.rows[0].cell[16]);
+                        $("#States option:contains(" + result.rows[0].cell[8] + ")").attr('selected', 'selected');
+                        //$('.vendor').show();
+
+                        $('.vendor').css('visibility', 'visible');
+                        LoadData("permittype");
+                        closeAjaxProgress();
+                    },
+                    Complete: function (result) {
+                        closeAjaxProgress();
+                    }
+                });
+            }
+            else { hidevendordetails(); }
+        }
+
+        function hidevendordetails() {
+            //$('.vendor').hide();
+            $('.vendor').css('visibility', 'hidden');
+            $('#vendorname').html('');
+            $('#vendoraddress').html('after TCS building Beside Outer Ring Road Mihan Khapri are , Nagpur Nagpur Iowa USA');
+        }
+
+
+
+        //Will do it later
+        function VehicleIdentificationNoCheck() {
+            try {
+
+
+                $.ajax({
+                    URL: "",
+                    data: "",
+                    contentType: "",
+                    success: function () { },
+                    error: function () { }
+
+                });
+
+            } catch (e) {
+
+            }
+        }
+        function PermitDetailsTypeChange() {
+            if ($("#PermitDetailsType").val() != "") {
+                $("#VehicleType").prop("disabled", false);
+                LoadData("vehicletype");
+            }
+            else {
+                $("#VehicleType").prop("disabled", true);
+                $("#VehicleType").val("");
+            }
+        }
+        $(function () {
+            //Logic for Permit details type and vehicle type display : Kartik
+            $("#VehicleType").prop("disabled", true);
+            if ($("#PermitDetailsType").val() != "") {
+                $("#VehicleType").prop("disabled", false);
+            }
+            else {
+                $("#VehicleType").prop("disabled", true);
+                $("#VehicleType").val("");
+            }
+
+
+            //End
+
+            $(".ExtraDetails").children("input[type=text]").hide();
+            var clienttype = $('#ClientType option:selected').val();
+            if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 104) {
+                $('#VendorDetail').prop('disabled', false);
+                $("input.specialpermit ").attr("disabled", true);
+                $("select.specialpermit").attr("disabled", true);
+                ////$('.permitdetails').show();//$('.permitdetails').css('visibility', 'visible');
+                $('.DriverDetails').show();
+                //$('.citypermit').css('visibility', 'visible');
+                $("#divSpecialNotes").css("display", "none");
+                $(".ExtraDetails").addClass('hide');
+                //$(".ExtraDetails").children("input['text']").prop("disabled", true);
+                $(".ExtraDetails").find("input").prop("disabled", true);
+
+            }
+            else if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 105) {
+                //$(".ExtraDetails").removeClass('hide');
+                //$(".ExtraDetails").find("input[type=text]").show();
+                //$(".ExtraDetails").find("input[type=text]").prop("disabled", false);
+                ////$('#VendorDetail').prop('disabled', true); $('#VendorDetail').val(-1);
+                $("input.specialpermit ").attr("disabled", false);
+                $("select.specialpermit").attr("disabled", false);
+                //$("input.specialpermit ").val('');
+                //$("select.specialpermit").val(0);
+                ////$('.permitdetails').hide();//$('.permitdetails').css('visibility', 'hidden');
+                //$('.DriverDetails').hide();
+                //$('.citypermit').css('visibility', 'hidden');
+                $("#divSpecialNotes").css("display", "block");
+                $(".ExtraDetails").find("input").prop("disabled", false);
+                $('#PolicyExpiration,#PermitBillingCode,#PermitDuration,#CityPermitNo,#CityPermitExpiryDate,').removeClass("required");
+            }
+
+            $('.vendor').css('visibility', 'hidden');//$('.vendor').hide();
+            //$("#ClientType").val($("#PermitType").val());
+
+            //loadvendordetails();
+            $("#PermitBillingCode").prop('disabled', true);
+            //$("#DriverEmail").prop('disabled', true);
+            //$("#DriverEmailContainer").hide();
+            $("#btnRegisterVehicle").prop('disabled', false);
+            $("#PickUpDateTime").prop('disabled', false);
+            $("#VendorDetail").prop('disabled', false);
+            //$("#DriverEmail").prop('disabled', true);
+            //$("#DriverEmailContainer").hide();
+            $("#PickUpDateTime").prop('disabled', true);
+            if ($("#ClientType").find(":selected").val() == 105) {
+                $("#VendorDetail")[0].selectedIndex = 0;
+                $("#VendorDetail").prop('disabled', true);
+                //$("#DriverEmail").prop('disabled', false);
+                //$("#DriverEmailContainer").show();
+                $("#PickUpDateTime").prop('disabled', false);
+                //$(".ExtraDetails").addClass('hide');
+                ////$(".ExtraDetails").children("input['text']").prop("disabled", true);
+                //$(".ExtraDetails").find("input").prop("disabled", true);
+            }
+            else {
+
+                $("#VendorDetail").prop('disabled', false);
+                //$("#DriverEmail").prop('disabled', true);
+                //$("#DriverEmailContainer").hide();
+                $("#PickUpDateTime").prop('disabled', true);
+                //$(".ExtraDetails").removeClass('hide');
+                //$(".ExtraDetails").find("input[type=text]").show();
+                //$(".ExtraDetails").find("input[type=text]").prop("disabled", false);
+            }
+            $("#ClientType").change(function () {
+                //alert(0);
+                if ($(this).find(":selected").val() == 105) {
+                    $("#PermitDetailsType").find('option').remove().end().append($("<option value=''>--Select--</option><option value='350'>Taxi Services</option><option value='351'>Offsite Vendors</option><option value='352'>Hotel/Motel Permit</option><option value='353'>Tour Operator Permit</option><option value='354'>Vehicle for Hire Permit</option><option value='355'>Other</option>"));
+                    $("#VehicleType").find('option').remove().end().append($("<option value=''>--Select--</option><option value='55'>Truck</option><option value='56'>SUV</option><option value='57'>Car</option><option value='347'>Limo</option><option value='54'>Shuttle Bus</option>"));
+                    $("#PermitTypePrice").val('').prop("readonly", false);
+                    $('#imgvehicletype').prop('src', '');
+                    $("#VendorDetail")[0].selectedIndex = 0;
+                    $("#VendorDetail").prop('disabled', true);
+                    //$("#DriverEmail").prop('disabled', false);
+                    //$("#DriverEmailContainer").show();
+                    $("#PickUpDateTime").prop('disabled', false);
+                    //$(".ExtraDetails").addClass('hide');
+                    ////$(".ExtraDetails").children("input['text']").prop("disabled", true);
+                    //$(".ExtraDetails").find("input").prop("disabled", true);
+                    $("#PermitBillingCode").prop('disabled', true);
+                }
+                else {
+
+                    $("#PermitDetailsType").find('option').remove().end().append($("<option value=''>--Select--</option>"));
+                    $("#VehicleType").find('option').remove().end().append($("<option value=''>--Select--</option>"));
+                    $("#PermitTypePrice").val('').prop("readonly", true);
+                    $('#imgvehicletype').prop('src', '');
+
+                    $("#VendorDetail").prop('disabled', false);
+                    //$("#DriverEmail").prop('disabled', true);
+                    //$("#DriverEmailContainer").hide();
+                    $("#PickUpDateTime").prop('disabled', true);
+                    //$(".ExtraDetails").removeClass('hide');
+                    //$(".ExtraDetails").find("input[type=text]").show();
+                    //$(".ExtraDetails").find("input[type=text]").prop("disabled", false);
+                    $("#PermitBillingCode").prop('disabled', true);
+                }
+                clearfields();
+            });
+            $("#btnRegisterVehicle").click(function () {
+              
+                if ((clienttype == undefined || clienttype == '' || parseInt(clienttype) == 105) && $('#States').val() == '') {
+                    $('.col-sm-8.vendorStateValidation > span').show();
+                }
+                else {
+                    $('.col-sm-8.vendorStateValidation > span').hide();
+                }   
+                //$("span.field-validation-error").parents("div.panel-collapse").show();
+
+
+            });
+
+            if ($("#ClientType").val() == "" || $("#ClientType").val() == undefined) {
+                $("#ClientType").val(104);
+                $(".ExtraDetails").addClass('hide');
+                $("#PickUpDateTime").prop('disabled', true);
+            }
+            $("#LicenseNo").focusout(function () {
+                console.log('dsafafasdfasfasdfsad');
+                if ($("#LicenseNo").val().trim() != "") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("ValidateDrivingLicence", "QRCSetup")',
+                        data: { "LicenceNo": $("#LicenseNo").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+                            console.log(Data);
+                            if (Data.status > 0) {
+                                $("#LicenseNo").addClass("form-control input-validation-error");
+                                $("#LicenseNo").siblings('span').show();
+                                $("#LicenseNo").val("");
+                                $("#LicenseNo").focus();
+                            }
+                            else {
+                                $("#LicenseNo").removeClass("input-validation-error");
+                                $("#LicenseNo").siblings('span').hide();
+                            }
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#LicenseNo").focus();
+                }
+            });// focusOut end.
+            $("#DriverEmail").focusout(function () {
+                console.log('dsafafasdfasfasdfsad');
+                if ($("#DriverEmail").val().trim() != "" && validateEmail($("#DriverEmail").val().trim())) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("isVendorEmailExists", "GlobalAdmin")',
+                        data: { "email": $("#DriverEmail").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+                            console.log(Data);
+                            if (Data.status > 0) {
+                                $("#DriverEmail").addClass("form-control input-validation-error");
+                                $("#DriverEmail").siblings('span').show();
+                                $("#DriverEmail").val("");
+                                $("#DriverEmail").focus();
+                            }
+                            else {
+                                $("#DriverEmail").removeClass("input-validation-error");
+                                $("#DriverEmail").siblings('span').hide();
+                            }
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#DriverEmail").focus();
+                }
+            });// focusOut end.
+
+        });
+        $(document).ready(function () {
+            $("#ZipCode").keydown(function (e) {
+                if ($.inArray(e.keyCode, [46, 8, 9, 27, 13, 110, 190]) !== -1 ||
+                    (e.keyCode == 65 && (e.ctrlKey === true || e.metaKey === true)) ||
+                    (e.keyCode >= 35 && e.keyCode <= 40)) {
+                    return;
+                }
+                if ((e.shiftKey || (e.keyCode < 48 || e.keyCode > 57)) && (e.keyCode < 96 || e.keyCode > 105)) {
+                    e.preventDefault();
+                }
+            });
+
+            //Added with Tarun(Designer) for collapse on 01/07/2016
+            $('.collapse').on('show.bs.collapse', function() {
+                var id = $(this).attr('id');
+                $('a[href="#' + id + '"] .panel-title span').html('');
+                $('a[href="#' + id + '"] .panel-title').find('span').html('<i class="glyphicon glyphicon-minus"></i>');
+            });
+            $('.collapse').on('hide.bs.collapse', function() {
+                var id = $(this).attr('id');
+                $('a[href="#' + id + '"] .panel-title span').html('');
+                $('a[href="#' + id + '"] .panel-title').find('span').html('<i class="glyphicon glyphicon-plus"></i>');
+            });
+        });
+
+        function validateEmail(email) {
+            var re = /^([\w-]+(?:\.[\w-]+)*)@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+            return re.test(email);
+        }
+
+
+        //City Permit Logic : Kartik Bhave 12/08/2015
+        if ($("#CityPermitNo").val() != null && $("#CityPermitNo").val() != undefined && $("#CityPermitNo").val() != "") {
+            $("#chkCityPermit").attr("checked", true);
+        } else {
+            $("#chkCityPermit").attr("checked", false);
+        }
+        CityPermitChange();
+
+        $("#chkCityPermit").change(function () {
+            CityPermitChange();
+        });
+        function CityPermitChange() {
+            if ($("#chkCityPermit").is(":checked")) {
+                $("#CityPermitNo").prop("disabled", false).addClass("required");
+                $("#PermitDuration").prop("disabled", false).addClass("required");
+                $("#CityPermitExpiryDate").prop("disabled", false).addClass("required");
+                $(".permited").show();
+            }
+            else {
+                $("#CityPermitNo").prop("disabled", true).removeClass("required");
+                $("#PermitDuration").prop("disabled", true).removeClass("required");
+                $("#CityPermitExpiryDate").prop("disabled", true).removeClass("required");
+                $(".permited").hide();
+            }
+        }
+        //End
+        function LoadData(fieldtype) {
+            console.log('dsafafasdfasfasdfsad');
+            if ($("#VendorDetail").val().trim() != "") {
+                $.ajax({
+                    type: "POST",
+                    async: false,
+                    url: '@Url.Action("GetPermitType", "Manager")',
+                    data: { "VendorID": $("#VendorDetail").val(), "Fields": fieldtype, "PermitTypeID": $("#PermitDetailsType").val(), "VehicleTypeID": $("#VehicleType").val() },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        if (fieldtype == 'permittype') {
+                            $("#PermitDetailsType").find('option').remove().end().append($('<option value="">--Select--</option>'));
+                            $("#VehicleType").find('option').remove().end().append($('<option value="">--Select--</option>'));
+                            $("#PermitTypePrice").val('');
+                            $('#imgvehicletype').prop('src', '');
+                            for (var v = 0; v < Data.data.length; v++) {
+                                $("#PermitDetailsType").append($("<option value=\"" + Data.data[v].id + "\">" + Data.data[v].codename + "</option>"));
+                            }
+                        }
+                        else if (fieldtype == 'vehicletype') {
+                            $("#VehicleType").find('option').remove().end().append($('<option value="">--Select--</option>'));
+                            $("#PermitTypePrice").val('');
+                            $('#imgvehicletype').prop('src', '');
+                            for (var v = 0; v < Data.data.length; v++) {
+                                $("#VehicleType").append($("<option value=\"" + Data.data[v].id + "\">" + Data.data[v].codename + "</option>"));
+                            }
+                        }
+                        else if (fieldtype == 'price') {
+                            $("#PermitTypePrice").val(Data.data[0].codename);
+                        }
+
+                    },
+                    error: function () {
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+            else {
+                $("#VendorEmail").focus();
+            }
+        }// focusOut end.
+        $(function () {
+            if ($("#ClientType").find(":selected").val() == 105 && ($("#VendorDetail").val() != null && $("#VendorDetail").val() != undefined && $("#VendorDetail").val() != '')) {
+                $("#PermitDetailsType").find('option').remove().end().append($("<option value=''>--Select--</option><option value='350'>Taxi Services</option><option value='351'>Offsite Vendors</option><option value='352'>Hotel/Motel Permit</option><option value='353'>Tour Operator Permit</option><option value='354'>Vehicle for Hire Permit</option><option value='355'>Other</option>"));
+                $("#VehicleType").find('option').remove().end().append($("<option value=''>--Select--</option><option value='55'>Truck</option><option value='56'>SUV</option><option value='57'>Car</option><option value='347'>Limo</option><option value='54'>Shuttle Bus</option>"));
+                $("#PermitTypePrice").val('').prop("readonly", false);
+                $('#imgvehicletype').prop('src', '');
+            }
+            else if ($("#ClientType").find(":selected").val() == 104) {
+                $("#PermitDetailsType").find('option').remove().end().append($("<option value=''>--Select--</option>"));
+                $("#VehicleType").find('option').remove().end().append($("<option value=''>--Select--</option>"));
+                $("#PermitTypePrice").val('').prop("readonly", true);
+                $('#imgvehicletype').prop('src', '');
+            }
+            else {
+                $("#PermitTypePrice").val('').prop("readonly", true);
+                $('#imgvehicletype').prop('src', '');
+            }
+
+            if ($("#VendorDetail").val() != null && $("#VendorDetail").val() != undefined && $("#VendorDetail").val() != '') {
+                $("#PermitTypePrice").removeClass("required");
+            }
+            else {
+                $("#PermitTypePrice").addClass("required");
+            }
+
+            if ($("#VehicleIDValue").val() != null && $("#VehicleIDValue").val() != undefined && $("#VehicleIDValue").val() != '') {
+                //$("#VendorDetail").prop("disabled", false);
+                LoadData("permittype");
+                $("#PermitDetailsType").val($("#PermitTypeValue").val());
+                LoadData("vehicletype");
+                $("#VehicleType").val($("#VehicleTypeValue").val());
+                $("#PermitTypePrice").val($("#PermitTypePriceValue").val());
+                var vehicletypeimgpath = $('#hddnimgaeserverpath').val();
+                vehicletypeimgpath = vehicletypeimgpath + $('#VehicleType option:selected').text() + ".png";
+                $('#imgvehicletype').prop('src', vehicletypeimgpath);
+            }
+
+        });
+
+
+    </script>
+}

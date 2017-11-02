@@ -1,0 +1,23 @@
+﻿@{
+    ViewBag.Title = "List Work Request";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long? ProjectID = 0, UserID = null ;
+    if (ViewBag.ProjectID != null)
+    {
+        ProjectID = Convert.ToInt32(ViewBag.ProjectID);
+      //  UserID = Convert.ToInt32(ViewBag.UserId);
+    } 
+}
+
+<script type="text/javascript">
+    $_ProjectID = '@ProjectID';
+    $_UserID = '@UserID';
+</script>
+<script src="~/GridListing/JqGridScript/WorkRequestList.js"></script>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div id="jqGrid_container">
+        <table id="tbl_WorkRequestList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divWorkRequestListPager"></div>
+    </div>
+</div>
+

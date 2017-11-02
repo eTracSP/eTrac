@@ -1,0 +1,18 @@
+﻿@{
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    ViewBag.Title = "List Employee";
+}
+@section scripts{
+<script src="~/GridListing/JqGridScript/VerifiedUserList.js"></script>
+
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_EmployeeList').setGridWidth(width);
+        });
+    </script>
+}
+
+<div id="jqGrid_container">
+    <table id="tbl_EmployeeList" border="0" cellpadding="0" cellspacing="0"></table><div id="divEmployeeListPager"></div>
+</div>

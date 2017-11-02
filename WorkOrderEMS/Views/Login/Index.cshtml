@@ -1,0 +1,365 @@
+﻿@model WorkOrderEMS.Models.eTracLoginModel
+@{
+    ViewBag.Title = "Login";
+    //Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+    Layout = null;
+}
+<style>
+    .loginClass {
+        float: right;
+        left: 1000px;
+        position: fixed;
+        top: 10px;
+    }
+
+    body {
+        margin-top: 0px !important;
+    }
+
+    input[type="text"].email-bad {
+        border: 1px solid #a94442;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/Images/logo-etrac.png" type="image/gif" sizes="16x16">
+    <title>eTrac</title>
+
+    <!-- Core CSS - Include with every page -->
+    <link href="~/Content/common/bootstrap.min.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link href="~/Content/common/admin.css" rel="stylesheet" />
+</head>
+
+
+<body class="loginbody">
+
+    <div class="container logindiv">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <label id="message" class="@ViewBag.AlertMessageClass "> @ViewBag.Message</label>
+                @*<div class="loginlogo"><img src="images/logo.png" width="137" height="67" alt=""></div>*@
+                @*<div class="loginlogo">
+                        <img src="~/images/logo2.png" alt="">
+                    </div>
+                    <span class="etrack">eTrac</span>*@
+                <div class="loginlogo">
+                    <img src="~/images/logo-etrac.png" alt="">
+                </div>
+
+                <div class="login-panel panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Sign In</h3>
+                    </div>
+                    <div class="panel-body">
+                        @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { enctype = "multipart/form-data", ReturnUrl = ViewBag.ReturnUrl, @id = "msform", @role = "form" }))
+                        {
+                            @Html.AntiForgeryToken()
+                            @Html.ValidationSummary(true)
+                            <fieldset>
+                                <div class="form-group">
+                                    @*<input type="email"  name="Email" placeholder="email id" class="form-control" value="testclient500@gmail.com">*@
+
+                                    @*<input type="email" name="Email" placeholder="email id" class="form-control" value="yo456@gmail.com">*@
+                                    @*<input type="email" name="Email" placeholder="email id" class="form-control" value="testitadmin@yopmail.com">*@
+
+                                    @Html.TextBoxFor(m => m.UserName, new
+                                        {
+                                            @id = "txtUserName",
+                                            @class = "form-control",
+                                            @autofocus = "true",
+                                            @autocomplete = "off",
+                                            @placeholder = "Username"
+                                        })
+                                    @Html.ValidationMessageFor(m => m.UserName, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="form-group">
+                                    @*<input type="password" value="" name="password" placeholder="Password" class="form-control ">*@
+                                    @Html.PasswordFor(m => m.Password, new
+                                        {
+                                            @class = "form-control",
+                                            @autocomplete = "off",
+                                            @placeholder = "Password",
+                                            //@value = "803931bb-9"
+                                            //@value = "efda7747-7"
+                                            //@value = "e150f667-2"
+                                        })
+                                    @Html.ValidationMessageFor(m => m.Password, null, new { @class = "text-danger" })
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        @*<input type="checkbox" value="Remember Me" name="remember">Remember Me*@
+                                        @Html.CheckBoxFor(m => m.RememberMe)
+                                        @Html.LabelFor(m => m.RememberMe)
+                                    </label>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                <div class="form-group">
+                                    @*<a class="bluebutton btn btn-lg btn-success btn-block" href="#">Login</a>*@
+
+                                    <input type="submit" value="Log in" class="bluebutton btn btn-lg btn-success btn-block" autofocus="autofocus" />
+
+                                    @*<input type="button" value="Log in" class="bluebutton btn btn-lg btn-success btn-block" autofocus="autofocus" />*@
+
+                                </div>
+                                <a href="javascript:void(0)" data-toggle="modal" data-target="#ForgotPWDModal">Forgot password?</a>
+                                <div><span><i><b>@Html.HiddenFor(x => x.Password, new { @id = "hdnPwdData" })</b></i></span></div>
+                            </fieldset>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Forgot your password Modal -->
+    <div class="modal fade" id="ForgotPWDModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            @*@using (Html.BeginForm("RecoveryEmailPassword", "Login", FormMethod.Post, new { enctype = "multipart/form-data", ReturnUrl = ViewBag.ReturnUrl, @id = "msform", @role = "form" }))
+                {*@
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Forgot password?</h4>
+                    Enter your e-mail and we will send you the password to your e-mail. Thanks!
+                </div>
+                <div class="modal-body">
+                    @*<label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>*@
+                    <div class="clearfix"></div>
+                    <div class="">
+                        <div class=" form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                            @Html.TextBoxFor(m => m.RecoveryEmail, new
+                                        {
+                                            @id = "RecoveryEmail",
+                                            @class = "form-control required",
+                                            @autofocus = "true",
+                                            @autocomplete = "off",
+                                            @placeholder = "Please enter an email",
+                                        })
+                            @Html.ValidationMessageFor(m => m.RecoveryEmail)
+
+                            <span id="invalidEmailError" style="display: none; color: #a94442;">Please enter a valid email address.</span>
+                        </div>
+                        <div class=" form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <input type="button" id="submitButton" onclick="SendRecoveryEmail();" value="Send Password Recovery Email" class="bluebutton btn btn-lg btn-success btn-block" disabled="disabled" />
+                    <input type="button" class="hide" id="btnHideForgotPWDModal" data-dismiss="modal" />
+                    @*<button type="button" onclick="return window.print();" class="btn btn-default bluebutton" data-dismiss="modal">ddprint</button>*@
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            @*  *@}
+        </div>
+    </div>
+    <!-- Forgot your password Modal End -->
+    <!-- Core Scripts - Include with every page -->
+    <script src="~/Scripts/common/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/common/bootstrap.min.js"></script>
+    <script src="~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js"></script>
+    @*<script src="js/jquery-1.10.2.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <script src="js/plugins/metisMenu/jquery.metisMenu.js"></script>*@
+
+    <!-- SB Admin Scripts - Include with every page -->
+    <script src="~/Scripts/common/sb-admin.js"></script>
+    @*<script src="js/sb-admin.js"></script>*@
+
+    <!--Validation-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+    <script src="@Url.Content("~/Scripts/jstz.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.cookie.min.js")"></script>
+    <script type="text/javascript">
+          @{string hostPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];};
+        $_JqueryLoader = '@hostPrefix';
+        function fn_showMaskloader(text) {                     //fn_showMaskloader
+            new fn_notify().maskloader.start({                //fn_hideMaskloader
+                ob: $('body'),
+                position: 'fixed',
+                height: '100%',
+                text: '&nbsp;&nbsp;&nbsp;&nbsp;' + text + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;',
+                left: "40%",
+                textbackcolor: 'Blue',
+                textbrad: '10px',
+                zindex: $('body').css('z-index') + 1,
+                width: '100%'
+            });
+        }
+
+        function fn_hideMaskloader() {
+            new fn_notify().maskloader.hide({
+                ob: $('body')
+            });
+        }
+
+        function fn_notify() {
+            var funthis = this;
+            this.maskloader = {
+                start: function (setting) {
+                    setting.ob.find('.eliteMask').remove();
+                    var div = $('<Span></Span>')
+                    .css({
+                        'height': setting.height,
+                        'width': setting.width,
+                        'position': (!!setting.position) ? setting.position : 'absolute',
+                        'background-color': '#000000',
+                        'filter': 'alpha(opacity=20)',
+                        'opacity': (!!setting.opacity) ? setting.opacity : '0.6',
+                        'text-align': 'center',
+                        'z-index': '20000000',
+                        'top': '0px'
+
+                    }).html('<span class="eliteMask_Span" style=" position: absolute; text-align: center; color: white;' +
+                    '  padding: 6px 9px 3px 7px;  height: 33px; border-right-width: 16px;  border-bottom-width: 0px;left:'
+                     + setting.left + ' ;color:  White;position: ' +
+                    'absolute; text-align: center; top: 45%;border-radius:' + (!!setting.textbrad ? setting.textbrad : '2px') + ';">' + '<span>' + setting.text + '</span>' + ((setting.requireloader == undefined) ?
+                     ('<img style="margin-right: 3px;top:44%;" src="' + $_JqueryLoader + 'Content/images/constant/Loader.gif">')
+                      : ((setting.requireloader == undefined) ? '<img style="margin-right: 3px;top:44%;width=200px;" src="' + $_JqueryLoader + 'Content/images/constant/Loader.gif">'
+                      : '')) + '</span>')
+                    .addClass('eliteMask')
+                    .prependTo(setting.ob);
+                    if (!!setting.ctop) {
+                        div.css({
+                            top: setting.ctop
+                        });
+                    }
+                    return funthis;
+                },
+                hide: function (setting) {
+                    setting.ob.find('.eliteMask').fadeOut('slow', function () {
+                        $(this).remove();
+                    });
+                    return funthis;
+                }
+            }
+        };
+
+        function SendRecoveryEmail() {
+            var myRecoveryEmail = $('#RecoveryEmail').val();
+            if (myRecoveryEmail != undefined && myRecoveryEmail != '' && myRecoveryEmail.trim() != '') {
+
+                if (true) {
+                    var eTracLogin = {};
+                    eTracLogin.RecoveryEmail = myRecoveryEmail.trim();
+                    $.ajax({
+                        url: '@Url.Action("RecoveryEmailPassword", "Login")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(eTracLogin),
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...Sending');
+                        },
+                        success: function (myresult) {
+
+                            if (myresult) {
+                                $('#btnHideForgotPWDModal').trigger("click");
+                                $('#RecoveryEmail').val('');
+
+                                if (myresult.Response == true) {
+                                    bootbox.alert("Username and Password sent to your '" + myRecoveryEmail.trim() + "'  email, Please check your Inbox/Spam.");
+                                    $('#submitButton').prop("disabled", true);
+                                    //$('#message').prop('class', 'text-info');
+                                    //if (myresult.Message == '') {
+                                    //    //myresult.Message = "An email with a your password has been sent to the email address: " + myRecoveryEmail.trim() + " ,chcek your Inbox/spam.";
+                                    //    bootbox.alert("Username and Password is send to your registerd Email. ");
+                                    //}
+                                }
+                                else {
+                                    $('#submitButton').prop("disabled", true);
+                                    bootbox.alert(myresult.Message);
+                                    //$('#message').prop('class', 'text-danger');
+                                }
+                                //$('#message').text(myresult.Message);
+
+                            }
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        },
+                        error: function (myerror) {
+                            $('#message').prop('class', 'text-danger');
+                            $('#message').text(JSON.stringify(myerror));
+                            fn_hideMaskloader();
+                        }
+                    });
+                } else { bootbox.alert("Invalid Email."); }
+            } else { bootbox.alert("Recovery email is required."); }
+        }
+        $(document).ready(function () {
+            setInterval(function () {
+                closeErrorMessage();
+            }, 4000);
+
+            fn_showMaskloader('Please wait...Loading');
+
+            $("#Password").val($("#hdnPwdData").val());
+
+        })
+
+        function closeErrorMessage() {
+            if ($('#message').length > 0) {
+                $('#message').hide();
+            } else {
+            }
+        }
+
+        $(window).load(function () {
+            fn_hideMaskloader();
+        });
+
+        $(function () {
+            setTimezoneCookie();
+        });
+        function setTimezoneCookie() {
+            try {
+                var timezone_cookie = "timezoneoffset";
+                var timeZoneName = "timezonename"
+
+                var tz = jstz.determine();
+                var aa = tz.name();
+                // if the timezone cookie not exists create one.
+                
+                if (!$.cookie(timezone_cookie)) {
+                    // create a new cookie
+                    $.cookie(timezone_cookie, new Date().getTimezoneOffset());
+                    $.cookie(timeZoneName, aa);
+                }
+                    // if the current timezone and the one stored in cookie are different
+                    // then store the new timezone in the cookie and refresh the page.
+                else {
+                    var storedOffset = parseInt($.cookie(timezone_cookie));
+                    var currentOffset = new Date().getTimezoneOffset();
+                    // user may have changed the timezone
+                    if (storedOffset !== currentOffset) {
+                        $.cookie(timezone_cookie, new Date().getTimezoneOffset());
+                        $.cookie(timeZoneName, aa);
+                        location.reload();
+                    }
+                    else {
+                        $.cookie(timeZoneName, aa);
+                    }
+                }
+            } catch (e) {
+                console.log("Time zone not detected.")
+                bootbox.alert("Time zone not detected.");
+            }
+
+        }
+    </script>
+
+    <script src="~/Scripts/BootStrap-Multiselect/JS/bootbox.js"></script>
+    <script src="~/Scripts/UserDefine/LoginEmailValidation.js"></script>
+</body>
+</html>

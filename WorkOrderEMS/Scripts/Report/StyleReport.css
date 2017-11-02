@@ -1,0 +1,139 @@
+﻿body {
+}
+.hdng21 {
+    border-bottom: 1px solid #ccc;
+    font-family: "LatoLight";
+    font-size: 21px;
+    font-weight: normal;
+    padding: 0 0 10px;
+    color: #5d5c5c;
+}
+.pagi {
+    background: none repeat scroll 0 0 #fbf9f9;
+    border: 1px solid #f1f1f1;
+    border-radius: 6px;
+    padding: 10px;
+    position: relative;
+}
+.lab07 {
+    color: #5d5c5c;
+    display: inline-block;
+    font-family: "LatoLight";
+    font-size: 15px;
+    font-weight: normal;
+    padding: 3px 5px 5px;
+    vertical-align: top;
+}
+.bluebutton {
+    background-color: #0aa0cd;
+    border-color: #357ebd;
+    color: #fff;
+}
+.bluebutton:hover {
+    background-color: #0792bc;
+    border-color: #357ebd;
+    color: #fff;
+}
+
+.panel-defaultReport > .panel-headingReport {
+    background-color: #007ea4;
+    color: #fff;
+}
+.panel-defaultReport > .panel-headingReport {
+    background-color: #007ea4;
+    border-color: #ddd;
+    color: #fff;
+}
+.panel-headingReport {
+    font-size: 18px;
+}
+.panel-headingReport {
+    border-bottom: 1px solid transparent;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+    padding: 10px 15px;
+}
+.top-right{
+    float:right;
+    position:relative;
+    top:-45px;
+    left:-10px;
+}
+.btngo{
+    height: 30px;
+    margin-top: -14px;
+    padding: 5px 10px;
+}
+.form-control2[disabled], .form-control2[readonly], fieldset[disabled] .form-control2 {
+    cursor: pointer;
+}
+.form-control2 {
+    cursor: pointer;
+}
+
+  .chartArea {
+            /*background: none repeat scroll 0 0 #fbf9f9;
+    border: 1px solid #f1f1f1;
+    border-radius: 6px;*/
+   background:#fff;
+    padding:30px;
+    
+        }
+      #filterby { min-width:inherit;}
+#filterby li { padding:0 5px}
+#filterby i { color:#333!important; font-size:18px}
+.daterangepicker {
+    left: auto !important;
+    position: absolute;
+    right: auto !important;
+    top: 0 !important;
+}
+/*.daterangepicker {
+    margin-right: -30px;
+    margin-top: -20px;
+}*/
+#showDiv {
+    display: block;
+    right: 95% !important;
+    top: 138% !important;
+}
+
+.popover {
+    z-index: 1;
+}
+/*.clockpicker-popover {
+  left: 60% !important;
+  top: 320.483px !important;
+}*/
+#divCharts .dropdown-menu > li > a:hover {
+    background-color: #3c8dbc;
+    color: #f9f9f9;
+}
+ ul.filterReportDd{width: 134px;}
+  ul.filterReportDd li {
+  color: #333;
+  display: block;
+  line-height: 30px!important;
+  text-align: left;
+  font-size:12px;
+}
+  ul.filterReportDd li i {
+      margin-right: 6px;
+  }
+  .daterangepicker.opensleft::before {
+  z-index: 1000;
+}
+
+.pagi img:hover {
+    border-radius: 3px;
+    height: 120px;
+    position: absolute;
+    transform: rotate(0deg) scale(1) skew(1deg) translate(0px);
+    transition-duration: 1.5s;
+    -webkit-transition-property: width, height; /* Safari */
+    transition-property: width, height;
+    width: 120px;
+    z-index: 2147483647;
+}
+
+.qrc_ammount #Scandetail td img:hover { margin-top:-50px; }

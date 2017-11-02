@@ -1,0 +1,30 @@
+﻿@{
+    ViewBag.Title = "My Profile";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+    //string StateID = string.Empty, Image = "no-profile-pic.jpg";
+    //if (Model != null && Model.Address != null && Model.Address.StateId.HasValue)
+    //{
+    //    StateID = Convert.ToString(Model.Address.StateId);
+    //    Image = string.IsNullOrEmpty(Model.ProfileImage) ? "no-profile-pic.jpg" : Model.ProfileImage;
+    //}
+}
+@using (Html.BeginForm("EmployeeProfile", "Employee", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Personal Details
+        </div>
+        @Html.Partial("_Registration")
+        <div class="col-sm-offset-9 col-sm-8">
+            <button class="btn btn-default bluebutton" type="submit">Save</button>
+
+            <a href="~/GlobalAdmin/Dashboard" class="btn btn-default bluebutton">Cancel</a>
+
+        </div>
+    </div>
+}
+@section scripts{
+
+    @Scripts.Render("~/bundles/jqueryval")
+
+}

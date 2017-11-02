@@ -1,0 +1,565 @@
+﻿@using WorkOrderEMS.Helper;
+@model WorkOrderEMS.Models.eFleetPMModel
+@{
+    ViewBag.Title = "Create Preventative Maintenance";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long locationId = 0;
+    long userType = 0;
+    long Miles = 0;
+    long Hours = 0;
+    long Annual = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+    Miles = Convert.ToInt64(eFleetEnum.Miles);
+    Hours = Convert.ToInt64(eFleetEnum.Hours);
+    Annual = Convert.ToInt64(eFleetEnum.Annual);
+}
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
+<link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
+<style type="text/css">
+    .errorspace {
+        margin-top: -5px
+    }
+</style>
+@section scripts{
+    <script type="text/javascript">
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_QRCList').setGridWidth(width);
+        });
+        $('#btnMyModalFORQRC').live("click", function () {
+            $('#myModalLicence').modal('show');
+        });
+    </script>
+}
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+@using (Html.BeginForm("Index", "eFleetPreventativeMaintenance", FormMethod.Post, new { enctype = "multipart/form-data", @id = "pm_form" }))
+{
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create Preventative Maintenance
+            </div>
+            <div class=" clearfix"></div>
+            <div class="form">
+                <div class="tab-content">
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            @Html.HiddenFor(model => model.VehicleID, new { @id = "VehicleID" })
+                            @Html.HiddenFor(model => model.QRCodeID, new { @id = "QRCodeID" })
+                            @Html.HiddenFor(model => model.ID, new { @id = "ID" })
+                            @Html.HiddenFor(model => model.PmID, new { @id = "PmID" })
+                            @*@if(Model.Category == 453)
+                            {
+                                @Html.HiddenFor(model => model.Category, new {@value = "453"})
+                            }*@
+                            <label>
+                                Vehicle Number<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.VehicleNumber != null)
+                                {
+                                <select name="@Html.NameFor(model => model.VehicleNumber)"
+                                        id="@Html.IdFor(model => model.VehicleNumber)"
+                                        onchange="BindVehicleID()">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.VehicleNumber)
+                                    {
+                                        <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID" data-codeid="@Vn.QRCodeID"
+                                                @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
+                                                                                                                                                                                                    }>
+                                            @Vn.VehicleNumber
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {<select id="VehicleNumber"><option value="-1">@ViewBag.VehicleNumber</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleNumber)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Service Due Date<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.ServiceDueDate, "{0:MM/dd/yyyy}", new { @id = "ServiceDueDate", @onkeydown = "return false;" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.ServiceDueDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Meter<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.MeterList != null)// This is temorary need to use Razor
+                            {
+                                <select name="@Html.NameFor(model => model.Meter)"
+                                        id="@Html.IdFor(model => model.Meter)"
+                                        onchange="BindMilesHours()">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.MeterList)
+                                    {
+                                        <option value="@Vn.GlobalCodeId" text="@Vn.CodeName"
+                                                @if (Vn.GlobalCodeId == Model.Meter) { @: selected="selected"
+                                                                                                                                                            }>
+                                            @Vn.CodeName
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            @*@if (ViewBag.MeterList != null)
+            {@Html.DropDownListFor(model => model.Meter, new SelectList(ViewBag.MeterList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "Meter", @onchange = "BindMilesHours()" })}*@
+                            else
+                            {<select id="State"><option value="-1">@ViewBag.MeterList</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Meter)
+                            </div>
+                        </div> 
+                        <div class="field-wrap">
+                            <label>
+                                PM metric<span class="req">*</span>
+                            </label>
+                            @Html.TextAreaFor(model => model.ReminderMetricDesc, new { @id = "Description" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.ReminderMetricDesc)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row" style="margin-top:15px">
+                        <div class="field-wrap">
+                            <label>
+                                Category<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.Category != null)// This is temorary need to use Razor
+                            {
+                                <select name="@Html.NameFor(model => model.Category)"
+                                        id="@Html.IdFor(model => model.Category)">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.Category)
+                                    {
+                                        <option value="@Vn.GlobalCodeId" text="@Vn.CodeName"
+                                                @if (Vn.GlobalCodeId == Model.Category) { @: selected="selected"
+                                                                                                            }>
+                                            @Vn.CodeName
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            @* @Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "Value", "Text"), "--Select--", new {  @id = "Category" })*@
+                            @*@Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "GlobalCodeId", "CodeName","--Select--"))*@
+                            @*@Html.DropDownListFor(model => model.Category, new SelectList(ViewBag.Category, "GlobalCodeId", "CodeName"), "", new { @id = "Category" })*@
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Meter)
+                            </div>
+                        </div>
+
+                                    
+                        @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true && Model.ReminderMetric == 9 && Model.Meter == Convert.ToInt64(eFleetEnum.Miles))
+                        {
+                            <div class="field-wrap" id="commentrow">
+                                <label>
+                                    Comment<span class="req"></span>
+                                </label>
+                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @id = "Comment" })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.OtherMilesComment)
+                                </div>
+                            </div>                           
+                        }
+                        else
+                        {
+                            <div class="field-wrap" style="display:none" id="commentrow">
+                                <label>
+                                    Comment<span class="req"></span>
+                                </label>
+                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @id = "Comment" })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.OtherMilesComment)
+                                </div>
+                            </div>
+                        }
+                        </div>
+                     @* while editing this div will open *@
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                   {
+                        <div class="top-row">
+                            @if ( Model.Meter == Convert.ToInt64(eFleetEnum.Miles))// For Miles
+                            {
+                                <div class="field-wrap" id="Milesrow">
+                                    @*<label>
+                                        Miles Value<span class="req">*</span>
+                                    </label>*@
+                                    @if (ViewBag.MilesValue != null)// This is temorary need to use Razor
+                                    {
+                                        @*<select name="@Html.NameFor(model => model.ReminderMetric)"
+                                                id="@Html.IdFor(model => model.ReminderMetric)"
+                                                onchange="BindMilesHours()">
+                                            <option>--Select--</option>
+                                            @foreach (var Vn in ViewBag.MilesValue)
+                                            {
+                                                <option value="@Vn.ID" text="@Vn.MeterValue"
+                                                        @if (Vn.ID == Model.ReminderMetric) { @: selected="selected"
+                                                                                                                                                                    }>
+                                                    @Vn.MeterValue
+                                                </option>
+                                            }
+                                        </select>
+                                    }*@
+
+                                        @Html.DropDownListFor(model => model.ReminderMetric, new SelectList(ViewBag.MilesValue, "ID", "MeterValue"), "--Select Miles--", new { @id = "MilesValue" ,@onchange = "BindMilesHours()" })}
+                                    else
+                                    {<select id="State"><option value="-1">@ViewBag.MilesValue</option></select>}
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                                <div class="field-wrap" id="Hoursrow" style="display: none">
+                                    <label>
+                                        Hours Value<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.Meter == Convert.ToInt64(eFleetEnum.Hours))
+                            {
+                                <div class="field-wrap" id="Hoursrow">
+                                    <label>
+                                        Hours Value<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                                <div class="field-wrap" id="Milesrow" style="display: none">
+                                    @*<label>
+                                        Miles Value<span class="req">*</span>
+                                    </label>*@
+                                   @if (ViewBag.MilesValue != null)// This is temorary need to use Razor
+                                   {
+                                    @*<select name="@Html.NameFor(model => model.ReminderMetric)"
+                                            id="@Html.IdFor(model => model.ReminderMetric)"
+                                            onchange="BindMilesHours()">
+                                        <option>--Select--</option>
+                                        @foreach (var Vn in ViewBag.MilesValue)
+                                        {
+                                            <option value="@Vn.ID" text="@Vn.MeterValue"
+                                                    @if (Vn.ID == Model.ReminderMetric) { @: selected="selected"
+                                                                                                                                                                                                                        }>
+                                                @Vn.MeterValue
+                                            </option>
+                                        }
+                                    </select>*@
+                                   
+                                    @Html.DropDownListFor(model => model.ReminderMetric, new SelectList(ViewBag.MilesValue, "ID", "MeterValue"), "--Select Miles--", new { @id = "MilesValue", @onchange = "BindMilesHours()" })
+                                   }
+                                    else
+                                    {
+                                       <select id="State"><option value="-1">@ViewBag.MilesValue</option></select>
+                                    }
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                            }
+                            else if (Model.Meter == Convert.ToInt64(eFleetEnum.Annual))
+                            {
+                                <div class="field-wrap" id="Hoursrow" style="display: none">
+                                    <label>
+                                        Hours Value<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                                <div class="field-wrap" id="Milesrow" style="display: none">
+                                    @*<label>
+                                        Miles Value<span class="req">*</span>
+                                    </label>*@
+                                    @if (ViewBag.MilesValue != null)
+                                    {@Html.DropDownListFor(model => model.ReminderMetric, new SelectList(ViewBag.MilesValue, "ID", "MeterValue"), "--Select Miles--", new { @id = "MilesValue", @onchange = "BindMilesHours()" })}
+                                    else
+                                    {<select id="State"><option value="-1">@ViewBag.MilesValue</option></select>}
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="top-row">
+                            <div class="field-wrap" id="Milesrow" style="display: none">
+                                @*<label>
+                                    Miles Value<span class="req">*</span>
+                                </label>*@
+                                @if (ViewBag.MilesValue != null)
+                                {@Html.DropDownListFor(model => model.ReminderMetric, new SelectList(ViewBag.MilesValue, "ID", "MeterValue"), "--Select Miles--", new { @id = "MilesValue", @onchange = "BindMilesHours()" })}
+                                else
+                                {<select id="State"><option value="-1">@ViewBag.MilesValue</option></select>}
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                </div>
+                            </div>
+                            <div class="field-wrap" id="Hoursrow" style="display: none">
+                                <label>
+                                    Hours Value<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.ReminderMetric)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    @*</form>*@
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Submit</button>
+                    }
+                </div><!-- tab-content -->
+            </div> <!-- /form -->
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@* Validation when no fields are filled then text box border will red *@
+<script>
+    $(document).ready(function () {
+        //Attach change event to textbox
+        $("#VehicleNumber").change(function () {
+            //Check if value is empty or not
+            if ($(this).val() == "--Select--") {
+                //if empty then assign the border
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Meter").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Category").change(function () {
+            if ($(this).val() == "--Select--") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#ServiceDueDate").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Description").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#MilesValue").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#HoursValue").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Comment").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+    });
+    function validatetextbox() {
+        var txtvalvehiclenumber = $("#VehicleNumber").val();
+        var txtvalMeter = $("#Meter").val();
+        var txtvalCategory = $("#Category").val();        
+        var txtvalServiceDueDate = $("#ServiceDueDate").val();
+        var txtvalDescription = $("#Description").val();
+        var txtvalMilesValue = $("#MilesValue").val();
+        var txtvalHoursValue = $("#HoursValue").val();
+        var txtvalComment = $("#Comment").val();
+        //Check if value is empty or not
+        if (txtvalvehiclenumber == "--Select--") {
+            //if empty then assign the border
+            $("#VehicleNumber").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#VehicleNumber").css("border", "1px solid #4475b5");
+        }
+        if (txtvalMeter == "") {
+            $("#Meter").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Meter").css("border", "1px solid #4475b5");
+        }
+        if (txtvalCategory == "--Select--") {
+            $("#Category").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Category").css("border", "1px solid #4475b5");
+        }       
+        if (txtvalServiceDueDate == "") {
+            $("#ServiceDueDate").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#ServiceDueDate").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDescription == "") {
+            $("#Description").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Description").css("border", "1px solid #4475b5");
+        }
+        if (txtvalMilesValue == "") {
+            $("#MilesValue").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#MilesValue").css("border", "1px solid #4475b5");
+        }
+        if (txtvalHoursValue == "") {
+            $("#HoursValue").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#HoursValue").css("border", "1px solid #4475b5");
+        }
+        if (txtvalComment == "") {
+            $("#Comment").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Comment").css("border", "1px solid #4475b5");
+        }
+    }
+</script>
+@*//File Upload script//*@
+<script language="javascript" type="text/javascript">
+    function BindVehicleID() {
+        var vid = $('#VehicleNumber').find('option:selected').attr('data-vid');
+        var codeId = $('#VehicleNumber').find('option:selected').attr('data-codeid');
+        // var vid = $(this).find('selected').attr('data-vid');
+        $('#VehicleID').val(parseInt(vid));
+        $('#QRCodeID').val(codeId);
+    }
+    function BindMilesHours() {
+        if ($('#Meter').val() == '@Miles') {
+                $("#Milesrow").show();
+            } else {
+                $("#Milesrow").hide();
+            }       
+            if ($('#Meter').val() == '@Hours') {
+                $("#Hoursrow").show();
+                $("#commentrow").hide();
+                $("#Milesrow").hide();
+            } else {
+                $("#Hoursrow").hide();
+            }
+            if ($('#MilesValue').val() == 9 && $('#Meter').val() == '@Miles') {
+                $("#commentrow").show();
+                $("#Hoursrow").hide();
+            } else {
+                $("#commentrow").hide();
+            }
+            if ($('#Meter').val() == '@Annual')
+            {
+                $('#Category').attr("disabled", true).val(453);
+            }
+            else
+            {
+                $('#Category').attr("disabled", false);
+            }
+    }
+    $("#pm_form").submit(function () {
+        debugger
+        $("#Category").attr("disabled", false);
+    });
+    $(function () {
+        //Image for Vahicle will use in Future so Keep it
+        //$("#fileuploadVehicle").change(function () {
+        //    $("#dvPreviewVehicle").html("");
+        //    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        //    if (regex.test($(this).val().toLowerCase())) {
+        //        if ($.browser.msie && parseFloat(jQuery.browser.version) <= 9.0) {
+        //            $("#dvPreviewVehicle").show();
+        //            $("#dvPreviewVehicle")[0].filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = $(this).val();
+        //        }
+        //        else {
+        //            if (typeof (FileReader) != "undefined") {
+        //                $("#dvPreviewVehicle").show();
+        //                $("#dvPreviewVehicle").append("<img />");
+        //                var reader = new FileReader();
+        //                reader.onload = function (e) {
+        //                    $("#dvPreviewVehicle img").attr("src", e.target.result).height(100).width(100);
+        //                }
+        //                reader.readAsDataURL($(this)[0].files[0]);
+        //            } else {
+        //                alert("This browser does not support FileReader.");
+        //            }
+        //        }
+        //    } else {
+        //        alert("Please upload a valid image file.");
+        //    }
+        //});
+        $("#ServiceDueDate").datepicker();
+        $("select").blur();
+        
+        //$("input[type='text']").focus();        
+        $("input[id='Meter']").focus();
+        $("input[id='Category']").focus();
+       // $("#Description").focus();
+        $("input[id='MilesValue']").focus();
+        $("input[id='HoursValue']").focus();
+       // $("input[id='ServiceDueDate']").blur(); 
+        $("input[id='Comment']").focus();
+        $("input[id='ServiceDueDate']").blur();
+        $("input[id='vehicleNumber']").focus();
+       // $("textarea").blur();
+        $("textarea").blur()
+       
+        
+    });
+</script>
+<script src="~/Scripts/eFleetVehicle/reg.js"></script>

@@ -1,0 +1,85 @@
+﻿@model WorkOrderEMS.Models.UserModel
+@{
+     var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty,controller=string.Empty;
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        {
+             actionName = routeValues["action"].ToString();
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            controller = routeValues["controller"].ToString();
+        }
+
+    }
+
+}
+<!-- /.panel -->
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Invite
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="">
+                @Html.ValidationSummary(true)
+                @Html.HiddenFor(model => model.UserId)
+                <div class="form-horizontal">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.FirstName, new { @class = "col-sm-4 control-label" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.FirstName, new { @Placeholder = "First Name", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.FirstName)
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-4" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.LastName, new { @Placeholder = "Last Name", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.LastName)
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    @if (actionName != "InviteClient") { 
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.EmployeeID, new { @class = "control-label col-md-4" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.EmployeeID, new { @Placeholder = "EmployeeID", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.EmployeeID)
+                        </div>
+                    </div>
+                    }
+                    else if (actionName == "InviteClient" && controller == "GlobalAdmin")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ProjectID, new { @class = "control-label col-md-4" })
+                            <div class="col-sm-7">
+                                @Html.DropDownListFor(model => model.ProjectID, new SelectList(ViewBag.Project, "Value", "Text"), "Select", new { @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ProjectID)
+                            </div>
+                       </div>
+                    }
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.UserEmail, new { @class = "control-label col-md-4" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.UserEmail, new { @Placeholder = "User Email", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.UserEmail)
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button class="btn btn-default bluebutton" type="submit">Send Invitation</button>
+                        </div>
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

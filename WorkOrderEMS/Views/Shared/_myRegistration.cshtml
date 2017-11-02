@@ -1,0 +1,1185 @@
+﻿@model dynamic
+@{
+    long UserType = 0; bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        UserType = ObjLogin.UserRoleId;
+
+        #region Get Active User Type Flag
+        /*Get Active User Type Flag*/
+
+        switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+        {
+            case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                GloblaAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                ITAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Administrator:
+                OnlyAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Manager:
+                ManagerUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Employee:
+                EmployeeUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Client:
+                ClientUser = true;
+                break;
+            default:
+                GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+                break;
+        }
+
+        /*Get Active User Type Flag*/
+        #endregion Get Active User Type Flag
+    }
+    else
+    {
+        WorkOrderEMS.Helper.AlertMessageClass ObjAlertMessageClass = new WorkOrderEMS.Helper.AlertMessageClass();
+        ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger; ViewBag.Message = WorkOrderEMS.Helper.CommonMessage.SessionExpired();
+        //throw new Exception(WorkOrderEMS.Helper.CommonMessage.SessionExpired());
+        //Server.Transfer("Error");
+        Response.Redirect("~/Views/Shared/_GlobalAdminLayout.cshtml");
+    }
+
+    string myModelprefix = ViewBag.myModelprefixName;
+    string IsClientEdit = ViewBag.ActionSection;
+
+    string myModelprefixwidProfileImage = myModelprefix + "ProfileImage";
+    string myModelmyProfileImage = myModelprefix + "myProfileImage";
+    string UserTypeControlName = myModelprefix + "UserType";
+    //string ProfileImageLabelCaption = "Profile Image";
+
+    string ProfileImageLabelCaption = myModelprefix + ((ViewBag.ActionSection == "client") ? "Client Logo" : "Profile Image");
+
+    string StateID = string.Empty, Image = "no-profile-pic.jpg";
+    //if (Model != null && Model.UserModel != null && Model.Address != null && Model.Address.StateId.HasValue)
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string Controller = string.Empty, ActionName = string.Empty;
+    string IsClientEmailVisible = string.Empty;
+
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("controller"))
+        {
+            Controller = ViewContext.RouteData.GetRequiredString("controller");
+            //Controller = routeValues["controller"].ToString();
+        }
+        if (routeValues.ContainsKey("action"))
+        {
+            ActionName = ViewContext.RouteData.GetRequiredString("action");
+            IsClientEmailVisible = ActionName.ToLower();
+            //ActionName = routeValues["action"].ToString();
+        }
+    }
+    if (ViewBag.UpdateMode == true || ActionName.ToLower() == "getmanagerdetails")
+    {
+        if (Model != null)
+        {
+            if (ViewBag.ActionSection == "manager")
+            {
+                StateID = Convert.ToString(Model.ManagerModel.Address.StateId);
+            }
+            else if (ViewBag.ActionSection == "client")
+            {
+                StateID = Convert.ToString(Model.ClientModel.Address.StateId);
+            }
+            else if (ViewBag.ActionSection == "User" && Model.UserModel != null)
+            {
+                StateID = Convert.ToString(Model.Address.StateId);
+            }
+            else if (ActionName.ToLower() == "locationsetup" || ActionName.ToLower() == "editlocationsetup" || ActionName.ToLower() == "getmanagerdetails")
+            {
+                StateID = Convert.ToString(Model.StateId);
+            }
+        }
+    }
+
+    /*
+    if (routeValues != null)
+    {
+        string actionName, controller = "";
+        if (routeValues.ContainsKey("action"))
+        {
+            var myaction = ViewContext.RouteData.GetRequiredString("action");
+            actionName = myaction;
+            //var myarea = ViewContext.RouteData.DataTokens["Area"];
+            //var myid = ViewContext.RouteData.DataTokens["area"];
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            //controller = routeValues["controller"].ToString();
+            var mycontroller = ViewContext.RouteData.GetRequiredString("controller");
+            controller = mycontroller;
+        }
+    }
+    */
+
+
+    //if (Model != null && Model.UserModel != null)
+    //{
+    //    if (Model.Address != null && Model.Address.StateId.HasValue)
+    //    { StateID = Convert.ToString(Model.Address.StateId); }
+    //    Image = string.IsNullOrEmpty(Model.myProfileImage) ? "no-profile-pic.jpg" : Model.myProfileImage;
+    //}
+
+    /*if (Model != null)
+     {
+         if (Model.Address != null && Model.Address.StateId != null && Model.Address.StateId.HasValue)
+         { StateID = Convert.ToString(Model.Address.StateId); }
+         Image = string.IsNullOrEmpty(Model.myProfileImage) ? "no-profile-pic.jpg" : Model.myProfileImage;
+     }
+     else { Image = "no-profile-pic.jpg"; }
+     */
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        //ViewBag.Title = "Update Item";
+
+    }
+
+
+    //Code written By gayatri
+    //on 24-Nov-2014
+    //For Binding Dropdown on the basis of the user type
+    string idState = string.Empty;
+    string idCountry = string.Empty;
+    string functionName = string.Empty;
+    string stateName = string.Empty;
+    string ddlAdminSelectName = string.Empty;
+    stateName = myModelprefix + "Address.StateId";
+
+    ddlAdminSelectName = myModelprefix + "Administrator";
+    if (ViewBag.ActionSection == "manager")
+    {
+        idState = "BillingStates";
+        idCountry = "BillingCountry";
+        functionName = "BindState(true)";
+    }
+    else if ((ViewBag.ActionSection == "user") || (ViewBag.ActionSection == "employee"))
+    {
+        idState = "EmployeeStates";
+        idCountry = "EmployeeCountry";
+        functionName = "BindState('user')";
+    }
+    else
+    {
+        idState = "CompanyStates";
+        idCountry = "CompanyCountry";
+        functionName = "BindState(false)";
+    }
+    long hiddnUserType = 0;
+    if (!string.IsNullOrEmpty(ViewBag.ActionSection) && ViewBag.ActionSection == "manager")
+    { hiddnUserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Manager); }
+    else if (!string.IsNullOrEmpty(ViewBag.ActionSection) && ViewBag.ActionSection == "itadmin")
+    { hiddnUserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator); }
+    else if (!string.IsNullOrEmpty(ViewBag.ActionSection) && ViewBag.ActionSection == "admin")
+    { hiddnUserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator); }
+    else if (!string.IsNullOrEmpty(ViewBag.ActionSection) && ViewBag.ActionSection == "client")
+    { hiddnUserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client); }
+    if (!string.IsNullOrEmpty(ViewBag.ActionSection) && (ViewBag.ActionSection == "employee" || ViewBag.ActionSection == "user"))
+    { hiddnUserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee); }
+
+}
+@Html.ValidationSummary(true)
+<input type="hidden" value='@hiddnUserType' name='@UserTypeControlName'>
+<input type="hidden" name="UserModel.EmployeeCategory" id="UserCategory" value='@Controller' />
+@Html.Hidden("StateList", null, new { id = myModelprefix + "StateList", Value = ViewBag.StateList })
+@Html.Hidden(myModelprefix + "UserId")
+@Html.Hidden(myModelprefix + "AddressMasterId")
+@Html.Hidden(myModelprefix + "Address.AddressMasterId")
+@Html.AntiForgeryToken()
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+<!--File Upload-->
+@*<script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>*@
+<script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12" id="myRegistration">
+    <div class="panel-body">
+        <div class="row">
+
+            <div class="form-horizontal">
+
+                @if (ViewBag.ActionSection != "client" && ViewBag.ActionSection != "user" && ViewBag.ActionSection != "employee" && (GloblaAdminUser || ITAdminUser) && (ActionName.ToLower() == "locationsetup" || ActionName.ToLower() == "editlocationsetup" || ActionName.ToLower() == "getmanagerdetails"))
+                {
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.Label(myModelprefix + "Administrator", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            @if (ViewBag.AdministratorList != null)
+                            {
+                                @Html.DropDownList(myModelprefix + "Administrator", new SelectList(ViewBag.AdministratorList, "UserId", "Name"), "--Select--", new { @class = "form-control required requiredselect nodisable star", @id = "ddlAdministrator" })}
+                            else
+                            {<select class="form-control required requiredselect nodisable" name="@ddlAdminSelectName" id="ddlAdministrator"><option value="">--Select--</option></select>}
+                            @Html.ValidationMessage(myModelprefix + "Administrator")
+                        </div>
+                    </div>
+
+                }
+
+
+                @if (true)
+                {
+                    if ((ActionName.ToLower() == "editlocationsetup" || ActionName.ToLower() == "locationsetup" || ActionName.ToLower() == "getmanagerdetails") && ViewBag.ActionSection == "manager")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+
+                            @Html.Label("Manager", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                <p class="form-control-static  alert alert-info">
+                                    @Html.RadioButton(myModelprefix + "IsExistingManager", "false", true, new { @class = "nodisable isNewManager", @value = "false" }) New Manager
+                                    @Html.RadioButton(myModelprefix + "IsExistingManager", "true", false, new { @class = "nodisable isNewManager", @value = "true" }) Existing Manager
+                                    @*<input type="radio" name="IsExistingManager" id="@myModelprefixIsExistingManager" value="1" class="nodisable" />
+                                        <span>New Manager</span>
+                                        &nbsp;&nbsp;&nbsp;<input type="radio" name="IsExistingManager" id="@myModelprefix'IsExistingManager'" value="0" class="nodisable" />
+                                        <span>Existing Manager List</span>*@
+                                </p>
+                            </div>
+                        </div>
+
+                        //string tempp = "Model." + myModelprefix + "ExistManagerID";
+                        string tempp = myModelprefix + "ExistManagerID";
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12" id="divexistingmanager">
+                            @*@Html.LabelFor(c => tempp, new { @class = "col-sm-4 control-label" })*@
+                            @*@Html.LabelFor(c => hiddnUserType, myModelprefix + "ExistManagerID", new { @class = "col-sm-4 control-label" })*@
+                            @*@Html.Label(myModelprefix + "ExistManagerID", new { @class = "col-sm-4 control-label" })*@
+
+
+                            @Html.Label("Select Manager", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @*<select class="form-control requiredselect nodisable" id="ddlManager" onchange="FillManagerDetails()" name="@tempp"><option value="">Select</option></select>*@
+                                @if (ViewBag.ManagerList != null && ViewBag.ManagerList.Count > 0)
+                                {
+                                    @Html.DropDownList(myModelprefix + "ExistManagerID", new SelectList(ViewBag.ManagerList, "UserId", "Name"), "--Select--", new { @class = "form-control requiredselect nodisable", @id = "ddlManager", @onchange = "FillManagerDetails()", @name = tempp })}
+                                else
+                                {<select class="form-control requiredselect nodisable" id="ddlManager" name="@tempp"><option>--Select--</option></select>}
+                                @Html.ValidationMessage(myModelprefix + "ExistManagerID")
+                            </div>
+                        </div>
+
+                    }
+                }
+
+                @*@if (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && ActionName.ToLower() == "locationsetup"))*@
+
+                @*@if (UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) && UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator) && ActionName.ToLower() == "locationsetup")*@
+
+                @*@if (!GloblaAdminUser && !ITAdminUser && !OnlyAdminUser && ActionName.ToLower() != "locationsetup")*@
+
+                @*@if (ActionName.ToLower() != "locationsetup" && ActionName.ToLower() != "editlocationsetup" && ActionName.ToLower() != "getmanagerdetails" && ViewBag.ActionSection != "itadmin")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.Label(myModelprefix + "Location", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @if (ViewBag.LocationList != null && ViewBag.LocationList.Count > 0)
+                                {
+                                    @Html.DropDownList(myModelprefix + "Location", new SelectList(ViewBag.LocationList, "LocationId", "LocationName"), "Select", new { @class = "form-control required requiredselect", @id = "Location" })}
+                                else
+                                {<select class="form-control required requiredselect" id="Location"><option>Select</option></select>}
+                                @Html.ValidationMessage(myModelprefix + "Location")
+                            </div>
+                        </div>
+                    }*@
+
+
+                @*@if (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && ActionName.ToLower() == "locationsetup")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.Label(myModelprefix + "Manager, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @if (ViewBag.ManagerList != null && ViewBag.ManagerList.Count > 0)
+                                {
+                                    @Html.DropDownList(myModelprefix + "Manager, new SelectList(ViewBag.ManagerList, "UserId", "UserName"), "Select", new { @class = "form-control requiredselect", @id = "Manager" })}
+                                else
+                                {<select class="form-control requiredselect" id="Location"><option>Select</option></select>}
+                                @Html.ValidationMessage(myModelprefix + "Location)
+                            </div>
+                        </div>
+                    }*@
+                @*@if (Controller.ToLower() != "client" && (ActionName.ToLower() != "locationsetup" && ActionName.ToLower() != "editlocationsetup" && ActionName.ToLower() != "getmanagerdetails") && ViewBag.ActionSection != "client")*@
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "First Name", new { @class = "col-sm-4 control-label star" })
+
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "FirstName", null, new { @Placeholder = "First Name", @class = "form-control required LetterOnlyFr", @maxLength = "35" })
+                        @Html.ValidationMessage(myModelprefix + "FirstName")
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Last Name", new { @class = "col-sm-4 control-label star" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "LastName", null, new { @Placeholder = "Last Name", @class = "form-control LetterOnlyFr required", @maxLength = "35" })
+                        @Html.ValidationMessage(myModelprefix + "LastName")
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 hide UpdateUserInfo @ActionName.ToLower()@IsClientEdit" title="Click on Yes to Change the Email">
+                    <label class="col-sm-4 control-label" for="Change Email">Want to Change User Email</label>
+                    <div class="col-sm-8">
+                        <input type="radio" id="btnChkChangeEmail" name="chkEmail" value="1" />Yes
+                        <input type="radio" id="btnChkChangeEmail" name="chkEmail" class="editUserEmailCheck" value="0" checked="checked" />No
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "User Email", new { @class = "col-sm-4 control-label star" })
+
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "UserEmail", null, new { @Placeholder = "User Email", @type = "email", @class = "form-control required requiredselect" })
+                        @*<span style="display:none;" data-valmsg-replace="true" class="field-validation-error"><span class="">The User Email field is required.</span></span>*@
+                        @Html.ValidationMessage(myModelprefix + "UserEmail", new { @class = "field-validation-error abc" })
+                        @Html.Hidden(myModelprefix + "UserEmail")
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @*@Html.Label(myModelprefix + "JobTitle", new { @class = "col-sm-4 control-label star" })*@
+
+                    <label class="col-sm-4 control-label star"> Job Title</label>
+
+                    <div class="col-sm-8">
+
+                        @if (ViewBag.JobTitleList != null && ViewBag.JobTitleList.Count > 0)
+                        {
+                            @Html.DropDownList(myModelprefix + "JobTitle", new SelectList(ViewBag.JobTitleList, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control required requiredselect", @id = "JobTitle" })}
+                        else
+                        {
+                            <select class="form-control required requiredselect" id="JobTitle"><option>--Select--</option></select>
+                        }
+                        @Html.ValidationMessage(myModelprefix + "JobTitle")
+                        @*@Html.TextBox(myModelprefix + "JobTitle", null, new { @Placeholder = "Job Title", @class = "form-control required LetterOnlyFr" })
+                            @Html.ValidationMessage(myModelprefix + "JobTitle")*@
+                    </div>
+
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 divOtherJobTitle">
+                    <label class="col-sm-4 control-label star"> Other Job Title</label>
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "JobTitleOther", null, new { @Placeholder = "Job Title", @class = "form-control required LetterOnlyFr" })
+                        @Html.ValidationMessage(myModelprefix + "JobTitleOther")
+                    </div>
+
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @*@Html.Label(myModelprefix + "EmployeeID", new { @class = "col-sm-4 control-label star" })*@
+
+                    <label class="col-sm-4 control-label star"> Employee ID</label>
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "EmployeeID", null, new { @Placeholder = "Employee ID", @class = "form-control required isValidUserNameOnly " })
+                        @Html.ValidationMessage(myModelprefix + "EmployeeID")
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "User Name", new { @class = "col-sm-4 control-label star" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "AlternateEmail", null, new { @Placeholder = "User Name", @class = "form-control required isValidUserNameOnly" })
+                        @Html.ValidationMessage(myModelprefix + "AlternateEmail")
+                    </div>
+                </div>
+                @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 hide UpdateUserInfo" title="Click on Yes to Change the Password">
+                        <label class="col-sm-4 control-label" for="Change Password">Want to Change Password</label>
+                        <div class="col-sm-8">
+                            <input type="radio" id="btnChkChangePassword" name="chkPassword" value="1" />Yes
+                            <input type="radio" id="btnChkChangePassword" name="chkPassword" value="0" checked="checked" />No
+                        </div>
+                    </div>*@
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 hide UpdateUserInfo" title="Click on Yes to Change the Email">
+                    <label class="col-sm-4 control-label" for="Change Password">Change Password</label>
+                    <div class="col-sm-8">
+                        <input type="radio" id="btnChkChangePassword" name="chkPassword" value="1" />Yes
+                        <input type="radio" id="btnChkChangePassword" name="chkPassword" value="0" checked="checked" />No
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Password", new { @class = "col-sm-4 control-label star" })
+                    <div class="col-sm-8">
+                        @Html.Password(myModelprefix + "Password", null, new { @Placeholder = "Password", @class = "form-control required" })
+                        @Html.ValidationMessage(myModelprefix + "Password")
+                    </div>
+                </div>
+                @*  @if (ActionName.ToLower() != "create" && ActionName.ToLower() != "locationsetup" && (Model != null && (ViewBag.UpdateMode == null || ViewBag.UpdateMode == false) || Model != null &&  (string.IsNullOrEmpty(Model.Password))))
+                    @if (ViewBag.UpdateMode == null || ViewBag.UpdateMode == true)
+                     {
+                         <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                             @Html.Label(myModelprefix + "Password", new { @class = "col-sm-4 control-label" })
+                             <div class="col-sm-8">
+                                 @Html.TextBox(myModelprefix + "Password", null, new { @Placeholder = "Password", @class = "form-control", @type = "Password", @autocomplete = "off" })
+                                 @Html.ValidationMessage(myModelprefix + "Password")
+                             </div>
+                         </div>
+                         <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                             @Html.Label(myModelprefix + "ConfirmPassword", new { @class = "col-sm-4 control-label", @autocomplete = "off" })
+                             <div class="col-sm-8">
+                                 @Html.TextBox(myModelprefix + "ConfirmPassword", null, new { @Placeholder = "Confirm Password", @class = "form-control", @type = "Password" })
+                                 @Html.ValidationMessage(myModelprefix + "ConfirmPassword")
+                             </div>
+                         </div>
+
+                         <div class="clearfix"></div>
+                     }*@
+                @*@if (ViewBag.ActionSection != "client")
+                    {*@
+
+                @*}*@
+
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Gender", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8 form-control-static ">
+                        @Html.RadioButton(myModelprefix + "Gender", "9", true)  &nbsp;Male &nbsp; @Html.RadioButton(myModelprefix + "Gender", "10") &nbsp;Female
+                    </div>
+                </div>
+
+                @if (IsClientEdit.Contains("client"))
+                {   <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Date of Birth", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "DOB", null, new { @Placeholder = "DOB", @class = "form-control", @readonly = "readonly" })
+                        @*@Html.ValidationMessage(myModelprefix + "DOB")*@
+                    </div>
+                </div>}
+                else
+                {
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.Label(myModelprefix + "Date of Hire", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            @Html.TextBox(myModelprefix + "DOB", null, new { @Placeholder = "DOH", @class = "form-control required", @readonly = "readonly" })
+                            @Html.ValidationMessage(myModelprefix + "DOB")
+                        </div>
+                    </div>
+                }
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 hide">
+                    @Html.Label(myModelprefix + "Blood Group", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "BloodGroup", null, new { @Placeholder = "Blood Group", @class = "form-control" })
+                        @Html.ValidationMessage(myModelprefix + "BloodGroup")
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(ProfileImageLabelCaption, new { @class = "col-sm-4 control-label" })
+                    @*@ActionName*@
+                    <div class="col-sm-8">
+
+                        <img id='@myModelmyProfileImage.Replace(".","_")' name='@myModelmyProfileImage' src="@Url.Content("~/Content/Images/ProjectLogo/" + Image)"
+                             class="img-rounded" alt="No Image " style="width: 70px; height: 70px;">
+                        <input type="file" id='@myModelprefixwidProfileImage.Replace(".", "_")' name='@myModelprefixwidProfileImage' onchange="readURL(this);" value="Upload Profile Image">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    @*=================================*@
+    <div class="panel-heading">
+        Contact Details
+    </div>
+    <div class="row">
+        <div class="">
+            <div class="form-horizontal">
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @*@Html.Label(myModelprefix + "Address.Address1", new { @class = "col-sm-4 control-label star" })*@
+
+
+                    <label class="col-sm-4 control-label star">Address 1 </label>
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.Address1", null, new { @Placeholder = "Address1", @class = "form-control required" })
+                        @Html.ValidationMessage(myModelprefix + "Address.Address1")
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @*@Html.Label(myModelprefix + "Address.Address2", new { @class = "col-sm-4 control-label" })*@
+                    <label class="col-sm-4 control-label">Address 2</label>
+
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.Address2", null, new { @Placeholder = "Address2", @class = "form-control" })
+                        @Html.ValidationMessage(myModelprefix + "Address.Address2")
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                @*@if (ViewBag.ActionSection == "User")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.Label(myModelprefix + "Address.CountryId", new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @if (ViewBag.Country != null)
+                                { @Html.DropDownList(myModelprefix + "Address.CountryId", new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control required requiredselect", @id = "Country", @onchange = "BindState()" })}
+                                else
+                                {<select class="form-control required requiredselect " id="Country"><option>Select</option></select>}
+                                @Html.ValidationMessage(myModelprefix + "Address.CountryId")
+                            </div>
+                        </div>
+                    }
+                    else
+                    {*@
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Address.City", new { @class = "col-sm-4 control-label star" })
+
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.City", null, new { @Placeholder = "City", @class = "form-control required isLetterOnly" })
+                        @Html.ValidationMessage(myModelprefix + "Address.City")
+                    </div>
+                </div>
+                @*}*@
+
+                @if (ViewBag.ActionSection == "User")
+                {
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.Label(myModelprefix + "Address.StateId", "State", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            <select id="States" name='@stateName' class="form-control required requiredselect locationstate"><option value="0">Select</option></select>
+                            @Html.ValidationMessage(myModelprefix + "Address.StateId")
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.Label(myModelprefix + "Address.StateId", "State", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            <select id='@idState' name='@stateName' class="form-control required requiredselect locationstate"><option value="0">Select</option></select>
+                            @Html.ValidationMessage(myModelprefix + "Address.StateId")
+                        </div>
+                    </div>
+                }
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Address.CountryId", "Country", new { @class = "col-sm-4 control-label star" })
+                    <div class="col-sm-8">
+                        @if (ViewBag.Country != null)
+                        { @Html.DropDownList(myModelprefix + "Address.CountryId", new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control required requiredselect", @id = idCountry, @onchange = functionName })}
+                        else
+                        {<select class="form-control required requiredselect " id="Country"><option>Select</option></select>}
+                        @Html.ValidationMessage(myModelprefix + "Address.CountryId")
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @*  @Html.Label(myModelprefix + "Address.ZipCode", new { @class = "col-sm-4 control-label star" })*@
+                    <label class="col-sm-4 control-label star">Zip Code</label>
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.ZipCode", null, new { @Placeholder = "Zip Code", @class = "form-control required", @maxlength = 5, onkeypress = "return isNumberKey(event) " })
+                        @Html.ValidationMessage(myModelprefix + "Address.ZipCode")
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Address.Mobile", new { @class = "col-sm-4 control-label star" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.Mobile", null, new { @Placeholder = "Mobile", @class = "Phone form-control required" })
+                        @Html.ValidationMessage(myModelprefix + "Address.Mobile")
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.Label(myModelprefix + "Address.Phone", new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBox(myModelprefix + "Address.Phone", null, new { @Placeholder = "Phone", @class = "Phone form-control" })
+                        @Html.ValidationMessage(myModelprefix + "Address.Phone")
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/common/Masking.js"></script>
+<script src="~/Scripts/ImageUpload/FileUpload.js"></script>
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+<script type="text/javascript">
+
+    $_imagePath = '@Url.Action("UploadImage", "GlobalAdmin")';
+    $_BindManager = '@Url.Action("GetManagerByAdminID", "DropDown")';
+    var Action = '@ActionName.ToLower()';
+    var updateMode = '@ViewBag.UpdateMode';
+    var actionName = '@ActionName';
+
+    //if (actionName != 'CreateUser')
+    //{
+    //    $('#UserModel_UserEmail').blur()
+    //}
+    //else{
+
+    //}
+    function readURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if ($(input).val() != undefined && $(input).val() != '') {                          //var tmppath = URL.createObjectURL(input.files[0]); //$('#myProfileImage').prop('src', $('#ProfileImage').val());              ;
+            if (input.files && input.files[0]) {
+                var LoadImage = false;
+                var FileExtension = input.value.split(".")[1];
+                for (var v = 0; v < FType.length; v++) {
+                    if (FType[v] == FileExtension) {
+                        LoadImage = true;
+                    }
+                }
+                if (LoadImage == true) {
+                    var reader = new FileReader();
+                    var imagepathChk = input.name.split(".")[1];
+                    var imageFileUrl = "";
+                    if (imagepathChk == "" || imagepathChk == undefined || imagepathChk == null) {
+                        imageFileUrl = "myProfileImage";
+                    }
+                    else { imageFileUrl = input.name.split('.')[0] + ".myProfileImage"; }
+                    //if (input.name.contains(".")) {
+                    //imageFileUrl = input.name.split('.')[0] + ".myProfileImage";
+                    //}
+                    //else {
+                    //imageFileUrl = "myProfileImage";
+                    //}
+                    reader.onload = function (e) {
+                        var imagepathChk = input.name.split(".")[1];
+                        if (imagepathChk == "" || imagepathChk == undefined || imagepathChk == null) {
+                            $('#' + imageFileUrl).attr('src', e.target.result);
+                        }
+                        else { $('#' + (imageFileUrl.replace(".", "_"))).attr('src', e.target.result); }
+
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $(input).val("");
+                    alert("Please select image to upload!")
+                    return false;
+                }
+            }
+        }
+    }
+
+    $(document).ready(function () {
+
+        $(".isLetterOnly").keydown(function (e) {
+            var reg = new RegExp("^[a-zA-Z]+$");
+            return reg.test(e.key);
+        })
+        $(".isValidUserNameOnly").keydown(function (e) {
+            var reg = new RegExp("^[a-zA-Z0-9-_ &]+$");
+            return reg.test(e.key);
+        })
+        $(".LetterOnlyFr").keydown(function (e) {
+            var reg = new RegExp("^[a-zA-Z ]+$");
+            return reg.test(e.key);
+        })
+        $("#IsExistingManager").prop('checked', true);
+
+        var action = '@ViewBag.ActionSection';
+        var d = new Date();
+        var curr_year = d.getFullYear();
+
+        $.each($('input[name*="DOB"]'), function (i, v) {
+            //$('input[name="' + v.name + '"]').datepicker({ dateFormat: 'dd/mm/y', changeMonth: true, changeYear: true, maxDate: new Date, yearRange: "-100:+0", }).val();
+            $(this).datepicker({ format: 'mm/dd/yy', endDate: new Date }).on('changeDate', function (e) {
+                $(this).datepicker('hide');
+            });
+        });
+
+        $_StateID = '@StateID';
+        if (action == "manager") {
+            BindState(true);
+            if (Action == 'getmanagerdetails') {
+                $("#BillingStates").attr('disabled', true)
+            }
+        }
+        else if ((action == "admin") || (action == "itadmin") || (action == "client")) {
+            BindState(false);
+        }
+        else if (action == "employee") {
+            BindState('user');
+
+        }
+        else {
+            BindState();
+        }
+
+        /*Manager ddl*/
+        $('#divexistingmanager').prop('disabled', true);
+
+        //Added By Bhushan Dod on 25/07/2016 for when click on loc next button and new manager select click on previous but again click next then new manager doesn't get selected.
+        $('input[name*=IsExistingManager]').on('click', function () {
+            chkisexistingmanager();
+        });
+
+        /*Admininstrator ddl*/
+
+        $("#IsExistingManager").change(function () {
+            if ($('#IsExistingManager').is(':checked')) {
+                $('#myRegistration').find('input, select').attr('disabled', false)
+                $('#ddlManager').attr('disabled', true);
+            }
+            $('#myRegistration').find('input[type="text"]').val('');
+            var adminselect = $('#ddlAdministrator').val();
+            $('#myRegistration').find('select').val(-1);
+            $('#ddlAdministrator').val(adminselect);
+        });
+        //To Change Password Or Not
+
+        $("input[name='chkPassword']").click(function () {
+            //
+            var SelectOptionP = $("#btnChkChangePassword:checked").val();
+            if (SelectOptionP == "1") {
+                $("#UserModel_Password").removeAttr("disabled");
+            }
+            else {
+                $("#UserModel_Password").attr("disabled", "true");
+            }
+        })
+        //User want to change email or not.
+        var previous = $("#UserModel_UserEmail").prop("defaultValue");
+    
+        //User want to change email or not from location edit.
+        var previousC = $("#ClientModel_UserEmail").prop("defaultValue");
+        if ('@IsClientEdit' == 'client') {
+
+            $(".editlocationsetupclient").show();
+
+           // $("#ClientModel_UserEmail").attr("disabled", "true");
+        } 
+        
+        if ('@IsClientEmailVisible' == 'editlocationsetup') {
+            $("#ClientModel_UserEmail").attr("disabled", "true");
+        }
+
+        $("input[name='chkEmail']").change(function () {
+
+            //Script for while editing by separate user.
+            var SelectOptionE = $(this + ":checked").val();
+            if (SelectOptionE == "1") {
+                $("#UserModel_UserEmail").removeAttr("disabled");
+                $("#UserModel_UserEmail").val('');
+            }
+            else {
+                $("#UserModel_UserEmail").attr("disabled", "true");
+                $('#UserModel_UserEmail').val(previous)
+                if ($('#UserModel_UserEmail') != null || $('#UserModel_UserEmail') != "" || $('#UserModel_UserEmail') != "0" || $('#UserModel_UserEmail') != undefined) {
+                    $('.abc').hide()
+                }
+                else {
+                    $('.abc').show()
+                }
+            }
+            
+            //Script for while editing by separate user.
+            var SelectOptionC = $(this).val();
+            if (SelectOptionC == "1") {
+                //For client location edit section.
+                $("#ClientModel_UserEmail").removeAttr("disabled");
+                $("#ClientModel_UserEmail").val('');
+            }
+            else {
+                //Copied by Bhushan due to in edit mode if No then again need to populate previous value of ddl.
+                $("#ClientModel_UserEmail").attr("disabled", "true");
+                $('#ClientModel_UserEmail').val(previousC)
+                if ($('#ClientModel_UserEmail') != null || $('#ClientModel_UserEmail') != "" || $('#ClientModel_UserEmail') != "0" || $('#ClientModel_UserEmail') != undefined) {
+                    $('.abc').hide()
+                }
+                else {
+                    $('.abc').show()
+                }
+            }
+        })
+
+
+        //******************Added By Manoj Jaswal***************//
+        @{string UserID = myModelprefix + "UserID";
+              string DOB = myModelprefix + "DOB";
+              string State = myModelprefix + "Address.StateID";
+             }
+
+        var PrfImage = '@Html.Value(myModelmyProfileImage)';
+        var dataController = '@ViewBag.ActionSection';
+        if (dataController == 'client' && PrfImage != undefined && PrfImage != "") {
+            $("#ClientModel_myProfileImage").attr("src", PrfImage);
+        }
+        var LogUserID = '@Html.Value(UserID)';
+        if (LogUserID == 0 || LogUserID == undefined || LogUserID == "" || LogUserID == '') {
+            jQuery("[id*='IsExistingManager']").prop('checked', true);
+        }
+        else {
+
+            var LogDOB = '@Html.Value(DOB)';
+            $("#@DOB.Replace('.','_')").val(LogDOB.split(" ")[0]);
+            $("#CompanyStates").val(@Html.Value(State));
+            $("#BillingStates").val(@Html.Value(State));
+            $("#EmployeeStates").val(@Html.Value(State));
+            var ProfileImage = '@Html.Value(myModelmyProfileImage)';
+            if (ProfileImage == "" || ProfileImage == null || ProfileImage == '') {
+            }
+            else { $("#UserModel_myProfileImage").attr("src", '@Html.Value(myModelmyProfileImage)'); }
+            //To disble Textboxes
+            // jQuery("[id*='Password']").attr("disabled", "true");
+
+            //alert(updateMode);
+
+            //if (updateMode == false)
+            //{
+            //     jQuery("[id*='Password']").attr("disabled", "true");
+            //}
+            jQuery("[id*='AlternateEmail']").attr("disabled", "true");
+            jQuery("[id*='EmployeeID']").attr("disabled", "true");
+            //For Client
+            jQuery("[id='ClientModel_Password']").each(function () { $(this).parent("div").parent("div").hide(); })
+            jQuery("[id='ClientModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").hide(); })
+            jQuery("[id='ClientModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").hide(); })
+            //For Manager
+            jQuery("[id='ManagerModel_Password']").each(function () { $(this).parent("div").parent("div").hide(); })
+            jQuery("[id='ManagerModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").hide(); })
+            //jQuery("[id='ManagerModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").hide(); })
+            //chkisexistingmanager();
+
+            $(".UpdateUserInfo").removeClass("hide");
+            var SelectOption = $("#btnChkChangePassword:checked").val();
+            var SelectOptionE = $("#btnChkChangeEmail:checked").val();
+            if (SelectOptionE == "1") {
+                //jQuery("[id*='Password']").removeAttr("disabled");
+                $("#UserModel_UserEmail").removeAttr("disabled");
+            }
+            else {
+                //jQuery("[id*='Password']").attr("disabled", "true");
+                $("#UserModel_UserEmail").attr("disabled", "true");
+            }
+            if (SelectOption == "1") {
+                //jQuery("[id*='Password']").removeAttr("disabled");
+                $("#UserModel_Password").removeAttr("disabled");
+            }
+            else {
+                //jQuery("[id*='Password']").attr("disabled", "true");
+                $("#UserModel_Password").attr("disabled", "true");
+            }
+            var ActionName = '@ViewBag.ActionSection';
+
+            switch (ActionName) {
+                case "manager":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update Manager ");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+                case "itadmin":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update IT-Administrator");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+                case "admin":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update Administrator");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+                case "client":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update Client");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+                case "employee":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update Employee");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+                case "user":
+                    $("#page-wrapper div div ol li i").addClass();
+                    $("#page-wrapper div div ol li span").html("Update User");
+                    $("#page-wrapper div div ol li small").html("Profile");
+                    $("button[Type='submit']").html("Update");
+                    break;
+
+            }
+            chkisexistingmanager();
+
+        }
+        //To Copy Data from UserName to EmployeeId
+        jQuery("[id*='_EmployeeID']").keyup(function () {
+            var modelPrefix = this.id.split("_")[0];
+            var data = $(this).val();
+            $("#" + modelPrefix + "_AlternateEmail").val(data);
+            //jQuery("[id*='AlternateEmail']").val(data);
+        })
+        $("#EmployeeID").keyup(function () {
+            var modelPrefix = this.id.split("_")[0];
+            var data = $(this).val();
+            //$("#AlternateEmail").val(data);
+            $("#" + modelPrefix + "_AlternateEmail").val(data);
+        })
+        $("#EmployeeID").keyup(function () {
+            var data = $(this).val();
+            $("#AlternateEmail").val(data);
+        })
+
+        //************************END****************************//
+
+    });
+
+
+    function FillManagerDetails() {
+
+        ismychk = true;
+        var _ddlManager = $('#ddlManager').val();
+        if (_ddlManager != undefined && _ddlManager != "" && parseInt(_ddlManager, 10) > 0) {
+            $.ajax({
+                url: '@Url.Action("LoadSelectedManagerDetails", "GlobalAdmin")',
+                //type: 'GET',
+                contentType: 'application/json',
+                data: "myManagerId=" + _ddlManager,
+                success: function (myresult) {
+                    $('#ManagerInformation .field-validation-error')
+                         .removeClass('field-validation-error')
+                         .addClass('field-validation-valid');
+
+                    $('#ManagerInformation .input-validation-error')
+                        .removeClass('input-validation-error')
+                        .addClass('valid');
+                    //Added by bhushan dod on 01/08/2016 Validation message is still showing when I am selecting existing manger after selecting the new manger
+                    $('#ManagerInformation .field-validation-valid').html('');
+
+                    if (myresult != undefined && myresult.ManagerModel != undefined) {
+                        if (myresult.ManagerModel.myProfileImage != "" || myresult.ManagerModel.myProfileImage != null || myresult.ManagerModel.myProfileImage != '') {
+                            $('#ManagerModel_myProfileImage').attr("src", myresult.ManagerModel.myProfileImage);
+                        }
+                        if (myresult.ManagerModel.UserId != undefined && myresult.ManagerModel.UserId != '' && parseInt(myresult.ManagerModel.UserId, 10) > 0) {
+                            $('#ManagerModel.UserId').val(parseInt(myresult.ManagerModel.UserId, 10));
+                        }
+                        if (myresult.ManagerModel.JobTitle != undefined && myresult.ManagerModel.JobTitle != '' && parseInt(myresult.ManagerModel.JobTitle, 10) > 0) {
+                            $('#ManagerModel.JobTitle').val(parseInt(myresult.ManagerModel.JobTitle, 10));
+                        }
+                        if (myresult.ManagerModel.UserEmail != undefined && myresult.ManagerModel.UserEmail != '') {
+                            $('input:[name="ManagerModel.UserEmail"]').val(myresult.ManagerModel.UserEmail);
+                        }
+                        if (myresult.ManagerModel.ProfileImage != undefined && myresult.ManagerModel.ProfileImage != '') {
+                            $('input:[name="ManagerModel.ProfileImage"]').val(myresult.ManagerModel.ProfileImage);
+                            $('[id*="myProfileImage"]').attr("src", myresult.ManagerModel.myProfileImage);
+                        }
+                        if (myresult.ManagerModel.AlternateEmail != undefined && myresult.ManagerModel.AlternateEmail != '') {
+                            $('input:[name="ManagerModel.AlternateEmail"]').val(myresult.ManagerModel.AlternateEmail);
+                        }
+                        if (myresult.ManagerModel.JobTitle != undefined && myresult.ManagerModel.JobTitle != '') {
+                            $('input:[name="ManagerModel.JobTitle"]').val(myresult.ManagerModel.JobTitle);
+                        }
+                        if (myresult.ManagerModel.FirstName != undefined && myresult.ManagerModel.FirstName != '') {
+                            $('input:[name="ManagerModel.FirstName"]').val(myresult.ManagerModel.FirstName);
+                        }
+                        if (myresult.ManagerModel.LastName != undefined && myresult.ManagerModel.LastName != '') {
+                            $('input:[name="ManagerModel.LastName"]').val(myresult.ManagerModel.LastName);
+                        }
+                        if (myresult.ManagerModel.DOB != undefined && myresult.ManagerModel.DOB != '') {
+                            $('input:[name="ManagerModel.DOB"]').val(myresult.ManagerModel.DOB);
+                        }
+                        if (myresult.ManagerModel.Address.Address1 != undefined && myresult.ManagerModel.Address.Address1 != '') {
+                            $('input:[name="ManagerModel.Address.Address1"]').val(myresult.ManagerModel.Address.Address1);
+                        }
+                        else {
+                            $('input:[name="ManagerModel.Address.Address1"]').val("");
+                        }
+                        if (myresult.ManagerModel.Address.Address2 != undefined && myresult.ManagerModel.Address.Address2 != '') {
+                            $('input:[name="ManagerModel.Address.Address2"]').val(myresult.ManagerModel.Address.Address2);
+                        }
+                        else {
+                            $('input:[name="ManagerModel.Address.Address2"]').val("");
+                        }
+
+
+                        if (myresult.ManagerModel.Address.CountryId != undefined && myresult.ManagerModel.Address.CountryId != '') {
+                            $('input:[name="ManagerModel.Address.CountryId"]').val(myresult.ManagerModel.Address.CountryId);
+                        }
+                        if (myresult.ManagerModel.Address.ZipCode != undefined && myresult.ManagerModel.Address.ZipCode != '') {
+                            $('input:[name="ManagerModel.Address.ZipCode"]').val(myresult.ManagerModel.Address.ZipCode);
+                        }
+                        if (myresult.ManagerModel.Address.Mobile != undefined && myresult.ManagerModel.Address.Mobile != '') {
+                            $('input:[name="ManagerModel.Address.Mobile"]').val(myresult.ManagerModel.Address.Mobile);
+                        }
+
+
+                        if (myresult.ManagerModel.Address.Phone != undefined && myresult.ManagerModel.Address.Phone != '') {
+                            $('input:[name="ManagerModel.Address.Phone"]').val(myresult.ManagerModel.Address.Phone);
+                        }
+
+                        //added by vijay sahu on 18 june 2015 9.40am
+                        if (myresult.ManagerModel.Address.City != undefined && myresult.ManagerModel.Address.City != '') {
+                            $('input:[name="ManagerModel.Address.City"]').val(myresult.ManagerModel.Address.City);
+                        }
+
+                        else { $('input:[name="ManagerModel.Address.City"]').val(""); }
+                        //added by vijay sahu on 18 june 2015 9.40am
+                        if (myresult.ManagerModel.Address.StateId != undefined && myresult.ManagerModel.Address.StateId != '') {
+                            $('[name="ManagerModel.Address.StateId"]').val(myresult.ManagerModel.Address.StateId);
+                        }
+                        //added by vijay sahu on 18 june 2015 9.40am
+                        if (myresult.ManagerModel.EmployeeID != undefined && myresult.ManagerModel.EmployeeID != '') {
+                            $('[name="ManagerModel.EmployeeID"]').val(myresult.ManagerModel.EmployeeID);
+                        }
+                        else {
+                            $('[name="ManagerModel.EmployeeID"]').val("");
+                        }
+
+                        //added by vijay sahu on 23 june 2015 9.40am
+                        if (myresult.ManagerModel.Gender != undefined && myresult.ManagerModel.Gender != '') {
+
+                            if (myresult.ManagerModel.Gender == 1 || myresult.ManagerModel.Gender == 9) {
+                                myresult.ManagerModel.Gender = 9
+                            }
+                            else { myresult.ManagerModel.Gender = 10 }
+
+
+
+
+                            $('input[name="ManagerModel.Gender"][value="' + myresult.ManagerModel.Gender + '"]').prop('checked', true);
+
+
+
+                        }
+                        else {
+                            $('[name="ManagerModel.Gender"]').val("");
+                        }
+
+
+                        /*
+                                                $.each($('input:[id*=ManagerModel]'), function (myindex, myval) {
+                                                    alert(myval.name);
+                                                    if (myval.name != undefined && myval.name != '' && myval.name != 'UserId') {
+                                                        if (myval.name != 'ManagerModel.UserId' && myval.name != 'ManagerModel.AddressMasterId' && myval.name != 'ManagerModel.Address.AddressMasterId'
+                                                            && myval.name != 'ManagerModel.ProfileImage' && myval.name != 'ManagerModel.UserEmail' && myval.name != 'ManagerModel.AlternateEmail') {
+
+
+                                                            $('input:[name=' + myval.name + ']').val(myval.name);
+                                                        }
+                                                        else {
+                                                             ;
+                                                            var ss = myval.name;
+                                                        }
+                                                    }
+
+                    });
+                    */
+                    }
+                }
+            });
+        }
+        else {
+            $("input[id^='ManagerModel']").each(function () {
+                var type = this.type;
+                if (type == "text" || type == "email") {
+                    $(this).val("");
+
+                }
+            })
+        }
+        //else { clearallfields(); }
+        //if ($('#rdExistingManager').is(':checked')) {
+        $('#myRegistration').find('input[type="text"], select,input[type="email"],input[type="password"]').attr('disabled', 'disabled');
+        $("input.nodisable ").attr("disabled", false);
+        $("select.nodisable").attr("disabled", false);
+
+    }
+
+    function chkadministratorselection() {
+
+        var selectedcontrol = $('#ddlAdministrator option:selected').val();
+        if (selectedcontrol != undefined && selectedcontrol != '' && parseInt(selectedcontrol, 10) > 0) {
+        }
+        else {
+            clearallfields();
+        }
+    }
+    //$("select.nodisable").attr("disabled", false);
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function chkisexistingmanager() {
+        //Added By Bhushan Dod on 25/07/2016 for when click on loc next button and new manager select click on previous but again click next then new manager doesn't get selected.
+        if ($("input[name='ManagerModel.IsExistingManager']:checked").val() == 'true') {
+            FillManagerDetails();
+        }
+
+        //    var isSelected = $(".isNewManager:checked").val();
+        //    if (isSelected != undefined && isSelected != "" && isSelected != "true" || isSelected == true) {
+
+        //        $("#ManagerModel_ProfileImage").hide();
+        //        $("[id^='ManagerModel']").removeAttr("disabled");
+        //        $('#ddlManager').removeAttr('disabled');
+        //        $("#UserModel_myProfileImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg")
+        //        $("#divexistingmanager").show();
+        //        jQuery("[id='ManagerModel_Password']").each(function () { $(this).parent("div").parent("div").hide(); })
+        //        jQuery("[id*='ManagerModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").hide(); })
+        //        jQuery("[id*='ManagerModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").hide(); })
+
+        //        $('#BillingStates').val($('#States').val());
+
+
+        //    }
+        //    else {
+
+        //        $("#ManagerModel_ProfileImage").show();
+        //        $("[name^='ManagerModel']").removeAttr("disabled");
+        //        $("#divexistingmanager").hide();
+        //        jQuery("[id='ManagerModel_Password']").each(function () { $(this).parent("div").parent("div").show(); })
+        //        jQuery("[id*='ManagerModel_AlternateEmail']").each(function () { $(this).parent("div").parent("div").show(); })
+        //        jQuery("[id*='ManagerModel_EmployeeID']").each(function () { $(this).parent("div").parent("div").show(); })
+        //        $("#ManagerModel_myProfileImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg")
+        //        $("[id^='ManagerModel']").each(function () {
+        //            var selected = this.type;
+        //            if (selected == "radio" || selected == "select") {
+
+        //            }
+        //            else {
+        //                $(this).val("");
+        //            }
+        //        })
+        //        $('#ddlManager').attr('disabled', true);
+        //        //$('#ddlManager').prop('disabled', true);
+        //        $('#ddlManager').val(-1);
+        //    }
+    }
+    function clearallfields() {
+        $('#ddlManager').prop('disabled', true);
+        $('#ddlManager').val(-1);
+        //$('[name*=IsExistingManager]').prop('checked', false);
+        $("#ManagerModel_IsExistingManager").attr("checked", true);
+        //$.each($('input'), function (index, valuee) {
+        $.each($('#ManagerInformation input'), function (index, valuee) {
+            if (valuee.type == 'text' || valuee.type == 'file') {
+                $('#' + valuee.id).val('');
+            }
+        });
+
+        $.each($('#ManagerInformation select'), function (index, valuee) {
+            $('#' + valuee.id).val('-1');
+        });
+    }
+</script>
+@section scripts{
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("[id*='DOB']").mask('99/99/99');
+            if (ismychk == true) {
+                $("#ManagerModel_IsExistingManager").prop('checked', true);
+                $('#myRegistration').find('input[type="text"], select,input[type="email"],input[type="password"]').attr('disabled', 'disabled');
+                $("input.nodisable ").attr("disabled", false);
+                $("select.nodisable").attr("disabled", false);
+            }
+            else {
+                $("#ManagerModel_IsExistingManager").prop('checked', true);
+                $('#myRegistration').find('input[type="text"], select,input[type="email"],input[type="password"]').attr('disabled', 'disabled');
+                $('#myRegistration').find('input[type="text"]').val('');
+                $('#myRegistration').find('select').val(-1);
+            }
+
+        });
+
+    </script>
+}
+

@@ -1,0 +1,167 @@
+﻿@model WorkOrderEMS.Models.ReportModel
+@{
+
+    //
+    Layout = null;
+    string srtype = string.Empty;
+    string srtypeName = string.Empty;
+  
+    if (Model != null && Model.ReportName != string.Empty)
+    {
+        srtype = Model.ReportName;
+    }
+    ViewBag.Title = srtype + " Report";
+    srtypeName = srtype.Replace(" ", "");
+}
+@if (Request.IsAjaxRequest())
+{
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.js")"></script>
+}
+else
+{
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+<style>
+    #ReportBar li a {
+        border-radius: 4px 4px 0 0!important;
+         border-color: lightgray;
+    }
+    .active a{
+        background-color:#0aa0cd !important;
+        color:white!important;
+    }
+</style>
+@*<link href="~/Content/Report-NavBar/component.css" rel="stylesheet" />
+<link href="~/Content/Report-NavBar/default.css" rel="stylesheet" />
+<script src="~/Content/Report-NavBar/modernizr.custom.js"></script>*@
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        // $("#wrapper").addClass("toggled");
+        //fn_showMaskloader('Please wait...Loading');
+        $("#loader-wrapper").css("display", "block");
+        ValidationCheck();
+  
+            
+        //$("#TextFromdate").datepicker({ dateFormat: 'mm/dd/y', minDate: '-90', maxDate: new Date });
+        //$("#TextTodate").datepicker({ dateFormat: 'mm/dd/y', maxDate: new Date });
+        //$("#idLoc").val($("#drp_MasterLocation").val());
+
+    });
+    //$(window).load(function () { fn_hideMaskloader(); })
+    function ValidationCheck() {
+    
+        ////url = url + "dpSpYearMonth=" + yearmonth + ",rpYearMonth=" + yearmonth + ",rpStockInTransit=" + stockInTransit;
+
+        var rtype = '@srtypeName';
+
+        var url = "";
+
+        switch (rtype) {
+
+            case "QRCScan":
+                url = "@Url.Action("QRCScan", "Report")";
+                break;
+            case "RoutineCheck":
+                $("[name='RoutineCheck']").parent("li").addClass("active");
+                url = "@Url.Action("RoutineCheck", "Report")";
+                break;
+            case "Cleaning":
+                $("[name='Cleaning']").parent("li").addClass("active");
+                url = "@Url.Action("Cleaning", "Report")";
+                break;
+                @*case "TrashLevel1":
+                $("[name='trashLevel']").parent("li").addClass("active");
+                url = "@Url.Action("TrashLevelCheck", "Report")";
+                break;*@
+            case "TrashLevel":
+                $("[name='trashLevel']").parent("li").addClass("active");
+                url = "@Url.Action("TrashLevels", "Report")";
+                break;
+            case "TrashPickedUp":
+                url = "@Url.Action("TrashPickedUp", "Report")";
+                break;
+            case "TrashPickedUpDetails":
+                url = "@Url.Action("TrashPickedUpDetails", "Report")";
+                break;
+            case "QRCExpiration":
+                url = "@Url.Action("QrcExpiration", "Report")";
+                break;
+            case "QRCOwnedBy":
+                url = "@Url.Action("QrcOwnedBy", "Report")";
+                break;
+            case "Damage":
+              $("#wrapper").addClass("toggled");
+                url = "@Url.Action("Damage", "Report")";
+                break;
+            case "QRCAmount":
+                url = "@Url.Action("QrcDetails", "Report")";
+                break;
+            case "WorkOrderCompleted":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("GetAllCompletedWorkOrder", "Report")";
+                break;
+            case "AssignedWorkOrder":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("GetAllAssignedWorkOrder", "Report")";
+                break;
+            case "WorkOrderIssued":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("ReportWorkOrderIssued","Report")";
+                break;
+            case "AssetsWorkOrder":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("ReportWorkOrderIssuedAssignedLocItem", "Report")";
+                break;
+            case "WorkOrderFixedTime":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("WorkOrderFixedTime", "Report")";
+                break;
+            case "WorkOrderInProgress":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("ReportWorkOrderInProgress", "Report")";
+                break;
+            case "WorkOrderMissedTime":
+                $("#wrapper").addClass("toggled");
+                url = "@Url.Action("ReportWorkOrderMissedTime", "Report")";
+                break;
+            case "CustomerAssistance":
+                url = "@Url.Action("CustomerAssistance", "Report")";
+                break;
+            case "JumpStarts":
+                url = "@Url.Action("JumpStarts", "Report")";
+                break;
+            case "TireInflation":
+                url = "@Url.Action("TireInflation", "Report")";
+                break;
+            case "SpaceCount":
+                url = "@Url.Action("SpaceCount", "Report")";
+                break;
+            case "DailyActivityCode":
+                url = "@Url.Action("GetAllDARCodes", "Report")";
+                break;
+        }
+
+        $.ajax({
+            url: url,
+            //dataType:'html',
+            success: function (data) {
+                $("#reportMaincontainer").replaceWith(data);
+            }
+        })
+
+    }
+
+</script>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="adminright">
+        <h2><span id="Operation_Page_heading"></span></h2>
+
+        <div class="row">
+            <div class="col-lg-12" id="reportMaincontainer">
+                
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,865 @@
+﻿@model WorkOrderEMS.Models.eFleetVehicleModel
+@{
+    ViewBag.Title = "Register Vehicle";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long locationId = 0;
+    long userType = 0;
+    //string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+    var VehicleAssignmet = ViewBag.PrintVehicleModel;
+    string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    string AOI = System.Configuration.ConfigurationManager.AppSettings["AttachmentOfInsurance"];
+    string AOR = System.Configuration.ConfigurationManager.AppSettings["AttachmentOfRegistration"];
+
+}
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
+<link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
+<script src="~/Scripts/QRCode/jquery.qrcode-0.9.5.js"></script>
+@*<link href="~/Content/eFleetVehicle/style.css" rel="stylesheet" />*@
+<style type="text/css">
+    .errorspace {
+        margin-top: -5px
+    }
+</style>
+@section scripts{
+    <script type="text/javascript">
+        var $_QRCIDNumber = @ViewBag.LastEncryptQRC;
+
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_QRCList').setGridWidth(width);
+        });
+
+
+        $('#btnMyModalFORQRC').live("click", function () {
+            $('#myModalLicence').modal('show');
+        });
+
+    </script>
+}
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+@using (Html.BeginForm("Index", "eFleetVehicle", FormMethod.Post, new { enctype = "multipart/form-data", @id = "vehicle_form" }))
+{
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create Vehicle
+            </div>
+            <div class=" clearfix"></div>
+            <div class="form">
+                <div class="tab-content">
+                    @*<form action="/" method="post" id="vehicle_form">*@
+                    <div class="top-row">
+                        
+                            @*@Html.Hidden("VehicleID", null, new { id = @Model.VehicleID + "VehicleID", Value = @ViewBag.UpdateMode })*@
+                            @Html.HiddenFor(model => model.VehicleID)
+                            @Html.HiddenFor(model => model.QRCodeID)
+                            <input type="hidden" id="EncryptLastQRC" value='@Model.EncryptLastQRC' />
+                       @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                       {
+                        <div class="field-wrap">
+                            <label>
+                                Vehicle Number<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.VehicleNumber, new { @id = "vehicleNumber", @data_val = "false", @name = "vehiclenum", @style = "background-color:#CACFD2", @readonly = "readonly" })
+
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleNumber)
+                            </div>
+                            @*<input type="text" id="vehicleNumber " name="vehicleNumber" required="required" aria-required="true" pattern="^(0|[1-9][0-9]*)$" />*@
+                        </div>
+                       }
+                       else
+                       {
+                        <div class="field-wrap">
+                            <label>
+                                Vehicle Number<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.VehicleNumber, new { @id = "vehicleNumber", @name = "vehiclenum" })
+
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleNumber)
+                            </div>
+                            @*<input type="text" id="vehicleNumber " name="vehicleNumber" required="required" aria-required="true" pattern="^(0|[1-9][0-9]*)$" />*@
+                        </div>
+                       }
+                        <div class="field-wrap">
+                            <label>
+                                VIN<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.VehicleIdentificationNo, new { @id = "vin" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleIdentificationNo)
+                                @*<input type="text"id="vin" required="required" aria-required="true" />*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Make<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.Make, new { @id = "makeid" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Make)
+                                @*<input type="text" required autocomplete="off"  id="makeid" />*@
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Model<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.Model, new { @id = "modelid" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Model)
+                                @*<input type="text" id="modelid" required autocomplete="off" />*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Year<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.Year, new { @id = "yeardatepicker", @class = "date-own form-control", @onkeydown = "return false;" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Year)
+                                @*<input type="text" required autocomplete="off" id="yeardatepicker" />*@
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Expiration Date<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.ExpirationDate, "{0:MM/dd/yyyy}", new { @id = "datepicker", @onkeydown = "return false;" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.ExpirationDate)
+                                @*<input type="text" required autocomplete="off" id="datepicker" />*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Gross Vehicle Weight Rating<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.GVWR, new { @id = "grossrating" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.GVWR)
+                                @*<input type="text" required autocomplete="off" id="grossrating"/>*@
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Fuel Type <span class="req">*</span>
+                            </label>
+                            @if (ViewBag.FuelType != null)// This is temorary need to use Razor
+                            {
+                                <select name="@Html.NameFor(model => model.FuelType)"
+                                        id="@Html.IdFor(model => model.FuelType)">
+                                    <option>--Select--</option>
+                                    @foreach (var ft in ViewBag.FuelType)
+                                    {
+                                        <option value="@ft.GlobalCodeId" text="@ft.CodeName"
+                                                @if (ft.GlobalCodeId == Model.FuelType) { @: selected="selected"
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
+                                            @ft.CodeName
+                                        </option>
+                                    }
+                                </select>
+                            }
+
+                            //Use after Got a solution for razor so keep it as it is..
+                            @*@if (ViewBag.FuelType != null)
+                {@Html.DropDownListFor(model => model.FuelType, new SelectList(ViewBag.FuelType, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "FuelType" })}*@
+                            else
+                            {<select id="State"><option value="-1">@ViewBag.FuelType</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.FuelType)
+                                @*<input type="text" required autocomplete="off" id="yeardatepicker" />*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                ZipCode<span class="req">*</span>
+                            </label>
+                            @*@Html.TextBoxFor(model => model.ZipCode, new { @id = "zipcode", @maxLength = "5", @onkeypress = "return isNumberKey(event)" })*@
+                            @Html.TextBoxFor(model => model.ZipCode, new { @id = "zipcode", @maxLength = "5", onkeypress = "return isNumberKey(event) " })
+
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.ZipCode)
+                                @*<input type="text" required autocomplete="off" id="zipcode"/>*@
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Storage Address<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.StorageAddress, new { @id = "storageaddr" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.StorageAddress)
+                                @*<input type="text" required autocomplete="off" id="storageaddr"/>*@
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label style="margin-left:-13px;">
+                                Attachment Of Insurance<span class="req"></span>
+                            </label>
+                            <div id="dvPreview">
+                            </div>
+                            @*@Html.EditorFor(m => m.AttachmentOfInsuranceFile)*@
+
+                            <input id="fileupload" type="file" style="margin-left:auto;" name="AttachmentOfInsuranceFile" />
+                            <ul class="attachment">
+                                @if (Model.AttachmentOfInsurance != null && Model.AttachmentOfInsurance != "")
+                                {
+                                    <li style="margin-left :25%;margin-top:20px;">
+                                        
+                                        <a class="title" href="@Url.Content(AOI+Model.AttachmentOfInsurance)">@Model.AttachmentOfInsurance</a>
+                                    </li>
+                                }
+                            </ul>
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.AttachmentOfInsuranceFile)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label style="margin-left:-13px;">
+                                Attachment of Registration <span class="req"></span>
+                            </label>
+                            <div id="dvPreviewRegistration">
+                            </div>
+                            @*@if (Model.AttachmentOfInsurance != null && Model.AttachmentOfInsurance != "")
+                                {
+                                    file = Model.AttachmentOfInsurance;
+                                    <div id='imgAttachmentOfInsurance' name='imgAttachmentOfInsurance' src="@Url.Content(file)"
+                                         alt="No File " margin-left:45%;"></div>
+                                }*@
+                            <input id="fileuploadforregistration" type="file" style="margin-left:auto;" name="AttachmentOfRegistrationFile" />
+                            <ul class="attachment">
+                                @if (Model.AttachmentOfRegistration != null && Model.AttachmentOfRegistration != "")
+                                {
+                                    <li style="margin-left :30%;margin-top:20px;">
+                                        <a class="title"  href="@Url.Content(AOR+Model.AttachmentOfRegistration)">@Model.AttachmentOfRegistration</a>
+                                    </li>
+                                }
+                            </ul>
+                            @*<input id="fileuploadforregistration" type="file" style="margin-left:auto;" name="AttachmentOfRegistrationFile" />*@
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.AttachmentOfRegistrationFile)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label style="margin-left:-13px;">
+                                Vehicle Image<span class="req"></span>
+                            </label>
+                            @if (Model.VehicleImage != null && Model.VehicleImage != "")
+                            {
+                                Image = Model.VehicleImage;
+                            }
+
+                            <img id='imgVehicleImage' name='imgVehicleImage' src="@Url.Content(Image)"
+                                 class="img-rounded" alt="No Image " style="width:110px; height:110px; margin-left:55%;">
+                            <input id="fileuploadVehicle" type="file" style="margin-left:auto;" name="VehicleImageFile" onchange="VehicleImagereadURL(this);" />
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleImageFile)
+                            </div>
+                        </div>                      
+                    </div>
+                   
+                    
+                    @*</form>*@
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Submit</button>
+                    }
+                </div><!-- tab-content -->
+            </div> <!-- /form -->
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@* Validation when no fields are filled then text box border will red *@
+<script>
+    $(document).ready(function () {
+        //Attach change event to textbox
+        $("#vin").change(function () {
+            //Check if value is empty or not
+            if ($(this).val() == "") {
+                //if empty then assign the border
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#makeid").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#modelid").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#yeardatepicker").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#datepicker").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        //$("#fileupload").change(function () {
+        // if ($(this).val() == "") {
+        //        $(this).css("border", "1px solid #bc3838");
+        //    }
+        //    else {
+        //        $(this).css("border", "1px solid #4475b5");
+        //    }
+        //});
+        //$("#fileuploadforregistration").change(function () {
+        //    if ($(this).val() == "") {
+        //        $(this).css("border", "1px solid #bc3838");
+        //    }
+        //    else {
+        //        $(this).css("border", "1px solid #4475b5");
+        //    }
+        //});
+        //$("#fileuploadVehicle").change(function () {
+        //    if ($(this).val() == "") {
+        //        $(this).css("border", "1px solid #bc3838");
+        //    }
+        //    else {
+        //        $(this).css("border", "1px solid #4475b5");
+        //    }
+        //});
+        $("#grossrating").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+
+        $("#FuelType").change(function () {
+            if ($(this).val() == "--Select--") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+
+        $("#storageaddr").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#zipcode").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#vehicleNumber").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+
+        if ('@ViewBag.LastEncryptQRC' == '' || '@ViewBag.LastEncryptQRC' == null ||'@ViewBag.LastEncryptQRC' == "")
+        {
+
+        } else {
+            $("#VehicleModalConfirmationPreview").modal('show');
+        }
+    });
+    function isNumberKey(evt) {
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    function validatetextbox() {
+
+        var txtvalvehiclenumber = $("#vehicleNumber").val();
+        var txtvalvin = $("#vin").val();
+        var txtvalmake = $("#makeid").val();
+        var txtvalmodel = $("#modelid").val();
+        var txtvalyear = $("#yeardatepicker").val();
+        var txtvalexpirationdate = $("#datepicker").val();
+        var txtvalFuelType = $("#FuelType").val();
+        //var txtvalattachmentofinsurance = $("#fileupload").val();
+        //var txtvalattachmentofregistration = $("#fileuploadforregistration").val();
+        //var txtvalpictureofvehicle = $("#fileuploadVehicle").val();
+        var txtvalgrossrating = $("#grossrating").val();
+        var txtvalstorageaddress = $("#storageaddr").val();
+        var txtvalzipcode = $("#zipcode").val();
+        //Check if value is empty or not
+        if (txtvalvin == "") {
+            //if empty then assign the border
+            $("#vin").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#vin").css("border", "1px solid #4475b5");
+        }
+        if (txtvalmake == "") {
+            $("#makeid").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#makeid").css("border", "1px solid #4475b5");
+        }
+        if (txtvalFuelType == "--Select--") {
+            $("#FuelType").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#FuelType").css("border", "1px solid #4475b5");
+        }
+        if (txtvalmodel == "") {
+            $("#modelid").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#modelid").css("border", "1px solid #4475b5");
+        }
+        if (txtvalyear == "") {
+            $("#yeardatepicker").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#yeardatepicker").css("border", "1px solid #4475b5");
+        }
+        if (txtvalexpirationdate == "") {
+            $("#datepicker").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#datepicker").css("border", "1px solid #4475b5");
+        }
+        //if (txtvalattachmentofinsurance == "") {
+        //    $("#fileupload").css("border", "1px solid #bc3838");
+        //}
+        //else {
+        //    $("#fileupload").css("border", "1px solid #4475b5");
+        //}
+        //if (txtvalattachmentofregistration == "") {
+        //    $("#fileuploadforregistration").css("border", "1px solid #bc3838");
+        //}
+        //else {
+        //    $("#fileuploadforregistration").css("border", "1px solid #4475b5");
+        //}
+        //if (txtvalpictureofvehicle == "") {
+        //    $("#fileuploadVehicle").css("border", "1px solid #bc3838");
+        //}
+        //else {
+        //    $("#fileuploadVehicle").css("border", "1px solid #4475b5");
+        //}
+        if (txtvalgrossrating == "") {
+            $("#grossrating").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#grossrating").css("border", "1px solid #4475b5");
+        }
+        if (txtvalstorageaddress == "") {
+            $("#storageaddr").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#storageaddr").css("border", "1px solid #4475b5");
+        }
+        if (txtvalzipcode == "") {
+            $("#zipcode").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#zipcode").css("border", "1px solid #4475b5");
+        }
+        if (txtvalvehiclenumber == "") {
+            $("#vehicleNumber").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#vehicleNumber").css("border", "1px solid #4475b5");
+        }
+        //loadVehicleQRCpreview();
+    }
+
+    function loadVehicleQRCpreview() {
+
+
+        var QRCType;
+
+        QRCType = 'EFV';
+
+        generatevehicleqrcode();
+        $("#ModalConfirumationPreview").modal('show');
+        return !isanyfieldempty;
+    }
+
+
+
+(function ($) {
+    generatevehicleqrcode();
+}(jQuery));
+
+
+function generatevehicleqrcode() {
+
+    try {
+        var size = '155';
+
+        size = (size != undefined && size != '' && size.trim() != '') ? size.trim() : '155';
+
+        size = size.trim();
+        'use strict';
+
+        var isOpera = Object.prototype.toString.call(window.opera) === '[object Opera]',
+
+            guiValuePairs = [
+                ["size", "px"],
+                ["minversion", ""],
+                ["quiet", " modules"],
+                ["radius", "%"],
+                ["msize", "%"],
+                ["mposx", "%"],
+                ["mposy", "%"]
+            ],
+
+            updateGui = function () {
+                $.each(guiValuePairs, function (idx, pair) {
+                    var $label = $('label[for="' + pair[0] + '"]');
+                    $label.text($label.text().replace(/:.*/, ': ' + $('#' + pair[0]).val() + pair[1]));
+                });
+            },
+
+            updateQrCode = function (mykey, mycontainer) {
+
+                EncryptQRC = '@ViewBag.LastEncryptQRC';
+                var options = {
+                    render: "image",//render: "image",
+                    ecLevel: "Q",// L=Low, M=Medium,
+                    minVersion: parseInt(5, 10),
+                    fill: '#333333',
+                    background: '#ffffff',
+                    text: EncryptQRC,
+                    size: parseInt(size, 10),
+                    radius: parseInt(50, 10) * 0.01,
+                    quiet: parseInt(1, 10),
+                    mode: parseInt(0, 10),
+                    mSize: parseInt(11, 10) * 0.01,
+                    mPosX: parseInt(50, 10) * 0.01,
+                    mPosY: parseInt(50, 10) * 0.01,
+                    label: 'Smartian says',
+                    fontname: 'Ubuntu',
+                    fontcolor: '#ff9818',
+                    image: 'http://localhost:57572/Images/upload.jpg'
+                };
+                $('#container2').empty().qrcode(options);
+
+            },
+
+            update = function () {
+                updateGui();
+                //updateQrCode();
+                updateQrCode('saadad', 'container2');
+            },
+
+            onImageInput = function () {
+
+                var input = $("#image")[0];
+
+                if (input.files && input.files[0]) {
+
+                    var reader = new FileReader();
+
+                    reader.onload = function (event) {
+                        $("#img-buffer").attr("src", event.target.result);
+                        $("#mode").val("4");
+                        setTimeout(update, 250);
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            },
+
+            download = function (event) {
+                var data = $("#container2 canvas")[0].toDataURL('image/png');
+                $("#download").attr("href", data);
+            };
+        $(function () {
+
+            try {
+                var EncryptQRC = '@ViewBag.LastEncryptQRC';//$('#EncryptLastQRC').val();
+
+                //if (_hddnUpdateMode != 'True' && EncryptLastQRC != undefined && EncryptLastQRC != '') {
+                if (EncryptLastQRC != undefined && EncryptLastQRC != '') {
+                    updateGui();
+                    updateQrCode(EncryptLastQRC, 'container2');
+                }
+
+                if (EncryptQRC != undefined && EncryptQRC != '') {
+                    updateGui();
+                    updateQrCode();
+                }
+            } catch (e) {
+                console.log(e);
+            }
+
+
+        });
+    } catch (e) {
+        console.log(e);
+    }
+
+    }
+
+</script>
+@*//File Upload script//*@
+<script language="javascript" type="text/javascript">
+    function VehicleImagereadURL(input) {
+
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgVehicleImage')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+    $(function () {
+        $("#fileupload").change(function () {
+            $("#dvPreview").html("");
+            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.pdf|.doc|.txt)$/;
+            if (regex.test($(this).val().toLowerCase())) {
+                if ($.browser.msie && parseFloat(jQuery.browser.version) <= 9.0) {
+                    $("#dvPreview").show();
+                    $("#dvPreview")[0].filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = $(this).val();
+                }
+                else {
+                    if (typeof (FileReader) != "undefined") {
+                        $("#dvPreview").show();
+                        $("#dvPreview").append("<img />");
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $("#dvPreview img").attr("src", e.target.result);
+                        }
+                        reader.readAsDataURL($(this)[0].files[0]);
+                    } else {
+                        alert("This browser does not support FileReader.");
+                    }
+                }
+            }
+        });
+        //Image for registration
+        $("#fileuploadforregistration").change(function () {
+            $("#dvPreviewRegistration").html("");
+            var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.pdf|.doc|.txt)$/;
+            if (regex.test($(this).val().toLowerCase())) {
+                if ($.browser.msie && parseFloat(jQuery.browser.version) <= 9.0) {
+                    $("#dvPreviewRegistration").show();
+                    $("#dvPreviewRegistration")[0].filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = $(this).val();
+                }
+                else {
+                    if (typeof (FileReader) != "undefined") {
+                        $("#dvPreviewRegistration").show();
+                        $("#dvPreviewRegistration").append("<img />");
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            $("#dvPreviewRegistration img").attr("src", e.target.result);
+                        }
+                        reader.readAsDataURL($(this)[0].files[0]);
+                    } else {
+                        alert("This browser does not support FileReader.");
+                    }
+                }
+            }
+        });
+        //Image for Vahicle
+        //$("#fileuploadVehicle").change(function () {
+        //    $("#dvPreviewVehicle").html("");
+        //    var regex = /^([a-zA-Z0-9\s_\\.\-:])+(.jpg|.jpeg|.gif|.png|.bmp)$/;
+        //    if (regex.test($(this).val().toLowerCase())) {
+        //        if ($.browser.msie && parseFloat(jQuery.browser.version) <= 9.0) {
+        //            $("#dvPreviewVehicle").show();
+        //            $("#dvPreviewVehicle")[0].filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = $(this).val();
+        //        }
+        //        else {
+        //            if (typeof (FileReader) != "undefined") {
+        //                $("#dvPreviewVehicle").show();
+        //                $("#dvPreviewVehicle").append("<img />");
+        //                var reader = new FileReader();
+        //                reader.onload = function (e) {
+        //                    $("#dvPreviewVehicle img").attr("src", e.target.result).height(100).width(100);
+        //                }
+        //                reader.readAsDataURL($(this)[0].files[0]);
+        //            } else {
+        //                alert("This browser does not support FileReader.");
+        //            }
+        //        }
+        //    } else {
+        //        alert("Please upload a valid image file.");
+        //    }
+        //});
+        $("#datepicker").datepicker();
+        $('.date-own').datepicker({
+            minViewMode: 2,
+            format: 'yyyy'
+        });
+        // $("input[type='text']").focus();
+        $("select").focus();      
+        $("input[id='vin']").focus();
+        $("input[id='makeid']").focus();
+        $("input[id='modelid']").focus();
+        $("input[id='grossrating']").focus();
+        $("input[id='storageaddr']").focus();
+        $("input[id='zipcode']").focus();
+        $("input[id='datepicker']").blur(); yeardatepicker
+        $("input[id='yeardatepicker']").blur();
+        $("input[id='vehicleNumber']").focus();
+
+    });
+</script>
+<script src="~/Scripts/eFleetVehicle/reg.js"></script>
+
+<!-- Modal Preview-->
+<div class="modal fade preview" data-backdrop="false" id="VehicleModalConfirmationPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">Vehicle Details</h4>
+            </div>
+            <div class="modal-body">
+                <div id="divVehicleConfirmationPreview" class="">
+                    <div class="row" id="DivQRCIndex">
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <p><strong>QRCodeID</strong></p>
+                                @*<label>QRCodeID</label>*@
+                                <div id="lblQRCodeID" class="form-control-static">@ViewBag.LastEncryptQRC</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>VIN</strong></p>
+                                @*<label><strong>Model</strong></label>*@
+                                <div id="lblVIN" class="form-control-static">@ViewBag.VIN</div>
+                            </div>
+                            <div class="form-group">
+                                <p id="labelMotorType"><strong>Make</strong></p>
+                               @* <label id="labelMotorType">Make</label>*@
+                                <div id="lblMake" class="form-control-static">@ViewBag.Make</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>Model</strong></p>
+                                @*<label><strong>Model</strong></label>*@
+                                <div id="lblModel" class="form-control-static">@ViewBag.Model</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>Fuel Type</strong></p>
+                                @*<label><strong>Model</strong></label>*@
+                                <div id="lblFuelType" class="form-control-static">@ViewBag.FuelTypeForModel</div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <div class="form-group">
+                                <p><strong>Vehicle Number</strong></p>
+                                @*<label><strong>Model</strong></label>*@
+                                <div id="lblVehicleNumber" class="form-control-static">@ViewBag.VehicleNumber</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>Location</strong></p>
+                                @*<label>Location</label>*@
+                                <div id="lblQRCodeID" class="form-control-static">@ViewBag.LocationName</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>Year</strong></p>
+                                @*<label><strong>Model</strong></label>*@
+                                <div id="lblYear" class="form-control-static">@ViewBag.Year</div>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>Vehicle Image</strong></p>
+                               @* <label>Vehicle Image</label>*@
+                                <img src="@ViewBag.VehicleImage" id="WorkOrderImage" style="width:100px; height:100px;" />
+                                <p>&nbsp;</p>
+                            </div>
+                            <div class="form-group">
+                                <p><strong>QRC Code</strong></p>
+                                @*<label>QRC Code</label>*@
+                                <div id="container2">
+                                    <canvas style="width: 200px; height: 200px;"></canvas>
+                                </div>
+                                <p>&nbsp;</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divPintFooter">
+                    <button id="printQRCIndex" type="button" onclick="PrintDivIndex('printtable');" class="btn btn-default bluebutton" formnovalidate="formnovalidate">Print Vehicle with details</button>
+                    <button id="printQRC_btn" type="button" onclick="PrintQRCButton();" class=" btn btn-default bluebutton" formnovalidate="formnovalidate">Print Vehicle QRC</button>
+                    <button data-dismiss="modal" class="btn btn-default bluebutton" id="btnCancelqwe">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Preview-->

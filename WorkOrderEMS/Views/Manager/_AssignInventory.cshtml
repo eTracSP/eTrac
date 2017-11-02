@@ -1,0 +1,129 @@
+﻿@model WorkOrderEMS.Models.AssignInventoryModel
+@using (Ajax.BeginForm("SaveAssignInventory", "Manager", new AjaxOptions()
+{
+
+    HttpMethod = "POST",
+    OnSuccess = "success",
+    OnBegin = "return QuantityValidation() ,new fn_showMaskloader('Please wait...');",
+    OnComplete=" fn_hideMaskloader();",
+}, new { @id="assignForm"}))
+{
+    <label id="popupmessage"> </label>
+
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.AssignInventoryID)
+    @Html.HiddenFor(model => model.RemainingQuantity)
+    @*<div class="panel panel-default">
+        <div class="panel-heading">
+            Assign Details
+        </div>*@
+    <div class="panel-body">
+        <div class="row">
+            <div class="">
+                <div class="form-horizontal">
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.InventoryID, new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.HiddenFor(model=>model.InventoryID)
+                            @Html.DropDownListFor(model => model.InventoryID, new SelectList(ViewBag.Inventory, "Value", "Text", Model.InventoryID), "--Select--", new { @id = "ddlInventory", @class = "form-control", @disabled = "disabled"})
+                            @Html.ValidationMessageFor(model => model.InventoryID)
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.AssignedUserID, new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.AssignedUserID, new SelectList(ViewBag.AssignedUser, "Value", "Text",Model.AssignedUserID), "--Select--", new { @id = "ddlAssignedUser", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.AssignedUserID)
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                       
+                         @Html.LabelFor(model => model.IssueDate, new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.IssueDate, new { @Placeholder = "Issue Date", @class = "form-control", @id = "IssueDate"})
+                            @Html.ValidationMessageFor(model => model.IssueDate)
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.Quantity, new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Quantity, new { @Placeholder = "Quantity", @class = "form-control", @id = "AssignedQuantity", @data_flag="0" })
+                            @Html.ValidationMessageFor(model => model.Quantity)
+                            @Html.Label("Enter value less than quantity", new { @id = "errorQuantity", @style = "color:#b94a48; font-size: 14px" })
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        <div class="col-md-8">
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button class="btn btn-default bluebutton" type="submit">Save</button>
+                            <a href="~/Manager/ListInventory" class="btn btn-default bluebutton">Cancel</a>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @*</div>*@
+}
+
+<script type="text/javascript">
+
+    function success(data) {
+
+        if (data != "") {
+
+            $("#popupmessage").html(data.Message);
+            $('#popupmessage').addClass(data.AlertMessageClass);
+            jQuery("#tbl_InventoryList").jqGrid().trigger("reloadGrid");
+            $("#myModallarge").modal('hide');
+            //$("#message").html(data.Message);
+            window.location.reload();
+            //$("#updateDialog1").dialog('close');
+        }
+        else {
+            $("#largeeditpopup").html(data);
+        }
+    }
+    $(function () {
+        $("#errorQuantity").hide();
+        $("#AssignedQuantity").keyup(function () {
+            checkQuantity();
+        });
+    });
+
+    $("#IssueDate").datepicker({ dateFormat: 'mm/dd/y' }).on('changeDate', function (e) {
+        $(this).datepicker('hide');
+    });
+
+    function checkQuantity()
+    {
+        var aq = $("#AssignedQuantity").val();
+        var rq = $("#RemainingQuantity").val();
+        if (aq > rq)
+        {
+            $("#AssignedQuantity").css("border", "1px solid #b94a48"); $('#AssignedQuantity').focus(); $("#AssignedQuantity").attr('data-flag', "1");
+            $("#errorQuantity").show();
+            return false;
+        }
+        else        
+        {
+            $("#AssignedQuantity").css("border", "1px solid #66AFE9"); $("#AssignedQuantity").attr('data-flag', "0");
+            $("#errorQuantity").hide();
+            return true;
+        }
+    }
+    function QuantityValidation()
+    {
+        if ($("#AssignedQuantity").attr('data-flag') == 1 || $("#AssignedQuantity").attr('data-flag') == "1")
+        { return false; }
+        else
+            return true;
+    }
+</script>

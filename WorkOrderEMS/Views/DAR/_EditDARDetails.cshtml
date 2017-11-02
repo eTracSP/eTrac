@@ -1,0 +1,71 @@
+﻿@model WorkOrderEMS.Models.DARModel
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+@using (Ajax.BeginForm("UpdateDARDetails", "DAR", new AjaxOptions()
+{
+    
+    HttpMethod = "POST",
+    OnSuccess = "success",
+    OnBegin = "new fn_showMaskloader('Please wait...');",
+    OnComplete=" fn_hideMaskloader();",
+
+}))
+{
+    <label id="popupmessage"> </label>
+     @Html.AntiForgeryToken()
+     @Html.HiddenFor(model => model.DARId)
+    
+    <div class="panel-body">
+        <div class="">
+            <div class="">
+                <div class="form-horizontal">               
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                        @Html.Label("Submitted On", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            @Html.TextBoxFor(model => model.CreatedOn, new { @class = "form-control", disabled = "disabled" })
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-12 col-md-6 col-sm-12 col-xs-12">
+                        @Html.Label("Activity Details", new { @class = "col-sm-4 control-label star" })
+                        <div class="col-sm-8">
+                            @*@Html.TextBoxFor(model => model.ActivityDetails, new { @Placeholder = "Activity Details", @class = "form-control resize" })*@
+                            @Html.TextAreaFor(model => model.ActivityDetails, new { @Placeholder = "Activity Details", @class = "form-control resize" })
+                            @Html.ValidationMessageFor(model => model.ActivityDetails, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="">
+                        <hr />
+                        <div class="col-sm-offset-8 col-sm-4 ">
+                            <button class="btn btn-default bluebutton" type="submit">Save</button>
+                            <button id="CloseModelpopup" class="btn btn-default bluebutton" data-dismiss="modal" type="button">Cancel</button>
+                            @*<a href="" class="btn btn-default bluebutton">Cancel</a>*@
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    function success(data) {
+         
+        if (data != "") {
+            $('.modal').modal('hide');
+            toastr.success('Record has been successfully updated')
+        }
+    }
+    //$("#CloseModelpopup").click(function () {
+    //    $('.modal').modal('hide');
+    //});
+
+</script>
+
+
+
+
+
+
+
+

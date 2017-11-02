@@ -1,0 +1,113 @@
+﻿@model WorkOrderEMS.Models.AssetMasterModel
+@{
+    ViewBag.Title = "Manage Asset";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+<script src="~/Scripts/ImageUpload/FileUpload.js"></script>
+@using (Html.BeginForm("ManageAsset", "Manager"))
+{
+    @Html.AntiForgeryToken()
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Assest Details
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="">
+                    <div class="form-horizontal">
+                        @Html.HiddenFor(model => model.AssetMasterID)
+
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.AssetName, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.AssetName, new { @Placeholder = "Asset Name", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AssetName)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.AssetID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.AssetID, new { @Placeholder = "Asset ID", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AssetID)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ClassID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.ClassID, new SelectList(ViewBag.AssetClass, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlAssetClass", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ClassID)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.WorkAreaID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.WorkAreaID, new SelectList(ViewBag.WorkArea, "Value", "Text"), "--Select--", new { @id = "ddlWorkArea", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.WorkAreaID)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.ModelName, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.ModelName, new { @Placeholder = "Model Name", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.ModelName)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.SerialNo, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.SerialNo, new { @Placeholder = "Serial No", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.SerialNo)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.AssetPhoto, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                <img id="AssetImage" src="@Url.Content("~/Content/Images/Asset/" + "")" class="img-rounded" alt="Rounded Image" style="width:200px; height:200px;">
+                                <input type="file" id="image" name="image" onchange="readURL(this);" value=" upload image">
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button class="btn btn-default bluebutton" type="submit">Save</button>
+                                <a href="~/Manager" class="btn btn-default bluebutton">Cancel</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<script type="text/javascript">
+    $_imagePath = '@Url.Action("UploadImage", "Manager")';
+    function readURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#AssetImage')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+
+</script>

@@ -1,0 +1,164 @@
+﻿@model WorkOrderEMS.Models.PermissionDetailsModel
+
+@using (Ajax.BeginForm("SaveLocationAndRoles", "RolesAndPermissions", new AjaxOptions()
+{
+    HttpMethod = "POST",
+    OnSuccess = "success",
+    OnBegin = "new fn_showMaskloader('Please wait...')",
+    OnComplete = "fn_hideMaskloader",
+    OnFailure = "fn_hideMaskloader",
+}))
+{
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="~/Scripts/bootstrap-checkbox.js"></script>
+    <label id="popupmessage"> </label>
+
+    <div class="panel-body">
+        <div class="" style="border-radius:10px;padding-left:0px;margin-top:-20px;">
+            <div class="">
+                <div class="form-horizontal">
+                    @Html.AntiForgeryToken()
+                    @Html.HiddenFor(model => model.UserIds)
+                    @Html.HiddenFor(model => model.UserId)
+                    @Html.HiddenFor(model => model.UserType)
+                    @Html.HiddenFor(model => model.FullName)
+                    <div class="divLocation">
+                        @Html.Label("Location", "Location", new { @class = "col-sm-3 control-label star rolesDivLabel", })
+                        <div class="col-sm-8">
+                            @if (Session != null)
+                            {
+                                if (Session["eTrac_UserLocations"] != null)
+                                {
+                                    @Html.DropDownList("LocationId", new SelectList(ViewBag.LocationList, "LocationId", "LocationName"), "--Select--", new { @class = "form-control", @id = "drp_UserRegisterLocation" })
+                                    @Html.ValidationMessage("LocationId")
+                                    @Html.Hidden("LocationName");
+                                }
+                            }
+                        </div>
+                    </div>
+                    <div id="rolesDiv">
+
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+        <div class="pull-right margintop10">
+            <div class="">
+                <button onclick="return UpdateRole();" class="btn btn-default bluebutton" type="submit">Assign</button>
+                <button id="CloseModel" class="btn btn-default bluebutton" type="button">Cancel</button>
+                @*<a href="" class="btn btn-default bluebutton">Cancel</a>*@
+            </div>
+        </div>
+    </div>
+
+    @*</div>*@
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        //This line is for first time when page render loc service hide bcoz of when selected location according to loc services render.
+        $("#chkboxdiv").hide();
+        var idslist = "";
+        $("#drp_UserRegisterLocation").change(function () {
+            var LocationID = $(this).val();
+            var UserType = $("#UserType").val();
+            if (LocationID != null && UserType != null && UserType != "" && LocationID != "") {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("AssignLocationBasedRole", "RolesAndPermissions")',
+                    data: { LocationID: LocationID, UserType: UserType },
+                    async: true,
+                    success: function (Data) {
+                        if (Data != null && Data.length > 0) {
+                            $("#rolesDiv").empty();
+                            $("#rolesDiv").append(Data);
+                            $("#rolesDiv").show();
+                            $("#LocationName").val($("#drp_UserRegisterLocation option:selected").text());
+                        }
+                    },
+                    error: function () {
+                    }
+                })
+                //------END------//
+            }
+            else {
+                $("#rolesDiv").hide();
+            }
+        })
+    });
+
+    function success(data) {
+         
+       // $(".close").trigger("click");
+        $("#myModalmedium").modal('hide');
+        $('#mediumeditpopup').html('');
+        if (data != "") {
+            toastr.success(data.Message)
+            if (data == "NotRegistered")
+            { bootbox.alert("This user is not registered for '" + $("#drp_MasterLocation :selected").text() + "' location."); }
+            else
+            {
+
+                jQuery("#tbl_ManagerList").jqGrid().trigger("reloadGrid");
+                $("#message").html(data.Message);
+                $('#message').addClass(data.AlertMessageClass);
+                $("#message").show();
+                setInterval(function () {
+                    $("#message").html("");
+                }, 30000);
+            }
+        }
+        else {
+            $("#largeeditpopup").html(data);
+        }
+    }
+
+    function UpdateRole() {
+         
+        var id = "";
+        if ($("#rolesDiv [type='checkbox']").length > 0) {
+            if ($("#rolesDiv [type='checkbox']:checked").length > 0) {
+                $("#rolesDiv [type='checkbox']:checked").each(function () {
+
+                    if (this.checked) {
+                        var ChkBoxId = this.id;
+                        if (id == "") {
+                            id += ChkBoxId
+                        }
+                        else {
+                            id += "," + ChkBoxId
+                        }
+                    }
+
+                });
+                $('#UserIds').val(id);
+                return true;
+            }
+            else {
+                bootbox.alert("Please select location services.");
+                return false;
+            }
+        }
+        else {
+            return true;
+        }
+      
+    }
+
+   
+
+    $("#CloseModel").click(function () {
+        $('.modal').modal('hide');
+    });
+</script>
+
+<style>
+    /*.btn-link, .btn-link:active, .btn-link[disabled], fieldset[disabled] .btn-link {
+        background-color: transparent;
+        box-shadow: 10px 10px 10px 0;
+    }*/
+    .checkbox {
+        padding: 0px !important;
+    }
+</style>

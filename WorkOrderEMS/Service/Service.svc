@@ -1,0 +1,4 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" 
+    Service="WorkOrderEMS.Service.Service"
+    Factory="System.ServiceModel.Activation.WebServiceHostFactory" 
+    CodeBehind="Service.svc.cs" %>

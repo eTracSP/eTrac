@@ -1,0 +1,73 @@
+﻿
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>JTSage::DateBox - DurationFlipBox</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" href="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.css" />
+    <link rel="stylesheet" href="http://dev.jtsage.com/DateBox/css/syntax.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/external/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="http://dev.jtsage.com/DateBox/js/doc.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/i18n/jtsage-datebox.lang.utf8.js"></script>
+
+    <!--<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.css" />
+    <link rel="stylesheet" href="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.jqm.min.css" />
+    <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.1.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/external/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="http://dev.jtsage.com/DateBox/js/doc.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.jqm.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/i18n/jtsage-datebox.lang.utf8.js"></script>-->
+    <script type="text/javascript">
+        jQuery.extend(jQuery.mobile,
+            {
+                ajaxEnabled: false
+            });
+    </script>
+    <script type="text/javascript">
+        jQuery.extend(jQuery.jtsage.datebox.prototype.options,
+            {
+                'useLang': 'en'
+            });
+
+
+    </script>
+    <style>
+        .ui-datebox-container {
+            margin-right: auto;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div data-role="page" id="main">
+        <div class="ui-content" role="main">
+            <div class="row">
+ 
+                <div class="col-sm-4" style="position:fixed; right:0; width:25%; top:100px">
+                    <div class="ui-field-contain">
+                        <label for="db">DurationFlipBox</label>
+                        <input class="form-control" id="db" type="text" data-role="datebox" data-options="{&quot;mode&quot;:&quot;durationflipbox&quot;}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <!-- page -->
+</body>
+</html>
+<script>
+        $(".input-group-addon").click(function () {
+            $("body").addClass("open1");
+        });
+        $(".closer").click(function () {
+            $("body").removeClass("open1");
+        });
+</script>

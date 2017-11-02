@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{A0E73362-382C-43C4-BB5C-19704AAF5ACE}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>WorkOrderEMS.Models</RootNamespace>
+    <AssemblyName>WorkOrderEMS.Models</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <CodeAnalysisRuleSet>..\..\NewProjects.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="CompiledValidators, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompiledValidators.1.0\lib\40\CompiledValidators.dll</HintPath>
+    </Reference>
+    <Reference Include="CompiledValidators.DataAnnotations, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CompiledValidators.DataAnnotations.1.0\lib\40\CompiledValidators.DataAnnotations.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.5.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.5\lib\itextsharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.0\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.0\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc, Version=5.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\WorkOrderSystemAfterBhushaneFleetChanges\WorkOrderSystem\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CommonModels\DashboardSettingModel.cs" />
+    <Compile Include="CommonModels\DropDownModel.cs" />
+    <Compile Include="CommonModels\EmailToUsers.cs" />
+    <Compile Include="CommonModels\EmployeeWorkAssignmentCountModel.cs" />
+    <Compile Include="CommonModels\GlobalCodeModel.cs" />
+    <Compile Include="CommonModels\LocationDetailModel.cs" />
+    <Compile Include="CommonModels\LocationRuleMappingModel.cs" />
+    <Compile Include="CommonModels\MethodResponse.cs" />
+    <Compile Include="CommonModels\MyGenericDataReader.cs" />
+    <Compile Include="CommonModels\PrintQRCModel.cs" />
+    <Compile Include="CommonModels\QRCModel.cs" />
+    <Compile Include="CommonModels\ReportModel.cs" />
+    <Compile Include="CommonModels\TemplateModel.cs" />
+    <Compile Include="CommonModels\UserDetailsForVerificationModel.cs" />
+    <Compile Include="CommonModels\WorkRequestAssignmentModel.cs" />
+    <Compile Include="DARModels\DARModel.cs" />
+    <Compile Include="eFleet\eFleetDriverModel.cs" />
+    <Compile Include="eFleet\eFleetMaintenanceModel.cs" />
+    <Compile Include="eFleet\eFleetMeterModel.cs" />
+    <Compile Include="eFleet\eFleetPassengerTrackingModel.cs" />
+    <Compile Include="eFleet\eFleetPMModel.cs" />
+    <Compile Include="eFleet\eFleetVehicleIncidentModel.cs" />
+    <Compile Include="eFleet\eFleetVehicleModel.cs" />
+    <Compile Include="eFleet\eFleetVehicleModelForService.cs" />
+    <Compile Include="eMaintenance_M\eMaintenance_M.cs" />
+    <Compile Include="Emial\EmailLogModel.cs" />
+    <Compile Include="LoginModel\eTracLoginModel.cs" />
+    <Compile Include="LoginModel\LoginLogModel.cs" />
+    <Compile Include="ManagerModels\AssetMasterModel.cs" />
+    <Compile Include="ManagerModels\AssignInventoryModel.cs" />
+    <Compile Include="ManagerModels\InventoryMasterModel.cs" />
+    <Compile Include="ManagerModels\ManagerModel.cs" />
+    <Compile Include="ManagerModels\RuleMasterModel.cs" />
+    <Compile Include="ManagerModels\WorkOrderModel.cs" />
+    <Compile Include="ManagerModels\WorkRequestModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceModel\ApiModel\ChangeInspectionStatusModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetFuelingModelForService.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetIncidentModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetMaintenanceModelForApiService.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetPassengerTrackingCountModelForService.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetPassengerTrackingRouteModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetPreventaticeMaintenanceModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\HoursOfServicesModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\MeterModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\UpdateEfleetInspectionTypeXML.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetNodeTypeModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\eFleetGroupTypeModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\VehicleDetailsModel.cs" />
+    <Compile Include="ServiceModel\ApiModel\VehicleScanModel.cs" />
+    <Compile Include="ServiceModel\ServiceDARModel.cs" />
+    <Compile Include="ServiceModel\ServiceDashboardModel.cs" />
+    <Compile Include="ServiceModel\ServiceDisclaimerModel.cs" />
+    <Compile Include="ServiceModel\ServiceDurationModel.cs" />
+    <Compile Include="ServiceModel\ServiceImageUpload.cs" />
+    <Compile Include="ServiceModel\ServiceInspectionModel.cs" />
+    <Compile Include="ServiceModel\ServicePushModel.cs" />
+    <Compile Include="ServiceModel\ServiceQRCNodeModel.cs" />
+    <Compile Include="ServiceModel\ServiceQRCTypeModel.cs" />
+    <Compile Include="ServiceModel\ServiceResponseModel.cs" />
+    <Compile Include="ServiceModel\ServiceUserModel.cs" />
+    <Compile Include="ServiceModel\ServiceWorkAssignmentModel.cs" />
+    <Compile Include="SuperAdminModels\GlobalUserModel.cs" />
+    <Compile Include="SuperAdminModels\ListLocationModel.cs" />
+    <Compile Include="SuperAdminModels\LocationMasterModel.cs" />
+    <Compile Include="SuperAdminModels\MasterLocationModel.cs" />
+    <Compile Include="SuperAdminModels\ProjectMasterModel.cs" />
+    <Compile Include="SuperAdminModels\ServiceMasterModel.cs" />
+    <Compile Include="UserModels\AddressModel.cs" />
+    <Compile Include="UserModels\AllWorkAssignedToEmployeeModel.cs" />
+    <Compile Include="UserModels\EmployeeModel.cs" />
+    <Compile Include="UserModels\InsuranceModel.cs" />
+    <Compile Include="UserModels\NotAssignedUserModel.cs" />
+    <Compile Include="UserModels\PermissionDetailsModel.cs" />
+    <Compile Include="UserModels\ReportChart.cs" />
+    <Compile Include="UserModels\UserModel.cs" />
+    <Compile Include="UserModels\VechicleModel.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\WorkOrderEMS.Helper\WorkOrderEMS.Helper.csproj">
+      <Project>{e9e7b445-9a09-4309-96fd-28b0c46b59c0}</Project>
+      <Name>WorkOrderEMS.Helper</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

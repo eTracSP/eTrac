@@ -1,0 +1,80 @@
+﻿@{
+
+    string loginUserName = "", loginUserEmail = "", loginUserProfile = "";
+    long loginUserType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        //loginUserName = (ObjLogin.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) ? "" : ObjLogin.FName);
+        loginUserName = ObjLogin.FName;//(ObjLogin.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) ? "" : ObjLogin.FName);
+
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+
+
+    if (ObjLogin != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#dropdownMenu1").click(function () {
+                    $("#filterMenu").toggle();
+                });
+
+
+                $("#btnSaveSettings").click(function () {
+                    var selected = "";
+                    $("#filterMenu [type='checkbox']:checked").each(function () {
+                        selected = selected + $(this).val() + ",";
+                    })
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveUserDashboardSettings", "Common")',
+                        data: { SelectedSettings: selected },
+                        beforeSend: function () {
+                            //new fn_showMaskloader('please wait...Deleting');
+                        },
+                        success: function (Data) {
+                            bootbox.alert(Data);
+                        },
+                        error: function (e) {
+                            bootbox.alert(e);
+                        },
+                        complete: function () {
+                            window.location.reload();
+                        }
+                    })
+                });
+            })
+
+        </script>
+        <li>
+            <div class="btn-group">
+                <button aria-expanded="false" data-toggle="dropdown" class="btn btn-default dropdown-toggle" type="button">
+                    <i class="fa fa-sign-out"></i> Setting <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu dropdown-user ">
+                    @if (!string.IsNullOrEmpty(loginUserName))
+                    {
+                        <li>
+                            <a href="javascript:void(0)"> <i class="fa fa-user fa-fw"></i> @loginUserName (@loginUserProfile)</a>
+                        </li>
+                    }
+                    @*<li>
+                        @if (@loginUserProfile.Contains("Manager") || @loginUserProfile.Contains("IT") || @loginUserProfile.Contains("Global Admin") || @loginUserProfile.Contains("Administrator"))
+                        {
+                            <a data-ajax="true" data-ajax-complete="your_js_function_toShowingDiv_ECashRenewal();" data-ajax-method="GET" data-ajax-mode="replace" data-ajax-update="#userList" href="/ECash/ECashRenewal"> <i class="fa fa-gear fa-fw"></i> Ecash Renewal</a>                            
+                        }
+                    </li>*@
+                    <li class="divider"></li>
+                    <li>
+                        <a href="@Url.Action("LogOut", "Login", new { id = ObjLogin.UserId })"><i class="fa fa-sign-out fa-fw"></i>Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+    }
+}
+

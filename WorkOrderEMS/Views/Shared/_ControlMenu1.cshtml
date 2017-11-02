@@ -1,0 +1,77 @@
+﻿
+@{
+
+    string loginUserName = "", loginUserEmail = "", loginUserProfile = "";
+    long loginUserType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        //loginUserName = (ObjLogin.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) ? "" : ObjLogin.FName);
+        loginUserName = ObjLogin.FName;//(ObjLogin.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) ? "" : ObjLogin.FName);
+
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+    if (ObjLogin != null)
+    {
+        <script>
+            $(document).ready(function () {
+                $("#dropdownMenu1").click(function () {
+                    $("#filterMenu").toggle();
+                });
+
+                $("#ddlUsrProfile").click(function () {                    
+                    if ($('#ddlUsrProfile div:first').hasClass('open') == true)
+                        $('#ddlUsrProfile div:first').toggleClass('open');
+                    else
+                        $('#ddlUsrProfile div:first').toggleClass('open');
+                });
+
+                $("#btnSaveSettings").click(function () {
+                    var selected = "";
+                    $("#filterMenu [type='checkbox']:checked").each(function () {
+                        selected = selected + $(this).val() + ",";
+                    })
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SaveUserDashboardSettings", "Common")',
+                        data: { SelectedSettings: selected },
+                        beforeSend: function () {
+                            //new fn_showMaskloader('please wait...Deleting');
+                        },
+                        success: function (Data) {
+                            bootbox.alert(Data);
+                        },
+                        error: function (e) {
+                            bootbox.alert(e);
+                        },
+                        complete: function () {
+                            window.location.reload();
+                        }
+                    })
+                });
+
+                //$('#control-sidebar').css('display','block')
+            })
+
+        </script>
+         <li id="ddlUsrProfile">
+            <div class="btn-group">
+              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"> <i class="fa fa-gear"></i>  <span class="caret"></span> </button>
+              <ul class="dropdown-menu dropdown-user ">
+                  @if (!string.IsNullOrEmpty(loginUserName))
+                  {
+                      <li><a href="javascript:void(0)"> <i class="fa fa-user fa-fw"></i> @loginUserName <span class="usertypename">@loginUserProfile</span></a></li>
+                  }
+                   <!-- Control Sidebar Toggle Button -->
+                        <li> <a id="control-sidebar" data-toggle="control-sidebar" style=""><i class="fa fa-gears"></i>Widget</a> </li>
+                <li class="divider"></li>
+                <li> <a href="@Url.Action("LogOut", "Login", new { id = ObjLogin.UserId })"><i class="fa fa-sign-out fa-fw"></i>Logout</a></li>
+              </ul>
+            </div>
+        </li>
+    }
+}
+

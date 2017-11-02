@@ -1,0 +1,118 @@
+﻿body {
+    padding-top: 50px;
+    padding-bottom: 20px;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Set width on the form input elements since they're 100% wide by default */
+input,
+select,
+textarea {
+    max-width: 280px;
+}
+
+.star:after {
+    content: "*";
+    color:red;padding:0 0 0 5px
+ 
+}
+
+.right-align {
+text-align:right}
+
+/* styles for validation helpers */
+.field-validation-error {
+    color: #b94a48;
+}
+
+.field-validation-valid {
+    display: none;
+}
+
+input.input-validation-error {
+    border: 1px solid #b94a48;
+}
+
+input[type="checkbox"].input-validation-error {
+    border: 0 none;
+}
+
+.validation-summary-errors {
+    color: #b94a48;
+}
+
+.validation-summary-valid {
+    display: none;
+}
+
+.ui-datepicker-calendar span {
+    color: #333;
+}
+.notepad2{background:green}
+
+.ui-icon-notepad{background-position: -160px -128px;}
+.topheader{background:#fff !important; z-index:1000  !important}
+
+.texthover-bluelight, .texthover-greenlight, .texthover-redlight, .texthover-solidblue {
+    transition-duration: 0.5s, 0.5s, 0.5s;
+    transition-property: text-shadow, color, background;
+}
+.texthover-bluelight:hover {
+    color: #fff !important;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #0d83dd, 0 0 40px #0d83dd;
+}
+.texthover-greenlight:hover {
+    color: #fff !important;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #67b239, 0 0 40px #67b239;
+}
+.texthover-redlight:hover {
+    color: #fff !important;
+    text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #e51400, 0 0 40px #e51400;
+}
+.texthover-solidblue:hover {
+    background: none repeat scroll 0 0 #2c84ee;
+}
+ .RegistrationUserSelect{
+      /*display: block; position: absolute; top: 0px;height:200px;*/
+   background-color:#0aa0cd; 
+    border: 2px ;
+    color:darkgray!important;
+    /*border-radius: 11px;*/
+    /*width:400%;
+    left: 20%;*/
+    /*margin:3%;*/
+}
+.of-bt-icon{
+    font-size: medium;
+}
+.RegistrationUserSelect a {
+    color:darkgray!important;
+}
+.deleteRecord{
+background-image: -webkit-gradient(
+	linear,
+	left top,
+	left bottom,
+	color-stop(0, #F0AFC0),
+	color-stop(0.3, #FC3232)
+);
+background-image: -o-linear-gradient(bottom, #F0AFC0 0%, #FC3232 30%);
+background-image: -moz-linear-gradient(bottom, #F0AFC0 0%, #FC3232 30%);
+background-image: -webkit-linear-gradient(bottom, #F0AFC0 0%, #FC3232 30%);
+background-image: -ms-linear-gradient(bottom, #F0AFC0 0%, #FC3232 30%);
+background-image: linear-gradient(to bottom, #F0AFC0 0%, #FC3232 30%);
+}
+    .deleteRecord:hover {
+        box-shadow:5px red 5px 5px inset!important; 
+    }
+  .ViewAllButton {
+  position: absolute!important;
+  top: 12px!important;
+  right: 4%;
+    }
+  

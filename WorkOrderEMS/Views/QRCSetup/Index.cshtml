@@ -1,0 +1,1301 @@
+﻿@model WorkOrderEMS.Models.QRCModel
+
+@{
+    ViewBag.Title = "QRC Setup";
+    //ViewBag.Title = "Register Vehicle";
+    //Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+
+
+    long UserType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    if (ObjLogin != null)
+    { UserType = ObjLogin.UserRoleId; }
+    else
+    {
+        WorkOrderEMS.Helper.AlertMessageClass ObjAlertMessageClass = new WorkOrderEMS.Helper.AlertMessageClass();
+        ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger; ViewBag.Message = WorkOrderEMS.Helper.CommonMessage.SessionExpired();
+        throw new Exception(WorkOrderEMS.Helper.CommonMessage.SessionExpired());
+    }
+
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    { ViewBag.Title = "Update QRC"; }
+    string imgaeserverpath = Url.Content("~/Content/Images/constant/");
+
+    string _GetLocationByAdminURL;// = Url.Action("GetLocationByAdminID", "DropDown");
+    //string _GetLocationByManagerIDUrl = @Url.Action("GetLocationByManagerID", "DropDown");
+   
+}
+
+<script src="~/Scripts/jquery.maskedinput-1.3.min.js"></script>
+@using (Html.BeginForm("Index", "QRCSetup", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-12 col-sm-12 col-lg-12 col-xs-12 commBox">
+            <div class="accordion-container">
+                <div id="accordion" class="panel-group">
+                    <div class="panel panel-default first-mar10">
+                        <div class="panel-heading" id="panel1">
+
+                            <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 id="heading1" class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-minus"></i></span>
+                                    QRC Item Details
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse in" id="collapseOne">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="">
+                                        <div class="form-horizontal">
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.ValidationSummary(true)
+                                                @Html.HiddenFor(model => model.QRCId)
+                                                @Html.HiddenFor(model => model.MotorTypeVehicle, new { id = "hddnMotorTypeVehicle" })
+                                                @Html.HiddenFor(model => model.UpdateMode)
+
+                                                @Html.HiddenFor(model => model.VehicleTypeCaption, new { id = "VehicleTypeCaption" })
+                                                @Html.HiddenFor(model => model.QRCTYPE, new { id = "hiddnQRCTYPE" })
+                                                @Html.HiddenFor(model => model.QRCTYPECaption, new { id = "QRCTYPECaption" })
+                                                @Html.HiddenFor(model => model.MotorTypeCaption, new { id = "MotorTypeCaption" })
+                                                @Html.HiddenFor(model => model.SizeCaption, new { id = "SizeCaption" })
+                                                @Html.HiddenFor(model => model.QRCodeID, new { id = "QRCodeID" })
+                                                @Html.HiddenFor(model => model.QRCImageBase64) 
+                                                <input type="hidden" id="EncryptLastQRC" value='@Model.EncryptLastQRC' />
+                                                <input type="hidden" id="@Model.UpdateMode" value="@ViewBag.UpdateMode" />
+
+                                            </div>
+
+                                            <div class="clearfix"></div>
+                                            @{if (Model.UpdateMode != null && Model.UpdateMode == true)
+                                    {
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.QRCId, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8" id="QRCIdDiv">
+                                            @*@Model.EncryptLastQRC*@
+                                            @Model.QRCodeID
+                                        </div>
+                                    </div>
+                                    }
+                                            }
+                                            <div class="clearfix"></div>
+
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.QRCName, new { @id = "lblQRCName", @class = "col-sm-4 control-label star" })
+                                                <div class="col-sm-8">
+                                                    @Html.TextBoxFor(model => model.QRCName, new { @Placeholder = "QRC Name", @class = "form-control" })
+                                                    @*@Html.ValidationMessageFor(model => model.QRCName)*@
+                                                    <span class="QRCName" style="color:indianred"></span>
+                                                    @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.SerialNo, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8">
+                                                    @Html.TextBoxFor(model => model.SerialNo, new { @Placeholder = "Serial No", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.SerialNo)
+                                                    @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                                </div>
+                                            </div>
+
+                                            <div class="clearfix"></div>
+
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.QRCTYPE, new { @class = "col-sm-4 control-label star" })
+                                                <div class="col-sm-8">
+                                                    @if (Model != null && Model.QRCTypeList != null && Model.QRCTypeList.Count > 0)
+                                            { @Html.DropDownListFor(model => model.QRCTYPE, new SelectList(Model.QRCTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCType", @class = "form-control", @onchange = "tooglevehicletype();" })}
+                                            else
+                                            {<select id="QRCType" class="form-control"><option>--Select--</option></select>}
+                                                    @*@Html.ValidationMessageFor(model => model.QRCTYPE)*@
+                                                    <span class="QRCType" style="color: indianred"></span>
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.QRCDefaultSize, new { @class = "col-sm-4 control-label star" })
+                                                <div class="col-sm-8">
+                                                    @if (Model != null && Model.QRCSize != null && Model.QRCSize.Count > 0)
+                                            {@Html.DropDownListFor(model => model.QRCDefaultSize, new SelectList(Model.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "DefaultSize", @class = "form-control", @onchange = "qrcSizeload();" })}
+                                            else
+                                            {<select id="DefaultSize" class="form-control"><option>--Select--</option></select>}
+                                                    @*@Html.ValidationMessageFor(model => model.QRCDefaultSize)*@
+                                                    <span class="DefaultSize" style="color: indianred"></span>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="form-group VehicleType1 col-lg-6 col-md-6 col-sm-12 col-xs-12 testing">
+                                                @Html.LabelFor(model => model.VehicleType, new { @class = "col-sm-4 control-label star" })
+                                                <div class="col-sm-8">
+                                                    @if (Model != null && Model.VehicleTypeList != null && Model.VehicleTypeList.Count > 0)
+                                            {@Html.DropDownListFor(model => model.VehicleType, new SelectList(Model.VehicleTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "VehicleType", @class = "form-control", @onchange = "loadmotortype();" });
+
+
+                                            }
+                                            else
+                                            { <select id="VehicleType" class="form-control"><option>--Select--</option></select>}
+                                                    @Html.ValidationMessageFor(model => model.VehicleType)
+                                                </div>
+                                            </div>
+                                            <div class="form-group VehicleType1 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.MotorType, new { @class = "col-sm-4 control-label star" })
+                                                <div class="col-sm-8 checkbox">
+                                                    @if (Model != null && Model.MotorTypeList != null && Model.MotorTypeList.Count > 0)
+                                            {
+                                            <img id="imgvehicletype" src="" class="img-rounded" alt="" style="position: absolute; padding-left: 0px; left: 160px; "> @*"width: 64px;*@
+                                            @Html.DropDownListFor(model => model.MotorType, new SelectList(Model.MotorTypeList, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "MotorType", @style = "width: 131px;", @class = "form-control", @onchange = "showvehicletypeimage(this);" })
+
+                                            <input type="hidden" id="hddnimgaeserverpath" value="@imgaeserverpath">
+                                            }
+                                            else
+                                            {<select id="MotorType" class="form-control"><option>--Select--</option></select>}
+                                                    @Html.ValidationMessageFor(model => model.MotorType)
+                                                </div>
+                                            </div>
+
+
+                                            <div class="clearfix"></div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.Make, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8">
+                                                    @Html.TextBoxFor(model => model.Make, new { @Placeholder = "Make", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Make)
+                                                    @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.Model, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8">
+                                                    @Html.TextBoxFor(model => model.Model, new { @Placeholder = "Model", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.Model)
+                                                    @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => model.SpecialNotes, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8">
+                                                    @Html.TextAreaFor(model => model.SpecialNotes, new { @Placeholder = "QRC Special Notes", @class = "form-control" })
+                                                    @Html.ValidationMessageFor(model => model.SpecialNotes)
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => Model.LocationPicture, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8 col-sm-offset-4">
+                                                    <img id='LocationImage' name='LocationImage' src="@Url.Content(Image)"
+                                                         class="img-rounded" style="width:100px; height:100px;">
+                                                    <input type="file" id="Location" name="LOCPicture" onchange="readURL(this);" value=" upload image" accept="image/*">
+                                                </div>
+                                            </div>
+                                            <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                @Html.LabelFor(model => Model.AssetPicture, new { @class = "col-sm-4 control-label" })
+                                                <div class="col-sm-8 col-sm-offset-4">
+                                                    <img id='AssetImage' name='AssetImage' src="@Url.Content(Image)"
+                                                         class="img-rounded" style="width:100px; height:100px;">
+
+                                                    <input type="file" id="Asset" name="AssetPictureUrl" onchange="readURL(this);" value=" upload image" accept="image/*">
+                                                </div>
+
+                                            </div>
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel panel-default first-mar10 permitdetails">
+                        <div class="panel-heading" id="panel2">
+                            <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                <h4 id="heading2" class="panel-title">
+                                    <span class="pull-right"><i class="glyphicon glyphicon-plus"></i></span>
+                                    Warranty Details
+                                </h4>
+                            </a>
+                        </div>
+                        <div class="panel-collapse collapse collapse" id="collapseTwo">
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.VendorName, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.VendorName, new { @Placeholder = "Vendor Name", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.VendorName)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.PointOfContact, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.PointOfContact, new { @Placeholder = "Point Of Contact", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.PointOfContact)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.TelephoneNo, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @*@Html.TextBoxFor(model => model.TelephoneNo,null, new { @Placeholder = "Telephone No", @class = "Phone form-control" })*@
+                                            @Html.TextBoxFor(model => model.TelephoneNo, new { @Placeholder = "Telephone No", @class = "Phone form-control" })
+                                            @Html.ValidationMessageFor(model => model.TelephoneNo)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.EmialAdd, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.EmialAdd, new { @Placeholder = "Email Address", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.EmialAdd)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.InsuranceExpDate, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.InsuranceExpDate, new { @Placeholder = "Expiration Date", @class = "form-control", @readonly = "readonly"})
+                                            @Html.ValidationMessageFor(model => model.InsuranceExpDate)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.Website, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.Website, new { @Placeholder = "Website", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.Website)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.WarrantyEndDate, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.WarrantyEndDate, new { @Placeholder = "Warranty End Date", @class = "form-control", @readonly = "readonly" })
+                                            @Html.ValidationMessageFor(model => model.WarrantyEndDate)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @*@Html.LabelFor(model => model.WarrantyDoc, new { @class = "col-sm-4 control-label" })*@
+                                        @Html.Label("Warranty Document", new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            <input type="file" id="fWarrantyDoc" name="WarrantyDocument" onchange="readURLWarrenty(this);" value=" Upload Warranty Doc" accept=".xlsx,.xls,image/*,.doc, .docx,.ppt, .pptx,.txt,.pdf">
+                                        </div>
+
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.PurchaseType, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.DropDownListFor(model => model.PurchaseType, new SelectList(ViewBag.PurchType, "Value", "Text"), "--Select--", new { @class = "form-control requiredselect", @id = "ddlPurchaseType" })
+                                            @Html.ValidationMessageFor(model => model.PurchaseType)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12 remark" style="display:none">
+                                        @Html.LabelFor(model => model.PurchaseTypeRemark, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextAreaFor(model => model.PurchaseTypeRemark, new { @Placeholder = "Remark", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.PurchaseTypeRemark)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="panel panel-default first-mar10 VehicleType" style="display:none;">
+                            <div class="panel-heading">
+
+                                <a href="#collapseTwo" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                    <h4 class="panel-title">
+                                        Personal <span>Details</span>
+                                    </h4>
+                                </a>
+
+                            </div>
+                            <div class="panel-collapse collapse collapse" id="collapseTwo">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        @Html.Partial("_Registration", @Model)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default first-mar10 VehicleType" style="display:none;">
+                            <div class="panel-heading">
+
+                                <a href="#collapseThree" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                    <h4 class="panel-title">
+                                        Ownership <span>Type</span>
+                                    </h4>
+                                </a>
+
+                            </div>
+                            <div class="panel-collapse collapse collapse" id="collapseThree">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="form-horizontal">
+                                            <div class="">
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="Address" class="col-sm-4 control-label">Select Type</label>
+                                                    <div class="col-sm-8">
+                                                        @if (Model != null && Model.VehicleModel != null && Model.VehicleModel.ClientType != null && Model.VehicleModel.ClientType.Count > 0)
+                                                        {@Html.DropDownListFor(model => model.ClientTypeID, new SelectList(Model.VehicleModel.ClientType, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ClientType", @class = "form-control", @onchange = "disablevendordetail();" });
+                                                        }
+                                                        else
+                                                        { <select id="ClientType" class="form-control"><option>--Select--</option></select>}
+                                                        @Html.ValidationMessageFor(model => model.ClientTypeID)
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="">
+                                                <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                    <label for="Address" class="col-sm-4 control-label">Select Vendor</label>
+                                                    <div class="col-sm-8">
+                                                        @if (Model != null && Model.VendorDetail != null && Model.VendorDetail.Count > 0)
+                                                        {@Html.DropDownListFor(model => model.VendorID, new SelectList(Model.VendorDetail, "VendorID", "ContactName"), "--Select--", new { @id = "VendorDetail", @class = "form-control", @onchange = "loadvendordetails()", @disabled = "disabled" });
+                                                        }
+                                                        else
+                                                        { <select id="VendorDetail" class="form-control" disabled="disabled"><option>--Select--</option></select>}
+                                                        @Html.ValidationMessageFor(model => model.VendorID)
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="clearfix"></div>
+                                            @if (Model != null && Model.VendorDetail != null)
+                                            {
+                                            foreach (var item in Model.VendorDetail)
+                                            {
+                                            string VendorAddress1 = item.Address1 + " " + item.Address2;
+                                            //string VendorAddress2 = item.City + " " + item.StateCode + ", " + item.CountryName;
+                                            string VendorAddress2 = item.City + " " + item.State + ", " + item.Country;
+
+                                            <div id="@item.VendorID" class="vendor">
+                                                <div class="">
+                                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                        <label for="ContactName" class="col-sm-4 control-label">Vendor Name</label>
+                                                        <div class="col-sm-8">
+                                                            @item.ContactName
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="">
+                                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                                        <label for="Address" class="col-sm-4 control-label">Address</label>
+                                                        <div class="col-sm-8">
+                                                            @VendorAddress1
+                                                            <div class="clear"></div>
+                                                            @VendorAddress2
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            }
+                                            }
+                                            <div class="clearfix"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="panel panel-default first-mar10 VehicleType" style="display:none;">
+                            <div class="panel-heading">
+
+                                <a href="#collapseFour" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                                    <h4 class="panel-title">
+                                        Vehicle <span>Informations</span>
+                                    </h4>
+                                </a>
+
+                            </div>
+                            <div class="panel-collapse collapse collapse" id="collapseFour">
+                                <div class="panel-body">
+                                    <div class="row">
+                                        @if (Model != null && Model.VehicleModel != null)
+                                        {
+                                        @Html.Partial("_Vehicle", new WorkOrderEMS.Models.VehiclesModel { VehicleModel = Model.VehicleModel })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>*@
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="marbottom"></div>
+                <div class="pull-right" style="padding-bottom:10px">
+                    @*@if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                        {<button class="btn btn-default bluebutton" type="submit">Update</button>}*@
+                    <button id="btnModalConfirumationPreview" type="button" onclick="return checkvalidation();" class="btn btn-default bluebutton">Preview Entries</button>
+                    @*<input type="button" data-toggle="modal" data-target="#ModalConfirumationPreview" id="btnModalConfirumationPreview" class="btn btn-default bluebutton h5" value="Preview Entries" onclick="loadpreview();" />*@
+
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+            {<a href="~/QRCSetup/ListQRC" class="btn btn-default bluebutton">Cancel</a>}
+            else
+            {<a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>}
+                </div>
+
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+  
+<!-- Modal Confirumation Preview-->
+<div class="modal fade preview" data-backdrop="false" id="ModalConfirumationPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @if (ViewBag.RefreshMode != null && ViewBag.RefreshMode == false)
+                { <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                @*<button type="button" href="~/QRCSetup/Index" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>*@
+                }
+                else
+                { <a href="~/QRCSetup/Index" class="close"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>}
+
+                <h4 class="modal-title" id="myModalLabel">Confirmation Preview QR-Code</h4>
+            </div>
+            <div class="modal-body">
+                @*<span id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</span>*@
+                <span id="diverrormessage" class="text-danger"></span>
+                <div id="divConfirumationPreview" class="">
+
+                    @{
+                    WorkOrderEMS.Models.PrintQRCModel MyPrintModel = null;
+                    if (ViewBag.EncryptQRC != null)
+                    {
+                    //MyPrintModel = new WorkOrderEMS.Models.PrintQRCModel();
+                    MyPrintModel = ViewBag.QRCModel;
+                    }
+                    }
+
+                    <div class="row">
+                        <div class="col -sm-8 hide">
+                            @if (MyPrintModel == null)
+                            {
+                            <div id="lblSizeCaption"></div>}
+                            else
+                            {
+                            <div id="lblSizeCaption">@MyPrintModel.SizeCaption</div>}
+                        </div>
+                        <div class="" id="DivQRCIndex">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label>QRC Type</label>
+
+                                    @if (MyPrintModel == null)
+                                    { <div id="lblQRCTYPE" class="form-control-static"></div>}
+                                    else
+                                    { <div id="lblQRCTYPE" class="form-control-static">@MyPrintModel.QRCTYPE</div>}
+
+                                </div>
+                                <div class="form-group">
+                                    <label>QRC Name</label>
+
+                                    @if (MyPrintModel == null)
+                                    { <div id="lblQRC" class="form-control-static"></div>}
+                                    else
+                                    { <div id="lblQRC" class="form-control-static">@MyPrintModel.QRCName</div>}
+
+                                </div>
+                                @if (MyPrintModel != null)
+                                {
+                                    <div class="form-group">
+                                        <label>QRC ID</label>
+                                       <div id="lblQRCId" class="form-control-static">@ViewBag.EncryptQRC</div>
+                                    </div>
+                                }
+
+
+
+
+
+                                @*Commented by: Bhushan Dod on 07/01/2015
+                                Reason : Shuttle bus added in QRC type so no need to show vehicle type*@
+                                @*<div class="form-group VehicleTypeDisplay">
+                                <label>Vehicle Type</label>
+
+                                @if (MyPrintModel != null)
+                                { <div id="lblVehicleType" class="form-control-static"></div>}
+                                else
+                                { <div id="lblVehicleType" class="form-control-static">@MyPrintModel.VehicleType</div>}
+
+                                </div>*@
+                                <div class="form-group VehicleTypeDisplay">
+                                    <label id="labelMotorType">Motor Type</label>
+
+                                    @if (MyPrintModel == null)
+                                    { <div id="lblMotorType" class="form-control-static"></div>}
+                                    else
+                                    { <div id="lblMotorType" class="form-control-static">@MyPrintModel.MotorType</div>}
+
+                                </div>
+
+                                @if (MyPrintModel != null && MyPrintModel.VehicleType != null)
+                                {
+                                    <div id="vehicleType" class="form-group">
+                                        <label><strong>Vehicle Type</strong></label>
+                                        <div id="lblVehicleType" class="form-control-static">@MyPrintModel.VehicleType</div>
+                                    </div>
+                                }
+
+                                <div id="specialnotes" class="form-group">
+                                    <label id="lblspecialnotes">Special Notes</label>
+                                    @if (MyPrintModel == null)
+                                    { <div id="lblSpecialNotes" class="form-control-static"></div>}
+                                    else
+                                    { <div id="lblSpecialNotes" class="form-control-static">@MyPrintModel.SpecialNotes</div>}
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label>Location</label>
+
+                                <div class="form-group">
+
+
+
+                                    @if (MyPrintModel == null)
+                                    {
+                                    <div id="lblLocationName" class="form-control-static"></div>
+                                    }
+                                    else
+                                    {
+                                    if (@Model.UpdateMode != null && @Model.UpdateMode == true)
+                                    {
+                                    <div id="lblLocationName" class="form-control-static">@Model.LocationName</div>
+                                    }
+                                    else
+                                    {
+                                    <div id="lblLocationName" class="form-control-static">@MyPrintModel.Location</div>
+                                    }
+                                    }
+                                </div>
+
+                                @*<div class="form-group">
+                                <label>The Bird</label>
+                                <p class="form-control-static">
+                                Twitter
+                                </p>
+                                </div>*@
+                            </div>
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label>QRC Code</label>
+                                <div id="container2">
+                                    <canvas style="width: 200px; height: 200px;"></canvas>
+                                </div>
+                                <p>&nbsp;</p>
+                            </div>
+                            <div id="Vmake" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label><strong>Make</strong></label>
+                                @*<div id="lblVmake" class="form-control-static"></div>*@
+                                @if (MyPrintModel == null)
+                                { <div id="lblVmake" class="form-control-static"></div>}
+                                else
+                                { <div id="lblVmake" class="form-control-static">@MyPrintModel.Make</div>}
+                            </div>
+                            <div id="Vmodel" class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <label><strong>Model</strong></label>
+                                @*<div id="lblVmodel" class="form-control-static"></div>*@
+                                @if (MyPrintModel == null)
+                                { <div id="lblVmodel" class="form-control-static"></div>}
+                                else
+                                { <div id="lblVmodel" class="form-control-static">@MyPrintModel.Model</div>}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divConfirumationPreviewFooter">
+
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {<button class="btn btn-default bluebutton" type="submit">Update</button>}
+                    else
+                    {<button class="btn btn-default bluebutton" type="submit" formnovalidate="formnovalidate" onclick="UploadQRCImage();">Finalize</button>}
+                    <button type="button" class="btn btn-default bluebutton" data-dismiss="modal">Edit</button>
+                </div>
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divPintFooter">
+                    <button id="printQRCIndex" type="button" onclick="PrintDivIndex('printtable');" class="btn btn-default bluebutton" formnovalidate="formnovalidate">Print QRC with details</button>
+                    <button id="printQRC_btn" type="button" onclick="PrintQRCButton();" class=" btn btn-default bluebutton" formnovalidate="formnovalidate">Print QRC</button>
+                    @*<button id="Close_btn" type="button" onclick="cancelPrinting();" class=" btn btn-default bluebutton" data-dismiss="modal" formnovalidate="formnovalidate">Close</button>*@
+                    <a href="~/QRCSetup/Index" class="btn btn-default bluebutton">Close</a>
+                    @*<button class="btn btn-default bluebutton" data-dismiss="modal" id="">Close</button>*@
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Confirumation Preview-->
+
+<div id="printtable" class="hide">
+    <div class="" id="DivQRCIndex">
+        <div class="table-responsive">
+            <table width="100%">
+                <tr>
+                    <td valign="top">
+                        <div class="form-group">
+                            <label><strong>QRC Type</strong></label>
+
+                            @if (MyPrintModel == null)
+                            { <div id="lblQRCTYPE" class="form-control-static"></div>}
+                            else
+                            { <div id="lblQRCTYPE" class="form-control-static">@MyPrintModel.QRCTYPE</div>}
+
+                        </div>
+                        <div class="form-group">
+                            <label><strong>QRC Name</strong></label>
+
+                            @if (MyPrintModel == null)
+                            { <div id="lblQRC" class="form-control-static"></div>}
+                            else
+                            { <div id="lblQRC" class="form-control-static">@MyPrintModel.QRCName</div>}
+                        </div>
+
+                        <div class="form-group">
+                            <label><strong>QRC ID</strong></label>
+
+                            @if (MyPrintModel == null)
+                            {
+                            @*<div id="lblQRCId">@Model.EncryptLastQRC</div>*@
+                            <div id="lblQRCId" class="form-control-static">@Model.EncryptLastQRC</div>
+                            }
+                            else
+                            { <div id="lblQRCId" class="form-control-static">@ViewBag.EncryptQRC</div>}
+
+                        </div>
+                        <div class="form-group VehicleTypeDisplay">
+                            <label id="lblVehicleTypeCaption"><strong>Vehicle Type</strong></label>
+
+                            @if (MyPrintModel == null)
+                            { <div id="lblVehicleType" class="form-control-static"></div>}
+                            else
+                            { <div id="lblVehicleType" class="form-control-static">@MyPrintModel.VehicleType</div>}
+
+                        </div>
+                        <div class="form-group VehicleTypeDisplay" id="divmotortype">
+                            <label id="lblMotorTypeCaption"><strong>Motor Type</strong></label>
+
+                            @if (MyPrintModel == null)
+                            { <div id="lblMotorType" class="form-control-static"></div>}
+                            else
+                            { <div id="lblMotorType" class="form-control-static">@MyPrintModel.MotorType</div>}
+
+                        </div>
+                        @if(MyPrintModel !=null && MyPrintModel.VehicleType !=null)
+                        {
+                           <div id="vehicleType" class="form-group">
+                            <label><strong>Vehicle Type</strong></label>
+                            <div id="lblVehicleType" class="form-control-static">@MyPrintModel.VehicleType</div>
+                        </div>
+                        }
+
+                        @if (MyPrintModel != null && MyPrintModel.SpecialNotes != null)
+                        {
+                        <div id="specialnotes" class="form-group">
+                            <label><strong>Special Notes</strong></label>
+                            <div id="lblSpecialNotes" class="form-control-static">@MyPrintModel.SpecialNotes</div>
+                        </div>
+                        }
+                        @if (MyPrintModel != null && MyPrintModel.Make != null)
+                        {
+                        <div id="Vmake" class="form-group">
+                            <label><strong>Make</strong></label>
+                            @*<div id="lblVmake" class="form-control-static"></div>*@
+                            <div id="lblVmake" class="form-control-static">@MyPrintModel.Make</div>
+                        </div>
+                        }
+                        @if (MyPrintModel != null && MyPrintModel.Model != null)
+                        {
+                        <div id="Vmodel" class="form-group">
+                            <label><strong>Model</strong></label>
+                            @*<div id="lblVmodel" class="form-control-static"></div>*@
+                            <div id="lblVmodel" class="form-control-static">@MyPrintModel.Model</div>
+                        </div>
+                        }
+                    </td>
+                    <td valign="top">
+                        <table>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label><strong>Location</strong></label>
+                                        <div class="form-group">
+                                            @if (MyPrintModel == null)
+                                            {
+                                            <div id="lblLocationName" class="form-control-static"></div>
+                                            }
+                                            else
+                                            {
+                                            if (@Model.UpdateMode != null && @Model.UpdateMode == true)
+                                            {
+                                            <div id="lblLocationName" class="form-control-static">@Model.LocationName</div>
+                                            }
+                                            else
+                                            {
+                                            <div id="lblLocationName" class="form-control-static">@MyPrintModel.Location</div>
+                                            }
+                                            }
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <label><strong>QRC Code</strong></label>
+                                    <div id="container">
+                                        <canvas style="width: 200px; height: 200px;"></canvas>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </table>
+
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+}
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+
+<!--File Upload-->
+@*
+<script type="text/javascript" src="@Url.Content(" ~ />Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>*@
+@*
+<script type="text/javascript" src="@Url.Content(" ~ />Scripts/FileUpload/jquery.fileupload.js")"></script>
+<script type="text/javascript" src="@Url.Content(" ~ />Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+<script type="text/javascript" src="@Url.Content(" ~ />Scripts/FileUpload/jquery.iframe-transport.js")"></script>*@
+
+@section Scripts {
+
+    @Scripts.Render("~/bundles/jqueryval")
+<script type="text/javascript">
+
+    var QRCID = '@ViewBag.EncryptLastQRC';
+    var ItemAbberivationList = '@ViewBag.ItemAbberivationList';
+    var $_hddnMotorTypeVehicle = '@Model.MotorTypeVehicle';
+    var _hddnUpdateMode = '@Model.UpdateMode';
+    var QRCodeID = '@Model.QRCodeID';
+    var _errorfound = false;
+    $(document).ready(function () {
+            $(".Phone").mask('(999) 999-9999');
+        //$('#ModalConfirumationPreview').on('hidden.bs.modal', function () {
+        //     
+        //    location.reload();
+        //});
+
+        //$("#ModalConfirumationPreview").modal({ backdrop: 'static' });
+        $('#diverrormessage').text('');
+        $('.VehicleType').hide();
+        $('.vendor').hide();
+        tooglevehicletype();
+        disablevendordetail();
+        // loadmotortype();
+        qrcSizeload();
+        if (_hddnUpdateMode != undefined && _hddnUpdateMode != '' && _hddnUpdateMode.toLowerCase() == 'true') { $('#QRCType').prop('disabled', true); }
+        else { $('#QRCType').removeAttr('disabled'); }
+
+        $("#InsuranceExpDate").datepicker({ format: 'mm/dd/yyyy', startDate: new Date, autoclose: true });
+        $("#WarrantyEndDate").datepicker({ format: 'mm/dd/yyyy', startDate: new Date, autoclose: true });
+
+        if ($("#InsuranceExpDate").val() != "") {
+
+            $("#InsuranceExpDate").val($("#InsuranceExpDate").val().split(' ')[0]);
+        }
+
+        if ($("#WarrantyEndDate").val() != "") {
+            $("#WarrantyEndDate").val($("#WarrantyEndDate").val().split(' ')[0]);
+        }
+
+        $("#QRCType").change(function () {            
+            var QRCName = $("#QRCName").val().toString().trim();
+            var qrcType = $("#QRCType").val();
+            if (qrcType != 36){
+                $('#MotorType').val('');
+            }
+            if (QRCName != "") {
+                checkName(QRCName, qrcType);
+            }
+        });
+
+        $("#QRCName").blur(function () {
+
+            var QRCName = $("#QRCName").val().toString().trim();
+            var qrcType = $("#QRCType").val();
+            if (QRCName != "" && qrcType != "") {
+                checkName(QRCName, qrcType);
+            }
+        });
+        //Added with Tarun(Designer) for collapse on 01/07/2016
+        $('.collapse').on('show.bs.collapse', function () {
+
+            var id = $(this).attr('id');
+            $('a[href="#' + id + '"] .panel-title span').html('');
+            $('a[href="#' + id + '"] .panel-title').find('span').html('<i class="glyphicon glyphicon-minus"></i>');
+        });
+        $('.collapse').on('hide.bs.collapse', function () {
+
+            var id = $(this).attr('id');
+            // $('a[href="#' + id + '"]').closest('.panel-heading').removeClass('active-faq');
+            $('a[href="#' + id + '"] .panel-title span').html('');
+            $('a[href="#' + id + '"] .panel-title').find('span').html('<i class="glyphicon glyphicon-plus"></i>');
+        });
+    });
+
+    function loadvendordetails() {
+        $('.vendor').hide();
+        var val = $('#VendorDetail').val();
+
+        if (val != undefined && val != '' && parseInt(val) > 0) {
+            $('#' + val).show();
+        }
+    }
+
+
+    //$("#heading1").click(function () {
+
+    //    if ($(this).hasClass("icon-plus-sign-alt")) {
+    //        $(this).removeClass("icon-plus-sign-alt");
+    //        if ($("#heading2").hasClass("icon-plus-sign-alt")) {
+    //            $("#heading2").removeClass("icon-plus-sign-alt");
+    //        }
+    //        else {
+    //            $("#heading2").addClass("icon-plus-sign-alt")
+
+    //        }
+    //    }
+    //    else {
+    //        $(this).addClass("icon-plus-sign-alt")
+
+    //    }
+    //});
+
+
+    //$("#heading2").click(function () {
+
+    //    if ($(this).hasClass("icon-plus-sign-alt")) {
+    //        $(this).removeClass("icon-plus-sign-alt");
+    //        if ($("#heading1").$(this).hasClass("icon-plus-sign-alt")) {
+    //            $("#heading1").removeClass("icon-plus-sign-alt");
+    //        }
+    //        else {
+    //            $("#heading1").addClass("icon-plus-sign-alt");
+
+    //        }
+    //    }
+    //    else {
+    //        $(this).addClass("icon-plus-sign-alt")
+
+    //    }
+    //});
+
+
+    function disablevendordetail() {
+
+        var clienttype = $('#ClientType option:selected').val();
+        if (clienttype != undefined && clienttype != '' && parseInt(clienttype) == 100) {
+            $('#VendorDetail').prop('disabled', false);
+        }
+        else { $('#VendorDetail').prop('disabled', true); $('.vendor').hide(); $('#VendorDetail').val(-1); }
+    }
+    function checkvalidation() {
+        var strcheck;
+        if ($('#QRCName').val() == null || $('#QRCName').val() == undefined || $('#QRCName').val() == "") {
+            $('.QRCName').text('Please enter QRC name.')
+            $('#QRCName').keyup(function () {
+                if ($('#QRCName').val() != null || $('#QRCName').val() != undefined) {
+                    $('.QRCName').text('')
+                }
+            })
+            strcheck = false;
+        }
+       
+       else if ($('#QRCType option:selected').text() == "--Select--" || $('#QRCType option:selected').val() == null) {
+           $('.QRCType').text('Please select QRC type.')
+            $($('#QRCType')).change(function () {
+                if ($('#QRCType option:selected').text() != "--Select--" || $('#QRCType option:selected').val() != null) {
+                    $('.QRCType').text('')
+                }
+            })
+            strcheck = false;
+       }
+
+       else if ($('#DefaultSize option:selected').text() == "--Select--" || $('#DefaultSize option:selected').val() == null) {
+           $('.DefaultSize').text('Please select qrc default size.')
+           $($('#DefaultSize')).change(function () {
+               if ($('#DefaultSize option:selected').text() != "--Select--" || $('#DefaultSize option:selected').val() != null) {
+                   $('.DefaultSize').text('')
+               }
+
+           })
+           strcheck = false;
+       }
+
+       else {
+           strcheck = true;
+           loadpreview();
+       }
+        return strcheck;
+    }
+
+    function loadpreview() {
+
+        //alert('loadpreview');
+        var isanyfieldempty = false;
+        var QRCType;
+        var errorMessage;
+        var updateLocationName = '@Model.LocationName';
+
+        if (!isanyfieldempty && $('#QRCType').val() != undefined && $('#QRCType').val() != '') {
+            var QRCType = $('#QRCType option:selected').text();
+            var locationName = $('#drp_MasterLocation option:selected').text();
+            $('#hiddnQRCTYPE').val($('#QRCType').val());
+            $('#QRCTYPECaption').val(QRCType.trim());
+            $('#lblQRCTYPE').text(QRCType.trim());
+
+            if (updateLocationName == '') {
+                $("#lblLocationName").text(locationName.trim());
+            }
+            else {
+                $("#lblLocationName").text(updateLocationName.trim());
+            }
+
+            // $("#lblLocationName").text(locationName.trim());
+            $("#lblSpecialNotes").text($("#SpecialNotes").val());
+
+        }
+        else { errormessage = "QRC Type can not be blank."; isanyfieldempty = true; }
+
+        //if (!isanyfieldempty && $('#ddlAdministrator').val() != undefined && $('#ddlAdministrator').val() != '' && parseInt($('#ddlAdministrator').val(), 10) > 0) {
+
+        //}
+        //else { errormessage = "Please select Administrator."; isanyfieldempty = true; }
+
+        //if (!isanyfieldempty && $('#LocationId').val() != undefined && $('#LocationId').val() != '' && parseInt($('#LocationId').val(), 10) > 0) {
+
+        //}
+        //else { errormessage = "Please select Location."; isanyfieldempty = true; }
+
+        if (!isanyfieldempty && $('#DefaultSize').val() != undefined && $('#DefaultSize').val() != '' && parseInt($('#DefaultSize').val(), 10) > 0) {
+            var QRCDefaultSize = $('#DefaultSize option:selected').text();
+            $('#SizeCaption').val(QRCDefaultSize.trim());
+            $('#lblQRCDefaultSize').text(QRCDefaultSize.trim());
+        }
+        else { errormessage = "QRC Default Size can not be blank."; isanyfieldempty = true; }
+
+        if ($("#QRCType").val() == "36") {
+
+            if (!isanyfieldempty && $('#VehicleType').val() != undefined && $('#VehicleType').val() != '' && parseInt($('#VehicleType').val(), 10) > 0) {
+                var VehicleType = $('#VehicleType option:selected').text();
+                $('#VehicleTypeCaption').val(VehicleType.trim());
+                $('#lblVehicleType').text(VehicleType.trim());
+            }
+            else { errormessage = "Vehicle Type can not be blank."; isanyfieldempty = true; }
+
+            if ($("#VehicleType").val() != "54") {
+                if (!isanyfieldempty && $('#MotorType').val() != undefined && $('#MotorType').val() != '' && parseInt($('#MotorType').val(), 10) > 0) {
+                    var MotorType = $('#MotorType option:selected').text();
+                    $('#MotorTypeCaption').val(MotorType.trim());
+                    $('#lblMotorType').text(MotorType.trim());
+                }
+                else { errormessage = "Motor Type can not be blank."; isanyfieldempty = true; }
+            }
+        }
+
+        if (!isanyfieldempty && $('#QRCName').val() != undefined && $('#QRCName').val() != '') {
+            var QRCName = $('#QRCName').val();
+            $('#lblQRC').text(QRCName.trim());
+        }
+        else { errormessage = "QRC Name can not be blank."; isanyfieldempty = true; }
+
+        //if (!isanyfieldempty && $('#SpecialNotes').val() != undefined && $('#SpecialNotes').val() != '') {
+        //    var SpecialNotes = $('#SpecialNotes').val();
+        //    $('#lblSpecialNotes').text(SpecialNotes.trim());
+        //}
+        //else { errormessage = "Special Notes can not be blank."; isanyfieldempty = true; }
+
+        if (isanyfieldempty) {
+            // bootbox.alert(errormessage);
+            errormessage = "Please enter the mandatory details required to generate QRC."
+            bootbox.alert(errormessage);
+        }
+        else { 
+            if (_hddnUpdateMode != 'True') {
+                //alert('in side _hddnUpdateMode ');
+                var x = new Array();
+                x = QRCID.split(",");
+                var list = new Array();
+                list = ItemAbberivationList.split(",");
+
+                // Get value in alert
+                var dropDownValue = $('#QRCType option:selected').text();
+                if (dropDownValue == "Parking Facility") {
+                    QRCType = list[0];
+                }
+                else if (dropDownValue == "Vehicle") {
+                    QRCType = list[1];
+                }
+                else if (dropDownValue == "Trash Can") {
+                    QRCType = list[2];
+                }
+                else if (dropDownValue == "Elevator") {
+                    QRCType = list[3];
+                }
+                else if (dropDownValue == "Gate Arm") {
+                    QRCType = list[4];
+                }
+                else if (dropDownValue == "Ticket Spitter") {
+                    QRCType = list[5];
+                }
+                else if (dropDownValue == "Bus Station") {
+                    QRCType = list[6];
+                }
+                else if (dropDownValue == "Emergency Phone Systems") {
+                    QRCType = list[7];
+                }
+                else if (dropDownValue == "Moving Walkway") {
+                    QRCType = list[8];
+                }
+                else if (dropDownValue == "Escalators") {
+                    QRCType = list[9];
+                }
+                else if (dropDownValue == "Bathroom") {
+                    QRCType = list[10];
+                }
+                else if (dropDownValue == "Equipment") {
+                    QRCType = list[11];
+                }
+                else if (dropDownValue == "Cellular Phone") {
+                    QRCType = list[12];
+                }
+                else if (dropDownValue == "GT Tracker") {
+                    QRCType = list[13];
+                }
+                else if (dropDownValue == "Shuttle Bus") {
+                    QRCType = list[14];
+                }
+                 
+                //alert(value);
+                $_QRCIDNumber = x[1] + QRCType + x[0];
+                //Commented by Bhushan  on 12Dec2016 for no need to append QRCType in QR Code as mobile scanner wants only code and export as well as same.
+                //$_QRCIDNumber = $_QRCIDNumber + "," + $('#QRCType option:selected').val();
+                $_QRCIDNumber = $_QRCIDNumber;//+ "," + $('#QRCType option:selected').val();
+                // var tt = QRCID;
+                //commented by bhushan dod 04/25/2017 for no need to show qrcid in preview modal
+               // $('#lblQRCId').text(x[1] + QRCType + x[0]);
+                $("#QRCodeID").val(x[1] + "," + QRCType + "," + x[0]);
+
+                //$_QRCIDNumber = $('#lblQRCId').text();
+            }
+            else {
+                 //commented by bhushan dod 04/25/2017 for no need to show qrcid in preview modal
+               // $('#lblQRCId').text(QRCodeID);
+                $_QRCIDNumber = QRCodeID + "," + $('#QRCType option:selected').val();
+            }
+            generateqrcode();
+            
+            if ($("#QRCType").val() != "36") {
+                $('.VehicleTypeDisplay').hide();
+                $(".VehicleTypeDisplay").css('display', 'none');
+                
+            }
+            else {
+                $('.VehicleTypeDisplay').show();
+                $(".VehicleTypeDisplay").css('display', ' ');
+                // $('#VehicleType').prop('disabled', true);
+            }
+
+            if ($('#SpecialNotes').val() == null || $('#SpecialNotes').val() == "") {
+                $("#lblspecialnotes").hide()
+                $("#specialnotes").css('display', 'none');
+            }
+            else {
+                $("#lblspecialnotes").show()
+                $("#specialnotes").css('display', '');
+            }
+            if ($("#QRCType").val() == "36" && $('#MotorType').val() != null && $('#MotorType').val()!== "") {
+                $("#specialnotes").css('display', '');
+                $('.VehicleTypeDisplay').show();
+                $('.VehicleTypeDisplay  #labelMotorType').show();             
+            }
+            else {
+                $(".VehicleTypeDisplay").css('display', 'none');
+                $('.VehicleTypeDisplay  #labelMotorType').hide()
+            }
+
+            if ($('#Make').val() == null || $('#Make').val() == "") {
+                $("#Vmake").css('display', 'none');
+            }
+            else {
+                $('#lblVmake').html($('#Make').val())
+                $('#lblVmake').show()
+                $("#Vmake").css('display', '');
+            }
+            if ($('#Model').val() == null || $('#Model').val() == "") {
+                $("#Vmodel").css('display', 'none');
+            }
+            else {
+                $('#lblVmodel').html($('#Model').val())
+                $('#lblVmodel').show()
+                $("#Vmodel").css('display', '');
+            }
+
+            $("#ModalConfirumationPreview").modal('show');
+        }
+        return !isanyfieldempty;
+    }
+
+    function loadmotortype() {
+        var golfcartimgpath = $('#hddnimgaeserverpath').val();
+        if ($_hddnMotorTypeVehicle == undefined || $_hddnMotorTypeVehicle == '') {
+            $_hddnMotorTypeVehicle = 53;//Motor type Vehicle;
+        }
+
+        if ($('#VehicleType').val() != undefined && $('#VehicleType').val() != '' && parseInt($('#VehicleType').val(), 10) > 0 && parseInt($('#VehicleType').val(), 10) == parseInt($_hddnMotorTypeVehicle, 10)) {
+            $('#MotorType').removeAttr('disabled');
+
+            $('#imgvehicletype').prop('src', "");
+        }
+        else {
+            $('#MotorType').prop('disabled', true); $('#MotorType').val(-1);
+            $('#imgvehicletype').prop('src', "");
+
+            if ($('#VehicleType').val() != undefined && $('#VehicleType').val() != '' && parseInt($('#VehicleType').val(), 10) > 0 && parseInt($('#VehicleType').val(), 10) != parseInt($_hddnMotorTypeVehicle, 10)) {
+                golfcartimgpath = golfcartimgpath + $('#VehicleType option:selected').text() + ".png";
+                $('#imgvehicletype').prop('src', golfcartimgpath);
+            }
+        }
+    }
+
+    function qrcSizeload() {
+        if ($('#DefaultSize').val() != undefined && $('#DefaultSize').val() != '' && parseInt($('#DefaultSize').val(), 10) > 0) { $('[type="submit"]').removeAttr('disabled'); $('#diverrormessage').text(''); }
+        else { $('[type="submit"]').prop('disabled', true); }
+    }
+
+    function readURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    if ($(input).prop('id') == 'Asset') {
+                        $('#AssetImage')
+                        .attr('src', e.target.result)
+                        .width(100)
+                        .height(100);
+                    }
+                    else if ($(input).prop('id') == 'Location') {
+                        $('#LocationImage')
+                            .attr('src', e.target.result)
+                            .width(100)
+                            .height(100);
+                    }
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+
+    function readURLWarrenty(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF", "doc", "docx", "xls", "xlsx", "pdf"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+
+    $("#ddlPurchaseType").change(function () {
+
+        if ($("#ddlPurchaseType").val() == 132) {
+            $(".remark").css('display', 'block');
+        }
+        else {
+            $(".remark").css('display', 'none');
+        }
+    });
+
+
+    var img1 = '@Model.LocationPicturePath';
+
+    if (img1) {
+        $("#LocationImage").attr("src", img1);
+    }
+    var img2 = '@Model.AssetPicturePath';
+    if (img2) {
+        $("#AssetImage").attr("src", img2);
+    }
+
+
+
+    function checkName(QRCName, QRCType) {
+        var locId = $("#drp_MasterLocation").val();
+        if (QRCName.trim() != "" || QRCName.trim() != null) {
+            $.ajax({
+                type: "GET",
+                data: { QRCName: QRCName, QRCType: QRCType, LocId: locId },
+                url: '@Url.Action("checkQRCName", "QRCSetup")',
+                dataType: "JSON",
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                error: function (xhr, status, error) {
+                    closeAjaxProgress();
+                },
+                beforeSend: function () {
+                    showAjaxProgress();
+                },
+                success: function (result) {
+                    if (result.status == 1) {
+                        //$("#qrcNameTxt").css("border-color", "red");
+                        $("#QRCName").val("");
+                        bootbox.alert("QRC Name already exists.");
+                        closeAjaxProgress();
+                    }
+                    $(".ajaxProgress").css("display", "none");
+
+                },
+                Complete: function (result) {
+                    closeAjaxProgress();
+                    event.stopPropagation(); $(".ajaxProgress").css("display", "none");
+                }
+            });// ajax end block
+        }
+    }
+</script>
+}
+
+
+
+

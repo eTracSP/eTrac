@@ -1,0 +1,120 @@
+﻿@model WorkOrderEMS.Models.WorkRequestModel
+
+@{
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string Controller = string.Empty; long AssetId = 0;
+    if (routeValues != null)
+    {
+        //if (routeValues.ContainsKey("action"))
+        //{
+        //    var actionName = routeValues["action"].ToString();
+        //}
+        if (routeValues.ContainsKey("controller"))
+        {
+            Controller = routeValues["controller"].ToString();
+        }
+    }
+    if (Model != null)
+    {
+        AssetId = Model.AssetID;
+    }
+}
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+<div class="panel-body">
+    <div class="row">
+        <div class="">
+            <div class="form-horizontal">
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => model.TaskName, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TaskName, new { @Placeholder = "Task Name", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TaskName)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => model.TaskPriority, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.TaskPriority, new SelectList(ViewBag.TaskPriority, "Value", "Text"), "--Select--", new { @id = "ddlTaskPriority", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TaskPriority)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.TaskType, new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-8">
+                            @Html.DropDownListFor(model => model.TaskType, new SelectList(ViewBag.TaskType, "Value", "Text"), "Select", new { @id = "ddlTaskType", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.TaskType)
+                        </div>
+                    </div>*@
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => model.WorkArea, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.WorkArea, new SelectList(ViewBag.WorkArea, "Value", "Text"), "--Select--", new { @id = "ddlWorkArea", @class = "form-control", @OnChange = "BindAsset()" })
+                        @Html.ValidationMessageFor(model => model.WorkArea)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => model.AssetID, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        <select id="ddlAssetID" name="AssetID" class="form-control valid"></select>
+                        @*@Html.DropDownListFor(model => model.AssetID, new SelectList(ViewBag.Asset, "Value", "Text"), "Select", new { @id = "ddlAssetID", @class = "form-control" })*@
+                        @Html.ValidationMessageFor(model => model.AssetID)
+                    </div>
+                </div>
+
+           
+            <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => model.Remarks, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">                        
+                            @Html.TextAreaFor(model => model.Remarks, new { @Placeholder = "Remarks", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Remarks)                     
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    <label for="Asset Image" class="col-sm-4 control-label">Asset Image</label>
+                    <div class="col-md-8">
+                        <img id="imgAsset" class="img-rounded" src='@Url.Content("~/Content/Images/LocationLogo/no-profile-pic.jpg")' style="width:150px; height:150px;" />
+                    </div>
+                </div>
+
+         
+            <div class="clearfix"></div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                <div class="col-sm-offset-4 col-sm-8">
+
+                </div>
+            </div>
+            <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                <div class="col-sm-offset-4 col-sm-8">
+                    <button class="btn btn-default bluebutton" type="submit">Save</button>
+                    <a href='@Url.Action("Index",Controller)' class="btn btn-default bluebutton">Cancel</a>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+    $_GetAssetByWorkAreaUrl = '@Url.Action("GetAllAssetByWorkArea", "DropDown")';
+    $_AssetID = '@AssetId';
+    $_ImagePath = '@Url.Content("~/Content/Images/LocationLogo/")';
+    $(document).ready(function () {
+        $("#ddlAssetID").change(function () {
+            $.ajax({
+                url: '@Url.Action("GetAssetImage","Common")',
+                type: 'POST',
+                data: JSON.stringify({ AssetID: $("#ddlAssetID").val() }),
+                contentType: 'application/json; charset=utf-8',
+                success: function (data) {
+                    //alert($_ImagePath + data);
+                    $("#imgAsset").attr("src", $_ImagePath + data);
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        });
+    });
+</script>

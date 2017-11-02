@@ -1,0 +1,196 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+/*body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}*/
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+.icons p {
+    margin: 5px;
+    padding: 5px;
+}
+
+.popupupcontent {
+    width: 100%;
+    padding: 0;
+}
+
+.leftdiv {
+    width: 40%;
+    float: left;
+}
+
+.rightdiv {
+    width: 90%;
+    /*float: left;*/
+}
+
+.clear {
+    clear: both;
+}
+
+.leftdivcontent {
+    padding: 20px;
+    border: 1px solid #ccc;
+    margin: 10px;
+}
+
+.rightdivcontent {
+    /*padding: 20px;
+    border: 1px solid #ccc;
+    margin: 10px;*/
+
+    /*Newly Added by Bhushan*/
+     padding: 20px;
+    border: 1px solid #ccc;
+    /* margin-left: 5%; */
+    float: right;
+    width: 95%;
+}
+
+.icons {
+    width: 42%;
+    float: left;
+    margin: 2%;
+    padding: 2%;
+    text-align: center;
+    display: inline-block;
+}
+
+.gridnew {
+    border-top: 1px solid #ccc;
+    border-left: 1px solid #ccc;
+}
+
+    .gridnew th {
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        padding: 5px;
+        background: #16A0CE;
+        color: #fff;
+    }
+
+    .gridnew td {
+        border-bottom: 1px solid #ccc;
+        border-right: 1px solid #ccc;
+        padding: 5px;
+        background: #f1f1f1;
+    }
+
+.billtitle {
+    padding: 10px 0;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.actions {
+    float: right;
+}
+
+.disc {
+    width: 47%;
+    float: left;
+    padding: 2% 0;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+.total {
+    width: 47%;
+    float: right;
+    padding: 2% 0;
+    margin: 10px 0;
+    font-size: 12px;
+}
+
+    .disc p, .total p {
+        margin: 10px 0;
+        padding: 0;
+    }
+
+    .total input {
+        float: right;
+        margin-bottom: 5px;
+        width: 35%;
+    }
+
+.disc textarea {
+    width: 100%;
+}
+
+.rightEcash {
+    border-left: 2px solid #4ab5d9 !important;
+    float: right !important;
+    height: 6px !important;
+    margin-top: 24px !important;
+}
+
+.inputEcash {
+    display: inline-block !important;
+    height: 30px !important;
+    font-size: 16px !important;
+    width: 100px !important;
+    border: 2px solid #4ab5d9 !important;
+    border-width: 0px 0px 1px 0px !important;
+    padding: 0px 5px !important;
+    outline: none !important;
+}
+
+.ecashamt {
+    float: left !important;
+    display: inline-block !important;
+    width: 100% !important;
+}
+
+    .ecashamt > label {
+        margin: 19px 0 0 !important;
+    }
+
+.rightecashinput {
+    border: 0;
+    border-bottom: 1px solid #4ab5d9 !important;
+}
+
+.rightecashinputTop {
+    /*border: 0;
+    border-bottom: 1px solid #4ab5d9 !important;
+    border-top: 1px solid #4ab5d9 !important;*/
+    border: 1px solid #4ab5d9 !important;
+}
+
+.billtitle > p {
+    color: green;
+}
+
+/*responsive classes*/
+@media screen and (max-width:767px) {
+    .leftdiv {
+        width: 100%;
+        float: inherit;
+    }
+
+    .rightdiv {
+        width: 100%;
+        float: inherit;
+    }
+
+    .gridnew {
+        font-size: 12px;
+    }
+
+    .disc, .total {
+        width: 95%;
+    }
+
+    .total {
+        float: none;
+    }
+}

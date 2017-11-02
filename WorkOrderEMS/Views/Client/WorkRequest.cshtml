@@ -1,0 +1,17 @@
+﻿@{
+    ViewBag.Title = "Work Request";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+}
+
+@using (Html.BeginForm("WorkRequest", "Client", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Work Request Details
+        </div>
+        @Html.Partial("_WorkRequest")
+
+    </div>
+}
+
+

@@ -1,0 +1,393 @@
+﻿@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel
+
+@{
+    ViewBag.Title = "Dashbord";
+    ViewBag.TitleDesc = "Statistics Overview";
+    Layout = "~/Views/Shared/_GlobalAdminLayout1.cshtml";
+}
+<script src="~/Scripts/UserDefine/Dashboard.js"></script>
+
+    <div class="row">
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-skyblue">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/admin.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.AdministratorCount</div>
+                            <div class="title">Administrator</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/man.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ManagerCount</div>
+                            <div class="title">Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-yellow">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/emp.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.EmployeeCount</div>
+                            <div class="title">Employee</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-red">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i><img src="~/Content/Images/constant/client.png" alt=""></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ClientCount</div>
+                            <div class="title">Clients</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-4 col-md-6">
+            <div class="panel panel-gray">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-list fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.AllWorkOrder</div>
+                            <div class="title">All workorder</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="panel panel-gray">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-th-list fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.AllAssignedWorkOrder</div>
+                            <div class="title">Assigned Workorder</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="panel panel-gray">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-user-times fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.NoAssignedUsers</div>
+                            <div class="title">UnAssigned Users</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+
+            <ol class="breadcrumb">
+                <li>
+                    <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="In Progress"})">
+                        <i class="fa fa-edit"></i> <span>In Progress</span> <small>Assignments</small>
+                    </a>
+                </li>
+
+
+                <a class="pull-right" id="ViewAll_pendingTbl">View All</a>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="row scrollUpDown" id="Pending_Section_Of_WorkOrder" style="max-height: 210px; height: auto;">
+    </div>
+
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <ol class="breadcrumb">
+                <li>
+                    <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="Pending"})">
+                        <i class="fa fa-file-text-o"></i> <span>Pending Work Request</span> <small>Assignments</small>
+                    </a>
+                </li>
+
+
+                <a class="pull-right" id="ViewAll_LastWeekHistoryTbl">View All</a>
+            </ol>
+        </div>
+    </div>
+
+
+    <div class="row" id="lastweekHistoryAssignments" style="max-height: 210px; height: auto; overflow-y:auto">
+</div>
+
+    <div class="row">
+        <div class="col-lg-12">
+
+            <ol class="breadcrumb">
+                <li>
+                    <a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="UnAssigned"})">
+                        <i class="fa fa-file-text-o"></i> <span>Work Order Request</span> <small>By Client (Un-Assigned)</small>
+                    </a>
+                </li>
+                <a class="pull-right" id="ViewAll_WorkOrderAssigntByClient">View All</a>
+            </ol>
+        </div>
+    </div>
+
+    <div class="row" id="WorkorderCreatedByClient" style="max-height: 210px; height: auto;">
+    </div>
+    <div class="row">
+
+        <div class="col-sm-12">
+            <div class="graybg">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox blue">
+                            <div class="heading"><i class="fa fa-user"></i> Total Users(@{long Cal = @ViewBag.AdministratorCount + @ViewBag.ManagerCount + @ViewBag.EmployeeCount + @ViewBag.ClientCount;}@Cal)  <span> <a href="">View All</a></span></div>
+                            <div class="content">
+                                <ul>
+                                    <li><a href="@Url.Action("listclient", "GlobalAdmin", new {filter="Administrator" })"><i class="fa fa-globe"></i>Admin Users (@ViewBag.AdministratorCount)</a></li>
+                                    <li>
+                                        <a href="@Url.Action("listclient", "GlobalAdmin", new {filter="Manager" })"><i class="fa fa-user"></i>Manager Users (@ViewBag.ManagerCount)</a>
+                                    </li>
+                                    <li><a href="@Url.Action("listclient", "GlobalAdmin", new {filter="Employee" })"><i class="fa fa-user"></i>Employee (@ViewBag.EmployeeCount)</a></li>
+                                    <li><a href="@Url.Action("listclient", "GlobalAdmin", new {filter="Client" })"><i class="fa fa-user"></i> Client(@ViewBag.ClientCount)</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox red">
+                            <div class="heading"><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="All"})"><i class="fa fa-list-ol"></i>Work Order Issued </a><span> <a id="ViewAll_AllWorkTbl">View All</a></span></div>
+                            <div class="content">
+                                <ul id="Box_DisplayAllWorkAssignment" class="scrollUpDown height100">
+                                    @*<li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>*@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox green">
+                            @{
+                                List<WorkOrderEMS.Models.UserLocations> obj_LocationsCount = (List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"];
+
+                            }
+                            <div class="heading"><i class="fa fa-map-marker"></i>Total Location (@obj_LocationsCount.Count())<span> <a id="ViewAll_TotalLocTbl">View All</a></span></div>
+                            <div class="content">
+                                <ul class="scrollUpDown height100">
+                                    @{
+                                        List<WorkOrderEMS.Models.UserLocations> obj_Locations = (List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"];
+                                        foreach (var res in obj_Locations)
+                                        {
+                                            <li><i class="fa fa-angle-double-right"></i><span class="">@res.LocationName</span> </li>
+                                        }
+                                    }                                  
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox orange">
+                            <div class="heading"><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="All"})"><i class="fa fa-warning"></i>Pending Assignment </a><span> <a id="ViewAll_PendingAssignTbl">View All</a></span></div>
+                            <div class="content">
+                                <ul id="PendingAssignmentDashboardBox" class="scrollUpDown height100">
+                                    @*<li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>*@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox gray">
+                            <div class="heading"><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin", new { filter="All"})"><i class="fa fa-edit"></i>Assignment</a><span> <a id="ViewAll_AssignedAssignTbl">View All</a></span></div>
+                            <div class="content">
+                                <ul id="AssignedAssignmentsRequest" class="scrollUpDown height100">
+                                    @*<li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>
+                                        <li><i class="fa fa-angle-double-right"></i><span class="left">Location Name</span> <span class="right">Temp Location 4</span></li>*@
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4 col-md-6">
+                        <div class="colorbox green-blue">
+                            <div class="heading"><a href="@Url.Action("ECash","ECash")"><i class="fa fa-money"></i>E Cash</a><span> <a href="">View All</a></span></div>
+                            <div class="content">
+                                <table class="table">
+                                    <tr>
+                                        <td>Today's Income</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>@ViewBag.EcashData </strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Total income</td>
+                                        <td>&nbsp;</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>@ViewBag.EcashDataWeek </strong></td>
+                                    </tr>
+                                </table>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="clearfix"></div>
+                        <div class="container-fluid">
+                            <!-- Page Heading -->
+                            <!-- /.row -->
+                            @*<div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="alert alert-info alert-dismissable >
+                                                <button type=" button" class="close" data-dismiss="alert" aria-hidden="true">
+                                            &times;</button>
+                                            <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+                                        </div>
+                                    </div>
+                                </div>*@
+                            <!-- /.row -->
+                            @{
+                                string[] Settings = ((string[])Session["eTrac_DashboardSetting"]);
+
+                                <script src="~/GridListing/JqGridScript/PendingWorkRequest.js"></script>
+                                <script src="~/GridListing/JqGridScript/WorkOrderWeekHistory.js"></script>
+                                <script type="text/javascript">
+                                    $_UserID = 0;
+                                    $_isEdit = true;
+                                    $(window).bind('resize', function () {
+                                        var width = $('#jqGrid_container').width();
+                                        $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+                                        $('#tbl_HistoryWorkRequestAssignmentList').setGridWidth(width);
+                                    });
+                                </script>
+
+                                <script>
+                                    $(document).ready(function () {
+                                        //To add Dashboard Sign
+                                        $("#page-wrapper div div ol li i").addClass("fa-dashboard");
+                                        //-----To Set the Location Selected By The User----//
+                                        //Created By Manoj Jaswal
+
+                                        Dashboard.PendingAssignmnet();
+                                        Dashboard.LastWeekWorkAssignments();
+                                        Dashboard.AssignedWorkRequests();
+                                        Dashboard.AllWorkAssignment();
+                                        Dashboard.GetAllWorkRequestCreatedByClient();
+
+                                        //// To get Live Information call after 20 seconds
+                                        //setInterval(function () {
+                                        //    Dashboard.PendingAssignmnet();
+                                        //    Dashboard.LastWeekWorkAssignments();
+                                        //    Dashboard.AssignedWorkRequests();
+                                        //    Dashboard.AllWorkAssignment();
+                                        //    Dashboard.GetAllWorkRequestCreatedByClient();
+                                        //}, 40000);//25000 = 0.41666667 min
+                                        var DashboardUrl = { "AllEmployeesList": '@Url.Action("GetUserByManager", "Manager")' }
+                                        $("#AllLocation").click(function () {
+                                            $.ajax({
+                                                type: "POST",
+                                                url: '@Url.Action("SetUserDashboardLocation", "GlobalAdmin")',
+                                                data: '',
+                                                beforeSend: function () {
+                                                    //new fn_showMaskloader('please wait...Deleting');
+                                                },
+                                                success: function (Data) {
+
+                                                },
+                                                error: function () {
+                                                    alert("Error:")
+                                                },
+                                                complete: function () {
+                                                    window.location.reload();
+                                                }
+                                            })
+                                            //------END------//
+                                        })
+                                        $("#SingleLocation").click(function () {
+                                            var LocationID = $("#drp_MasterLocation").val();
+                                            var LocationName = $("#drp_MasterLocation option:selected").text();
+                                            $.ajax({
+                                                type: "POST",
+                                                url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                                                data: { LocationID: LocationID, LocationName: LocationName },
+                                                beforeSend: function () {
+                                                    //new fn_showMaskloader('please wait...Deleting');
+                                                },
+                                                success: function (Data) {
+
+                                                },
+                                                error: function () {
+                                                    alert("Error:")
+                                                },
+                                                complete: function () {
+                                                    window.location.reload();
+                                                }
+                                            })
+                                        })
+                                    })
+
+                                </script>
+
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>

@@ -1,0 +1,1505 @@
+﻿@model WorkOrderEMS.Models.CommonModels.WorkRequestAssignmentModel
+@{
+    long splProjectID = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["SpecialProjectID"]);
+    long workRequestProjectID = Convert.ToInt32(System.Configuration.ConfigurationManager.AppSettings["WorkRequestProjectID"]);
+    long UserType = 0; bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        UserType = ObjLogin.UserRoleId;
+
+        /*Get Active User Type Flag*/
+        switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+        {
+            case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                GloblaAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                ITAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Administrator:
+                OnlyAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Manager:
+                ManagerUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Employee:
+                EmployeeUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Client:
+                ClientUser = true;
+                break;
+            default:
+                GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+                break;
+        }
+    }
+    string imgaeserverpath = Url.Content("~/Content/Images/ProjectLogo/");
+    string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    string myModelprefixwidProfileImage = "WorkOrderImage";
+    string myModelmyProfileImage = "myWorkOrderImage";
+    int state = Model.StateId ?? 0;
+    var WorkAssignmet = ViewBag.WorkAssignmet;
+    var AssignedToEmployee = ViewBag.AssignedToEmployee;
+    var AssetID = ViewBag.AssetId;
+    var WOImage = ViewBag.WorkOrderImageModal;
+}
+
+@Html.AntiForgeryToken()
+@Html.ValidationSummary()
+<script src="~/Scripts/bootstrap-checkbox.js"></script>
+<script src="~/Scripts/BootStrap-Multiselect/JS/bootstrap-tooltip.js"></script>
+<script src="~/Scripts/common/Common.js"></script>
+@*@Styles.Render("~/Scripts/ClockPickerCss")
+    @Scripts.Render("~/Scripts/ClockPickerJs")*@
+
+
+</div>
+</section>
+<style>
+    .ui-datebox-container {
+        width: 215px !important;
+        margin-left: 108px;
+    }
+
+    .ui-datebox-flipcenter {
+        width: 180px !important;
+    }
+
+    .bg-success {
+        background-color: #CCC;
+    }
+
+    .ui-datebox-controls > .btn {
+        background-color: #d4d4d4 !important;
+        border-color: #d4d4d4 !important;
+    }
+</style>
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div class="~/Scripts/MobiTimePicker/panel panel-default first-mar10">
+
+
+        <div id="collapseOne" class="panel-collapse collapse in panel panel-default">
+            <div class="panel-heading">
+
+
+                Work Order <span>Details</span>
+
+
+            </div>
+            <div class="panel-body">
+                <div class="panel-body">
+                    @using (Html.BeginForm("WorkRequestAssignment", "GlobalAdmin", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                    <div class="" id="workOrderDiv">
+                        @Html.HiddenFor(model => model.WorkOrderCode)
+                        @Html.HiddenFor(model => model.WorkRequestAssignmentID)
+                        @Html.HiddenFor(model => model.WorkOrderCodeID)
+                        @*@Html.HiddenFor(model => model.ProjectDesc)*@
+                        @*@Html.HiddenFor(model => model.AssignedTimeInterval)*@
+                        @*@Html.Hidden("txtAssignedTime");*@
+
+
+                        <div class="form-horizontal">
+                            @Html.ValidationSummary(true)
+                            <div class="clearfix"></div>
+                            @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    @Html.LabelFor(model => model.WorkOrderCodeID, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Model.WorkOrderCode
+                                        @Model.WorkOrderCodeID
+
+                                    </div>
+                                </div>
+                                }
+                            <div class="clearfix"></div>
+                            @if (Model != null)
+                                {
+                                    if (Model.WorkRequestAssignmentID != 0)
+                                    {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.WorkRequestProjectType, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.WorkRequestProjectType, new SelectList(ViewBag.WorkRequestProjectTypeID, "GlobalCodeId", "CodeName"), new { @id = "ddlWorkRequestProjectType", @class = "form-control", @onchange = "showHideControl('changeFun')", @disabled = "disabled" })
+                                        @*@Html.ValidationMessageFor(model => model.WorkRequestType)*@
+                                    </div>
+                                </div>
+
+                                    }
+                                    else
+                                    {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.WorkRequestProjectType, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.WorkRequestProjectType, new SelectList(ViewBag.WorkRequestProjectTypeID, "GlobalCodeId", "CodeName"), new { @id = "ddlWorkRequestProjectType", @class = "form-control", @onchange = "showHideControl('changeFun')" })
+                                        @*@Html.ValidationMessageFor(model => model.WorkRequestType)*@
+                                    </div>
+                                </div>
+                                    }
+                                }
+                                else
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.WorkRequestProjectType, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.WorkRequestProjectType, new SelectList(ViewBag.WorkRequestProjectTypeID, "GlobalCodeId", "CodeName"), new { @id = "ddlWorkRequestProjectType", @class = "form-control", @onchange = "showHideControl('changeFun')" })
+                                        @*@Html.ValidationMessageFor(model => model.WorkRequestType)*@
+                                    </div>
+                                </div>
+                                }
+                            <div id="divWorkRequest">
+
+                                @*<div class="clearfix"></div>*@
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @*@Html.LabelFor(model => model.WorkRequestType, new { @class = "col-sm-4 control-label star" })*@
+                                    @Html.Label("Work Request Type", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        @Html.DropDownListFor(model => model.WorkRequestType, new SelectList(ViewBag.WorkRequestType, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlWorkRequestType", @class = "form-control required requiredselect" })
+                                        @Html.ValidationMessageFor(model => model.WorkRequestType)
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.PriorityLevel, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.PriorityLevel, new SelectList(ViewBag.PriorityLevel, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlPriorityLevel", @class = "form-control required requiredselect", @onchange = "showHideAssignEmployeePrioritywise()" })
+                                        @Html.ValidationMessageFor(model => model.PriorityLevel)
+                                    </div>
+                                </div>
+
+                                @*<div class="clearfix"></div>*@
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.Label("Registered Asset", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <p class="form-control-static  alert alert-info">
+                                            <input type="radio" name="RegisteredAssest" id="rdRegisteredAssestY" value="1" class="nodisable" checked="checked" />
+                                            <span>Yes</span>
+                                            &nbsp;&nbsp;&nbsp;<input type="radio" name="RegisteredAssest" id="rdRegisteredAssestN" value="0" class="nodisable" />
+                                            <span>No</span>
+
+                                        </p>
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 Asset">
+                                    @Html.LabelFor(model => model.AssetID, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.AssetID, new SelectList(ViewBag.Asset, "Value", "Text"), "--Select--", new { @id = "ddlAsset", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.AssetID)
+                                    </div>
+                                </div>
+
+
+
+                                @*<div class="clearfix"></div>*@
+
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.Label("Safety Hazard", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <p class="form-control-static  alert alert-info">
+
+                                            @Html.RadioButtonFor(model => model.SafetyHazard, true, new { @class = "yes" })Yes &nbsp; @Html.RadioButtonFor(model => model.SafetyHazard, false, new { @class = "no", @checked = true })No
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.ProblemDesc, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextAreaFor(model => model.ProblemDesc, new { @Placeholder = "Problem Description", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ProblemDesc)
+
+                                    </div>
+
+                                </div>
+                                @*Added bymanoj*@
+
+                            </div>
+                            <div id="workImage">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 WorkOrderImage">
+                                    @Html.LabelFor(model => model.WorkOrderImage, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+
+                                        @if (Model.AssignedWorkOrderImage != null && Model.AssignedWorkOrderImage != "")
+                                            {
+                                                Image = Model.AssignedWorkOrderImage;
+                                            }
+                                        <img id='imgWorkOrderImage' name='imgWorkOrderImage' src="@Url.Content(Image)"
+                                             class="img-rounded" alt="No Image " style="width:110px; height:110px;">
+                                        <input type="file" id='WorkOrderImage' name='WorkOrderImage' onchange="WorkOrderImagereadURL(this);" value="Upload WorkOrder Image">
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if (Model != null)
+                                {
+                                    if (Model.WorkRequestAssignmentID != 0)
+                                    {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 FacilityRequest" style="display:none">
+                                    @Html.Label("Facility Request", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.FacilityRequestId, new SelectList(ViewBag.FacilityRequest, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlFacilityRequest", @class = "form-control", @onchange = "showHideControl('changeFun')", @disabled = "disabled" })
+                                        @Html.ValidationMessageFor(model => model.FacilityRequestId)
+                                    </div>
+                                </div>
+                                    }
+                                    else
+                                    {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 FacilityRequest" style="display:none">
+                                    @Html.Label("Facility Request", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.FacilityRequestId, new SelectList(ViewBag.FacilityRequest, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlFacilityRequest", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.FacilityRequestId)
+                                    </div>
+                                </div>
+                                    }
+                                }
+                                else
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 FacilityRequest" style="display:none">
+                                    @Html.Label("Facility Request", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.FacilityRequestId, new SelectList(ViewBag.FacilityRequest, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "ddlFacilityRequest", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.FacilityRequestId)
+                                    </div>
+                                </div>
+                                }
+
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.CustomerName, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.CustomerName, new { @Placeholder = "Customer Name", @class = "form-control LetterOnlyFr" })
+                                        @Html.ValidationMessageFor(model => model.CustomerName)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.CustomerContact, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.CustomerContact, new { @Placeholder = "Contact No", @minlength = "10", @maxlength = "10", @class = "NumericOnly1 form-control" })
+                                        @Html.ValidationMessageFor(model => model.CustomerContact)
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.VehicleColor, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star " })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.VehicleColor, new { @Placeholder = "Vehicle Color", @class = "form-control LetterOnlyFr" })
+                                        @Html.ValidationMessageFor(model => model.VehicleColor)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.VehicleMake, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.VehicleMake, new { @Placeholder = "Vehicle Make", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.VehicleMake)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.VehicleModel, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.VehicleModel, new { @Placeholder = "Vehicle Model", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.VehicleModel)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.DriverLicenseNo, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.DriverLicenseNo, new { @Placeholder = " Driver License No", @data_facility_datepicker = "true", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.DriverLicenseNo)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.VehicleYear, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.VehicleYear, new { @Placeholder = "Vehicle Year", @data_facility_datepicker = "true", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.VehicleYear)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.CurrentLocation, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.CurrentLocation, new { @Placeholder = "Location Name", @class = "form-control LetterOnlyFr" })
+                                        @Html.ValidationMessageFor(model => model.CurrentLocation)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.Address, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.Address, new { @Placeholder = "Address", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Address)
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.City, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.City, new { @Placeholder = "Location City", @maxLength = "100", @class = "form-control required isLetterOnly" })
+                                        @Html.ValidationMessageFor(model => model.City)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 Asset">
+                                    @Html.Label("State", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateId, "FrStateId", "StateName"), "--Select--", new { @id = "ddlState", @class = "form-control", @value = Model.StateId })
+                                        @Html.ValidationMessageFor(model => model.StateId)
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.ZipCode, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.ZipCode, new { @Placeholder = "Location Zip Code", @maxLength = "5", @class = "Postal form-control", onkeypress = "return isNumberKey(event) " })
+                                        @Html.ValidationMessageFor(model => model.ZipCode)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-facility="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    @Html.LabelFor(model => model.LicensePlateNo, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.LicensePlateNo, new { @Placeholder = "License plate number", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.LicensePlateNo)
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="divSpecialProject" style="display:none">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 projectDescription">
+                                    @Html.LabelFor(model => model.ProjectDesc, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextAreaFor(model => model.ProjectDesc, new { @Placeholder = "Project Description", @class = "form-control required loadcls" })
+                                        @Html.ValidationMessageFor(model => model.ProjectDesc)
+                                    </div>
+
+                                </div>
+                            </div>
+                            @if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssignEmp">
+                                    @Html.Label("Assign Employee", new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-sm-7">
+                                        <p class="form-control-static  alert alert-info">
+                                            <input type="radio" name="1AssignToUserId" id="rdAssignToUserIdY" value="1" class="nodisable" checked="checked" />
+                                            <span>Yes</span>
+                                            &nbsp;&nbsp;&nbsp;<input type="radio" name="1AssignToUserId" id="rdAssignToUserIdN" value="0" class="nodisable" />
+                                            <span>No</span>
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssignToUser">
+                                    @Html.LabelFor(model => model.AssignToUserId, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.DropDownListFor(model => model.AssignToUserId, new SelectList(ViewBag.AssignToUser, "Value", "Text"), "--Select--", new { @id = "ddlAssignToEmployee", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.AssignToUserId)
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssignTime">
+                                    @Html.LabelFor(model => model.AssignedTime, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label" })
+                                    @*<div class="col-md-8 col-sm-8 col-xs-12">
+                                            <div class="duration"></div>
+                                        </div>*@
+                                    <div class="clockpicker col-md-8 col-sm-8 col-xs-12" data-placement="bottom" data-align="top" data-autoclose="true">
+                                        @*<input class="form-control form-control2" name="AssignedTimeInterval" id="txtAssignedTime" placeholder="Choose Time" onkeypress="return isNumberKey(event)" type="text" data-role="datebox" data-options='{"mode":"durationflipbox","useFocus":true,"overrideDurationOrder":["h","i"],"overrideDurationFormat": "%Dl:%DM" }'>*@
+                                        @Html.TextBoxFor(model => model.AssignedTimeInterval, new { @class = "form-control", @onkeypress = "return isNumberKey(event)",@id= "txtAssignedTime", @placeholder = "Choose Time",data_role = "datebox", data_options = "{\"mode\":\"durationflipbox\",\"useFocus\":true,\"overrideDurationOrder\":[\"h\",\"i\"],\"overrideDurationFormat\": \"%Dl:%DM\" }" })
+                                        <span class="pull-left text-info" style="color:gray;"><i>(HH:MM i.e 00:30)</i></span>
+                                        @Html.ValidationMessageFor(model => model.AssignedTimeInterval)
+                                    </div>
+                                </div>
+
+                                @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssignTime">
+                                        <label class="col-sm-4 col-md-4 col-xs-12 control-label">Dummy Time</label>
+                                        <div class="clockpicker col-md-8 col-sm-8 col-xs-12" data-placement="bottom" data-align="top" data-autoclose="true">
+                                            @Html.TextBoxFor(model => model.AssignedTimeInterval, new { @id = "timepicker1", @class = "form-control timeass form-control2", @onkeypress = "return isNumberKey(event)", @maxlength = "9", @placeholder = "Assigned Time Limit (Minutes)" })
+                                            <span class="input-group-addon"><i class="glyphicon glyphicon-time"></i></span>
+                                            <span class="pull-left text-info" style="color:gray;"><i>(HH:MM i.e 00:30)</i></span>
+                                            @Html.ValidationMessageFor(model => model.AssignedTimeInterval)
+                                        </div>
+                                    </div>*@
+                                }
+                            <div id="" data-continues="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    <label class="col-sm-4 col-md-4 col-xs-12 control-label star">Start Date</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.StartDate, new { @Placeholder = "Select Start Date", @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.StartDate)
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="" data-continues="true">
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 ">
+                                    <label class="col-sm-4 col-md-4 col-xs-12 control-label star">End Date</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextBoxFor(model => model.EndDate, new { @Placeholder = "Select End Date", @class = "form-control", @maxlength = "10" })
+                                        @Html.ValidationMessageFor(model => model.EndDate)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-continues="true">
+
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    @Html.LabelFor(model => model.CrStartTime, new { @class = "col-sm-4 col-md-4 col-xs-12 control-label star" })
+                                    <div class="clockpicker col-md-8 col-sm-8 col-xs-12" data-placement="bottom" data-align="top" data-autoclose="true">
+                                        @*<input class="form-control form-control2" name="CrStartTime" id="ContinuesStartTime" placeholder="Choose Start Time" onkeypress="return isNumberKey(event)" type="text" data-role="datebox" data-options='{"mode":"durationflipbox","useFocus":true,"overrideDurationOrder":["h","i"],"overrideDurationFormat": "%Dl:%DM" }'>*@
+                                        @Html.TextBoxFor(model => model.CrStartTime, new { @class = "form-control", @onkeypress = "return isNumberKey(event)", @id = "ContinuesStartTime", @placeholder = "Choose Start Time", data_role = "datebox", data_options = "{\"mode\":\"durationflipbox\",\"useFocus\":true,\"overrideDurationOrder\":[\"h\",\"i\"],\"overrideDurationFormat\": \"%Dl:%DM\" }" })
+
+
+                                        @*@Html.TextBoxFor(model => model.CrStartTime, new { @id = "ContinuesStartTime", @class = "form-control form-control2", @onkeypress = "return isNumberKey(event)", @maxlength = "9", @placeholder = "Start Time" })*@
+                                        <span class="pull-left text-info" style="color:gray;"><i>(HH:MM i.e 00:30)</i></span>
+                                        @Html.ValidationMessageFor(model => model.CrStartTime)
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="" data-continues="true">
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12 ">
+
+                                    <label class="col-sm-2 control-label star">Weekdays</label>
+                                    <div id="chkboxdivCR" style="overflow:auto;">
+                                        @foreach (var per in Model.WeekDaysList)
+                                            {
+                                                if (Model.AssignedWeekDaysList != null && Model.AssignedWeekDaysList.Count > 0)
+                                                {
+                                                    if (Model.AssignedWeekDaysList.Exists(x => x == per.Name))
+                                                    {
+                                            <div class="checkbox squaredTwo weekday @per.Name ">
+                                                <input type="checkbox" class="large" id='@per.ID' checked="checked" name='@per.Name' />&nbsp;<span>@per.Name</span>
+                                                <label for="squaredTwo"></label>
+                                            </div>
+                                                    }
+                                                    else
+                                                    {
+                                            <div class="checkbox squaredTwo weekday @per.Name ">
+                                                <input type="checkbox" class="large" id='@per.ID' name='@per.Name' />&nbsp;<span>@per.Name</span>
+                                                <label for="squaredTwo"></label>
+                                            </div>
+                                                    }
+                                                }
+                                                else
+                                                {
+                                            <div class="checkbox squaredTwo weekday @per.Name ">
+
+                                                <input type="checkbox" class="large" id='@per.ID' checked="checked" name='@per.Name' />&nbsp;<span>@per.Name</span>
+                                                <label for="squaredTwo"></label>
+                                            </div>
+                                                }
+                                            }
+
+                                        @Html.HiddenFor(model => model.WeekDayLst)
+                                        @Html.ValidationMessageFor(model => model.WeekDayLst, "Please select weekdays.")
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="clearfix"></div>
+                            @if (Model.AssetPicture != null)
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssetImage Asset">
+                                    <label for="Asset Image" class="col-sm-4 col-md-4 col-xs-12 control-label">Asset Image</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <img id="imgWorkRequest" class="img-rounded" src='@Url.Content(Model.AssetPicture)' style="width:150px; height:150px;" />
+                                        <input type="hidden" id="hddnAssetimagepath" value="@imgaeserverpath">
+
+                                    </div>
+                                </div>
+                                }
+                                else
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 AssetImage Asset">
+                                    <label for="Asset Image" class="col-sm-4 col-md-4 col-xs-12 control-label">Asset Image</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <img id="imgWorkRequest" class="img-rounded" src='@Url.Content("../Content/Images/ProjectLogo/no-profile-pic.jpg")' style="width:150px; height:150px;" />
+                                        <input type="hidden" id="hddnAssetimagepath" value="@imgaeserverpath">
+
+                                    </div>
+                                </div>
+                                }
+
+                            @if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+                                {
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 EmployeeImage AssignToUser">
+                                    <label for="Asset Image" class="col-sm-4 col-md-4 col-xs-12 control-label">Employee Image</label>
+                                    <div class="col-md-8 col-sm-8 col-xs-12">
+                                        <img id="EmployeeImage" class="img-rounded" src='@Url.Content("../Content/Images/ProjectLogo/no-profile-pic.jpg")' style="width:150px; height:150px;" />
+                                        <input type="hidden" id="hddnEmployeeimagepath" value="@imgaeserverpath">
+
+                                    </div>
+                                </div>}
+                            <div class="clearfix"></div>
+                            <div class="form-group  margintop10">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="pull-right">
+                                        <button onclick="return getWeekDayNames();" class="btn btn-default bluebutton" type="submit" id="SaveWorkOrder">Submit Work Request</button>
+                                        @*<button class="btn btn-default bluebutton" type="button">Cancel</button>*@
+                                        @if (Model != null && Model.WorkRequestAssignmentID != null && Model.WorkRequestAssignmentID > 0)
+                                            {
+                                            <a href="~/GlobalAdmin/WorkAssignmentList" class="btn btn-default bluebutton">Cancel</a>
+                                                //Commented By Bhushan Dod on 31/03/2015 for Navigate to dashboard after click on cancel
+                                            @*@Html.ActionLink("Cancel", "WorkAssignmentList", "GlobalAdmin", null, new { @class = "btn btn-default bluebutton" })*@
+                                            }
+                                            else
+                                            {
+                                            @*@Html.ActionLink("Cancel", "WorkAssignmentList", "GlobalAdmin", null, new { @class = "btn btn-default bluebutton" })*@
+                                            <a href="~/GlobalAdmin/WorkAssignmentList" class="btn btn-default bluebutton">Cancel</a>
+                                                //Commented By Bhushan Dod on 31/03/2015 for Navigate to dashboard after click on cancel
+                                            @*@Html.ActionLink("Cancel", "WorkRequestAssignment", "GlobalAdmin", null, new { @class = "btn btn-default bluebutton" })*@
+                                            }
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="modal fade" id="WorkOrderRequestResult" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                @*<a href="~/GlobalAdmin/WorkAssignmentList" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></a>*@
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myWorkOrderModalLabel">Work Order Detail</h4>
+            </div>
+
+            <div class="modal-body" id="WorkOrdermediumeditpopup">
+                <div class="row">
+                    <div class="license-back2">
+                        <div class="">
+                            <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                <label class="col-sm-6 control-label" for="">Assigned WorkOrder ID:</label>
+                                <div class="pull-left">
+                                    @ViewBag.WorkAssignmet
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                <label class="col-sm-6 control-label" for="">Project Type:</label>
+                                <div class="pull-left" id="Res_ProjectType">
+                                </div>
+                            </div>
+                            @if (ViewBag.ProjectType == 128)
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Work Request Type:</label>
+                                    <div class="pull-left" id="WorkRequestType">
+                                        @ViewBag.WorkRequestTypeName
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.ProjectType != 279)
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Priority Level:</label>
+                                    <div class="pull-left" id="Res_ProrityLevel">
+                                        @ViewBag.ProrityLevel
+                                    </div>
+                                </div>}
+                            @if (ViewBag.ProjectType == 256)
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Facility Request:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.FacilityRequestType
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+
+                                    <label class="col-sm-6 control-label" for="">Customer Name:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.CustomerName
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Contact Number:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.CustomerContact
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Driver License No:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.DriverLicenseNo
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Vehicle Color:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.VehicleColor
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Vehicle Make:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.VehicleMake
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Vehicle Model:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.VehicleModel
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Vehicle Year:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.VehicleYear
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.ProjectType != 256)
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 " id="divAssignEmp">
+
+                                    <label class="col-sm-6 control-label" for="">Assigned Employee: </label>
+                                    <div class="pull-left" id="Res_AssginToEmployee">
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11  ">
+
+                                    <label class="col-sm-6 control-label" for=""> </label>
+
+                                    <div class="col-md-6">
+                                        <img src="../Content/Images/ProjectLogo/no-profile-pic.jpg" id="AssignedEmployeeImage" style="width:100px; height:100px;" />
+
+                                    </div>
+
+                                </div>
+                                if (ViewBag.ProjectType != 279 && ViewBag.ProjectType != 129)
+                                {
+                                    <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11  " id="divAssetImage">
+
+                                        <label class="col-sm-6 control-label" for="">Asset Image</label>
+
+                                        <div class="col-md-6">
+                                            <img src="../Content/Images/ProjectLogo/no-profile-pic.jpg" id="AssetImage" style="width:100px; height:100px;" />
+
+                                        </div>
+
+                                    </div>}
+
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11  " id="divWOImage">
+
+                                    <label class="col-sm-6 control-label" for=""> Workorder Image</label>
+                                    <div class="col-md-6">
+                                        <img src="@ViewBag.WorkOrderImage" id="WorkOrderImage" style="width:100px; height:100px;" />
+                                    </div>
+                                </div>
+                            }
+                            @if (ViewBag.ProjectType == 279)
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+
+                                    <label class="col-sm-6 control-label" for="">Start Date:</label>
+                                    <div class="pull-left" id="CRStartDate">
+                                        @ViewBag.CRStartDate
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+
+                                    <label class="col-sm-6 control-label" for="">End Date:</label>
+                                    <div class="pull-left" id="CREndDate">
+                                        @ViewBag.CREndDate
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Start Time:</label>
+                                    <div class="pull-left" id="CRStartTime">
+                                        @ViewBag.CRStartTime
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Weekdays:</label>
+                                    <div class="pull-left" id="FRcustomername">
+                                        @ViewBag.Weekdays
+                                    </div>
+                                </div>
+                                if (ViewBag.CRTimeAssigned != null && ViewBag.CRTimeAssigned != "")
+                                {
+                                    <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                        <label class="col-sm-6 control-label" for="">Time Assigned:</label>
+                                        <div class="pull-left" id="CRTimeAssigned">
+                                            @ViewBag.CRTimeAssigned
+                                        </div>
+                                    </div>}
+
+                            }
+                            @if (ViewBag.ProblemDesc != null && ViewBag.ProblemDesc != "")
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Problem Description:</label>
+                                    <div class="pull-left" id="ProblemDesc">
+                                        @ViewBag.ProblemDesc
+                                    </div>
+                                </div>}
+                            @if (ViewBag.ProjectDesc != null && ViewBag.ProjectDesc != "")
+                            {
+                                <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                    <label class="col-sm-6 control-label" for="">Project Description:</label>
+                                    <div class="pull-left" id="ProjectDesc">
+                                        @ViewBag.ProjectDesc
+                                    </div>
+                                </div>}
+                            @if (ViewBag.ProjectType != 256 && ViewBag.ProjectType != 279 && ViewBag.TimeAssigned != null && ViewBag.TimeAssigned != "")
+                            { <div class="form-group col-lg-11 col-md-11 col-sm-11 col-xs-11 ">
+                                <label class="col-sm-6 control-label" for="">Time Assigned:</label>
+                                <div class="pull-left" id="TimeAssigned">
+                                    @ViewBag.TimeAssigned
+                                </div>
+                            </div>
+
+                            }
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="panel-footer">
+                <div class="text-right">
+                    <button id="btnCancelqwe" class="btn btn-default bluebutton" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirumation Preview-->
+<script type="text/javascript">
+
+    $_EmployeeUser = '@EmployeeUser';
+    var splProjectID = '@splProjectID'
+    var workRequestProjectID = '@workRequestProjectID';
+
+    var arr = [];
+
+    $("[data-weekday='true']").click(function () {
+        if ($(this).is(":checked")) {
+            //alert($(this).attr("data-val"));
+            arr.push($(this).attr("data-val"));
+
+            //for (var ik = 0 ; ik < arr.length; ik++) {
+            //    //alert(arr[ik]);
+            //}
+
+        }
+        else {
+            arr.pop($(this).attr("data-val"));
+            //for (var ik = 0 ; ik < arr.length; ik++) {
+            //    alert(arr[ik]);
+            //}
+        }
+    });
+
+    function showHideControl(pgLoadChk) {
+        if (pgLoadChk != "pageload") {
+            $('#ProjectDesc').val('');
+            $('#txtAssignedTime').val('');
+            $('#ContinuesStartTime').val('');
+        }
+
+        $('*').filter('[data-facility="true"]').hide();  // this will hide the facility Div content
+        $('*').filter('[data-Continues="true"]').hide();
+        if ($("#ddlWorkRequestProjectType").val() == splProjectID) {//Special project
+            $('#divWorkRequest').find('input:text, select, textarea').val('');
+            $("#ddlAssignToUser").val('')
+            $("#divSpecialProject").css("display", "block");
+            $("#divWorkRequest").css("display", "none");
+            $("#workImage").css("display", "block");
+            $(".projectDescription").css("display", "block");
+            $('.AssetImage').css("display", "none");
+            $(".AssignEmp").css("display", "none");
+            $(".AssignToUser").css("display", "block");
+            $(".AssignTime").css("display", "block");
+            $(".FacilityRequest").css("display", "none");
+        }
+        else if ($("#ddlWorkRequestProjectType").val() == workRequestProjectID) {
+            $('#divSpecialProject').find('input:text, select, textarea').val('');
+            $("#divSpecialProject").val('')
+            $("#divSpecialProject").css("display", "none");
+            $("#divWorkRequest").css("display", "block");
+            $("#workImage").css("display", "block");
+            $(".AssetImage").css("display", "block");
+            $(".AssignEmp").css("display", "block");
+            $(".AssignToUser").css("display", "block");
+            $(".AssignTime").css("display", "block");
+            $(".FacilityRequest").css("display", "none");
+        }
+        else if ($("#ddlWorkRequestProjectType").val() == 256) {
+            $('#divWorkRequest').find('input:text, select, textarea').val('');
+            $("#ddlAssignToUser").val('')
+            $(".projectDescription").css("display", "none");
+            $("#divSpecialProject").css("display", "block");
+            $("#divWorkRequest").css("display", "none");
+            $("#workImage").css("display", "none");
+            $('.AssetImage').css("display", "none");
+            $(".AssignEmp").css("display", "none");
+            $(".AssignToUser").css("display", "none");
+            $(".AssignTime").css("display", "none");
+            $(".FacilityRequest").css("display", "block");
+
+            $('*').filter('[data-facility="true"]').show();
+
+            //alert('Tu toh mera bhai h pagley');
+            $("#CustomerContact").on("keypress,keyup,keydown", function (e) {
+                $(this).val($(this).val().replace(/[^0-9]+/g, ''));
+            }); //End
+
+            $("#VehicleYear").datepicker({
+                format: "yyyy",
+                viewMode: "year",
+                minViewMode: "years",
+                endDate: "+2y",
+                autoclose: true
+            });
+        }
+        else if ($("#ddlWorkRequestProjectType").val() == 279) {
+            $('#divWorkRequest').find('input:text, select, textarea').val('');
+            $("#ddlAssignToUser").val('')
+            $(".projectDescription").css("display", "block");
+            $("#divSpecialProject").css("display", "block");
+            $("#divWorkRequest").css("display", "none");
+            $("#workImage").css("display", "block");
+            $('.AssetImage').css("display", "none");
+            $(".AssignEmp").css("display", "none");
+            $(".AssignToUser").css("display", "block");
+            $(".AssignTime").css("display", "block");
+            $(".FacilityRequest").css("display", "none");
+            $(".WorkOrderImage").show();
+            $('*').filter('[data-facility="true"]').hide();
+
+
+            $("#ddlAssignToEmployee").parent("div").parent('div').show();
+            $('*').filter('[data-Continues="true"]').show();
+
+            //$("#StartDate").datepicker({
+            //    format: "mm/dd/yyyy",
+            //    startDate: new Date(),
+            //    autoclose: true
+            //});
+
+            //$("#EndDate").datepicker({
+            //    format: "mm/dd/yyyy",
+            //    startDate: new Date(),
+            //    autoclose: true
+            //});
+            var startDate = new Date();
+            var FromEndDate = new Date();
+            var ToEndDate = new Date();
+            ToEndDate.setDate(ToEndDate.getDate());
+
+            $('#StartDate').datepicker({
+                format: "mm/dd/yyyy",
+                startDate: new Date(),
+                autoclose: true
+            })
+             .on('changeDate', function (selected) {
+                 startDate = new Date(selected.date.valueOf());
+                 startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+                 $('#EndDate').datepicker('setStartDate', startDate);
+             });
+            $('#EndDate').datepicker({
+                format: "mm/dd/yyyy",
+                startDate: startDate,
+                autoclose: true
+            })
+                .on('changeDate', function (selected) {
+                    FromEndDate = new Date(selected.date.valueOf());
+                    FromEndDate.setDate(FromEndDate.getDate(new Date(selected.date.valueOf())));
+                    $('#StartDate').datepicker('setEndDate', FromEndDate);
+
+                    //added by vijay sahu
+                    var sDate = new Date($('#StartDate').val());
+                    var eDate = new Date($(this).val());
+                    var totalDays = mydiff(sDate, eDate, "days");
+                    var weekday = new Array(7);
+                    weekday[0] = "Sunday";
+                    weekday[1] = "Monday";
+                    weekday[2] = "Tuesday";
+                    weekday[3] = "Wednesday";
+                    weekday[4] = "Thursday";
+                    weekday[5] = "Friday";
+                    weekday[6] = "Saturday";
+
+
+                    sDate.setDate(sDate.getDate() - 1);
+                    $("#chkboxdivCR input:checkbox").removeAttr('checked');
+                    $("#chkboxdivCR").find("div").each(function () {
+                        $(this).removeClass('show');
+                        $(this).addClass('hide');
+                    });
+
+                    for (var i = 0 ; i <= totalDays; i++) {
+
+
+                        sDate.setDate(sDate.getDate() + 1);
+                        //alert(sDate.getDay());
+                        //console.log(weekday[sDate.getDay()] + "   and Date is : " + (sDate.getDate() + "/" + sDate.getMonth() + "/" + sDate.getYear()));
+
+                        //alert(weekday[sDate.getDay()]);
+
+
+                        $("#chkboxdivCR").find("div").each(function () {
+                            if ($(this).hasClass(weekday[sDate.getDay()])) {
+                                $(this).removeClass('hide');
+                                $(this).addClass('show');
+                                $(this).children('input:checkbox').attr('checked', 'true');
+                                //alert('showing div');
+                            }
+                            else {
+                                //alert('hiding div');
+                                //$(this).removeClass('show');
+                                if ($(this).hasClass('show')) {
+
+                                }
+                                else {
+                                    $(this).addClass('hide');
+                                }
+                                //$(this).children('input:checkbox').removeAttr('checked');
+
+                            }
+                        });
+
+                    }
+                });
+        }
+    }
+
+    function showHideAssignEmployeePrioritywise() {
+        if ($('#ddlPriorityLevel').val() == 11) {
+            $(".AssignEmp").css("display", "none");
+            $(".AssignToUser").css("display", "none");
+        }
+        else{
+            $(".AssignEmp").css("display", "block");
+            $(".AssignToUser").css("display", "block");
+}
+    }
+
+    function mydiff(date1, date2, interval) {
+        var second = 1000, minute = second * 60, hour = minute * 60, day = hour * 24, week = day * 7;
+        date1 = new Date(date1);
+        date2 = new Date(date2);
+        var timediff = date2 - date1;
+        if (isNaN(timediff)) return NaN;
+        switch (interval) {
+            case "years": return date2.getFullYear() - date1.getFullYear();
+            case "months": return (
+                (date2.getFullYear() * 12 + date2.getMonth())
+                -
+                (date1.getFullYear() * 12 + date1.getMonth())
+            );
+            case "weeks": return Math.floor(timediff / week);
+            case "days": return Math.floor(timediff / day);
+            case "hours": return Math.floor(timediff / hour);
+            case "minutes": return Math.floor(timediff / minute);
+            case "seconds": return Math.floor(timediff / second);
+            default: return undefined;
+        }
+    }
+    $("#ddlFacilityRequest").change(function () {
+        if ($("#ddlFacilityRequest").val() == 260) {
+            $(".projectDescription").css("display", "block");
+        }
+        else {
+            $(".projectDescription").css("display", "none");
+        }
+    });
+
+    function WorkOrderImagereadURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgWorkOrderImage')
+                       .attr('src', e.target.result)
+                       .width(150)
+                       .height(150);
+
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+
+    function readURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgWorkRequest')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+
+    $(document).ready(function () {
+
+        //Added by Bhushan Dod for first time load no need to show validation.
+        $("#WeekDayLst").siblings('span').hide();
+
+        //Added BY bhushan Dod for when edit, assigntime interval need to display.
+        $('#ContinuesStartTime').val('@Html.ValueFor(x=>x.CrStartTime)');
+        // $('.clockpicker').clockpicker();
+
+        showHideControl("pageload");
+        $(".AssignEmp").css("display", "none");
+        $(".AssignToUser").css("display", "none");
+        if ('@UserType' == 3 || '@UserType' == 4) {
+            $("#ddlWorkRequestProjectType option[value=256]").remove();
+            $("#ddlWorkRequestProjectType option[value=279]").remove();
+        }
+        $("#ddlState").val(@state);
+        $("#ddlAsset").val('@Html.ValueFor(model => model.AssetID)')
+
+        $("#ddlWorkRequestType").val('@Html.ValueFor(model => model.WorkRequestType)')
+        $("#ddlPriorityLevel").val('@Html.ValueFor(model => model.PriorityLevel)')
+        $('#ddlPriorityLevel').val(11);
+        // var CodeData = $("#drp_MasterLocation :selected").text().substr(0, 3);commented by Bhushan Due to client want loc code not loc name 3 char
+        var CodeData = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+        $("#WorkOrderCode").val(CodeData);
+
+        $("#ddlWorkRequestProjectType").change(function () {
+            // var Code = $("#drp_MasterLocation :selected").text().substr(0, 3);commented by Bhushan Due to client want loc code not loc name 3 char
+            var Code = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+            $("#WorkOrderCode").val(Code);
+            $('#imgWorkRequest').prop('src', "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+
+        });
+
+        var EmployeeID = $("#ddlAssignToEmployee").val();
+        if (EmployeeID != "" || EmployeeID != undefined || EmployeeID != null) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("GetUserDetailByUserID","GlobalAdmin")',
+                data: { UserID: EmployeeID },
+                beforeSend: function () {
+                    //new fn_showMaskloader('please wait...Deleting');
+                },
+                success: function (Data) {
+                    // var CodeData = $("#drp_MasterLocation :selected").text().substr(0, 3);
+                    var CodeData = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+                    $("#WorkOrderCode").val(CodeData);
+                    if (jQuery.isPlainObject(Data)) {
+                        if (Data.myProfileImage != "") {
+                            $("#EmployeeImage").attr("src", Data.myProfileImage);
+                        }
+                        else {
+                            $("#EmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                        }
+                    }
+                    else {
+                        $("#EmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                    }
+                },
+                error: function () {
+                    alert("Error:")
+                },
+                complete: function () {
+                    //window.location.reload();
+                }
+            });
+        }
+        var imagepathurl = '@Url.Action("GetAssetImage","QRCSetup")';
+        if ($_EmployeeUser == 'True') {
+            $("#ddlWorkRequestProjectType option[value='129']").remove();
+        }
+
+        $("#rdAssignToUserIdY, #rdAssignToUserIdN").change(function () {
+
+            if ($('#rdAssignToUserIdY').is(':checked')) {
+                $('.AssignToUser').css("display", "block");
+            }
+            else if ($('#rdAssignToUserIdN').is(':checked')) {
+                $("#ddlAssignToUser").val('');
+                $("#ddlAssignToEmployee").val('');
+                $("#EmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                $('.AssignToUser').css("display", "none");
+            }
+        });
+
+        $("#rdRegisteredAssestY , #rdRegisteredAssestN").change(function () {
+
+            if ($('#rdRegisteredAssestY').is(':checked')) {
+                $('.Asset').css("display", "block");
+            }
+            else if ($('#rdRegisteredAssestN').is(':checked')) {
+                $("#ddlAsset").val('');
+                $("#imgWorkRequest").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                $('.Asset').css("display", "none");
+            }
+        });
+
+        $(".yes, .no").change(function () {
+
+            if ($('.yes').is(':checked')) {
+                $('#ddlPriorityLevel').val(11);
+                $('#ddlPriorityLevel').attr("disabled", true)
+                $(".AssignEmp").css("display", "none");
+                $(".AssignToUser").css("display", "none");
+            }
+            else if ($('.no').is(':checked')) {
+                $('#ddlPriorityLevel').attr("disabled", false)
+                $('#ddlPriorityLevel').val(0);
+                $(".AssignEmp").css("display", "block");
+                $(".AssignToUser").css("display", "block");
+            }
+        });
+
+        $("#ddlAsset").change(function () {
+            // var CodeData = $("#drp_MasterLocation :selected").text().substr(0, 3);
+            if ($("#ddlAsset :selected").val() > 0) {
+                var CodeData = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+                $("#WorkOrderCode").val(CodeData);
+                var path = $("#hddnAssetimagepath").val();
+                $.ajax({
+                    url: imagepathurl,
+                    type: 'POST',
+                    data: { QrcID: $("#ddlAsset").val() },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (data) {
+                        if (jQuery.isPlainObject(data)) {
+                            if (data.AssetImage != null) {
+                                $('#imgWorkRequest').prop('src', path + data.AssetImage);
+                            }
+                            else {
+                                $('#imgWorkRequest').prop('src', "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                            }
+                        }
+                    },
+                    error: function () {
+                        alert("Error:")
+                    },
+                    complete: function () {
+                        //window.location.reload();
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+        });
+
+        $("#ddlAssignToEmployee").change(function () {
+            // CodeData = $("#drp_MasterLocation :selected").text().substr(0, 3);
+            var CodeData = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+            $("#WorkOrderCode").val(CodeData);
+            var EmployeeID = $("#ddlAssignToEmployee").val();
+            if (EmployeeID != "" || EmployeeID != undefined || EmployeeID != null) {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetUserDetailByUserID","GlobalAdmin")',
+                    data: { UserID: EmployeeID },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        if (jQuery.isPlainObject(Data)) {
+                            if (Data.myProfileImage != "") {
+                                $("#EmployeeImage").attr("src", Data.myProfileImage);
+                            }
+                            else {
+                                $("#EmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                            }
+                        }
+                        else { $("#EmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg"); }
+                    },
+                    error: function () {
+                        alert("Error:")
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+        })
+
+        //Added By Manoj Jaswal on 3 March 2015
+        //This function is to Display the Result After the Save
+        //var WorkAssignmet = '@ViewBag.WorkAssignmet';
+
+        if ('@WorkAssignmet' == '' || '@WorkAssignmet' == null ||'@WorkAssignmet' == "") {
+
+        }
+        else {
+
+            $("#txtAssignedTime").val('@Html.ValueFor(x=>x.AssignedTime)');
+            $("#Res_ProjectType").html($("#ddlWorkRequestProjectType option[value='" + @ViewBag.ProjectType + "']").text());
+            $("#Res_ProrityLevel").html($("#ddlPriorityLevel option[value='" + @ViewBag.ProrityLevel +"']").text());
+            $("#Res_AssginToEmployee").html($("#ddlAssignToEmployee option[value='" + @ViewBag.AssignedToEmployee + "']").text());
+            $("#ddlWorkRequestType option[value='" + @ViewBag.RequestType +"']").text();
+
+            if ('@AssignedToEmployee' != null && '@AssignedToEmployee' != '') {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("GetUserDetailByUserID","GlobalAdmin")',
+                    data: { UserID: '@ViewBag.AssignedToEmployee' },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        if (jQuery.isPlainObject(Data)) {
+                            $("#divAssignEmp").show();
+                            $("#AssignedEmployeeImage").css("display", "block");
+                            if (Data.myProfileImage != "") {
+                                $("#AssignedEmployeeImage").attr("src", Data.myProfileImage);
+                            }
+                            else {
+                                $("#AssignedEmployeeImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                            }
+                        }
+                        else {
+                            $("#Res_AssginToEmployee").html("No employee Assigned");
+                            $("#AssignedEmployeeImage").css("display", "none");
+                        }
+                    },
+                    error: function () {
+                        alert("Error:")
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+            else {
+                $("#AssignedEmployeeImage").css("display", "none");
+                $("#divAssignEmp").hide();
+
+            }
+
+            if ('@AssetID' != null && '@AssetID' != '') {
+                var path = $("#hddnAssetimagepath").val();
+                $.ajax({
+                    type: "POST",
+                    url: imagepathurl,
+                    data: { QrcID: parseInt('@ViewBag.AssetId') },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Please wait...');
+                    },
+                    success: function (Data) {
+                        if (jQuery.isPlainObject(Data)) {
+                            $("#divAssetImage").show();
+                            if (Data.AssetImage != null) {
+                                $("#AssetImage").attr("src", path + Data.AssetImage);
+                            }
+                            else {
+                                $("#AssetImage").attr("src", "../Content/Images/ProjectLogo/no-profile-pic.jpg");
+                            }
+                        }
+                        else {
+                            $("#Res_AssginToEmployee").html("No Asset Image");
+                            $("#AssetImage").css("display", "none");
+                        }
+                    },
+                    error: function (err, err, errr) {
+                        //alert("Error:")
+                        console.log(err);
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    }
+                });
+            }
+            else {
+                $("#divAssetImage").hide();
+            }
+            //Added by Bhushan Dod on 23/Sep/2016 for After generting WO then modal come with WO image. If no image uploaded modal doesn't need to display image.
+            if ('@WOImage' != null && '@WOImage' != '') {
+                $('#divWOImage').show();
+            } else {
+                $('#divWOImage').hide();
+            }
+
+            $("#WorkOrderRequestResult").modal('show');
+        }
+
+        //var CodeData = $("#drp_MasterLocation :selected").text().substr(0, 3);
+        var CodeData = $("#ddlWorkRequestProjectType :selected").text().substr(0, 3);
+        $("#WorkOrderCode").val(CodeData);
+
+        $('input[type="checkbox"]').checkbox({
+            buttonStyle: 'btn-link fa-1x',
+            buttonStyleChecked: 'btn-link fa-1x',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty',
+            constructorCallback: null,
+            defaultState: true,
+            defaultEnabled: true,
+
+            checked: true,
+            enabled: true
+
+        });
+        $('input[type="checkbox"].large').checkbox({
+            buttonStyle: 'btn-link btn-large',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty'
+        });
+        //$('#ProblemDesc').keypress(function (event) {
+
+        //    var keycode = (event.keyCode ? event.keyCode : event.which);
+        //    if (keycode == '13') {
+        //        $('#ProblemDesc').parent().find('span').hide();
+        //    }
+        //    event.stopPropagation();
+        //});
+    });
+    function isNumberKey(evt) {
+
+        var charCode = (evt.which) ? evt.which : event.keyCode;
+        if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    //var id = "";
+    $('#chkboxdivCR').click(function () {
+        $("#chkboxdivCR").find("input:checkbox").each(function () {
+            if ($(this).prop('checked') == true) {
+                $("#WeekDayLst").siblings('span').hide();
+            }
+            else {
+                $("#WeekDayLst").siblings('span').removeClass();
+                $("#WeekDayLst").siblings('span').addClass('field-validation-error');
+            }
+        });
+
+        //    $("#chkboxdivCR :checked").each(function () {
+        //        $("#WeekDayLst").siblings('span').hide();
+        //        if (this.checked) {
+        //            var ChkBoxId = this.name;
+        //            if (id == "") {
+        //                id += ChkBoxId
+        //            }
+        //            else {
+        //                id += "," + ChkBoxId
+        //            }
+        //        }
+
+        //    });
+        //    $('#WeekDayLst').val(id);
+    });
+
+    function getWeekDayNames() {
+        //This function is called when I  clicking on the submit Work Request button
+
+
+        //$("#chkboxdivCR").find("checkbox").each(function () {
+        //    if ($(this).prop('checked') == true) {
+
+        //    }
+        //    else {
+        //        $("#WeekDayLst").siblings('span').removeClass();
+        //        $("#WeekDayLst").siblings('span').addClass('field-validation-error');
+        //    }
+        //});
+        //this added if we disabled ddlpriority then backend doesn't map value.So while sybmit we need to enable.
+        $('#ddlPriorityLevel').attr("disabled", false)
+        var id = "";
+        if ($("#ddlWorkRequestProjectType").val() == 279) {
+            $('#chkboxdivCR input:checkbox').each(function () {
+
+                if (this.checked) {
+                    var ChkBoxId = this.name;
+                    if (id == "") {
+                        id += ChkBoxId
+                    }
+                    else {
+                        id += "," + ChkBoxId
+                    }
+                }
+
+            });
+            if (id == "") {
+                $('#WeekDayLst').val(null);
+                $("#WeekDayLst").siblings('span').removeClass();
+                $("#WeekDayLst").siblings('span').addClass('field-validation-error');
+                $("#WeekDayLst").siblings('span').show()
+                return true;
+            }
+            $('#WeekDayLst').val(id);
+        }
+        else {
+            return true;
+        }
+
+    }
+</script>
+

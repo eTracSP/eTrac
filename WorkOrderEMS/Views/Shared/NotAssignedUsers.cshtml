@@ -1,0 +1,157 @@
+﻿@{
+
+    bool _flag = false;
+    int icount = 1;
+    long? ITAdminUseType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator);
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty, controller = string.Empty, baseController = string.Empty, adduser = string.Empty;
+    bool _isRoles = false;
+
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        {
+            var myaction = ViewContext.RouteData.GetRequiredString("action");
+            actionName = myaction.ToLower();
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            var mycontroller = ViewContext.RouteData.GetRequiredString("controller");
+            controller = mycontroller;
+            controller = controller.ToLower();
+            baseController = routeValues["controller"].ToString();
+            baseController = baseController.ToLower();
+        }
+    }
+
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+
+    ViewBag.Title = "Unassigned User List";
+
+}
+
+
+@section scripts{
+
+    <script type="text/javascript">
+         @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];}
+        var $Login_UserType = '@ObjLogin2.UserRoleId';
+        var $_controllerName = '@controller';
+        var $_mycolflag = '@_flag';
+        var $_controllerUserType = '@ITAdminUseType';
+        var $_isRoles = '@_isRoles';
+        var UserListUrl = {
+            "DeleteUser": '@Url.Action("DeleteUser", "Common")',
+            "GlobalAdminEdit": '@Url.Action("Index", "GLobalAdmin")',
+            "ITAdminEdit": '@Url.Action("Create", "ITAdministrator")',
+            "AdminEdit": '@Url.Action("Create", "Administrator")',
+            "ManagerEdit": '@Url.Action("Index", "Manager")',
+            "EmployeeEdit": '@Url.Action("CreateEmployee", "Employee")',
+            "ClientEdit": '@Url.Action("Index", "Client")',
+        }
+    </script>
+
+
+    <script src="~/GridListing/JqGridScript/NotAssignedUsers.js"></script>
+
+    <script type="text/javascript">
+
+
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_ManagerList').setGridWidth(width);
+        });
+        $(document).ready(function () {
+            $("#drp_MasterLocation").hide();
+        })
+    </script>
+}
+</div>
+</section>
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+    <div id="jqGrid_container">
+
+        @*<a href="#" id="adduser" style="float:right;" class="btn btn-default bluebutton">Add New  @adduser</a>*@
+        @{
+
+            WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+            bool isAdminFlag = false; string TargetController = "";
+            long loginUserType = 0;
+
+            if (ObjLogin != null)
+            {
+                loginUserType = ObjLogin.UserRoleId;
+                switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+                {
+                    case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                        isAdminFlag = true;
+                        TargetController = "GlobalAdmin";
+                        break;
+                    case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                        isAdminFlag = true;
+                        TargetController = "ITAdministrator";
+                        break;
+                    case WorkOrderEMS.Helper.UserType.Administrator:
+                        isAdminFlag = true;
+                        TargetController = "Administrator";
+                        break;
+                    default:
+                        isAdminFlag = false;
+                        break;
+                }
+            }
+        }
+
+        <div class="text-right">
+            @if (isAdminFlag && actionName.Contains("admin"))
+            {
+                @*@Html.ActionLink(adduser, "Create", TargetController, null, new { @class = "btn btn-default bluebutton", @id = "adduser" })*@
+            }
+            @*else
+                {
+                    @Html.DropDownListFor(a => icount, new SelectList(new WorkOrderEMS.BusinessLogic.Managers.CommonMethodManager().GetUserTypeList("UserType", loginUserType), "GlobalCodeId", "CodeName"), "Select", new { @class = "form-control requiredselect", @style = "display: inline-block;", @id = "AddUserType" })
+                    <button id="adduser" class="btn btn-default bluebutton">
+                        Add New
+                    </button>
+                }*@
+        </div>
+        <input type="hidden" id="hiddnListUserType" value="@ViewBag.ListUserType" />
+        <div class="clearfix"></div>
+        <div class="marbottom"></div>
+        <table id="tbl_ManagerList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divManagerListPager"></div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+<button id="clickForUserDetails" style="display:none;" type="button" class="btn btn-primary" data-toggle="modal" data-target=".bs-example-modal-lg">Large modal</button>
+
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">UnAssigned User</h4>
+            </div>
+            <div class="modal-body">
+                <div id="DivForUserDetail"></div>&nbsp;
+                <button style="display:none;"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default bluebutton" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<style>
+    .ViewAllButton {
+        /*height: 18px;
+        margin: -10px 10px 0 0;
+        padding: 1px;*/
+        position: absolute;
+        right: 4%;
+    }
+</style>

@@ -1,0 +1,131 @@
+﻿@model WorkOrderEMS.Models.WorkOrderModel
+@{
+    long AssetId = 0;
+    if (Model != null)
+    {
+        AssetId = Model.AssetID;
+    }
+}
+@using (Ajax.BeginForm("SaveWorkOrder", "Manager", new AjaxOptions()
+{
+
+    HttpMethod = "POST",
+    OnSuccess = "success"
+
+}))
+{
+<label id="popupmessage"> </label>
+<div class="panel-body">
+    <div class="row">
+        @Html.HiddenFor(model=>model.WorkOrderID)
+        @Html.HiddenFor(model=>model.WorkRequestID)
+        @Html.HiddenFor(model=>model.ProjectId)
+        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            @Html.ValidationSummary(true)
+            <div class="form-horizontal">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TaskName, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.TaskName, new { @Placeholder = "Task Name", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TaskName)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TaskPriority, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.TaskPriority, new SelectList(ViewBag.TaskPriority, "Value", "Text"), "--Select--", new { @id = "ddlTaskPriority", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TaskPriority)
+                    </div>
+                </div>
+                @*<div class="form-group">
+                    @Html.LabelFor(model => model.TaskType, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.TaskType, new SelectList(ViewBag.TaskType, "Value", "Text"), "Select", new { @id = "ddlTaskType", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.TaskType)
+                    </div>
+                </div>*@
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StartTime, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+
+                        @Html.TextBoxFor(model => model.StartTime, new { @Placeholder = "Start Time", @class = "form-control", @id = "StartTime" })
+                        @Html.ValidationMessageFor(model => model.StartTime)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Remarks, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextAreaFor(model => model.Remarks, new { @Placeholder = "Remarks", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.Remarks)
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+            <div class="form-horizontal">             
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WorkArea, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.WorkArea, new SelectList(ViewBag.WorkArea, "Value", "Text"), "Select", new { @id = "ddlWorkArea", @class = "form-control", @OnChange = "BindAsset()" })
+                        @Html.ValidationMessageFor(model => model.WorkArea)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssetID, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        <select id="ddlAssetID" name="AssetID" class="form-control valid"></select>
+                        @Html.ValidationMessageFor(model => model.AssetID)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CompletionTime, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.TextBoxFor(model => model.CompletionTime, new { @Placeholder = "Completion Time", @class = "form-control", @id = "CompletionTime" })
+                        @Html.ValidationMessageFor(model => model.CompletionTime)
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.AssignedToUser, new { @class = "col-sm-4 control-label" })
+                    <div class="col-md-8">
+                        @Html.DropDownListFor(model => model.AssignedToUser, new SelectList(ViewBag.AssignedToUser, "Value", "Text"), "Select", new { @id = "ddlAssignedToUser", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => model.AssignedToUser)
+                    </div>
+                </div>
+                <div class="col-sm-offset-9 col-sm-8">
+                    <button class="btn btn-default bluebutton" type="submit">Save</button>                    
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+
+<script type="text/javascript">
+    $_GetAssetByWorkAreaUrl = '@Url.Action("GetAllAssetByWorkArea", "DropDown")';
+    $_AssetID = '@AssetId';
+    $(document).ready(function () {
+        $('#StartTime').timepicker({ timeFormat: "hh:mm tt" });
+        $('#CompletionTime').timepicker({ timeFormat: "hh:mm tt" });
+
+        if ($("#ddlWorkArea").val() != '' || $("#ddlWorkArea").val() != 0) {           
+            BindAsset();
+        }
+
+    });
+    function success(data) {
+     
+        if (data != "") {
+            $("#popupmessage").html(data.Message);
+            $('#popupmessage').addClass(data.AlertMessageClass);
+            jQuery("#tbl_WorkRequestList").jqGrid().trigger("reloadGrid");
+            //$("#updateDialog1").dialog('close');
+        }
+        else {
+            $("#largeeditpopup").html(data);
+        }
+    }
+</script>
+    

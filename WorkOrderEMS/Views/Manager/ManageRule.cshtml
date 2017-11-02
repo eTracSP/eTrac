@@ -1,0 +1,110 @@
+﻿@model WorkOrderEMS.Models.RuleMasterModel
+@{
+    
+    ViewBag.Title = "Manage Rule";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    ViewBag.Title = "New Rule";
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        ViewBag.Title = "Update Rule";
+    }
+}
+<link href="~/Content/common/plugins/Toggle%20button/bootstrap-toggle.min.css" rel="stylesheet" />
+<script src="~/Content/common/plugins/Toggle%20button/bootstrap-toggle.min.js"></script>
+@using (Html.BeginForm("ManageRule", "Manager"))
+{
+<div class="panel panel-default">
+    <div class="panel-heading">
+        Rule Details
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="">
+                <div class="form-horizontal">
+                    @Html.HiddenFor(model=>model.RuleID)
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.RuleName, new { @class = "col-sm-4 control-label star" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.RuleName, new { @Placeholder = "Rule Name", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.RuleName)
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.VoilationCharges, new { @class = "col-sm-4 control-label star" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.VoilationCharges, new { @Placeholder = "Voilation Charges", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.VoilationCharges)
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        @Html.LabelFor(model => model.Description, new { @class = "col-sm-4 control-label star" })
+                        <div class="col-md-8">
+                            @Html.TextAreaFor(model => model.Description, new { @Placeholder = "Description", @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.Description)
+                        </div>
+                    </div> 
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                       @Html.Label("Rule Status", new { @class = "col-sm-4 control-label" })
+                        <div class="col-md-1">
+                            @*@Html.CheckBoxFor(model => model.IsActive, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(model => model.IsActive)*@
+                            @*<input data-toggle="toggle" data-on="Enabled" data-off="Disabled" type="checkbox">*@
+                            <input id="toggle-two" type="checkbox">
+                            @*<input id="ruleStatus" checked data-toggle="toggle" data-on="Active" data-off="Inactive" data-onstyle="success" data-offstyle="danger" type="checkbox">*@
+                            @Html.HiddenFor(model => model.IsActive)
+                        </div>
+                    </div>                    
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        <div class="col-sm-offset-4 col-sm-8">
+
+                        </div>
+                    </div>
+                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                        <div class="col-sm-offset-4 col-sm-8">
+                            <button class="btn btn-default bluebutton" type="submit">Save</button>
+                            @*<a href="~/Manager" class="btn btn-default bluebutton">Cancel</a>*@
+                            @if (Model != null && Model.RuleID != null && Model.RuleID > 0)
+                            {
+                                <a href="~/Manager/ListRule" class="btn btn-default bluebutton">Cancel</a>
+                                @*@Html.ActionLink("Cancel", "ListRule", "Manager", null, new { @class = "btn btn-default bluebutton" })*@
+                            }
+                            else
+                            {  <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                                @*@Html.ActionLink("Cancel", "ManageRule", "Manager", null, new { @class = "btn btn-default bluebutton" })*@}
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+}
+    @*<script type="text/javascript">
+            $('#StartTime').timepicker({ timeFormat: "hh:mm tt" });
+            $('#CompletionTime').timepicker({ timeFormat: "hh:mm tt" });
+        </script>*@
+<script>
+   
+    $(function () {
+        $('#toggle-two').bootstrapToggle({
+            on: 'Active',
+            off: 'Inactive'
+        });
+        $("#toggle-two").parent("div").click(function(){ 
+            var Res = $("#toggle-two").parent("div").hasClass("off");
+            $("#IsActive").val(Res);
+        });
+
+        if (  $("#IsActive").val() == "False")
+        {
+            $("#toggle-two").parent("div").addClass("off");
+        }
+        else
+        {
+            $("#toggle-two").parent("div").removeClass("off");
+        }
+    })
+</script>

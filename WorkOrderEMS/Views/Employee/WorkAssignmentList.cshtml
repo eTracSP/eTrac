@@ -1,0 +1,71 @@
+﻿@{
+    ViewBag.Title = "List Work Request";
+    Layout = "~/Views/Shared/_EmployeeLayout.cshtml";
+
+    long UserID = 0;
+    if (ViewBag.UserID != null)
+    {
+        UserID = Convert.ToInt32(ViewBag.UserID);
+    }
+    long UserType = 0; bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    int isEdit = 0;
+    
+    if (ObjLogin != null)
+    {
+        UserType = ObjLogin.UserRoleId;
+
+
+        /*Get Active User Type Flag*/
+
+        switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+        {
+            case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                GloblaAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                ITAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Administrator:
+                OnlyAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Manager:
+                ManagerUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Employee:
+                EmployeeUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Client:
+                ClientUser = true;
+                break;
+            default:
+                GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+                break;
+        }
+
+    }
+    if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser)
+    {
+        isEdit = 1;
+    }
+}
+
+<script src="~/GridListing/JqGridScript/WorkRequestAssignment.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $_UserID = '@UserID';
+    $_isEdit = '@isEdit';
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+    });
+</script>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div id="jqGrid_container">
+        <table id="tbl_WorkRequestAssignmentList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divWorkRequestAssignmentListPager"></div>
+    </div>
+</div>
+
+

@@ -1,0 +1,494 @@
+﻿@model WorkOrderEMS.Models.eFleetDriverModel
+@{
+    ViewBag.Title = "Register Driver";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+
+    string myModelprefix = ViewBag.myModelprefixName;
+    string idState = string.Empty;
+    string idCountry = string.Empty;
+    string functionName = string.Empty;
+    string stateName = string.Empty;
+    string ddlAdminSelectName = string.Empty;
+    stateName = myModelprefix + "Address.StateId";
+    long locationId = 0;
+    long userType = 0;
+    //string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+    string Image = "~/Content/Images/ProjectLogo/no-profile-pic.jpg";
+    string imgaeserverpath = Url.Content("~/Content/eFleetDocs/DriverImage/");
+}
+
+
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
+<link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
+@*<link href="~/Content/eFleetVehicle/style.css" rel="stylesheet" />*@
+<style type="text/css">
+    .errorspace {
+        margin-top: -5px
+    }
+</style>
+
+@section scripts{
+    <script type="text/javascript">
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script type="text/javascript">
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_QRCList').setGridWidth(width);
+    });
+    $('#btnMyModalFORQRC').live("click", function () {
+        $('#myModalLicence').modal('show');
+    });
+    </script>
+}
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+@using (Html.BeginForm("Index", "eFleetDriver", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Driver_form" }))
+{
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create Driver
+            </div>
+            <div class=" clearfix"></div>
+            <div class="form">
+                <div class="tab-content">
+                    <div class="top-row">
+                        <div class="field-wrap">                      
+                            @Html.HiddenFor(model => model.DriverID)
+                            @*@Html.HiddenFor(model => model.Passwordforedit)
+                            @Html.HiddenFor(model => model.DOB)*@
+                            @Html.HiddenFor(model => model.UserID)
+                            <label>
+                                Employee Name<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.EmployeeList != null)
+                            {
+                                <select name="@Html.NameFor(model => model.EmployeeName)"
+                                        id="@Html.IdFor(model => model.EmployeeName)"
+                                        onchange="BindEmployeeImage()">
+                                    <option>--Select--</option>
+                                    @foreach (var En in ViewBag.EmployeeList)
+                                    {
+                                        <option value="@En.UserId" data-vid="@En.FirstName" data-imagepath="@En.ProfileImage"
+                                                @if (En.UserId == Model.EmployeeName) { @: selected="selected"
+                                                                                                                                                                                                                                                                                                    }>
+                                            @En.FirstName
+                                        </option>
+                                    }
+                                </select>
+                            }
+                            else
+                            {<select id="VehicleNumber"><option value="-1">@ViewBag.VehicleNumber</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.EmployeeName)
+                            </div>
+                        </div>
+                        <div class="field-wrap" style="margin-top:-10px;">
+                            <label>
+                                Driver Image<span class="req">*</span>
+                            </label>
+                            @*<div id="dvPreviewVehicle"></div>*@
+                            @if (Model.DriverImage != null && Model.DriverImage != "")
+                            {
+                                <div style="margin-left:25%;">
+                                    <img name="DriverImage" id="DriverImage" class="img-rounded" src='@Model.DriverImage' style="width:100px; height:100px;" />
+                                    @*<input type="hidden" id="hddnEmployeeimagepath" name="DriverImageFile" value="@imgaeserverpath">*@
+                                </div>
+                               // Image = Model.DriverImage;
+                            }
+                            else
+                            {
+                            <div style="margin-left:25%;">
+                                <img name="DriverImage" id="DriverImage" class="img-rounded" src='@Url.Content("../Content/Images/ProjectLogo/no-profile-pic.jpg")' style="width:100px; height:100px;" />
+                                @*<input type="hidden" id="hddnEmployeeimagepath" name="DriverImageFile" value="@imgaeserverpath">*@
+                            </div>
+                            }
+                        </div>
+                    </div>
+                            <div class="top-row" style="margin-top:10px;">
+                                <div class="field-wrap">
+                                    <label>
+                                        Driver License State<span class="req">*</span>
+                                    </label>
+                                    @if (ViewBag.StateList != null)
+                                    {
+                                        <select name="@Html.NameFor(model => model.StateId)"
+                                                id="@Html.IdFor(model => model.StateId)">
+                                            <option>--Select--</option>
+                                            @foreach (var Vn in ViewBag.StateList)
+                                            {
+                                                <option value="@Vn.StateId" text="@Vn.StateName"
+                                                        @if (Vn.StateId == Model.StateId) { @: selected="selected"
+                                                                                                 }>
+                                                    @Vn.StateName
+                                                </option>
+                                            }
+                                        </select>
+                                    }
+                                    @*{@Html.DropDownListFor(model => model.StateId, new SelectList(ViewBag.StateList, "StateId", "StateName"), "--Select--", new { @id = "State" })}*@
+                                    else
+                                    {<select id="State"><option value="-1">@ViewBag.StateList</option></select>}
+                                    @Html.ValidationMessageFor(model => model.StateId)
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        CDL Type <span class="req">*</span>
+                                    </label>
+                                    @Html.DropDownListFor(c => c.CDLType, new SelectList(
+                           new List<Object>{
+                               new { value = 0 , text = "--Select--"  },
+                       new { value = "A" , text = "A"  },
+                       new { value = "B" , text = "B" },
+                       new { value = "C" , text = "C"}
+                    },
+                  "value",
+                  "text", 0), new { @id = "CDLType" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.CDLType)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top-row">
+                                <div class="field-wrap">
+                                    <label>
+                                        MVR Expiration<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.MVRExpiration, "{0:MM/dd/yyyy}", new { @id = "MVRExpiration", @onkeydown = "return false;" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.MVRExpiration)
+                                    </div>
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        Driver License Number<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.DriverLicenseNo, new { @id = "DriverLicenseNo" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.DriverLicenseNo)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top-row" style="margin-top:10px;">
+                                <div class="field-wrap">
+                                    <label>
+                                        CDL Expiration<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.CDLExpiration, "{0:MM/dd/yyyy}", new { @id = "CDLExpiration", @onkeydown = "return false;" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.CDLExpiration)
+                                    </div>
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        Medical Card Expiration<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.MedicleCardExpiration, "{0:MM/dd/yyyy}", new { @id = "MedicleCardExpiration", @onkeydown = "return false;" })
+
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.MedicleCardExpiration)
+                                    </div>
+                                </div>
+                            </div>
+                            @* ======================================================== *@
+                            @*<div class="panel-heading">
+                                Contact Details
+                            </div>
+                            <br>
+                            <div class="top-row">
+                                <div class="field-wrap">
+                                    <label>
+                                        Address 1<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.Address1, new { @id = "Address1" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.Address1)
+                                    </div>
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        Address 2<span class="req"></span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.Address2, new { @id = "Address2" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.Address2)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top-row">
+                                <div class="field-wrap">
+                                    <label>
+                                        City<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.City, new { @id = "City" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.City)
+                                    </div>
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        State<span class="req">*</span>
+                                    </label>
+                                    @if (ViewBag.StateList != null)
+                                    {@Html.DropDownListFor(model => model.StateIDForPersonal, new SelectList(ViewBag.StateList, "StateId", "StateName"), "--Select--", new { @id = "State1", @onchange = "BindState()" })}
+                                    else
+                                    {<select id="State"><option value="-1">--Select--</option></select>}
+                                    @Html.ValidationMessageFor(model => model.StateIDForPersonal)
+                                </div>
+                            </div>
+
+                            <div class="top-row">
+                                <div class="field-wrap">
+                                    <label>
+                                        Country<span class="req">*</span>
+                                    </label>
+                                    @if (ViewBag.Country != null)
+                                    {@Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), "--Select--", new { @id = "idCountry", @onchange = "BindState()" })}
+                                    else
+                                    {<select id="Country"><option>Select</option></select>}
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.City)
+                                    </div>
+                                </div>
+                                <div class="field-wrap">
+                                    <label>
+                                        ZipCode<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.ZipCode, new { @id = "ZipCode", @maxLength = "5", onkeypress = "return isNumberKey(event) " })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.ZipCode)
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="top-row">
+                                <div class="field-wrap">
+                                    <label>
+                                        MobileNo<span class="req">*</span>
+                                    </label>
+                                    @Html.TextBoxFor(model => model.Mobile, new { @id = "Mobile" })
+                                    <div class="errorspace">
+                                        @Html.ValidationMessageFor(model => model.Mobile)
+                                        @*<input type="text" required autocomplete="off" id="zipcode"/>*@
+                                    @*</div>
+                                </div>
+
+                            </div>*@
+                            @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                            {
+                                <button type="submit" class="button button-block" onclick=" return validatetextbox()" id="btnSaveVehicle">Update</button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="button button-block" onclick="return validatetextbox()" id="btnSaveVehicle">Submit</button>
+                            }
+                        </div><!-- tab-content -->
+            </div> <!-- /form -->
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@* Validation when no fields are filled then text box border will red *@
+<script>
+        $(document).ready(function () {
+            //Attach change event to textbox
+            $("#StateId").change(function () {
+                if ($(this).val() == "--Select--") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#CDLType").change(function () {
+                if ($(this).val() == "--Select--") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#DriverLicenseNo").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#CDLExpiration").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#MedicleCardExpiration").change(function () {
+                if ($(this).val() == "") {
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#MVRExpiration").change(function () {
+                if ($(this).val() == "") {
+                    //if empty then assign the border
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+            $("#EmployeeName").change(function () {
+                if ($(this).val() == "--Select--") {
+                    //if empty then assign the border
+                    $(this).css("border", "1px solid #bc3838");
+                }
+                else {
+                    $(this).css("border", "1px solid #4475b5");
+                }
+            });
+        });
+    function validatetextbox()
+    {     
+        var txtvalEmployeeName = $("#EmployeeName").val(); 
+        var txtvalstate = $("#StateId").val();
+        var txtvalCDLType = $("#CDLType").val();
+        var txtvalDriverLicenseNo = $("#DriverLicenseNo").val();
+        var txtvalCDLExpiration = $("#CDLExpiration").val();
+        var txtvalMedicleCardExpiration = $("#MedicleCardExpiration").val();
+        var txtvalMVRExpiration = $("#MVRExpiration").val();
+      //Check if value is empty or not
+        if (txtvalstate == "--Select--") {
+            $("#StateId").css("border", "1px solid #bc3838");
+            return true;
+        }
+        else {
+            $("#StateId").css("border", "1px solid #4475b5");
+        }
+        if (txtvalEmployeeName == "--Select--") {
+            $("#EmployeeName").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#EmployeeName").css("border", "1px solid #4475b5");
+            return false;
+        }
+
+        if (txtvalCDLType == "--Select--") {
+            $("#CDLType").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#CDLType").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDriverLicenseNo == "") {
+            $("#DriverLicenseNo").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#DriverLicenseNo").css("border", "1px solid #4475b5");
+        }
+        if (txtvalCDLExpiration == "") {
+            $("#CDLExpiration").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#CDLExpiration").css("border", "1px solid #4475b5");
+        }
+
+        if (txtvalMedicleCardExpiration == "") {
+            $("#MedicleCardExpiration").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#MedicleCardExpiration").css("border", "1px solid #4475b5");
+        }
+        if (txtvalMVRExpiration == "") {
+
+            $("#MVRExpiration").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#MVRExpiration").css("border", "1px solid #4475b5");
+        }  
+        return true;
+    }
+</script>
+@*//File Upload script//*@
+<script language="javascript" type="text/javascript">
+    function BindEmployeeImage() {
+        debugger
+        var vid = $('#EmployeeName').find('option:selected').attr('data-vid');
+        var EmployeeImage = $('#EmployeeName').find('option:selected').attr('data-imagepath');
+        // var vid = $(this).find('selected').attr('data-vid');
+        // $('#VehicleID').val(parseInt(vid));
+        $('#DriverImage').attr("src", EmployeeImage);
+    }
+    function DriverImagereadURL(input) {
+        var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+        if (input.files && input.files[0]) {
+            var LoadImage = false;
+            var FileExtension = input.value.split(".")[1];
+            for (var v = 0; v < FType.length; v++) {
+                if (FType[v] == FileExtension) {
+                    LoadImage = true;
+                }
+            }
+            if (LoadImage == true) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#imgDriverImage')
+                        .attr('src', e.target.result)
+                        .width(150)
+                        .height(150);
+
+                };
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                $(input).val("");
+                alert("Please select image to upload!")
+                return false;
+            }
+        }
+    }
+        $(function () {
+            //Change Password or not
+            $("input[name='IsPasswordChanged']").click(function () {
+                var SelectOptionP = $("#btnChkChangePassword:checked").val();
+                if (SelectOptionP == "1") {
+                    $("#Password").removeAttr("disabled").css({ "background-color": "#FFFFFF" });
+                }
+                else {
+                    $("#Password").attr("disabled", "true").css({ "background-color": "#CACFD2" });
+                }
+            })
+            $("#passwordclass").removeClass("hide");
+            var SelectOption = $("#btnChkChangePassword:checked").val();
+            if (SelectOption == "1") {
+                //jQuery("[id*='Password']").removeAttr("disabled");
+                $("#Password").removeAttr("disabled").css({ "background-color": "#FFFFFF" });
+            }
+            else {
+                //jQuery("[id*='Password']").attr("disabled", "true");
+                $("#Password").attr("disabled", "true").css({ "background-color":"#CACFD2" });// "background-color:#CACFD2"
+            }
+            //Password Code End
+            
+            $("#CDLExpiration").datepicker();
+            $("#MedicleCardExpiration").datepicker();
+            $("#MVRExpiration").datepicker();         
+            $("#DOB").datepicker();
+            $("#HireDate").datepicker();                    
+            $("input[id='DriverLicenseNo']").blur();
+            $("input[id='CDLExpiration']").blur();
+            $("input[id='MedicleCardExpiration']").blur();
+            $("input[id='MVRExpiration']").blur();
+            $("select").blur(); 
+        });
+</script>
+<script src="~/Scripts/eFleetVehicle/reg.js"></script>
+

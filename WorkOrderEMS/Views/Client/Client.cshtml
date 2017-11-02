@@ -1,0 +1,41 @@
+﻿@{
+    ViewBag.Title = "Client";
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty;
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        {
+            actionName = routeValues["action"].ToString();
+            ViewBag.ActionName = actionName;
+        }
+    }
+
+    if (ViewBag.ActionName == "Client")
+    { Layout = "~/Views/Shared/_InvitationLayout.cshtml"; }
+    else
+    { Layout = "~/Views/Shared/_ClientLayout.cshtml"; }
+}
+
+@using (Html.BeginForm("Index", "Client", new { ActionName = ViewBag.ActionName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Personal Details
+        </div>
+        <div id="CreateUser">
+            @Html.Partial("_myRegistration")
+        </div>
+        <div class="col-sm-offset-9">
+            <button class="btn btn-default bluebutton" type="submit">Save</button>
+            @*<a href="~/GlobalAdmin/Login" class="btn btn-default bluebutton">Cancel</a>*@            
+            <a class="btn btn-default bluebutton" href="@System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"]">Cancel</a>
+            <div class="clearfix"></div>
+        </div>
+        <div class="marbottom"></div>
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

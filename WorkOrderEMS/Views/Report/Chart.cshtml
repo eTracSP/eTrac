@@ -1,0 +1,91 @@
+﻿@model WorkOrderEMS.Models.TrashLevelChartModel
+@{
+    ViewBag.Title = "Chart";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+
+    google.load("visualization", "1", { packages: ["corechart"] });
+    google.setOnLoadCallback(drawChart);
+    function drawChart() {
+        $.ajax({
+            url: '../Report/GetChartdata',
+            type: 'post',
+            // data: JSON.stringify({ StartDate: StartDate, EndDate: EndDate }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            async: false,
+            beforeSend: function () {
+                //OpenLoader();
+            },
+            success: function (data) {
+                var Head1 = 'Trash Title';
+                var Head2 = 'Trash Level';
+                var arr_data = GetFormattedData(data, Head1, Head2);
+                var data = google.visualization.arrayToDataTable(arr_data);
+                var options = {
+                    title: 'Trash Level',
+                    hAxis: { title: 'Trash Tilte', titleTextStyle: { color: 'blue' } },
+                    vAxis: { title: 'Trash Level', titleTextStyle: { color: 'red' } }
+                };
+
+                var BarChart = new google.visualization.BarChart(document.getElementById('BarChartdiv'));
+                BarChart.draw(data, options);
+
+                var ColumnChart = new google.visualization.ColumnChart(document.getElementById('ColumnChartdiv'));
+                ColumnChart.draw(data, options);
+
+                //var Piechart = new google.visualization.PieChart(document.getElementById('PieChartdiv'));
+                //Piechart.draw(data, options);
+
+            },
+            error: function (mydata)
+            { alert("Error !"); },
+            complete: function () {
+              //  CloseLoader();
+            }
+        });
+    }
+
+    function GetFormattedData(data, Head1, Head2) {        
+        var Sumtotal = 0;
+        var arr = new Array();
+        var arr2, arr3, arr4;
+        var New_data = data;
+        //for (i = 0; i < data.length; i++) {
+        //    Sumtotal = parseInt(parseInt(Sumtotal) + parseInt(data[i].Count));
+        //}
+        arr3 = new Array();
+        arr3[0] = Head1;
+        arr3[1] = Head2;
+        arr.push(arr3);
+        var chk = 1;
+        var i = 0;
+        var count = data.length;
+        while (count > 0) {
+          
+            arr2 = new Array();
+            arr2[0] = data[i].TrashName;
+            arr2[1] = parseInt(data[i].TrashLevel);
+            arr.push(arr2);
+            count = count - 1;
+            i = i + 1;
+            //arr.push(arr3);
+            //chk = parseInt(parseInt(chk) + 1);
+        }
+        return arr;
+    }
+  
+</script>
+<div id="BarChartdiv" style="width: 500px; height: 300px;">
+</div>
+
+<div id="ColumnChartdiv" style="width: 500px; height: 300px;">
+</div>
+
+<div id="PieChartdiv" style="width: 500px; height: 300px; float: right; top:193px; right: 0px; position:fixed; " >
+</div>
+  
+

@@ -1,0 +1,93 @@
+﻿@model WorkOrderEMS.Models.UserModel
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.FirstName, new { @class = "col-sm-5 control-label " })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.FirstName, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+
+
+
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.LastName, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.LastName, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+@*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+        @Html.LabelFor(model => model.Password, new { @class = "col-sm-5 control-label" })
+        <div class="col-sm-7">
+            @Html.PasswordFor(model => model.Password, new { value = Model.Password, @Placeholder = "", @class = "form-control", disabled = true })
+        </div>
+    </div>*@
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.UserEmail, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.UserEmail, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.AlternateEmail, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.AlternateEmail, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.SubscriptionEmail, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.SubscriptionEmail, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.Gender, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @if (Model.Gender == 10)
+        {
+            <p>Female</p>
+            
+        }
+        else
+        {
+            <p>Male</p>
+            
+        }
+
+    </div>
+</div>
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.DOB, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.DOB, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.myProfileImage, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+
+
+        <img style="width:110px; height:110px;" alt="No Image " class="img-rounded" src="@Model.myProfileImage">
+        @*  @Html.DisplayFor(model => model.myProfileImage, new { @Placeholder = "", @class = "form-control", disabled = true })*@
+    </div>
+</div>
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.IsLoginActive, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.IsLoginActive, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+
+<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+    @Html.LabelFor(model => model.IsEmailVerify, new { @class = "col-sm-5 control-label" })
+    <div class="col-sm-7">
+        @Html.DisplayFor(model => model.IsEmailVerify, new { @Placeholder = "", @class = "form-control", disabled = true })
+    </div>
+</div>
+

@@ -1,0 +1,193 @@
+﻿@model WorkOrderEMS.Models.CommonModels.WorkRequestAssignmentModel
+@{
+
+    var priority = Model.PriorityLevel;
+}
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+@*@Styles.Render("~/scripts/clockpickercss")
+@Scripts.Render("~/scripts/clockpickerjs")*@
+
+<link href="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css" rel="stylesheet" />
+<script src="~/Scripts/DurationFlipbox/jquery.mousewheel.min.js"></script>
+<script src="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.js"></script>
+
+<style>
+    .ui-datebox-container {
+        width: 215px !important;
+        margin-left: 108px;
+    }
+
+    .ui-datebox-flipcenter {
+        width: 180px !important;
+    }
+
+    .bg-success {
+        background-color: #CCC;
+    }
+
+    .ui-datebox-controls > .btn {
+        background-color: #d4d4d4 !important;
+        border-color: #d4d4d4 !important;
+    }
+</style>
+@using (Ajax.BeginForm("_AssignWorkAssignmentRequest", "GlobalAdmin", new AjaxOptions()
+{
+    HttpMethod = "POST",
+    OnSuccess = "success",
+
+}, new { @id = "assignToForm" }))
+{
+    <label id="popupmessage"> </label>
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model => model.WorkRequestAssignmentID)
+    <div class="panel-body">
+        <div class="row">
+            <div class="">
+                <div class="form-horizontal">
+
+
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.PriorityLevel, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownListFor(model => model.PriorityLevel, new SelectList(ViewBag.PriorityLevel, "GlobalCodeId", "CodeName", Model.PriorityLevel), "--Select--", new { @class = "form-control" })
+                            @*@Html.EditorFor(model => model.PriorityLevel, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.ValidationMessageFor(model => model.PriorityLevel, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                    @if (Model.WorkRequestTy == "Work Request")
+                    {
+                        if (Model.ProblemDesc != "")
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProblemDesc, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                    @Html.TextAreaFor(model => model.ProblemDesc, new { @class = "form-control", @readonly = "readonly" })
+                                    @Html.ValidationMessageFor(model => model.ProblemDesc, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ProblemDesc, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                                <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                    @Html.TextAreaFor(model => model.ProblemDesc, new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.ProblemDesc, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+                        }
+                    }
+                    @if (Model.WorkRequestTy == "Special Project" || Model.WorkRequestTy == "Facility Request")
+                    {
+                        if (Model.ProjectDesc != "")
+                        {
+                            if (Model.FacilityRequestId != 260)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ProjectDesc, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextAreaFor(model => model.ProjectDesc, new { @class = "form-control", @readonly = "readonly" })
+                                        @Html.ValidationMessageFor(model => model.ProjectDesc, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+                        }
+                        else
+                        {
+                            if (Model.FacilityRequestId != 260)
+                            {
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.ProjectDesc, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                                    <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                                        @Html.TextAreaFor(model => model.ProjectDesc, new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.ProjectDesc, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            }
+                        }
+                    }
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.AssignToUserId, htmlAttributes: new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12 star" })
+                        <div class="col-lg-8 col-md-8 col-sm-8 col-xs-12">
+                            @Html.DropDownListFor(model => model.AssignToUserId, new SelectList(ViewBag.AssignedToUser, "Value", "Text"), "--Select--", new { @id = "ddlAssignedUser", @class = "form-control" })
+                            @*@Html.EditorFor(model => model.AssignToUserId, new { htmlAttributes = new { @class = "form-control" } })*@
+                            @Html.ValidationMessageFor(model => model.AssignToUserId, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                    <div class="form-group AssignTime">
+                        @Html.LabelFor(model => model.AssignedTime, new { @class = "control-label col-lg-4 col-md-4 col-sm-4 col-xs-12" })
+                        <div class="clockpicker col-lg-8 col-md-8 col-sm-8 col-xs-12" data-placement="bottom" data-align="top" data-autoclose="true">
+                            @Html.TextBoxFor(model => model.AssignedTimeInterval, new { @class = "form-control", @onkeypress = "return isNumberKey(event)", @placeholder = "Choose Time", data_role = "datebox", data_options = "{\"mode\":\"durationflipbox\",\"useFocus\":true,\"overrideDurationOrder\":[\"h\",\"i\"],\"overrideDurationFormat\": \"%Dl:%DM\" }" })
+                            @*@Html.TextBoxFor(model => model.AssignedTimeInterval, new { @id = "txtAssignedTime", @class = "form-control form-control2", @onkeypress = "return isNumberKey(event)", @maxlength = "9", @placeholder = "Assigned Time Limit (Minutes)" })*@
+                            <span class="pull-left text-info" style="color:gray;"><i>(HH:MM i.e 00:30)</i></span>
+                            @Html.ValidationMessageFor(model => model.AssignedTimeInterval)
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                    <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+                        <hr />
+                        <div class="pull-right">
+                            <button class="btn btn-default bluebutton" type="submit">Save</button>
+                            @*<a href="~/GlobalAdmin/WorkAssignmentList" class="btn btn-default bluebutton">Cancel</a>*@
+                            <button id="" data-dismiss="modal" class="btn btn-default bluebutton">Close</button>
+                        </div>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<div class="modal fade" id="myModallarge" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog" >
+        <div class="modal-content" style="">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel"></h4>
+            </div>
+            <div class="modal-body" id="largeeditpopup" style="width: auto ;margin-left: 10px">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #myModallarge .modal-body {width:auto !important; margin:0px !important; }
+    
+   
+
+</style>
+<script type="text/javascript">
+    function success(data) {
+
+
+        if (data != "") {
+            $("#myModallarge").modal('hide');
+            //alert(data.Message)
+            toastr.success('Work order assigned successfully');
+            //$("#message").html(data.Message);
+            //$('#message').addClass(data.AlertMessageClass);
+            jQuery("#tbl_WorkRequestAssignmentList").jqGrid().trigger("reloadGrid");
+
+            setInterval(function () {
+                $("#message").html("");
+            }, 30000);
+            //$("#message").html(data.Message);
+            // window.location.reload();
+            //$("#updateDialog1").dialog('close');
+
+
+        }
+        else {
+            $("#largeeditpopup").html(data);
+        }
+    }
+</script>
+<script type="text/javascript">
+      //  $('.clockpicker').clockpicker();
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js"></script>

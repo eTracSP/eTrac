@@ -1,0 +1,15 @@
+﻿@model WorkOrderEMS.Models.UserModel
+@{
+    ViewBag.Title = "Invite Employee";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+<div class="form-horizontal">
+    @using (Html.BeginForm("InviteEmployee", "Manager"))
+    {
+
+        @Html.Partial("_InviteUser")
+    }
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

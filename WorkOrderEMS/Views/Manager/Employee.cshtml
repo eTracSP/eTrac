@@ -1,0 +1,28 @@
+﻿@{
+    ViewBag.Title = "Employee Registration";
+    Layout = "~/Views/Shared/_InvitationLayout.cshtml";
+    //string StateID = string.Empty, Image = "no-profile-pic.jpg";
+    //if (Model != null && Model.Address != null && Model.Address.StateId.HasValue)
+    //{
+    //    StateID = Convert.ToString(Model.Address.StateId);
+    //    Image = string.IsNullOrEmpty(Model.ProfileImage) ? "no-profile-pic.jpg" : Model.ProfileImage;
+    //}
+}
+@using (Html.BeginForm("Employee", "Manager", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Personal Details
+        </div>
+        @Html.Partial("_Registration")
+        <div class="marbottom"></div>
+        <div class="col-sm-offset-8">
+            <button class="btn btn-default bluebutton" type="submit">Save</button>
+            <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@section scripts{
+    @Scripts.Render("~/bundles/jqueryval")
+}

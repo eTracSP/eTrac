@@ -1,0 +1,59 @@
+﻿
+@{
+
+    ViewBag.Title = "User List";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+
+<script src="~/GridListing/JqGridScript/ListUserForPermission.js"></script>
+
+
+<script type="text/javascript">
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_UserListForPermission').setGridWidth(width);
+    });
+</script>
+<script>
+    $(document).ready(function () {
+        var Result = ' @ViewBag.Message';
+        if (Result != "" || Result != undefined) {
+            $(".close").trigger("click");
+        }
+    })
+</script>
+<div class="text-success">@TempData["Message"]</div>
+<div class="panel panel-default first-mar10">
+   
+        <div class="panel-body">
+            <div class="row">
+                <div class="">
+                    <div class="form-horizontal">
+
+                        @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.Label("Location", new { @class = "col-sm-4 control-label star" }) 
+                            <div class="col-sm-8">
+                                @if (ViewBag.LocationList != null && ViewBag.LocationList.Count > 0)
+                                {
+                                    @Html.DropDownList("Location", new SelectList(ViewBag.LocationList, "LocationId", "LocationName"), "Select", new { @class = "form-control required requiredselect", @id = "Location" })}
+                                else
+                                {<select class="form-control required requiredselect" id="Location"><option>--Select---</option></select>}
+                            </div>
+                        </div>
+
+                        <div class="clearfix"></div>*@
+
+                        <div id="jqGrid_container">
+                            <table id="tbl_UserListForPermission" border="0" cellpadding="0" cellspacing="0"></table>
+                            <div id="divUserListForPermissionPager"></div>
+                        </div>
+
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+

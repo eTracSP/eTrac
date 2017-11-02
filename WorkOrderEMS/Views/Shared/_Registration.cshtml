@@ -1,0 +1,498 @@
+﻿@model WorkOrderEMS.Models.QRCModel
+
+@{
+    string StateID = string.Empty, Image = "no-profile-pic.jpg";
+    //if (Model != null && Model.UserModel != null && Model.UserModel.Address != null && Model.UserModel.Address.StateId.HasValue)
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string Controller = string.Empty, ActionName = string.Empty;
+
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("controller"))
+        {
+            Controller = ViewContext.RouteData.GetRequiredString("controller");
+            //Controller = routeValues["controller"].ToString();
+        }
+        if (routeValues.ContainsKey("action"))
+        {
+            ActionName = ViewContext.RouteData.GetRequiredString("action");
+            //ActionName = routeValues["action"].ToString();
+        }
+    }
+
+    /*
+    if (routeValues != null)
+    {
+        string actionName, controller = "";
+        if (routeValues.ContainsKey("action"))
+        {
+            var myaction = ViewContext.RouteData.GetRequiredString("action");
+            actionName = myaction;
+            //var myarea = ViewContext.RouteData.DataTokens["Area"];
+            //var myid = ViewContext.RouteData.DataTokens["area"];
+        }
+        if (routeValues.ContainsKey("controller"))
+        {
+            //controller = routeValues["controller"].ToString();
+            var mycontroller = ViewContext.RouteData.GetRequiredString("controller");
+            controller = mycontroller;
+        }
+    }
+    */
+
+
+    if (Model != null && Model.UserModel != null)
+    {
+        if (Model.UserModel.Address != null && Model.UserModel.Address.StateId.HasValue)
+        { StateID = Convert.ToString(Model.UserModel.Address.StateId); }
+        Image = string.IsNullOrEmpty(Model.UserModel.myProfileImage) ? "no-profile-pic.jpg" : Model.UserModel.myProfileImage;
+    }
+    else { Image = "no-profile-pic.jpg"; }
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    {
+        //ViewBag.Title = "Update Item";
+
+    }
+
+
+
+    long UserType = 0;
+
+    switch (Controller.ToLower())
+    {
+        case "itadministrator":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator);
+            break;
+        case "administrator":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator);
+            break;
+        case "manager":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Manager);
+            break;
+        case "employee":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee);
+            break;
+        case "client":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client);
+            break;
+
+        case "globaladmin":
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin);
+            break;
+        default:
+            UserType = Convert.ToInt64(WorkOrderEMS.Helper.UserType.GuestUser);//throw new Exception("");
+            break;
+    }
+}
+
+
+
+@Html.ValidationSummary(true)
+@*@Html.HiddenFor(model => Model.UserModel.EmployeeCategory)*@
+<input type="hidden" value='@UserType' name="UserModel.UserType">
+
+<input type="hidden" name="UserModel.EmployeeCategory" id="UserCategory" value='@Controller' />
+@Html.HiddenFor(model => Model.UserModel.UserId)
+@Html.HiddenFor(model => Model.UserModel.Address.AddressMasterId)
+@Html.AntiForgeryToken()
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+    <div class="panel-body">
+        <div class="row">
+
+
+
+            <div class="form-horizontal">
+
+
+                @if (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) && ActionName.ToLower() == "locationsetup")
+                {
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Administrator, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @if (ViewBag.AdministratorList != null && ViewBag.AdministratorList.Count > 0)
+                            {
+                            @Html.DropDownListFor(model => Model.UserModel.Administrator, new SelectList(ViewBag.AdministratorList, "UserId", "UserEmail"), "--Select--", new { @class = "form-control requiredselect", @id = "ddlAdministrator" })}
+                            else
+                            {<select class="form-control requiredselect" id="ddlAdministrator"><option>--Select--</option></select>}
+                        @Html.ValidationMessageFor(model => Model.UserModel.Administrator)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                }
+
+
+                @if (true)
+                {
+                    if (ActionName.ToLower() == "locationsetup")
+                    {
+                <div class="form-group col-lg-6 col-fmd-6 col-sm-12  col-xs-12">
+                    <div class="col-sm-offset-4">
+                        <input type="radio" name="IsExistingManager" id="1" checked="checked" value="1" />
+                        <span>New Manager</span>
+                        &nbsp;&nbsp;&nbsp;<input type="radio" name="IsExistingManager" id="0" value="0" />
+                        <span>Select from existing Manager List</span>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12" id="divexistingmanager">
+                    @Html.LabelFor(model => Model.UserModel.ExistManagerID, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @if (ViewBag.ManagerList != null && ViewBag.ManagerList.Count > 0)
+                                {
+                                @Html.DropDownListFor(model => Model.UserModel.ExistManagerID, new SelectList(ViewBag.ManagerList, "UserId", "UserEmail"), "--Select--", new { @class = "form-control requiredselect", @id = "ddlManager" })}
+                                else
+                                {<select class="form-control requiredselect" id="ddlManager"><option>--Select--</option></select>}
+                        @Html.ValidationMessageFor(model => Model.UserModel.ExistManagerID)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                    }
+                }
+
+
+
+                @*@if (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && ActionName.ToLower() == "locationsetup"))*@
+                @if (UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && UserType != Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) && ActionName.ToLower() == "locationsetup")
+                {
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Location, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @*@if (Model != null && Model.LocationList != null && Model.LocationList.Count > 0)*@
+                        @if (ViewBag.LocationList != null && ViewBag.LocationList.Count > 0)
+                            {
+                            @Html.DropDownListFor(model => Model.UserModel.Location, new SelectList(ViewBag.LocationList, "LocationId", "LocationName"), "--Select--", new { @class = "form-control requiredselect", @id = "Location" })}
+                            else
+                            {<select class="form-control requiredselect" id="Location"><option>--Select--</option></select>}
+                        @Html.ValidationMessageFor(model => Model.UserModel.Location)
+                    </div>
+                </div>
+                }
+
+
+                @*@if (UserType == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) && ActionName.ToLower() == "locationsetup")
+                    {
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => Model.UserModel.Manager, new { @class = "col-sm-4 control-label" })
+                            <div class="col-sm-8">
+                                @if (ViewBag.ManagerList != null && ViewBag.ManagerList.Count > 0)
+                                {
+                                    @Html.DropDownListFor(model => Model.UserModel.Manager, new SelectList(ViewBag.ManagerList, "UserId", "UserName"), "Select", new { @class = "form-control requiredselect", @id = "Manager" })}
+                                else
+                                {<select class="form-control requiredselect" id="Location"><option>Select</option></select>}
+                                @Html.ValidationMessageFor(model => Model.UserModel.Location)
+                            </div>
+                        </div>
+                    }*@
+
+                @if (Controller != "Client" && ActionName != "LocationSetup")
+                {
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.EmployeeID, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.EmployeeID, new { @Placeholder = "Employee ID", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.EmployeeID)
+                    </div>
+                </div>
+                }
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.ProfileImage, new { @class = "col-sm-4 control-label" })
+                    @ActionName
+                    <div class="col-sm-8">
+                        @*<img id="myProfileImage" src="@Url.Content("~/Content/Images/LocationLogo/" + Image)"*@
+                        <img id="myProfileImage" src="@Url.Content("~/Content/Images/ProjectLogo/" + Image)"
+                             class="img-rounded" alt="Rounded Image" style="width:110px; height:110px;">
+                        @*<input type="file" id="ProfileImage" name="ProfileImage" onchange="readURL(this);" value="Upload Profile Image">*@
+                        <input type="file" id="ProfileImage" name="ProfileImage" onchange="readURL(this);" value="Upload Profile Image">
+                        @*@Html.HiddenFor(model => Model.UserModel.ProfileImage, new { @id = "hiddnProfileImage" })*@
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.UserEmail, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => model.UserModel.UserEmail, new { @placeholder = "User Email", @class = "form-control" })
+                        @Html.TextBox("name", new { @placeholder = "email id", @class = "form-control" })
+
+
+
+
+                        @*   @Html.TextBoxFor(model => Model.UserModel.UserEmail, new { @Placeholder = "Email ID", @class = "form-control" })*@
+                        @Html.ValidationMessageFor(model => Model.UserModel.UserEmail)
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.AlternateEmail, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.AlternateEmail, new { @Placeholder = "Email ID", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.AlternateEmail)
+                    </div>
+                </div>
+
+
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.JobTitle, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @*@if (Model != null && ViewBag.JobTitleList != null && ViewBag.JobTitleList.Count > 0)*@
+                        @if (ViewBag.JobTitleList != null && ViewBag.JobTitleList.Count > 0)
+                        {
+                        @Html.DropDownListFor(model => Model.UserModel.JobTitle, new SelectList(ViewBag.JobTitleList, "GlobalCodeId", "CodeName"), "--Select--", new { @class = "form-control requiredselect", @id = "JobTitle" })}
+                        else
+                        {<select class="form-control requiredselect" id="JobTitle"><option>--Select--</option></select>}
+                        @Html.ValidationMessageFor(model => Model.UserModel.JobTitle)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.FirstName, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.FirstName, new { @Placeholder = "First Name", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.FirstName)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.LastName, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.LastName, new { @Placeholder = "Last Name", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.LastName)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+
+                @if (ActionName != "Create" && (Model != null && (Model.UpdateMode == null || Model.UpdateMode == false) || Model != null && Model.UserModel != null && (string.IsNullOrEmpty(Model.UserModel.Password))))
+                {
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Password, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Password, new { @Placeholder = "Password", @class = "form-control", @type = "Password", @autocomplete = "off" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Password)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.ConfirmPassword, new { @class = "col-sm-4 control-label", @autocomplete = "off" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.ConfirmPassword, new { @Placeholder = "Confirm Password", @class = "form-control", @type = "Password" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.ConfirmPassword)
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+                }
+
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Gender, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.RadioButtonFor(model => Model.UserModel.Gender, 1)Male &nbsp; @Html.RadioButtonFor(model => Model.UserModel.Gender, 2)Female
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.DOB, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.DOB, "{0:dd/MM/yyyy}", new { @Placeholder = "DOB", @class = "form-control", @id = "DOB" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.DOB)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12 hide">
+                    @Html.LabelFor(model => Model.UserModel.BloodGroup, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.BloodGroup, new { @Placeholder = "Blood Group", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.BloodGroup)
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
+
+            </div>
+        </div>
+    </div>
+    @*=================================*@
+    <div class="panel-heading">
+        Contact Details
+    </div>
+    <div class="row">
+        <div class="">
+            <div class="form-horizontal">
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.Address1, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.Address1, new { @Placeholder = "Address1", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.Address1)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.Address2, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.Address2, new { @Placeholder = "Address2", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.Address2)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.CountryId, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @if (ViewBag.Country != null)
+                        { @Html.DropDownListFor(model => Model.UserModel.Address.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), "--Select--", new { @class = "form-control requiredselect", @id = "Country", @onchange = "BindState()" })}
+                        else
+                        {<select class="form-control requiredselect" id="Country"><option>--Select--</option></select>}
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.CountryId)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.StateId, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        <select id="States" name="UserModel.Address.StateId" class="form-control required requiredselect"><option value="0">--Select--</option></select>
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.StateId)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.City, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.City, new { @Placeholder = "City", @class = "form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.City)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.ZipCode, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.ZipCode, new { @Placeholder = "ZipCode", @class = "Postal form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.ZipCode)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.Mobile, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.Mobile, new { @Placeholder = "Mobile", @class = "Mobile form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.Mobile)
+                    </div>
+                </div>
+                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                    @Html.LabelFor(model => Model.UserModel.Address.Phone, new { @class = "col-sm-4 control-label" })
+                    <div class="col-sm-8">
+                        @Html.TextBoxFor(model => Model.UserModel.Address.Phone, new { @Placeholder = "Phone", @class = "Phone form-control" })
+                        @Html.ValidationMessageFor(model => Model.UserModel.Address.Phone)
+                    </div>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="~/Scripts/common/Masking.js"></script>
+<script src="~/Scripts/ImageUpload/FileUpload.js"></script>
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+
+
+<script type="text/javascript">
+
+    $_imagePath = '@Url.Action("UploadImage", "GlobalAdmin")';
+
+
+    function readURL(input) {
+        if ($('#ProfileImage').val() != undefined && $('#ProfileImage').val() != '')
+        { $('#myProfileImage').prop('src', $('#ProfileImage').val()); }
+    }
+
+
+    $(document).ready(function () {
+        var d = new Date();
+        var curr_year = d.getFullYear();
+        $("#DOB").datepicker({ dateFormat: 'dd/mm/yy', maxDate: new Date, changeMonth: true, changeYear: true });
+
+        $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+        $_StateID = '@StateID';
+        //if ($("#Country").val() != '') {
+        BindState();
+        //}
+
+        /*Manager ddl*/
+        $('#divexistingmanager').prop('disabled', true);
+        chkisexistingmanager();
+        $('input[name=IsExistingManager]').on('click', function () {
+            chkisexistingmanager();
+        });
+
+
+
+        $('#ddlAdministrator').on('change', function () {
+            chkadministratorselection();
+        });
+
+        /*Manager ddl*/
+
+        /*Admininstrator ddl*/
+
+
+        /*Admininstrator ddl*/
+
+    });
+
+    function chkadministratorselection() {
+
+        var selectedcontrol = $('#ddlAdministrator option:selected').val();
+        if (selectedcontrol != undefined && selectedcontrol != '' && parseInt(selectedcontrol, 10) > 0) {
+        }
+        else {
+            clearallfields();
+        }
+    }
+
+
+    function chkisexistingmanager() {
+
+
+        $('.field-validation-error')
+    .removeClass('field-validation-error')
+    .addClass('field-validation-valid');
+
+        $('.input-validation-error')
+            .removeClass('input-validation-error')
+            .addClass('valid');
+
+        var isSelected = $('input[name=IsExistingManager]').prop('checked');
+        if (isSelected != undefined && isSelected != '' && isSelected != 'true') {
+            //$('#divexistingmanager').children().children().prev().prop('disabled', true);
+
+            //$('#divexistingmanager select').prop('disabled', true);
+            //$('#divexistingmanager select').val(-1);
+
+            $('#ddlManager').prop('disabled', true);
+            $('#ddlManager').val(-1);
+        }
+        else {
+            //$('#divexistingmanager').children().children().prev().prop('disabled', false);
+            $('#divexistingmanager select').prop('disabled', false);
+        }
+    }
+
+
+
+    function clearallfields() {
+
+
+        $('#ddlManager').prop('disabled', true);
+        $('#ddlManager').val(-1);
+        $('[name=IsExistingManager]').prop('checked', false);
+
+        //$.each($('input'), function (index, valuee) {
+        $.each($('#ManagerInformation input'), function (index, valuee) {
+            if (valuee.type == 'text' || valuee.type == 'file') {
+                $('#' + valuee.id).val('');
+            }
+        });
+
+        $.each($('#ManagerInformation select'), function (index, valuee) {
+            $('#' + valuee.id).val('-1');
+        });
+    }
+
+</script>
+

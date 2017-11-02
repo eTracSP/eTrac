@@ -1,0 +1,275 @@
+﻿@{
+
+    string loginUserName = "", loginUserEmail = "", loginUserContactNo = "", loginUserProfile = "";
+    long loginUserType = 0;
+    long userId = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        loginUserName = ObjLogin.FName + "'s";
+        loginUserEmail = ObjLogin.Email;
+        loginUserProfile = ObjLogin.UserProfile;
+        loginUserType = ObjLogin.UserRoleId;
+        userId = ObjLogin.UserId;
+        //loginUserContactNo = ObjLogin.ContactNo;
+    }
+
+    bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    switch ((WorkOrderEMS.Helper.UserType)loginUserType)
+    {
+        case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+            GloblaAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.ITAdministrator:
+            ITAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Administrator:
+            OnlyAdminUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Manager:
+            ManagerUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Employee:
+            EmployeeUser = true;
+            break;
+        case WorkOrderEMS.Helper.UserType.Client:
+            ClientUser = true;
+            break;
+        default:
+            GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+            break;
+    }
+
+}
+<link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet' type='text/css'>
+<link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css'>
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark" id="controlsidebar">
+    <!-- Create the tabs -->
+    <!-- Tab panes -->
+    <div class="tab-content" id="widgetsidebar">
+        <h4 class="control-sidebar-heading"> Layout Options</h4>
+        @{
+            WorkOrderEMS.Models.CommonModels.WidgetList DashboardWidget = (WorkOrderEMS.Models.CommonModels.WidgetList)Session["eTrac_DashboardWidget"];
+            List<string> UserRoles = (List<string>)Session["eTrac_UserRoles"];
+            if (DashboardWidget.AllWidgetList != null)
+            {
+                @*if (GloblaAdminUser || ITAdminUser)
+                    {
+                        <ul class="choice-list">
+                            @foreach (var widgetname in DashboardWidget.AllWidgetList)
+                            {
+                                if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                {
+                                    <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                }
+                                else
+                                {
+                                    <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                }
+                            }
+                        </ul>
+                        <input type="hidden" id="checkedboxids">
+                        <button class="applyBtn btn btn-small btn-sm btn-success" id="dashboardApply">Apply</button>
+                        <button class="cancelBtn btn btn-small btn-sm btn-default" id="dashboardCancel">Cancel</button>
+                    }*@
+
+                if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+                {
+                    if (UserRoles.Count > 0 && UserRoles != null)
+                    {
+                        <ul class="choice-list">
+                            @foreach (var widgetname in DashboardWidget.AllWidgetList)
+                            {
+                                if (UserRoles.Contains("eScanner") && ((widgetname.WidgetID == 376) || (widgetname.WidgetID == 386)))
+                                {
+                                    if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                }
+                                if (UserRoles.Contains("eMaintenance") && ((widgetname.WidgetID == 377) || (widgetname.WidgetID == 380) || (widgetname.WidgetID == 381) || (widgetname.WidgetID == 383)))
+                                {
+                                    if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                }
+                                if (UserRoles.Contains("Manage Users") && ((widgetname.WidgetID == 378) || (widgetname.WidgetID == 384)))
+                                {
+                                    if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                }
+                                if (UserRoles.Contains("GT Tracker") && ((widgetname.WidgetID == 379) || (widgetname.WidgetID == 385)))
+                                {
+                                    if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                }
+                                if (UserRoles.Contains("Daily Activity Reports") && ((widgetname.WidgetID == 382)))
+                                {
+                                    if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                    else
+                                    {
+                                        <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                                    }
+                                }
+                            }
+                        </ul>
+                        <input type="hidden" id="checkedboxids">
+                        <button class="applyBtn btn btn-small btn-sm btn-success" id="dashboardApply">Apply</button>
+
+                    }
+                    <button class="cancelBtn btn btn-small btn-sm btn-default" id="dashboardCancel">Cancel</button>
+                }
+                else
+                {
+                    <ul class="choice-list">
+                        @foreach (var widgetname in DashboardWidget.AllWidgetList)
+                        {
+                            if (DashboardWidget.CheckedList.Exists(x => x.WidgetID == widgetname.WidgetID))
+                            {
+                                <li class="checkbox layout-@widgetname.WidgetID is-checked" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                            }
+                            else
+                            {
+                                <li class="checkbox layout-@widgetname.WidgetID" id='@widgetname.WidgetID'> <span>@widgetname.WidgetName</span></li>
+                            }
+                        }
+                    </ul>
+                    <input type="hidden" id="checkedboxids">
+                    <button class="applyBtn btn btn-small btn-sm btn-success" id="dashboardApply">Apply</button>
+                    <button class="cancelBtn btn btn-small btn-sm btn-default" id="dashboardCancel">Cancel</button>
+                }
+
+
+            }
+            else
+            {
+                Response.Redirect("~/Login/Index");
+            }
+        }
+
+
+    </div>
+</aside>
+<!-- /.control-sidebar -->
+<!-- Add the sidebar's background. This div must be placed
+         immediately after the control sidebar -->
+<div class="control-sidebar-bg" id="autoHeightSideBar"></div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('.checkbox').click(function () {
+            $(this).toggleClass('is-checked');
+        });
+
+
+        $('#dashboardCancel').click(function () {
+            $('#controlsidebar').removeClass('control-sidebar-open');
+        });
+
+        $('#dashboardApply').click(function () {
+            try {
+                var id = "";
+                $('#widgetsidebar .choice-list li').each(function () {
+                    if ($('#' + this.id + '').hasClass('is-checked')) {
+
+                        var ChkBoxId = this.id;
+                        if (id == "") {
+                            id += ChkBoxId
+                        }
+                        else {
+
+                            id += "," + ChkBoxId
+                        }
+                    }
+
+                });
+                if ($('#checkedboxids').val() == id) {
+                    bootbox.alert("Checked setting is same as pervious.Please select differ options.");
+                }
+                else {
+                    try {
+                        $.ajax({
+                            type: 'GET',
+                            url: '@Url.Action("SaveDashboardWidgetSetting", "RolesAndPermissions")',
+                            //url: $_HostPrefix + '/RolesAndPermissions/SaveDashboardWidgetSetting',
+                            data: { "WidgetIds": id },
+                            beforeSend: function () {
+                                new fn_showMaskloader('Applying setting...Please wait.');
+                            },
+                            complete: function () {
+                                fn_hideMaskloader();
+                            },
+                            async: true,
+                        }).success(function (status) {
+                            if (status == true) {
+                                $('#reservation1').val('');
+                                location.reload();
+                            }
+                            else {
+                                bootbox.alert("Something went wrong. Please login again");
+                                window.setTimeout(function () {
+                                    window.location.href = $_HostPrefix;
+                                }, 3000)
+                            }
+                        }).error(function (xhr) {
+                        });
+                    } catch (e) {
+                        console.log('catch', e);
+                    }
+                }
+            }
+            catch (e) {
+                console.log('dashboardApply Click', e);
+            }
+        });
+
+        var ids = "";
+        $('#widgetsidebar .choice-list li').each(function () {
+            try {
+                if ($('#' + this.id + '').hasClass('is-checked')) {
+
+                    var ChkBoxId = this.id;
+                    if (ids == "") {
+                        ids += ChkBoxId
+                    }
+                    else {
+
+                        ids += "," + ChkBoxId
+                    }
+                }
+            }
+            catch (e) {
+                console.log('dashboardApply Click', e);
+            }
+        });
+        $('#checkedboxids').val(ids);
+    });
+
+
+</script>

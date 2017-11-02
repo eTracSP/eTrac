@@ -1,0 +1,100 @@
+﻿@{
+    ViewBag.Title = "List Daily Activity Report";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+
+<script type="text/javascript">
+    $(function () {
+        @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];}
+         $userType = '@ObjLogin2.UserRoleId';
+         $locationId = '@ObjLogin2.LocationID';
+
+         //$('#wrapper .sidebar-toggle').click(function () {
+         //    debugger
+         //    $('body').removeClass('ui-mobile-viewport ui-overlay-a');
+         //    if ($('body').hasClass('.sidebar-collapse')) {
+         //        $('body').removeClass('sidebar-collapse');
+         //    }
+         //    else {
+                 
+         //        $('body').addClass('sidebar-collapse');
+         //    }
+         //});        
+    });
+</script>
+
+@Styles.Render("~/Scripts/ClockPickerCss")
+@Scripts.Render("~/Scripts/ClockPickerJs")
+   <style>
+       .ui-datebox-container {
+           width: 215px !important;
+           margin-left: 108px;
+       }
+
+       .ui-datebox-flipcenter {
+           width: 180px !important;
+       }
+
+       .bg-success {
+           background-color: #CCC;
+       }
+
+       .ui-datebox-controls > .btn {
+           background-color: #d4d4d4 !important;
+           border-color: #d4d4d4 !important;
+           color: #000;
+       }
+       .dropdown-menu {
+           /* left: -108px; */
+       }
+
+       .dynamic-input {
+           display: inline-block;
+           padding: 1px 5px 0 0;
+           vertical-align: top;
+       }
+           .dynamic-input .input-group > input {
+               height: 28px !important;
+           }
+           .dynamic-input .input-group-addon {
+               display: none;
+           }
+       #dynamicToTime .input-group-addon {
+           display: none;
+       }
+       .drpLocation #drp_MasterLocation-button {
+         display:none;
+       }
+       .drpLocation #drp_MasterLocation {
+           display: block !important;
+       }
+       .ui-loader {
+           display: none;
+       }
+   </style>
+
+    <!--Assign Timer & Continuous timer-->
+    @*<link rel="stylesheet" href="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.css" />
+    <script type="text/javascript" src="http://cdn.jtsage.com/external/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.js"></script>*@
+ 
+<script src="~/GridListing/JqGridScript/ListDAR.js"></script>
+
+<script type="text/javascript">
+
+    $(window).bind('resize', function () {
+        var width = $('#jqGrid_container').width();
+        $('#tbl_DARList').setGridWidth(width);
+    });
+</script>
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    <div id="jqGrid_container">
+        <table id="tbl_DARList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divDARListPager"></div>
+    </div>
+</div>
+<script type="text/javascript">
+    $('.clockpicker').clockpicker();
+</script>

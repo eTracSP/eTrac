@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Work Request List";
+    Layout = "~/Views/Shared/_ClientLayout.cshtml";
+    long ProjectID = 0, UserID = 0;
+    if (ViewBag.ProjectID != null)
+    {
+        ProjectID = Convert.ToInt32(ViewBag.ProjectID);
+        UserID = Convert.ToInt32(ViewBag.UserId);
+    } 
+}
+<script type="text/javascript">
+    $_ProjectID = '@ProjectID';
+    $_UserID = '@UserID';
+</script>
+@Html.Partial("_WorkRequestList")
+

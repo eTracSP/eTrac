@@ -1,0 +1,109 @@
+﻿@{
+    ViewBag.Title = "Create IT Administrator";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+
+    long UserType = 0; bool GloblaAdminUser, ITAdminUser, OnlyAdminUser, ManagerUser, EmployeeUser, ClientUser;
+    GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        UserType = ObjLogin.UserRoleId;
+
+        #region Get Active User Type Flag
+        /*Get Active User Type Flag*/
+
+        switch ((WorkOrderEMS.Helper.UserType)ObjLogin.UserRoleId)
+        {
+            case WorkOrderEMS.Helper.UserType.GlobalAdmin:
+                GloblaAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.ITAdministrator:
+                ITAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Administrator:
+                OnlyAdminUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Manager:
+                ManagerUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Employee:
+                EmployeeUser = true;
+                break;
+            case WorkOrderEMS.Helper.UserType.Client:
+                ClientUser = true;
+                break;
+            default:
+                GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
+                break;
+        }
+
+        /*Get Active User Type Flag*/
+        #endregion Get Active User Type Flag
+    }
+    else
+    {
+        WorkOrderEMS.Helper.AlertMessageClass ObjAlertMessageClass = new WorkOrderEMS.Helper.AlertMessageClass();
+        ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger; ViewBag.Message = WorkOrderEMS.Helper.CommonMessage.SessionExpired();
+        //throw new Exception(WorkOrderEMS.Helper.CommonMessage.SessionExpired());
+        //Server.Transfer("Error");
+        Response.Redirect("~/Views/Shared/_GlobalAdminLayout.cshtml");
+    }
+
+    string myModelprefix = ViewBag.myModelprefixName;
+    string myModelprefixwidProfileImage = myModelprefix + "ProfileImage";
+    string myModelmyProfileImage = myModelprefix + "myProfileImage";
+    string UserTypeControlName = myModelprefix + "UserType";
+    //string ProfileImageLabelCaption = "Profile Image";
+
+    string ProfileImageLabelCaption = myModelprefix + ((ViewBag.ActionSection == "client") ? "Client Logo" : "Profile Image");
+    long hiddnUserType = 0;
+    string StateID = string.Empty, Image = "no-profile-pic.jpg";
+    var routeValues = HttpContext.Current.Request.RequestContext.RouteData.Values;
+    string actionName = string.Empty; string Controller = string.Empty, ActionName = string.Empty;
+    if (routeValues != null)
+    {
+        if (routeValues.ContainsKey("action"))
+        { actionName = routeValues["action"].ToString(); }
+    }
+    
+}<div class="clearfix"></div>
+</div>
+</section>
+@Html.ValidationSummary(true)
+<input type="hidden" value='@hiddnUserType' name='@UserTypeControlName'>
+<input type="hidden" name="UserModel.EmployeeCategory" id="UserCategory" value='@Controller' />
+@Html.Hidden("StateList", null, new { id = myModelprefix + "StateList", Value = ViewBag.StateList })
+@Html.Hidden(myModelprefix + "UserId")
+@Html.Hidden(myModelprefix + "AddressMasterId")
+@Html.Hidden(myModelprefix + "Address.AddressMasterId")
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        @using (Html.BeginForm("Create", "ITAdministrator", new { ActionName = ViewBag.ActionName }, FormMethod.Post, new { enctype = "multipart/form-data" }))
+    {
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    Personal Details
+                </div>
+                @{ViewBag.myModelprefixName = "UserModel."; ViewBag.ActionSection = "itadmin";}
+                <div id="CreateUser">
+                    @Html.Partial("_myRegistration")
+                </div>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="text-right">
+                        <button class="btn btn-default bluebutton" type="submit">Save</button>
+                        <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                        @*<a class="btn btn-default bluebutton" href="@System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"]">Cancel</a>*@
+                        <div class="clearfix"></div>
+                    </div></div><div class="clearfix"></div>
+                    <div class="marbottom"></div>
+                </div>
+    }
+    </div>
+    <div class="clearfix"></div>
+
+    @section scripts{
+        @Scripts.Render("~/bundles/jqueryval")
+    }
+    <script>
+        $("#drp_MasterLocation").hide();//.attr("display", "none");
+    </script>
+

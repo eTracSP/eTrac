@@ -1,0 +1,72 @@
+﻿@model WorkOrderEMS.Models.AssignInventoryModel
+
+@*@{
+    ViewBag.Title = "Assign Inventory";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}*@
+
+
+@using (Html.BeginForm("AssignInventory", "Manager")) 
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    @Html.HiddenFor(model=>model.AssignInventoryID)
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Assign Details
+        </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="">
+                    <div class="form-horizontal">
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.InventoryID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.InventoryID, new SelectList(ViewBag.Inventory, "Value", "Text"), "Select", new { @id = "ddlInventory", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.InventoryID)
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.AssignedUserID, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.DropDownListFor(model => model.AssignedUserID, new SelectList(ViewBag.AssignedUser, "Value", "Text"), "--Select--", new { @id = "ddlAssignedUser", @class = "form-control" })
+                                @Html.ValidationMessageFor(model => model.AssignedUserID)
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            @Html.LabelFor(model => model.IssueDate, new { @class = "col-sm-4 control-label" })
+                            <div class="col-md-8">
+                                @Html.TextBoxFor(model => model.IssueDate, new { @Placeholder = "Issue Date", @class = "form-control", @id = "IssueDate" })
+                                @Html.ValidationMessageFor(model => model.IssueDate)
+                            </div>
+                        </div>
+                      
+                        <div class="clearfix"></div>
+                        <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                            <div class="col-sm-offset-4 col-sm-8">
+                                <button class="btn btn-default bluebutton" type="submit">Save</button>                                
+                                <a href="~/Manager" class="btn btn-default bluebutton">Cancel</a>                                
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+}
+<script type="text/javascript">
+ $(document).ready(function () {
+        var d = new Date();
+        var curr_year = d.getFullYear();
+        $("#IssueDate").datepicker({}).on('changeDate', function (e) {
+            $(this).datepicker('hide');
+        });
+ });
+ </script>
+
+
+
+

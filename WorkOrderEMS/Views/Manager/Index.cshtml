@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Dashbord";
+    ViewBag.TitleDesc = "Statistics Overview";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel
+
+@*@{
+    ViewBag.Title = "Dashbord";
+    ViewBag.TitleDesc = "Statistics Overview";
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+}*@
+@*<div id="page-wrapper">*@
+
+@if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+{
+    <div class=" form-horizontal">
+        <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <label class="col-sm-12 control-label" for="QRCTYPE"><a id="AllLocation" class="btn btn-default bluebutton">View All Loation</a></label>
+        </div>
+
+    </div>
+}
+<div class="clearfix"></div>
+<div class="container-fluid">
+    <!-- Page Heading -->
+    <!-- /.row -->
+    @*<div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-info alert-dismissable >
+                    <button type=" button" class="close" data-dismiss="alert" aria-hidden="true">
+                &times;</button>
+                <i class="fa fa-info-circle"></i>  <strong>Like SB Admin?</strong> Try out <a href="http://startbootstrap.com/template-overviews/sb-admin-2" class="alert-link">SB Admin 2</a> for additional features!
+            </div>
+        </div>
+    </div>*@
+    <!-- /.row -->
+    <div class="row">
+        @*@ViewBag.AdministratorCount
+            @ViewBag.ManagerCount
+            @ViewBag.EmployeeCount
+            @ViewBag.ClientCount*@
+        @*<div class="col-lg-3 col-md-6">
+            <div class="panel panel-skyblue">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa  fa-user fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.AdministratorCount</div>
+                            <div>Administrator</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-users fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ManagerCount</div>
+                            <div>Manager</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        <span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>
+                    </div>
+                </a>
+            </div>
+        </div>*@
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-skyblue">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-users fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.EmployeeCount</div>
+                            <div>Employee</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        @*<span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>*@
+                    </div>
+                </a>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="panel panel-green">
+                <div class="panel-heading">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <i class="fa fa-users fa-5x"></i>
+                        </div>
+                        <div class="col-xs-9 text-right">
+                            <div class="huge">@ViewBag.ClientCount </div>
+                            <div>Clients</div>
+                        </div>
+                    </div>
+                </div>
+                <a href="#">
+                    <div class="panel-footer">
+                        @*<span class="pull-left">View Details</span>
+                        <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                        <div class="clearfix"></div>*@
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- /.row -->
+    <div class="row">
+        <script src="~/GridListing/JqGridScript/ManagersAllWorkOrders.js"></script>
+        <script src="~/GridListing/JqGridScript/WorkOrderAssignmentByManager.js"></script>
+        <script type="text/javascript">
+            $_UserID = 0;
+            $_isEdit = true;
+            $(window).bind('resize', function () {
+                var width = $('#jqGrid_container').width();
+                $('#tbl_WorkRequestAssignmentList').setGridWidth(width);
+            });
+        </script>
+        <ol class="breadcrumb fa-2x">
+            <li class="">
+                <i class="fa fa-dashboard"></i>
+                Pending Assignments
+            </li>
+        </ol>
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="jqGrid_container">
+                <table id="tbl_WorkRequestAssignmentList" border="0" cellpadding="0" cellspacing="0"></table>
+                <div id="divWorkRequestAssignmentListPager"></div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix margintop10"></div>
+    <div class="row">
+        <ol class="breadcrumb fa-2x">
+            <li class="">
+                <i class="fa fa-dashboard"></i>
+                Status of the work order assign to employee 
+            </li>
+        </ol>
+
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div id="jqGrid_container">
+                <table id="tbl_HistoryWorkRequestAssignmentList" border="0" cellpadding="0" cellspacing="0"></table>
+                <div id="divHistoryWorkRequestAssignmentListPager"></div>
+            </div>
+        </div>
+
+
+    </div>
+</div>
+@*</div>*@
+<script>
+    $(document).ready(function () {
+        //-----To Set the Location Selected By The User----//
+        //Created By Manoj Jaswal
+        $("#AllLocation").click(function () {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SetUserDashboardLocation", "GlobalAdmin")',
+                data: '',
+                beforeSend: function () {
+                    //new fn_showMaskloader('please wait...Deleting');
+                },
+                success: function (Data) {
+
+                },
+                error: function () {
+                    alert("Error:")
+                },
+                complete: function () {
+                    window.location.reload();
+                }
+            })
+            //------END------//
+        })
+    })
+
+</script>
+

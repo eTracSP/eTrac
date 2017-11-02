@@ -1,0 +1,161 @@
+﻿@{
+    ViewBag.Title = "Login";
+    //Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+    Layout = null;
+}
+<style>
+    .loginClass {
+        float: right;
+        left: 1000px;
+        position: fixed;
+        top: 10px;
+    }
+</style>
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="icon" href="~/Images/logo-etrac.png" type="image/gif" sizes="16x16">
+    <title>eTrac</title>
+
+
+    <link href="~/Content/common/bootstrap.min.css" rel="stylesheet" />
+    @*<link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />*@
+    <link href="~/Content/common/admin.css" rel="stylesheet" />
+</head>
+
+<body class="loginbody">
+    <div class="container logindiv">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="loginlogo">
+                    <img src="~/images/logo-etrac.png" alt="">
+                </div>
+
+                <div class="login-panel panel panel-default">
+
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Sign In</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form">
+                            <fieldset>
+                                <div class="form-group">
+                                    <input type="email" autofocus="" name="email" placeholder="Email Id" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <input type="password" value="" name="password" placeholder="Password" class="form-control">
+                                </div>
+                                <div class="checkbox">
+                                    <label>
+                                        <input type="checkbox" value="Remember Me" name="remember">Remember Me
+                                    </label>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                <div class="form-group">
+                                    <a class="bluebutton btn btn-lg btn-success btn-block" href="javascript:void(0)">Login</a>
+                                </div>
+                                <a href="javascript:void(0)">Forgot your password?</a>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="login-panel panel panel-default templogin">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Temporary redirect section</h3>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="clear"></div>
+
+                    <fieldset>
+                        <div class="clear"></div>
+
+                        <div class="form-group col-sm-offset-2 col-sm-8 margintop10">
+                            @*<a href="~/GlobalAdmin" class="btn btn-default bluebutton">Login as Global Admin</a>*@
+
+                            @Html.ActionLink("Login as Global Admin", "LoginAsGlobalAdmin", "Login", null, new { @class = "btn btn-default bluebutton" })
+
+                        </div>
+                        <div class="clear"></div>
+
+
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            @*<a href="#" class="btn btn-default bluebutton">Login as IT Administrator</a>*@
+                            @Html.ActionLink("Login as IT Administrator", "LoginAsITAdministrator", "Login", null, new { @class = "btn btn-default bluebutton" })
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            @*<a href="#" class="btn btn-default bluebutton">Login as Administrator</a>*@
+                            @Html.ActionLink("Login as Administrator", "LoginAsAdministrator", "Login", null, new { @class = "btn btn-default bluebutton" })
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            @*<a href="~/Manager" class="btn btn-default bluebutton">Login as Manager</a>*@
+                            @Html.ActionLink("Login as Manager", "LoginAsManager", "Login", null, new { @class = "btn btn-default bluebutton" })
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            @*<a href="~/Employee" class="btn btn-default bluebutton">Login as Employee</a>*@
+                            @Html.ActionLink("Login as Employee", "LoginAsEmployee", "Login", null, new { @class = "btn btn-default bluebutton" })
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            @*<a href="~/Client" class="btn btn-default bluebutton">Login as Client</a>*@
+                            @Html.ActionLink("Login as Client", "LoginAsClient", "Login", null, new { @class = "btn btn-default bluebutton" })
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 hide">
+                <div class="login-panel panel panel-default loginClass">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Test redirect section</h3>
+                    </div>
+                    <div class="clear"></div>
+                    <div class="clear"></div>
+
+                    <fieldset>
+                        <div class="clear"></div>
+
+                        <div class="form-group col-sm-offset-2 col-sm-8 margintop10">
+                            <a href="~/QRCSetup" class="btn btn-default bluebutton">QR Code Setup</a>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            <a href="~/QRCSetup/ListQRC" class="btn btn-default bluebutton">QRC List</a>
+                        </div>
+                        <div class="clear"></div>
+
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            <a href="~/Manager" class="btn btn-default bluebutton">Login as Manager</a>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            <a href="~/Employee" class="btn btn-default bluebutton">Login as Employee</a>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="form-group col-sm-offset-2 col-sm-8">
+                            <a href="~/Client" class="btn btn-default bluebutton">Login as Client</a>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+    <!-- Core Scripts - Include with every page -->
+    <script src="~/Scripts/common/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/common/bootstrap.min.js"></script>
+</body>
+</html>

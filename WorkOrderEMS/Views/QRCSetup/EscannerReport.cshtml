@@ -1,0 +1,141 @@
+﻿@{
+    ViewBag.Title = "Escanner Report";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    
+}
+<script src="~/Content/Report-NavBar/jquery.smooth-scroll.js"></script>
+<script src="~/Content/Report-NavBar/run_prettify.js"></script>
+<!-- stylesheets-->
+<link href="http://fonts.googleapis.com/css?family=Lustria|Lato:300,400,700,400italic" rel="stylesheet" type="text/css">
+<link href="~/Content/Report-NavBar/ohover.css" rel="stylesheet" />
+<link href="~/Content/Report-NavBar/main.css" rel="stylesheet" />
+
+<style>
+    #ReportBar li a {
+        border-radius: 4px 4px 0 0 !important;
+        border-color: lightgray;
+    }
+
+    .active a {
+        background-color: #0aa0cd !important;
+        color: white !important;
+    }
+</style>
+<div class="clearfix"></div>
+<div class="content-header ">
+    <div class="panel">
+        <div data-example-id="simple-nav-justified" class="bs-example">
+
+            <div class="row-2">
+                <div class="item-hover circle effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=QRC Scan" id="qrcScan">*@
+                        <a href="@Url.Action("QRCScan", "Report")" id="qrcScan">
+                            <div class="img"><img src="~/Content/Images/Report/QRCScan.jpg"></div>
+                            <div class="info">
+                                <h5>QRC Scan</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Routine Check">*@
+                        <a href="@Url.Action("RoutineCheck", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/f2.jpg"></div>
+                            <div class="info">
+                                <h5>Routine Check</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Cleaning">*@
+                        <a href="@Url.Action("Cleaning", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/cleaning.png"></div>
+                            <div class="info">
+                                <h5>Cleaning</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Trash Level">*@
+                        <a href="@Url.Action("TrashLevels", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/TrashLevel.png"></div>
+                            <div class="info">
+                                <h5>Trash Levels</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            @*<div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    <a href="@Url.Action("TrashPickedUp", "Report")">                        
+                            <div class="img"><img src="~/Content/Images/Report/trashpickedup.jpg"></div>
+                            <div class="info">
+                                <h5>Trash PickedUp</h5>
+                            </div>
+                        </a>
+</div>
+            </div>*@
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Trash Picked Up Details">*@
+                        <a href="@Url.Action("TrashPickedUpDetails", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/trashpickedup.jpg"></div>
+                            <div class="info">
+                                <h5>Trash PickedUp Details</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=QRC Expiration">*@
+                        <a href="@Url.Action("QrcExpiration", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/expiration1.jpg"></div>
+                            <div class="info">
+                                <h5>QRC Expiration</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=QRC Owned By" target="_blank">*@
+                        <a href="@Url.Action("QrcOwnedBy", "Report")">
+                            <div class="img"><img src="~/Content/Images/Report/ownedby5.png"></div>
+                            <div class="info">
+                                <h5>QRC OwnedBy</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    <a href="@Url.Action("Damage", "Report")">
+                        @*<a href="../Report/Reports?ReportName=Damage">*@
+                            <div class="img"><img src="~/Content/Images/Report/damage1.png"></div>
+                            <div class="info">
+                                <h5>Damage</h5>
+                            </div>
+                        </a>
+</div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    <a href="@Url.Action("QrcDetails", "Report")">
+                        @*<a href="../Report/Reports?ReportName=QRC Amount">*@
+                            <div class="img"><img src="~/Content/Images/Report/f9.png"></div>
+                            <div class="info">
+                                <h5>QRC Amount</h5>
+                            </div>
+                        </a>
+</div>
+            </div>
+
+        </div>
+    </div>
+</div>

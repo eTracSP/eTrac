@@ -1,0 +1,545 @@
+﻿@model WorkOrderEMS.Models.eFleetMaintenanceModel
+@{
+    ViewBag.Title = "Create Maintenance";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long locationId = 0;
+    long userType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+}
+<link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
+<link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
+@*<link href="~/Content/eFleetVehicle/style.css" rel="stylesheet" />*@
+<style type="text/css">
+    .errorspace {
+        margin-top: -5px
+    }
+
+    .input-icon {
+        position: relative;
+    }
+
+        .input-icon > i {
+            position: absolute;
+            display: block;
+            transform: translate(0, -50%);
+            top: 48%;
+            pointer-events: none;
+            width: 25px;
+            text-align: center;
+            font-style: normal;
+        }
+
+        .input-icon > input {
+            padding-left: 25px;
+            padding-right: 0;
+        }
+</style>
+@section scripts{
+    <script type="text/javascript">
+        debugger
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_QRCList').setGridWidth(width);
+        });
+        $('#btnMyModalFORQRC').live("click", function () {
+            $('#myModalLicence').modal('show');
+        });
+
+    </script>
+}
+@Html.AntiForgeryToken()
+@Html.ValidationSummary(true)
+@using (Html.BeginForm("Index", "eFleetMaintenance", FormMethod.Post, new { enctype = "multipart/form-data", @id = "Maintenance_form" }))
+{
+    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Create Maintenance
+            </div>
+            <div class=" clearfix"></div>
+            <div class="form">
+                <div class="tab-content">
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            @Html.HiddenFor(model => model.VehicleID)
+                            @Html.HiddenFor(model => model.PmID)
+                            @Html.HiddenFor(model => model.MaintenanceID)
+                            @Html.HiddenFor(model => model.CreatedBy)
+                            @Html.HiddenFor(model => model.CreatedDate)
+                            <label>
+                                Vehicle Number<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.VehicleNumber != null)
+                            {
+                                <select name="@Html.NameFor(model => model.VehicleNumber)"
+                                        id="@Html.IdFor(model => model.VehicleNumber)"
+                                        onchange="BindVehicleID()">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.VehicleNumber)
+                                    {
+                                        <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID"
+                                                @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
+                                                                                                                                                                                                                                                                                                                                                    }>
+                                            @Vn.VehicleNumber
+                                        </option>
+                                    }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
+                                </select>
+                            }
+                            else
+                            {<select id="VehicleNumber"><option value="-1">@ViewBag.VehicleNumber</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.VehicleNumber)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Maintenance Type<span class="req">*</span>
+                            </label>
+                            @if (ViewBag.MaintenanceType != null)
+                            {
+                                <select name="@Html.NameFor(model => model.MaintenanceType)"
+                                        id="@Html.IdFor(model => model.MaintenanceType)"
+                                        onchange="BindSchedulePM()">
+                                    <option>--Select--</option>
+                                    @foreach (var Vn in ViewBag.MaintenanceType)
+                                    {
+                                        <option value="@Vn.GlobalCodeId" data-vid="@Vn.CodeName"
+                                                @if (Vn.GlobalCodeId == Model.MaintenanceType) { @: selected="selected"
+                                                                                                                                                                                                                                                                                                                                                                                                    }>
+                                            @Vn.CodeName
+                                        </option>
+                                    }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
+                                </select>
+                            }
+                            @*@Html.DropDownListFor(model => model.MaintenanceType, new SelectList(ViewBag.MaintenanceType, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "MaintenanceType", @onchange = "BindSchedulePM()" })*@
+                            else
+                            {<select id="State"><option value="-1">@ViewBag.MaintenanceType</option></select>}
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.MaintenanceType)
+                            </div>
+                        </div>
+                    </div>
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true && Model.MaintenanceType == 445)
+                    {
+                        <div class="top-row" id="IssueDetailsShow" style="margin-top:-10px">
+                            <label style="margin-left:40px; ">Scheduled PM</label><br><br>
+                            @if (ViewBag.RemainderMetricDesc != null)
+                            {
+                                foreach (var rmd in ViewBag.RemainderMetricDesc)
+                                {
+                                    <span>
+                                        @if (rmd.PmID == Model.PmID)
+                                        {
+                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" checked="checked" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                        }
+                                        else
+                                        {
+                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" /> <span>&nbsp;&nbsp;</span> @rmd.ReminderMetricDesc
+                                        }
+
+                                        @*<input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM"
+                                            @if (rmd.PmID == Model.PmID) { @: checked="checked" />  @rmd.ReminderMetricDesc*@
+                                        @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
+                                    </span><br><br>
+                                }
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="top-row" id="IssueDetailsShow" style="display:none;margin-top:-10px">
+                            <label style="margin-left:40px; ">Scheduled PM</label><br><br>
+                            @if (ViewBag.RemainderMetricDesc != null || Model.MaintenanceType == 445)
+                            {
+                                foreach (var rmd in ViewBag.RemainderMetricDesc)
+                                {
+                                    <span>
+                                        <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                        @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
+                                    </span><br><br>
+                                }
+                            }
+                        </div>
+                    }
+                   @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true || Model.MaintenanceType == 445)
+                   {
+                      <div style="display:none;" id="brfordate">
+                       <br>
+                      </div>
+                   }
+                    <br>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Date<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.MaintenanceDate, "{0:MM/dd/yyyy}", new { @id = "MaintenanceDate", @onkeydown = "return false;" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.MaintenanceDate)
+                            </div>
+                        </div>
+                        @*<div class="field-wrap" id="IssueDetailsShowonRadioSelected" style="display: none">
+                                <label>
+                                    Issue Details<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.ReminderMetricDesc, new { @id = "ReminderDesc", @style = "background-color:#CACFD2" })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.ReminderMetricDesc)
+                                </div>
+                            </div>*@
+                        <div class="field-wrap" id="IssueDetailsHide">
+                            <label>
+                                Issue Details<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.ReminderMetricDesc, new { @id = "ReminderMetricDesc" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.ReminderMetricDesc)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Driver Name<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.DriverName, new { @id = "DriverName" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.DriverName)
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                Days Out Of Service<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.DaysOutOfService, new { @id = "DaysOutOfService", @maxLength = "2", onkeypress = "return isNumberKey(event) " })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.DaysOutOfService)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <div class="input-icon">
+                                <i>$</i>
+                                <label style="margin-left: 10px;">
+                                    Parts<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.PartsCost, new { @id = "PartsCost", @maxLength = "10", @onchange = "sum();", @onkeypress = "return isNumberKey(event) " })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.PartsCost)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="field-wrap">
+                            <div class="input-icon">
+                                <i>$</i>
+                                <label style="margin-left: 10px;">
+                                    Labour Costs<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.LabourCost, new { @id = "LabourCost", maxlength = "10", @onchange = "sum();", @onkeypress = "return isNumberKey(event) " })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.LabourCost)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <div class="input-icon">
+                                <i>$</i>
+                                <label style="margin-left: 10px;">
+                                    Total Costs<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.TotalCost, new { @id = "TotalCost", @style = "background-color:#CACFD2", @readonly = "readonly" })
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.TotalCost)
+                                </div>
+                            </div>
+                        </div>
+                        <div class="field-wrap">
+                            <label>
+                                End Odo. (Miles)<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.Miles, new { @id = "Miles", maxlength = "10", @onkeypress = "return isNumberKey(event) " })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Miles)
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="top-row">
+                        <div class="field-wrap">
+                            <label>
+                                Notes<span class="req">*</span>
+                            </label>
+                            @Html.TextBoxFor(model => model.Note, new { @id = "Note" })
+                            <div class="errorspace">
+                                @Html.ValidationMessageFor(model => model.Note)
+                            </div>
+                        </div>
+                    </div>
+                    @*</form>*@
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Update</button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Submit</button>
+                    }
+                </div><!-- tab-content -->
+            </div> <!-- /form -->
+            <div class="marbottom"></div>
+        </div>
+    </div>
+}
+@* Validation when no fields are filled then text box border will red *@
+<script>
+    $(document).ready(function () {
+        $('input[type="radio"]').click(function () {
+            var result = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').val());
+            document.getElementById('ReminderMetricDesc').value = result;
+            var pmid = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').attr('id'));
+            document.getElementById('PmID').value = pmid;
+        });
+        //Attach change event to textbox
+        $("#MaintenanceType").change(function () {
+            //Check if value is empty or not
+            if ($(this).val() == "--Select--") {
+                //if empty then assign the border
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#MaintenanceDate").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#ReminderMetricDesc").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#DriverName").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#DaysOutOfService").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#PartsCost").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#LabourCost").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#TotalCost").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Miles").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#Note").change(function () {
+            if ($(this).val() == "") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+        $("#vehicleNumber").change(function () {
+            if ($(this).val() == "--Select--") {
+                $(this).css("border", "1px solid #bc3838");
+            }
+            else {
+                $(this).css("border", "1px solid #4475b5");
+            }
+        });
+    });
+    function validatetextbox() {
+        var txtvalvehiclenumber = $("#vehicleNumber").val();
+        var txtvalMaintenanceType = $("#MaintenanceType").val();
+        var txtvalMaintenanceDate = $("#MaintenanceDate").val();
+        var txtvalReminderMetricDesc = $("#ReminderMetricDesc").val();
+        var txtvalDriverName = $("#DriverName").val();
+        var txtvalDaysOutOfService = $("#DaysOutOfService").val();
+        var txtvalPartsCost = $("#PartsCost").val();
+        var txtvalLabourCost = $("#LabourCost").val();
+        var txtvalTotalCost = $("#TotalCost").val();
+        var txtvalMiles = $("#Miles").val();
+        var txtvalNote = $("#Note").val();
+        //Check if value is empty or not
+        if (txtvalMaintenanceType == "--Select--") {
+            //if empty then assign the border
+            $("#MaintenanceType").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#MaintenanceType").css("border", "1px solid #4475b5");
+        }
+        if (txtvalMaintenanceDate == "") {
+            $("#MaintenanceDate").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#MaintenanceDate").css("border", "1px solid #4475b5");
+        }
+        if (txtvalNote == "") {
+            $("#Note").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Note").css("border", "1px solid #4475b5");
+        }
+        if (txtvalReminderMetricDesc == "") {
+            $("#ReminderMetricDesc").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#ReminderMetricDesc").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDriverName == "") {
+            $("#DriverName").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#DriverName").css("border", "1px solid #4475b5");
+        }
+        if (txtvalDaysOutOfService == "") {
+            $("#DaysOutOfService").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#DaysOutOfService").css("border", "1px solid #4475b5");
+        }
+        if (txtvalPartsCost == "") {
+            $("#PartsCost").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#PartsCost").css("border", "1px solid #4475b5");
+        }
+        if (txtvalLabourCost == "") {
+            $("#LabourCost").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#LabourCost").css("border", "1px solid #4475b5");
+        }
+        if (txtvalTotalCost == "") {
+            $("#TotalCost").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#TotalCost").css("border", "1px solid #4475b5");
+        }
+        if (txtvalMiles == "") {
+            $("#Miles").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#Miles").css("border", "1px solid #4475b5");
+        }
+        if (txtvalvehiclenumber == "--Select--") {
+            $("#vehicleNumber").css("border", "1px solid #bc3838");
+        }
+        else {
+            $("#vehicleNumber").css("border", "1px solid #4475b5");
+        }
+    }
+</script>
+@*//File Upload script//*@
+<script language="javascript" type="text/javascript">
+    function isNumberKey(event) {
+        var iKeyCode = (event.which) ? event.which : event.keyCode
+        if (iKeyCode != 46 && iKeyCode > 31 && (iKeyCode < 48 || iKeyCode > 57))
+            return false;
+
+        return true;
+    }
+    function BindVehicleID() {
+        var vid = $('#VehicleNumber').find('option:selected').attr('data-vid');
+        // var codeId = $('#VehicleNumber').find('option:selected').attr('data-codeid');
+        // var vid = $(this).find('selected').attr('data-vid');
+        $('#VehicleID').val(parseInt(vid));
+        //$('#QRCodeID').val(codeId);
+    }
+    function sum() {
+        var txtFirstNumberValue = document.getElementById('PartsCost').value;
+        var txtSecondNumberValue = document.getElementById('LabourCost').value;
+        var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
+        var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
+        if (!isNaN(result)) {
+            document.getElementById('TotalCost').value = result;
+        }
+    }
+    function BindSchedulePM() {
+        if ($('#MaintenanceType').val() == 445) {
+            debugger
+            $("#IssueDetailsShow").show();
+            $("#brfordate").show();
+            // $("#IssueDetailsShowonRadioSelected").show();
+            // $("#IssueDetailsHide").hide();
+        } else {
+            $("#IssueDetailsShow").hide();
+            $("#brfordate").hide();
+            //  $("#IssueDetailsShowonRadioSelected").hide();
+        }
+    }
+    $(function () {
+        $("#MaintenanceDate").datepicker({ defaultDate: -1 });
+        // $("input[type='text']").focus();
+        $("input[id='Miles']").blur();
+        $("input[id='TotalCost']").blur();
+        $("input[id='LabourCost']").blur();
+        $("input[id='PartsCost']").blur();
+        $("input[id='DaysOutOfService']").blur();
+        $("input[id='DriverName']").blur();
+        $("input[id='ReminderMetricDesc']").blur();
+        $("input[id='MaintenanceType']").blur();
+        $("input[id='Note']").blur();
+        $("select").blur();
+        $("#vehicleNumber").focus();
+        $("#MaintenanceDate").blur();
+    });
+</script>
+<script src="~/Scripts/eFleetVehicle/reg.js"></script>

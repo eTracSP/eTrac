@@ -1,0 +1,448 @@
+﻿@*@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel*@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="~/Images/logo.png" type="image/gif" sizes="16x16">
+    <title>@ViewBag.Title - eTrac</title>
+
+    @*@Styles.Render("~/Content/css")*@
+    <link href="~/Content/bootstrap.css" rel="stylesheet" />
+    <link href="~/Content/Site.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/modernizr")
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+    @*desing mearg work 001*@
+    <link href="~/Content/common/admin.css" rel="stylesheet" />
+
+    @*@Scripts.Render("~/bundles/bootstrap")*@
+    <link href="~/Content/font-awesome/css/font-awesome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+
+    <!-- Page-Level Plugin CSS - Dashboard -->
+    <link href="~/Content/common/plugins/morris/morris-0.4.3.min.css" rel="stylesheet" />
+    <link href="~/Content/common/plugins/timeline/timeline.css" rel="stylesheet" />
+    <!-- SB Admin CSS - Include with every page -->
+
+
+
+    <link href="~/Content/themes/base/jquery.ui.theme.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.core.css" rel="stylesheet" />
+    <link href="~/Content/themes/base/jquery.ui.all.css" rel="stylesheet" />
+    <link href="~/Content/JqGridCSS/ui.jqgrid.css" rel="stylesheet" />
+    <link href="~/Content/JqGridCSS/DilogPopup.css" rel="stylesheet" />
+    <link href="~/Content/datepicker.css" rel="stylesheet" />
+    @*<link href="~/Content/themes/base/jquery.ui.datepicker.css" rel="stylesheet" />*@
+    <link href="~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/Content/formwizard.css" />
+    <link href="~/Content/SuperAdmin/sb-admin.css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="~/Content/common/plugins/simple-sidebar.css" rel="stylesheet" />
+    <script type="text/javascript" src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+    <!--FOLLOWING  files are used for JqGrid Javascript-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/grid.common.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/DilogPopUP.js")"></script>
+
+    <!--Validation-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
+    <!--DatePicker Javascript-->
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+
+    <!--File Upload-->
+    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+    @*<script src="~/Scripts/ImageUpload/FileUpload.js"></script>*@
+
+
+
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+
+    <!-- Page-Level Plugin Scripts - Dashboard -->
+    <script type="text/javascript" src="~/Scripts/common/plugins/morris/raphael-2.1.0.min.js"></script>
+    <!-- SB Admin Scripts - Include with every page -->
+    <script type="text/javascript" src="~/Scripts/common/sb-admin.js"></script>
+
+    <!--DatePicker Javascript-->
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+    <script src="~/Content/common/plugins/Loader/maskLoader.js"></script>
+    <link href='http://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
+    @RenderSection("scripts", required: false)
+
+</head>
+<body>
+    <div id="wrapper">
+        <!-- Navigation -->
+        <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="javascript:void(0)"><img src="~/images/logo.png" alt=""></a>
+            </div>
+            <!-- Top Menu Items -->
+            <ul class="navbar-right top-nav">
+
+                <li id="drp_MasterLocationLi" class="rel">
+                    @*@if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+                        {*@
+                    @*@Html.DropDownList("drp_MasterLocation", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), null, new { @class = "form-control", @id = "drp_MasterLocation" })*@
+                    @*}
+                        else
+                        {
+                            @Html.DropDownList("drp_MasterLocation", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), null, new { @class = "form-control", @id = "drp_MasterLocation", @disabled = "true" })
+                        }*@
+
+                    <i class="fa fa-map-marker location"></i>
+                </li>
+                @Html.Partial("_ControlMenu")
+
+
+            </ul>
+
+            <!-- /.navbar-top-links -->
+            <!-- /.navbar-static-side -->
+        </nav>
+        <div class="navbar-inverse collapse navbar-collapse navbar-ex1-collapse">
+            <div class="navbar-default navbar-static-side" role="navigation">
+
+                <div id="sidemenu">
+                    @*@Html.Partial("_SideMenu")*@
+                </div>
+                <!-- /.sidebar-collapse -->
+            </div>
+        </div>
+
+        <div id="page-wrapper">
+
+
+            <div class="container-fluid">
+
+                <a href="#menu-toggle" class="btn btn-primary togglebtn" id="menu-toggle"><i class="icon-reorder"></i></a>
+                <div class="">
+                    <ol class="breadcrumb">
+                        <li>
+                            <i class="fa "></i>
+                            <span>@ViewBag.Title </span>
+                            <small>@ViewBag.TitleDesc</small>
+                        </li>
+                    </ol>
+                </div>
+
+                <label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>
+
+                @RenderBody()
+
+            </div>
+            <!--child page end-->
+            @*</div>
+                </div>*@
+
+        </div>
+        @*<a href="#menu-toggle" class="btn btn-primary togglebtn" id="menu-toggle"><i class="fa fa-navicon"></i></a>*@
+
+        @*//Bootstrap modal dialog*@
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Printing QR-Code</h4>
+                        <input type="hidden" id="StateByCountryIDUrl" />
+                    </div>
+                    <div class="modal-body ">
+                        <label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>
+                        <div class="clearfix"></div>
+                        <div id="divToPrint" class="hide">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                @* <div class="panel panel-default" style="background:#eee">*@
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    <div class=" form-group">
+                                        <input type="hidden" id="EncryptQRC" value="@ViewBag.EncryptQRC" />
+                                        @*<div class="col-sm-8 col-sm-offset-4">*@
+                                        <label id="QRCName" class="col-sm-4 control-label">QRC Name:</label>
+                                        <div class="col-sm-8">
+                                            <div id="QRCDetails" class="show">
+                                                <div id="QRCName"> @ViewBag.QRCName </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group">
+                                        <label id="QRCName" class="col-sm-4 control-label">Special Notes:</label>
+                                        <div class="col-sm-8">
+                                            <div id="QRCNote">@ViewBag.SpecialNote </div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group">
+                                        <label id="QRCName" class="col-sm-4 control-label">QRC Size:</label>
+                                        <div class="col-sm-8">
+                                            <div class="noprint">
+                                                @{int iz = 1;}
+                                                @{if (ViewBag.QRCSize != null)
+                                                {@Html.DropDownListFor(x => iz, new SelectList(ViewBag.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCSize", @class = "form-control requiredselect", @onchange = "loadsizeselection()" });
+                                                }
+                                                else
+                                                {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
+                                                }
+                                            </div>
+                                            <div id="lblQRCSize" class="col-sm-4 control-label onlyforprint" style="display:none;"></div>
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    <div class="form-group">
+                                        <div class="col-sm-8">
+                                            <div id="container">
+                                                <canvas style="width: 200px; height: 200px;"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label id="QRCName" class="col-sm-4 control-label"></label>
+                                        <div class="noprint col-sm-8">
+                                            <button id="printQRC" type="button" onclick="PrintDiv();" class="btn btn-default bluebutton h5">Print</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*   </div>*@
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        @*<button type="button" onclick="return window.print();" class="btn btn-default bluebutton" data-dismiss="modal">ddprint</button>*@
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="myModalmedium" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Assign Project</h4>
+                    </div>
+                    <div class="modal-body" id="mediumeditpopup">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="myAssignedWorkOrder" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h4 class="modal-title" id="myModalLabel">Assigned Work Order Detail</h4>
+                    </div>
+                    <div class="modal-body" id="AssignedWorkorderBody">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+         <div class="modal fade" id="UserRegistrationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999999999;">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="myModalLabel">Create User</h4>
+                        </div>
+                        <div class="modal-body clearfix RegistrationUserSelect" id="UserRegisterModel">
+                            <div class="row of-bar transparent-deepsea">
+                    @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin))
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        <div class="form-group of-barcontainer">
+                                            <div class="col-sm-12">
+                                                <a href="@Url.Action("Create", "ITAdministrator")">
+                                                    <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-apps">
+                                                        <span class="of-bt-icon">
+                                                            <i class="fa icon-user  fa-5x "></i>
+                                                        </span>
+                                                        <span class="of-bt-title ">IT Administrator</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                    @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator))
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <a href="@Url.Action("Create", "Administrator")">
+                                                    <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-settings">
+                                                        <span class="of-bt-icon">
+                                                            <i class="fa icon-user  fa-5x "></i>
+                                                        </span>
+                                                        <span class="of-bt-title">Administrator</span>
+                                                    </div>
+                                                </a>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                    @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator))
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <a href="@Url.Action("Index", "Manager")">
+                                                    <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-storage">
+                                                        <span class="of-bt-icon ">
+                                                            <i class="fa icon-user fa-5x"></i>
+                                                        </span>
+                                                        <span class="of-bt-title ">Manager</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                    @if (ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) || ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client))
+                            {
+                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        <div class="form-group">
+                                            <div class="col-sm-12">
+                                                <a href="@Url.Action( "CreateEmployee","Employee")">
+                                                    <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-social">
+                                                        <span class="of-bt-icon">
+                                                            <i class="fa fa-group fa-5x "></i>
+                                                        </span>
+                                                        <span class="of-bt-title ">Employee</span>
+                                                    </div>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                            }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @Scripts.Render("~/bundles/bootstrap")
+        <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-multiselect.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-tooltip.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-confirmation.js")"></script>
+        <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootbox.js")"></script>
+        <script type="text/javascript" src="~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js"></script>
+
+        <!-- Page-Level Plugin Scripts - Dashboard -->
+        @*<script type="text/javascript" src="js/plugins/morris/raphael-2.1.0.min.js"></script>*@
+        <script type="text/javascript" src="~/Scripts/common/plugins/morris/raphael-2.1.0.min.js"></script>
+
+        <script type="text/javascript">
+
+            $("#menu-toggle").click(function (e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+
+            @{string hostPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];};
+            $_JqueryLoader = '@hostPrefix';
+            $_HostPrefix = '@hostPrefix';
+
+            function PrintDiv() {
+                $('.noprint').hide();
+                $('.onlyforprint').show();
+                var divToPrint = document.getElementById('divToPrint');
+                $('.modal-body').html(divToPrint.innerHTML);
+                var popupWin = window.open('', '_blank', 'width=400,height=400');
+                popupWin.document.open();
+                popupWin.document.write("<html><link href='/Content/bootstrap.css' rel='stylesheet'/><body onload='window.print();window.close();'><div style='width:300px;height:300px;'>" + divToPrint.innerHTML + "</html>");
+                //popupWin.document.write("<html><link href='/Content/bootstrap.css' rel='stylesheet'/><body onload='window.print();'><div style='width:400px;height:400px;'>" + divToPrint.innerHTML + "</html>");
+
+                if (popupWin.closed == false)
+                    popupWin.document.close();
+                $('.noprint').show();
+                $('.onlyforprint').hide();
+            }
+
+            function loadsizeselection() {
+                if ($('#QRCSize').select().val() != undefined && $('#QRCSize').select().val() != '' && parseInt($('#QRCSize').select().val()) > 0) {
+                    //alert($('#QRCSize').select().val());
+                    $('#lblQRCSize').text($('#QRCSize option:selected').html());
+                }
+                else { $('#lblQRCSize').text = ""; }
+            }
+
+            $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+            $(window).load(function () { fn_hideMaskloader(); })
+            $(document).ready(function () {
+                fn_showMaskloader('Please wait...Loading');
+                @{long Location = ((WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"]).LocationID;}
+                if ('@Location' != undefined || '@Location' > '0' || '@Location' != '') {
+                    $("#drp_MasterLocation").val(@Location);
+                }
+                var ismychk = false;
+
+                $('#StateByCountryIDUrl').val('@Url.Action("GetStateByCountryID", "Dropdown")');
+                var data = "@ViewBag.EncryptQRC";
+                if (data != null && data != "") {
+                    //$("#printQRC").trigger("click");
+                }
+
+                //-----To Set the Location Selected By The User----//
+                //Created By Manoj Jaswal
+                $("#drp_MasterLocation").change(function () {
+                    var LocationID = $(this).val();
+                    var LocationName = $("#drp_MasterLocation option:selected").text();
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                        data: { LocationID: LocationID, LocationName: LocationName },
+                        beforeSend: function () {
+                            //new fn_showMaskloader('please wait...Deleting');
+                        },
+                        success: function (Data) {
+
+                        },
+                        error: function () {
+
+                        },
+                        complete: function () {
+                            window.location.reload();
+                        }
+                    })
+                    //------END------//
+                })
+
+            });
+
+
+        </script>
+    </div>
+</body>
+</html>

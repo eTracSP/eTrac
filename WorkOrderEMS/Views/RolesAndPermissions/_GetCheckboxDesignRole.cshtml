@@ -1,0 +1,49 @@
+﻿@model WorkOrderEMS.Models.PermissionDetailsModel
+
+
+<script src="~/Scripts/bootstrap-checkbox.js"></script>
+
+
+
+<div id="chkboxdiv">
+    @Html.Label("Location Services", "Location Services", new { @class = "col-sm-4 control-label star rolesDivLabel" })
+    <div class="clearfix"></div>
+    @foreach (var per in Model.GetPermission)
+    {
+        <div class="checkbox squaredTwo">
+            <input type="checkbox" class="large" id='@per.PermissionId' name="checkboxPermissions" />&nbsp;<span>@per.PermissionName</span>
+            <label for="squaredTwo"></label>
+        </div>
+    }
+</div>
+
+<div class="clearfix"></div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[type="checkbox"]').checkbox({
+            buttonStyle: 'btn-link fa-1x',
+            buttonStyleChecked: 'btn-link fa-1x',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty',
+            constructorCallback: null,
+            defaultState: true,
+            defaultEnabled: true,
+
+            checked: true,
+            enabled: true
+
+        });
+        $('input[type="checkbox"].large').checkbox({
+            buttonStyle: 'btn-link btn-large',
+            checkedClass: 'icon-check',
+            uncheckedClass: 'icon-check-empty'
+        });
+    });
+</script>
+
+<style>
+    .checkbox {
+        padding: 0px !important;
+    }
+</style>

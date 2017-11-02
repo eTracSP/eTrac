@@ -1,0 +1,1360 @@
+﻿@model WorkOrderEMS.Models.SuperAdminModels.MasterLocationModel
+
+@{
+    ViewBag.Title = "Dashboard";
+    ViewBag.TitleDesc = "Count panel";
+    long locationId = 0;
+    long userId = 0;
+    long userType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = new WorkOrderEMS.Models.eTracLoginModel();
+    ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+    var viewallloc = Session["eTrac_SelectedDasboardLocationID"];
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userId = ObjLogin.UserId;
+        userType = ObjLogin.UserRoleId;
+    }
+    Layout = "~/Views/Shared/_GlobalAdminLayout.cshtml";
+}
+@{
+    List<string> UserRoles = new List<string>();
+    WorkOrderEMS.Models.CommonModels.WidgetList DashboardWidget = new WorkOrderEMS.Models.CommonModels.WidgetList();
+    try
+    {
+        DashboardWidget = (WorkOrderEMS.Models.CommonModels.WidgetList)Session["eTrac_DashboardWidget"];
+        UserRoles = (List<string>)Session["eTrac_UserRoles"];
+    }
+    catch (Exception)
+    { }
+
+}
+<ol class="breadcrumb">
+    @if (DashboardWidget.CheckedList.Count > 0)
+    {
+        <li>
+            <!-- Date range -->
+            <div class="form-group">
+                <div class="input-group">
+
+                    <div id="headCalender">
+                        <input type="text" class="form-control pull-right" id="reservation1" readonly="readonly">
+                    </div>
+                </div>
+                <!-- /.input group -->
+            </div>
+            <!-- /.form group -->
+        </li>
+    }
+    <li>
+        <div class="onoffswitch">
+            <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="ViewAllLocation">
+            <label class="onoffswitch-label" for="ViewAllLocation">
+                <span class="onoffswitch-inner"></span>
+                <span class="onoffswitch-switch"></span>
+            </label>
+        </div>
+    </li>
+    @if (DashboardWidget.CheckedList.Count > 0)
+    {
+        <li>
+            <a class="btn refreshbtn pull-right tooltipinfo" title="Refresh Dashboard" id="RefreshDashboard"><i class="fa fa-refresh"></i><span class="tooltips">Refresh</span></a>
+        </li>
+    }
+</ol><div class="clearfix"></div>
+    </div>
+            </section>
+@if (DashboardWidget.CheckedList.Count <= 0)
+{<div class="content">
+        <div class="alert alert-success">
+            <strong>ATTENTION!</strong><br> No dashboard layout selected. Please select a module to display.
+        </div>
+    </div>
+}
+@if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+{
+    if (UserRoles.Count > 0 && UserRoles != null)
+    {
+    <!-- Main content -->
+        <section class="content">
+            @if ((DashboardWidget.AllWidgetList != null) &&
+         (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Count" || x.WidgetName == "Work Order Count" || x.WidgetName == "User Count" || x.WidgetName == "Vendors Vehicle Count")) &&
+         (UserRoles.Contains("eScanner") || UserRoles.Contains("eMaintenance") || UserRoles.Contains("Manage Users") || UserRoles.Contains("GT Tracker")))
+            {
+            <!-- Small boxes (Stat box) -->
+                <div class="row">
+                    <div id="divCountPanel" class="hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5c">
+                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Count")) && UserRoles.Contains("eScanner"))
+                        {
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="card effect__hover hi-icon ">
+                                    <div class="card__front bg-red">
+                                        <div class="small-box  ">
+                                            <div class="col-sm-4 text-center">
+                                                <div class="icon"> <i class="fa fa-fw fa-qrcode"></i> </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="inner">
+                                                    <h3 id="QrcCount"></h3>
+                                                    <p>QRC</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card__back small-box bg-red">
+                                        <div class="col-sm-6 col-xs-6 backBgRedDark">
+                                            <h3><a href="@Url.Action("Index", "QRCSetup")"><i class="fa fa-fw fa-qrcode"></i></a></h3>
+
+                                            <h4><a href="@Url.Action("Index", "QRCSetup")">QR Code Setup</a></h4>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-6 backBgRedLight">
+                                            <h3><a href="@Url.Action("ListQRC", "QRCSetup")"><i class="fa fa-list-alt"></i></a></h3>
+                                            <h4><a href="@Url.Action("ListQRC", "QRCSetup")">QR Code List</a></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Work Order Count")) && UserRoles.Contains("eMaintenance"))
+                        {
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="card effect__hover  hi-icon ">
+                                    <div class="card__front bg-green">
+                                        <div class="small-box ">
+                                            <div class="col-sm-4 text-center">
+                                                <div class="icon"> <i class="fa fa-shopping-cart"></i> </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="inner">
+                                                    <h3 id="WorkRequestCount"></h3>
+                                                    <p>Work Order</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card__back small-box bg-green">
+                                        <div class="col-sm-6 col-xs-6 backBgGreenDark">
+                                            <h3><a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")"><i class="fa fa-pencil-square-o"></i></a></h3>
+                                            <h4><a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")">Create New</a></h4>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-6 backBgGreenLight">
+                                            <h3><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin")"><i class="fa fa-list-alt"></i></a></h3>
+                                            <h4><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin")">List Work Request</a></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "User Count")) && UserRoles.Contains("Manage Users"))
+                        {
+                            <div class="col-lg-3 col-xs-6">
+                                <!-- small box -->
+                                <div class="card effect__hover  hi-icon ">
+                                    <div class="card__front bg-light-blue">
+                                        <div class="small-box bg-light-blue">
+                                            <div class="col-sm-4 text-center">
+                                                <div class="icon"> <i class="fa fa-users"></i> </div>
+                                            </div>
+                                            <div class="col-sm-8">
+                                                <div class="inner">
+                                                    <h3 id="UserCount"></h3>
+                                                    <p>User</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card__back small-box bg-light-blue">
+                                        <div class="col-sm-6 col-xs-6 backbgblueDark">
+                                            <h3><a href="@Url.Action("CreateUser", "Common")"><i class="fa fa-user-plus"></i></a></h3>
+                                            <h4><a href="@Url.Action("CreateUser", "Common")">Register User</a></h4>
+                                        </div>
+                                        <div class="col-sm-6 col-xs-6 backBgBlueLight">
+                                            <h3><a href="@Url.Action("listclient", "GlobalAdmin")"><i class="fa fa-list-alt"></i></a></h3>
+                                            <h4><a href="@Url.Action("listclient", "GlobalAdmin")">All User List</a></h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
+                    </div>
+                </div>
+
+            }
+
+            @if ((DashboardWidget.AllWidgetList != null) &&
+         (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Project Progress" || x.WidgetName == "WorkOrder & User" || x.WidgetName == "Daily Activity Report")) &&
+        (UserRoles.Contains("eMaintenance") || UserRoles.Contains("Daily Activity Reports") || UserRoles.Contains("Manage Users")))
+            {
+        <!-- Main row -->
+                <div class="row">
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Project Progress")) && (UserRoles.Contains("eMaintenance")))
+                    {
+            <!-- Left col -->
+                        <div class="col-lg-8 col-sm-12 connectedSortable" id="ProjectProgress">
+                            <div id="" class="box box-success ">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title"><strong>Project</strong> Progress </h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <!-- /.box-header -->
+                                <div class="box-body tabsShow">
+                                    <div class="nav-tabs-custom">
+                                        <ul class="nav nav-tabs pull-right">
+                                            <li class="active"><a href="#divWOProgress" data-toggle="tab" title="Progress" class="tooltipInfo"><i class="fa fa-line-chart"></i><span class="tooltips">Progress</span></a></li>
+                                            <li><a href="#divWOPending" data-toggle="tab" title="Pending" class="tooltipInfo"><i class="fa fa-bar-chart"></i><span class="tooltips">Pending</span></a></li>
+                                            <li><a href="#divWOComplete" data-toggle="tab" title="Completed" class="tooltipInfo"><i class="fa fa-area-chart"></i><span class="tooltips">Completed</span></a></li>
+                                            <li>
+
+                                        </ul>
+                                        <div class="tab-content">
+                                            <div class="tab-pane active" id="divWOProgress">
+                                                <div class="box-body   table-responsive">
+                                                    <table id="dtWOProgress" class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="display:none">Code</th>
+                                                                <th style="width:14%">Code No. </th>
+                                                                <th style="width:13%;">Location</th>
+                                                                <th style="width:10%;">Project Type</th>
+                                                                <th style="width:12%;">Priority</th>
+                                                                <th style="width:20%;">Assign To</th>
+                                                                <th style="width:14%;">Created On</th>
+                                                                <th style="width:17%;">Progress</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="dtWOProgressbody"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- /.tab-pane -->
+                                            <div class="tab-pane" id="divWOPending">
+                                                <div class="box-body  table-responsive">
+                                                    <table id="dtWOPending" class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="display:none">Code</th>
+                                                                <th style="width:14%">Code No. </th>
+                                                                <th style="width:17%;">Location</th>
+                                                                <th style="width:18%;">Project Type</th>
+                                                                <th style="width:15%;">Priority</th>
+                                                                <th style="width:20%;">Assign To</th>
+                                                                <th style="width:16%;">Created On</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="dtWOPendingbody"></tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                            <!-- /.tab-pane -->
+                                            <div class="tab-pane" id="divWOComplete">
+                                                <div class="box-body table-responsive">
+                                                    <table id="dtWOComplete" class="table table-bordered table-striped">
+                                                        <thead>
+                                                            <tr>
+                                                                <th style="display:none">Code</th>
+                                                                <th style="width:14%">Code No. </th>
+                                                                <th style="width:17%;">Location</th>
+                                                                <th style="width:15%;">Priority</th>
+                                                                <th style="width:20%;">Completed By</th>
+                                                                <th style="width:16%;">Created On</th>
+                                                                <th style="width:18%;">Completed On</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="dtWOCompletebody"></tbody>
+
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-content -->
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                                <!-- /.footer -->
+                            </div>
+                            <!-- /.box-body -->
+                            <!-- /.footer -->
+                        </div>
+                    }
+
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User" || x.WidgetName == "Daily Activity Report"))
+                   && (UserRoles.Contains("eMaintenance") || UserRoles.Contains("Daily Activity Reports") || UserRoles.Contains("Manage Users")))
+                    {
+                        <div class="col-lg-4 col-sm-12 connectedSortable">
+                            @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User"))
+                      && (UserRoles.Contains("eMaintenance") || UserRoles.Contains("Manage Users")))
+                            {
+                    <!-- DONUT CHART -->
+                                <div class="box box-warning">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Work Order & Users</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="box-body chart-responsive">
+                                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User")) && (UserRoles.Contains("eMaintenance")))
+                                        {
+                                            <div id="divPieWorkOrderGraph" class="workOrderChart">
+                                                <div id="workOrderChart"></div>
+                                                <div id="legend"></div>
+                                            </div>
+                                        }
+                                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User")) && (UserRoles.Contains("Manage Users")))
+                                        {
+                                            <div id="divPieUserGraph" class="workOrderChartSmall">
+                                                <div class="mini-chart-list">
+                                                    <ul>
+                                                        <li>
+                                                            <span id="pieClientCount" class="epie-chart" data-percent="20" data-barcolor="#00acc1" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="80" data-animate="2000">
+                                                                <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                                <canvas width="40" height="40"></canvas>
+                                                            </span>
+                                                            <span class="chart-sub-title">Client</span>
+                                                            <label class="countPaneldb" id="ClientCount"></label>
+                                                        </li>
+                                                        <li>
+                                                            <span id="pieAdminCount" class="epie-chart" data-percent="35" data-barcolor="#ffb74d" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="80" data-animate="2000">
+                                                                <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent"><span>1</span></span>
+                                                                <canvas width="40" height="40"></canvas>
+                                                            </span>
+                                                            <span class="chart-sub-title">Administrator</span>
+                                                            <label class="countPaneldb" id="AdminCount"></label>
+                                                        </li>
+                                                        <li>
+                                                            <span id="pieManagerCount" class="epie-chart" data-percent="50" data-barcolor="#428A4B" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="80" data-animate="2000">
+                                                                <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                                <canvas width="40" height="40"></canvas>
+                                                            </span>
+                                                            <span class="chart-sub-title">Manager</span>
+                                                            <label class="countPaneldb" id="ManagerCount"></label>
+                                                        </li>
+                                                        <li>
+                                                            <span id="pieEmpCount" class="epie-chart" data-percent="75" data-barcolor="#DE4D4E" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="80" data-animate="2000">
+                                                                <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                                <canvas width="40" height="40"></canvas>
+                                                            </span>
+                                                            <span class="chart-sub-title">Employee</span>
+                                                            <label class="countPaneldb" id="EmpCount"></label>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                            }
+
+                            @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Daily Activity Report"))
+                        && (UserRoles.Contains("Daily Activity Reports")))
+                            {
+                    <!-- /.box -->
+                                <div class="box box-danger">
+                                    <div class="box-header with-border">
+                                        <h3 class="box-title">Daily Activity Report</h3>
+                                        <div class="box-tools pull-right">
+                                            <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                            <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                        </div>
+                                    </div>
+                                    <div id="divDarDetails" class="box-body tableinfo darInnerHeight">
+                                        <marquee direction="down" scrolldelay=500>
+                                            <table class="table table-striped">
+                                                <tbody id="darDetail"></tbody>
+                                            </table>
+                                        </marquee>
+                                    </div>
+                                    <!-- /.box-body -->
+                                </div>
+                            }
+
+                        </div>
+                    }
+                </div>
+            }
+
+            @if ((DashboardWidget.AllWidgetList != null) &&
+            (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "UnAssigned Work Order" || x.WidgetName == "Active Users")) &&
+            (UserRoles.Contains("eMaintenance") || UserRoles.Contains("Manage Users") || UserRoles.Contains("GT Tracker")))
+            {
+                <div class="row">
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "UnAssigned Work Order")) && (UserRoles.Contains("eMaintenance")))
+                    {
+                        <div class="col-lg-4 col-sm-12 connectedSortable ">
+                            <!-- DONUT CHART -->
+                            <div class="box box-info unAssignedWO">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Unassigned Work Order</h3>
+
+                                </div>
+                                <div id="divUnAssignedWODetails" class="box-body tableList">
+                                    <table class="table table-striped" id="TableUnAssignedDetails">
+                                        <tbody id="UnAssignedDetails"></tbody>
+                                    </table>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                            <!-- /.box -->
+                        </div>
+                    }
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Active Users")) && (UserRoles.Contains("Manage Users")))
+                    {
+                        <div class="col-lg-4 col-sm-12 connectedSortable">
+                            <div class="box box-primary ">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs userAct">
+                                        <li class="active"><a href="#divAllActiveUser" data-toggle="tab">All</a></li>
+                                        <li><a href="#divWebActiveUser" data-toggle="tab">Web</a></li>
+                                        <li><a href="#divMobActiveUser" data-toggle="tab">Mobile</a></li>
+                                        <li class="pull-right"><a href="javascript:void(0)">Active Users</a></li>
+                                    </ul>
+                                    <div class="tab-content userActList">
+                                        <div class="tab-pane active" id="divAllActiveUser">
+                                            <div class="box-body tableList">
+                                                <table class="table table-striped" id="tableActiveUser">
+                                                    <tbody id="AllActiverUser"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="divWebActiveUser">
+                                            <div class="box-body tableList">
+                                                <table class="table table-striped">
+                                                    <tbody id="WebActiverUser"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="divMobActiveUser">
+                                            <div class="box-body tableList">
+                                                <table class="table table-striped">
+                                                    <tbody id="MobActiverUser"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-content -->
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+
+            @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Scanned")) && (UserRoles.Contains("eScanner")))
+            {
+                <div class="row">
+                    <div class="col-sm-12 connectedSortable">
+
+                        <div id="divScannedByPanel" class="otherInfoBtm box ">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">QRC Scanned</h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <div class="box-body">
+                                <ul>
+                                    <li id="42">
+                                        <span class="greenBrd"><i class="fa fa-fax"></i></span>
+                                        <p class="number" id="PhoneSystems"></p>
+                                        <p class="textInfo">Phone System</p>
+                                    </li>
+                                    <li id="47">
+                                        <span class="blueBrd"><i class="fa fa-mobile"></i></span>
+                                        <p class="number" id="Devices"></p>
+                                        <p class="textInfo">Devices</p>
+                                    </li>
+                                    <li id="37">
+                                        <span class="orgBrd"><i class="fa fa-trash"></i></span>
+                                        <p class="number" id="TrashCan"></p>
+                                        <p class="textInfo">Trash Can</p>
+                                    </li>
+                                    <li id="38">
+                                        <span class="greyBrd"><i class="fa fa-arrows-v"></i></span>
+                                        <p class="number" id="Elevator"></p>
+                                        <p class="textInfo">Elevator</p>
+                                    </li>
+                                    <li id="46">
+                                        <span class="violetBrd"><i class="fa fa-wrench"></i></span>
+                                        <p class="number" id="Equipment"></p>
+                                        <p class="textInfo">Equipment</p>
+                                    </li>
+                                    <li id="40">
+                                        <span class="turquoiseBrd"><i class="fa fa-clipboard"></i></span>
+                                        <p class="number" id="TicketSpitter"></p>
+                                        <p class="textInfo">Ticket Spitter</p>
+                                    </li>
+                                    <li id="36">
+                                        <span class="redBrd"><i class="fa fa-car"></i></span>
+                                        <p class="number" id="Vehicle"></p>
+                                        <p class="textInfo">Vehicle</p>
+                                    </li>
+                                    <li id="41">
+                                        <span class="redBrd"><i class="fa fa-subway"></i></span>
+                                        <p class="number" id="BusStation"></p>
+                                        <p class="textInfo">Bus Station</p>
+                                    </li>
+                                    <li id="43">
+                                        <span class="turquoiseBrd"><i class="fa fa-road"></i></span>
+                                        <p class="number" id="MovingWalkway"></p>
+                                        <p class="textInfo">Moving Walkway</p>
+                                    </li>
+                                    <li id="44">
+                                        <span class="violetBrd"><i class="fa fa-ticket"></i></span>
+                                        <p class="number" id="Escalators"></p>
+                                        <p class="textInfo">Escalators</p>
+                                    </li>
+                                    <li id="45">
+                                        <span class="greenBrd"><i class="fa fa-building-o"></i></span>
+                                        <p class="number" id="Bathroom"></p>
+                                        <p class="textInfo">Bathroom</p>
+                                    </li>
+                                    <li id="101">
+                                        <span class="blueBrd"><i class="fa fa-map-signs"></i></span>
+                                        <p class="number" id="ParkingFacility"></p>
+                                        <p class="textInfo">Parking Facility</p>
+                                    </li>
+                                    <li id="375">
+                                        <span class="greyBrd"><i class="fa fa-bus"></i></span>
+                                        <p class="number" id="ShuttleBus"></p>
+                                        <p class="textInfo">Shuttle Bus</p>
+                                    </li>
+                                    <li id="39">
+                                        <span class="orgBrd"><i class="fa fa-outdent"></i></span>
+                                        <p class="number" id="GateArm"></p>
+                                        <p class="textInfo">Gate Arm</p>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </section>
+    }
+}
+else
+{
+    <!-- Main content -->
+    <section class="content">
+        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Count" || x.WidgetName == "Work Order Count" || x.WidgetName == "User Count" || x.WidgetName == "Vendors Vehicle Count")))
+        {
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+                <div id="divCountPanel" class="hi-icon-wrap hi-icon-effect-5 hi-icon-effect-5c">
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Count")))
+                    {
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="card effect__hover hi-icon ">
+                                <div class="card__front bg-red">
+                                    <div class="small-box  ">
+                                        <div class="col-sm-4 text-center">
+                                            <div class="icon"> <i class="fa fa-fw fa-qrcode"></i> </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="inner">
+                                                <h3 id="QrcCount"></h3>
+                                                <p>QRC</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__back small-box bg-red">
+                                    <div class="col-sm-6 col-xs-6 backBgGreenDark">
+                                        @if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) != 0)
+                                        {
+                                            <h3><a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")"><i class="fa fa-pencil-square-o"></i></a></h3>
+                                            <h4><a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")">Create New</a></h4>
+                                        }
+                                        else
+                                        {
+                                            <h3><a href="javascript:void(0)" onclick="SidemenuNotAllowed(this);"><i class="fa fa-pencil-square-o"></i></a></h3>
+                                            <h4><a href="javascript:void(0)" onclick="SidemenuNotAllowed(this);">Create New</a></h4>
+                                        }
+
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-6 backBgRedLight">
+                                        <h3><i class="fa fa-list-alt"></i></h3>
+                                        <h4><a href="@Url.Action("ListQRC", "QRCSetup")">QR Code List</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Work Order Count")))
+                    {
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="card effect__hover  hi-icon ">
+                                <div class="card__front bg-green">
+                                    <div class="small-box ">
+                                        <div class="col-sm-4 text-center">
+                                            <div class="icon"> <i class="fa fa-shopping-cart"></i> </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="inner">
+                                                <h3 id="WorkRequestCount"></h3>
+                                                <p>Work Order</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__back small-box bg-green">
+                                    <div class="col-sm-6 col-xs-6 backBgGreenDark">
+                                        <h3><i class="fa fa-pencil-square-o"></i></h3>
+                                        <h4><a href="@Url.Action("WorkRequestAssignment", "GlobalAdmin")">Create New</a></h4>
+                                    </div>
+                                    <div class="col-sm-6 col-xs-6 backBgGreenLight">
+                                        <h3><i class="fa fa-list-alt"></i></h3>
+                                        <h4><a href="@Url.Action("WorkAssignmentList", "GlobalAdmin")">List Work Request</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "User Count")))
+                    {
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="card effect__hover  hi-icon ">
+                                <div class="card__front bg-light-blue">
+                                    <div class="small-box bg-light-blue">
+                                        <div class="col-sm-4 text-center">
+                                            <div class="icon"> <i class="fa fa-users"></i> </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="inner">
+                                                <h3 id="UserCount"></h3>
+                                                <p>User</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__back small-box bg-light-blue">
+                                    <div class="col-sm-6 col-xs-6 backbgblueDark">
+                                        <h3><a href="@Url.Action("CreateUser", "Common")"><i class="fa fa-user-plus"></i></a></h3>
+                                        <h4><a href="@Url.Action("CreateUser", "Common")">Register User</a></h4>   
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-6 backBgBlueLight">
+                                        <h3><i class="fa fa-list-alt"></i></h3>
+                                        <h4><a href="@Url.Action("listclient", "GlobalAdmin")">All User List</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    }
+                    @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Vendors Vehicle Count")))
+                    {
+                        <div class="col-lg-3 col-xs-6">
+                            <!-- small box -->
+                            <div class="card effect__hover  hi-icon ">
+                                <div class="card__front  bg-aqua">
+                                    <div class="small-box bg-aqua">
+                                        <div class="col-sm-4 text-center">
+                                            <div class="icon"> <i class="fa fa-truck"></i> </div>
+                                        </div>
+                                        <div class="col-sm-8">
+                                            <div class="inner">
+                                                <h3 id="VendorsVehicleCount"></h3>
+                                                <p>Vendor's Vehicle</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="card__back small-box bg-aqua">
+                                    <div class="col-sm-6 col-xs-6 backBgAquaDark">                                     
+                                            <h3><a href="javascript:void(0)" onclick="SidemenuNotAllowed(this);"><i class="fa fa-plus-square"></i></a></h3>
+                                            <h4><a href="javascript:void(0)" onclick="SidemenuNotAllowed(this);">Register Vehicle</a></h4>                                   
+                                    </div>
+
+                                    <div class="col-sm-6 col-xs-6 backBgAquaLight">
+                                        <h3><i class="fa fa-list-alt"></i></h3>
+                                        <h4><a href="@Url.Action("Index", "Vehicle")">List Vehicle</a></h4>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+        }
+
+        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Project Progress" || x.WidgetName == "WorkOrder & User" || x.WidgetName == "Daily Activity Report")))
+        {
+        <!-- Main row -->
+            <div class="row">
+                @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Project Progress")))
+                {
+            <!-- Left col -->
+                    <div class="col-lg-8 col-sm-12 connectedSortable" id="ProjectProgress">
+                        <div id="" class="box box-success ">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><strong>Project</strong> Progress </h3>
+                                <div class="box-tools pull-right">
+                                    <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                    <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                </div>
+                            </div>
+                            <!-- /.box-header -->
+                            <div class="box-body tabsShow">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs pull-right">
+                                        <li class="active"><a href="#divWOProgress" data-toggle="tab" title="Progress" class="tooltipInfo"><i class="fa fa-line-chart"></i><span class="tooltips">Progress</span></a></li>
+                                        <li><a href="#divWOPending" data-toggle="tab" title="Pending" class="tooltipInfo"><i class="fa fa-bar-chart"></i><span class="tooltips">Pending</span></a></li>
+                                        <li><a href="#divWOComplete" data-toggle="tab" title="Completed" class="tooltipInfo"><i class="fa fa-area-chart"></i><span class="tooltips">Completed</span></a></li>
+                                        <li>
+
+                                    </ul>
+                                    <div class="tab-content">
+                                        <div class="tab-pane active" id="divWOProgress">
+                                            <div class="box-body   table-responsive">
+                                                <table id="dtWOProgress" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="display:none">Code</th>
+                                                            <th style="width:14%">Code No. </th>
+                                                            <th style="width:13%;">Location</th>
+                                                            <th style="width:10%;">Project Type</th>
+                                                            <th style="width:12%;">Priority</th>
+                                                            <th style="width:20%;">Assign To</th>
+                                                            <th style="width:14%;">Created On</th>
+                                                            <th style="width:17%;">Progress</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="dtWOProgressbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="divWOPending">
+                                            <div class="box-body  table-responsive">
+                                                <table id="dtWOPending" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="display:none">Code</th>
+                                                            <th style="width:14%">Code No. </th>
+                                                            <th style="width:17%;">Location</th>
+                                                            <th style="width:18%;">Project Type</th>
+                                                            <th style="width:15%;">Priority</th>
+                                                            <th style="width:20%;">Assign To</th>
+                                                            <th style="width:16%;">Created On</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="dtWOPendingbody"></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <!-- /.tab-pane -->
+                                        <div class="tab-pane" id="divWOComplete">
+                                            <div class="box-body table-responsive">
+                                                <table id="dtWOComplete" class="table table-bordered table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="display:none">Code</th>
+                                                            <th style="width:14%">Code No. </th>
+                                                            <th style="width:17%;">Location</th>
+                                                            <th style="width:15%;">Priority</th>
+                                                            <th style="width:20%;">Completed By</th>
+                                                            <th style="width:16%;">Created On</th> .
+                                                            <th style="width:18%;">Completed On</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="dtWOCompletebody"></tbody>
+
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-content -->
+                                </div>
+                            </div>
+                            <!-- /.box-body -->
+                            <!-- /.footer -->
+                        </div>
+                        <!-- /.box-body -->
+                        <!-- /.footer -->
+                    </div>
+                }
+
+                @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User" || x.WidgetName == "Daily Activity Report")))
+                {
+                    <div class="col-lg-4 col-sm-12 connectedSortable" id="workorderSection">
+                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "WorkOrder & User")))
+                        {
+
+                    <!-- DONUT CHART -->
+                            <div class="box box-warning">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Work Order</h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div class="box-body chart-responsive">
+                                    <div id="divPieWorkOrderGraph" class="workOrderChart">
+                                        <div id="workOrderChart"></div>
+                                        <div id="legend"></div>
+                                        @*<div class="chartName">
+                                                <ul><li>Work Request</li> <li>Special Project</li>  <li>Facility Request</li><li>Continuous Request</li></ul>
+                                                <ul><li>Pending</li> <li>In Progress</li> <li>Completed</li></ul>
+                                            </div>*@
+                                    </div>
+
+                                    <div id="divPieUserGraph" class="workOrderChartSmall">
+                                        <div class="mini-chart-list">
+                                            <ul>
+                                                <li>
+                                                    <span id="pieClientCount" class="epie-chart" data-percent="20" data-barcolor="#00acc1" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="76" data-animate="2000">
+                                                        <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                        <canvas width="40" height="40"></canvas>
+                                                    </span>
+                                                    <span class="chart-sub-title">Client</span>
+                                                    <label class="countPaneldb" id="ClientCount"></label>
+                                                </li>
+                                                <li>
+                                                    <span id="pieAdminCount" class="epie-chart" data-percent="35" data-barcolor="#ffb74d" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="76" data-animate="2000">
+                                                        <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent"><span>1</span></span>
+                                                        <canvas width="40" height="40"></canvas>
+                                                    </span>
+                                                    <span class="chart-sub-title">Administrator</span>
+                                                    <label class="countPaneldb" id="AdminCount"></label>
+                                                </li>
+                                                <li>
+                                                    <span id="pieManagerCount" class="epie-chart" data-percent="50" data-barcolor="#428A4B" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="76" data-animate="2000">
+                                                        <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                        <canvas width="40" height="40"></canvas>
+                                                    </span>
+                                                    <span class="chart-sub-title">Manager</span>
+                                                    <label class="countPaneldb" id="ManagerCount"></label>
+                                                </li>
+                                                <li>
+                                                    <span id="pieEmpCount" class="epie-chart" data-percent="75" data-barcolor="#DE4D4E" data-tcolor="#e0e0e0" data-scalecolor="#e0e0e0" data-linecap="round" data-linewidth="6" data-size="76" data-animate="2000">
+                                                        <span style="width: 40px; line-height: 80px; visibility: hidden;" class="percent">1</span>
+                                                        <canvas width="40" height="40"></canvas>
+                                                    </span>
+                                                    <span class="chart-sub-title">Employee</span>
+                                                    <label class="countPaneldb" id="EmpCount"></label>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        }
+
+                        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Daily Activity Report")))
+                        {
+                    <!-- /.box -->
+                            <div class="box box-danger darHeight">
+                                <div class="box-header with-border">
+                                    <h3 class="box-title">Daily Activity Report</h3>
+                                    <div class="box-tools pull-right">
+                                        <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                        <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <div id="divDarDetails" class="box-body tableinfo">
+                                    <marquee direction="down" scrolldelay=500>
+                                        <table class="table table-striped">
+                                            <tbody id="darDetail"></tbody>
+                                        </table>
+                                    </marquee>
+                                </div>
+                                <!-- /.box-body -->
+                            </div>
+                        }
+
+                    </div>
+                }
+
+            </div>
+        }
+        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "UnAssigned Work Order" || x.WidgetName == "Active Users")))
+        {
+            <div class="row">
+                @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "UnAssigned Work Order")))
+                {
+                    <div class="col-lg-4 col-sm-12 connectedSortable " id="unassignedSection">
+                        <!-- DONUT CHART -->
+                        <div class="box box-info unAssignedWO">
+                            <div class="box-header with-border">
+                                <h3 class="box-title">UnAssigned Work Order</h3>
+
+                            </div>
+                            <div id="divUnAssignedWODetails" class="box-body tableList">
+                                <table class="table table-striped" id="TableUnAssignedDetails">
+                                    <tbody id="UnAssignedDetails"></tbody>
+                                </table>
+                            </div>
+                            <!-- /.box-body -->
+                        </div>
+                        <!-- /.box -->
+
+                    </div>
+                }
+                @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "Active Users")))
+                {
+                    <div class="col-lg-4 col-sm-12 connectedSortable" id="activeUserSection">
+                        <div class="box box-primary ">
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs userAct">
+                                    <li class="active"><a href="#divAllActiveUser" data-toggle="tab">All</a></li>
+                                    <li><a href="#divWebActiveUser" data-toggle="tab">Web</a></li>
+                                    <li><a href="#divMobActiveUser" data-toggle="tab">Mobile</a></li>
+                                    <li class="pull-right"><a href="javascript:void(0)">Active Users</a></li>
+                                </ul>
+                                <div class="tab-content userActList">
+                                    <div class="tab-pane active" id="divAllActiveUser">
+                                        <div class="box-body tableList">
+                                            <table class="table table-striped" id="tableActiveUser">
+                                                <tbody id="AllActiverUser"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="divWebActiveUser">
+                                        <div class="box-body tableList">
+                                            <table class="table table-striped">
+                                                <tbody id="WebActiverUser"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="divMobActiveUser">
+                                        <div class="box-body tableList">
+                                            <table class="table table-striped">
+                                                <tbody id="MobActiverUser"></tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.tab-content -->
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+
+        @if ((DashboardWidget.AllWidgetList != null) && (DashboardWidget.CheckedList.Exists(x => x.WidgetName == "QRC Scanned")))
+        {
+            <div class="row">
+                <div class="col-sm-12 connectedSortable">
+
+                    <div id="divScannedByPanel" class="otherInfoBtm box ">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">QRC Scanned</h3>
+                            <div class="box-tools pull-right">
+                                <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                            </div>
+                        </div>
+                        <div class="box-body">
+                            <ul>
+                                <li id="42">
+                                    <span class="greenBrd"><i class="fa fa-fax"></i></span>
+                                    <p class="number" id="PhoneSystems"></p>
+                                    <p class="textInfo">Phone System</p>
+                                </li>
+                                <li id="47">
+                                    <span class="blueBrd"><i class="fa fa-mobile"></i></span>
+                                    <p class="number" id="Devices"></p>
+                                    <p class="textInfo">Devices</p>
+                                </li>
+                                <li id="37">
+                                    <span class="orgBrd"><i class="fa fa-trash"></i></span>
+                                    <p class="number" id="TrashCan"></p>
+                                    <p class="textInfo">Trash Can</p>
+                                </li>
+                                <li id="38">
+                                    <span class="greyBrd"><i class="fa fa-arrows-v"></i></span>
+                                    <p class="number" id="Elevator"></p>
+                                    <p class="textInfo">Elevator</p>
+                                </li>
+                                <li id="46">
+                                    <span class="violetBrd"><i class="fa fa-wrench"></i></span>
+                                    <p class="number" id="Equipment"></p>
+                                    <p class="textInfo">Equipment</p>
+                                </li>
+                                <li id="40">
+                                    <span class="turquoiseBrd"><i class="fa fa-clipboard"></i></span>
+                                    <p class="number" id="TicketSpitter"></p>
+                                    <p class="textInfo">Ticket Spitter</p>
+                                </li>
+                                <li id="36">
+                                    <span class="redBrd"><i class="fa fa-car"></i></span>
+                                    <p class="number" id="Vehicle"></p>
+                                    <p class="textInfo">Vehicle</p>
+                                </li>
+                                <li id="41">
+                                    <span class="redBrd"><i class="fa fa-subway"></i></span>
+                                    <p class="number" id="BusStation"></p>
+                                    <p class="textInfo">Bus Station</p>
+                                </li>
+                                <li id="43">
+                                    <span class="turquoiseBrd"><i class="fa fa-road"></i></span>
+                                    <p class="number" id="MovingWalkway"></p>
+                                    <p class="textInfo">Moving Walkway</p>
+                                </li>
+                                <li id="44">
+                                    <span class="violetBrd"><i class="fa fa-ticket"></i></span>
+                                    <p class="number" id="Escalators"></p>
+                                    <p class="textInfo">Escalators</p>
+                                </li>
+                                <li id="45">
+                                    <span class="greenBrd"><i class="fa fa-building-o"></i></span>
+                                    <p class="number" id="Bathroom"></p>
+                                    <p class="textInfo">Bathroom</p>
+                                </li>
+                                <li id="101">
+                                    <span class="blueBrd"><i class="fa fa-map-signs"></i></span>
+                                    <p class="number" id="ParkingFacility"></p>
+                                    <p class="textInfo">Parking Facility</p>
+                                </li>
+                                <li id="375">
+                                    <span class="greyBrd"><i class="fa fa-bus"></i></span>
+                                    <p class="number" id="ShuttleBus"></p>
+                                    <p class="textInfo">Shuttle Bus</p>
+                                </li>
+                                <li id="39">
+                                    <span class="orgBrd"><i class="fa fa-outdent"></i></span>
+                                    <p class="number" id="GateArm"></p>
+                                    <p class="textInfo">Gate Arm</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>}
+    </section>
+}
+
+
+<div class="modal fade preview" id="ModalDetailPreview" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+                <h4 class="modal-title" id="myModalLabel">Work Order Details</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="divDetailPreview" class="">
+
+                    <div class="row">
+
+                        <div class="" id="DivWorkDetailsIndex">
+
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label> Project Type</label>
+                                    <div id="lblProjectType" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labelWorkRequestType">Work Request Type</label>
+                                    <div id="lblWorkRequestType" class="form-control-static"></div>
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Priority Level</label>
+                                    <div id="lblPriorityLevel" class="form-control-static"></div>
+                                </div>
+
+                                <label id="labellAssignedWorkImage">Work Order Image</label>
+                                <div id="lblAssignedWorkImage" class="custom-size">
+                                    <canvas style="width: 200px!important; height: 200px!important;"></canvas>
+                                </div>
+                                <p>&nbsp;</p>
+
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                <div class="form-group">
+                                    <label id="labellWorkRequestStatus">Work Request Status</label>
+                                    <div id="lblWorkRequestStatus" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Submitted On</label>
+                                    <div id="lblSubmittedOn" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label id="labellProblemDescription"> Problem Description</label>
+                                    <div id="lblProblemDescription" class="form-control-static"></div>
+                                </div>
+                                <label>Code No</label>
+                                <div class="form-group">
+                                    <div id="lblCodeNo" class="form-control-static"></div>
+                                </div>
+                                <label>Location</label>
+                                <div class="form-group">
+                                    <div id="lblLocationName" class="form-control-static"></div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">
+                    <button data-dismiss="modal" class="btn btn-default bluebutton" id="btnCancelqwe">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Confirumation Preview-->
+<div class="modal fade preview" id="ModalQRCScannedView" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" style="width:900px">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="myModalLabel">QRC Scanned Details</h4>
+            </div>
+            <div class="modal-body" id="divQRCScannedPreview" style="height: 400px; overflow-y: scroll;">
+
+            </div>
+            <div class="modal-footer">
+                <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12" id="divPintFooter">
+                    <button id="Close_btn" type="button" class=" btn btn-default bluebutton" data-dismiss="modal" formnovalidate="formnovalidate">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Confirumation Preview-->
+<!-- /.Left col -->
+<!-- right col (We are only adding the ID to make the widgets sortable)-->
+<!-- right col -->
+<script>
+    $(document).ready(function () {
+
+        var loc = '@locationId';
+        var viewall = '@viewallloc';
+
+        if (viewall == 0 || viewall == '0') {
+            $('#ViewAllLocation').attr('checked', 'checked')
+            $('#drp_MasterLocation').hide();
+        }
+        else {
+            $('#ViewAllLocation').removeAttr('checked');
+            $('#drp_MasterLocation').show();
+        }
+
+        $('.headerBg  #ViewAllLocation').change(function () {
+            try {
+                var locaId = $('#ViewAllLocation').prop('checked') == true ? 0 : loc;
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SetViewAllUserDashboardLocation", "GlobalAdmin")',
+                    data: { "LocId": locaId },
+                    success: function (Data) {
+                    },
+                    error: function (error) {
+                        alert("Error:" + error.error)
+                    },
+                    beforeSend: function () {
+                        new fn_showMaskloader('Loading...');
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                        window.location.reload();
+
+                    }
+                })
+            }
+            catch (e) {
+                console.log('Error in view all location change', e);
+            }
+        });
+
+        //-----To Set the Location Selected By The User----//
+        //Created By Manoj Jaswal
+        $("#AllLocation").click(function () {
+            try {
+                $.ajax({
+                    type: "POST",
+                    url: '@Url.Action("SetUserDashboardLocation", "GlobalAdmin")',
+                    data: '',
+                    beforeSend: function () {
+                        //new fn_showMaskloader('please wait...Deleting');
+                    },
+                    success: function (Data) {
+
+                    },
+                    error: function () {
+
+                    },
+                    complete: function () {
+                        window.location.reload();
+                    }
+                })
+            } catch (e) {
+                alert(e.description);
+                console.log('catch', e);
+            }
+            //------END------//
+        })
+
+        $("#divScannedByPanel ul li").click(function () {
+            var fromDate = $('#daterangepicker0 .daterangepicker_start_input .input-mini').val();
+            var toDate = $('#daterangepicker0 .daterangepicker_end_input .input-mini').val();
+            var id = $(this).attr("id");
+            if ($('#' + id + ' .number').html() > 0 || $('#' + id + ' .number').html() > '0') {
+                try {
+                    $.ajax({
+                        type: 'GET',
+                        url: $_HostPrefix + '/GlobalAdmin/GetQRCScannedDetail',
+                        data: { "qrcType": id, "fromDate": fromDate, "toDate": toDate },
+                        async: true,
+                        contentType: "application/json",
+                        beforeSend: function () {
+                            new fn_showMaskloader('Loading...');
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        },
+                    }).success(function (dataItems) {
+                        if (dataItems.dataJson != null || dataItems.dataJson != "") {
+                            if (dataItems.dataJson.length > 0) {
+                                if (!$("#ModalQRCScannedView  #divQRCScannedPreview").length > 0) {
+                                    $('#Scandetail').dataTable().fnDestroy();
+                                    $('#Scandetail').remove();
+
+                                    //*******************QRC Scanned Details data table*******************************//
+                                    var QRCScannedBody = '';
+                                    QRCScannedBody = "<table id='Scandetail' class='table table-bordered table-striped'><thead><tr><th>Serial No.</th><th>User Name</th><th>QR Code ID</th><th>QRC Name</th><th>Scan Date</th></tr></thead><tbody>";
+
+                                    for (i = 0; (i < dataItems.dataJson.length) ; i++) {
+                                        QRCScannedBody += '<tr class="odd" role="row"><td>' + (i + 1) + '</td><td>' + dataItems.dataJson[i]['ScanUserName'] + '</td> <td>' + dataItems.dataJson[i]['QrCodeId'] + '</td><td>' + dataItems.dataJson[i]['QrcName'] + '</td><td>' + dataItems.dataJson[i]['StrCreatedDate'] + '</td></tr>';
+                                    }
+                                    QRCScannedBody += "</tbody></table>";
+                                    $("#Scandetail").DataTable({
+                                        "order": [[3, "desc"]]
+                                    });
+                                    $('.modal-title').text("QRC Scanned Details");
+                                    $('#ModalQRCScannedView  #divQRCScannedPreview').html(QRCScannedBody);
+                                    $("#ModalQRCScannedView").modal('show');
+                                    //*******************QRC Scanned Details data table End*******************************//
+                                }
+                                else {
+                                    //*******************QRC Scanned Details data table*******************************//
+                                    var QRCScannedBody = '';
+                                    QRCScannedBody = "<table id='Scandetail' class='table table-bordered table-striped'><thead><tr><th>Serial No.</th><th>User Name</th><th>QR Code ID</th><th>QRC Name</th><th>Scan Date</th></tr></thead><tbody>";
+
+                                    for (i = 0; (i < dataItems.dataJson.length) ; i++) {
+                                        QRCScannedBody += '<tr class="odd" role="row"><td class="sorting_1">' + (i + 1) + '</td><td>' + dataItems.dataJson[i]['ScanUserName'] + '</td> <td>' + dataItems.dataJson[i]['QrCodeId'] + '</td><td>' + dataItems.dataJson[i]['QrcName'] + '</td><td>' + dataItems.dataJson[i]['StrCreatedDate'] + '</td></tr>';
+
+                                    }
+                                    QRCScannedBody += "</tbody></table>";
+                                    $("#Scandetail").DataTable({
+                                        "order": [[3, "desc"]]
+                                    });
+                                    $('.modal-title').text("QRC Scanned Details");
+                                    $('#ModalQRCScannedView  #divQRCScannedPreview').html(QRCScannedBody);
+                                    $("#ModalQRCScannedView").modal('show');
+                                    //*******************QRC Scanned Details data table End*******************************//
+                                }
+
+                            }
+                            else {
+                                $('#Scandetail').dataTable().fnDestroy();
+                                $('#Scandetail').remove();
+                                $('.modal-title').text("QRC Scanned Details");
+                                $("#ModalQRCScannedView  #divQRCScannedPreview").html("No records found");
+                                $("#ModalQRCScannedView").modal('show');
+
+                            }
+
+                        }
+
+                    }).error(function (xhr) {
+                    });
+                } catch (e) {
+                    console.log('catch', e);
+                }
+            }
+            else {
+                $('.modal-title').text("QRC Scanned Details");
+                $("#ModalQRCScannedView  #divQRCScannedPreview").html("No records found");
+                $("#ModalQRCScannedView").modal('show');
+            }
+
+        });
+
+        $("#divUnAssignedWODetails #UnAssignedDetails .assign").click(function () {
+            try {
+                var row = $(this).closest("tr");
+                var id = $(this).attr("id");
+                var ProblemDesc = row.find("td").eq(7).html();
+                var PriorityLevel = row.find("td").eq(11).html();
+                var ProjectDesc = row.find("td").eq(7).html();
+                var locationId = row.find("td").eq(10).html();
+                var WorkRequestType = row.find("td").eq(1).html();
+                if (PriorityLevel == null || PriorityLevel == "" || PriorityLevel == 'undefined') {
+                    PriorityLevel = 0;
+                }
+                $.ajax({
+                    type: "GET",
+                    data: { 'id': id, 'ProblemDesc': ProblemDesc, 'PriorityLevel': PriorityLevel, 'ProjectDesc': ProjectDesc, 'WorkRequestType': WorkRequestType, 'locationId': locationId },
+                    url: '../GlobalAdmin/_AssignWorkAssignmentRequest/',
+                    contentType: "application/json; charset=utf-8",
+                    beforeSend: function () {
+                        new fn_showMaskloader('Loading...');
+                    },
+                    error: function (xhr, status, error) {
+                    },
+                    success: function (result) {
+
+                        $('.modal-title').text("Assign Work Order");
+                        $("#largeeditpopup").html(result);
+                        $("#myModallarge").modal('show');
+                    },
+                    complete: function () {
+                        fn_hideMaskloader();
+                    },
+                });
+            }
+            catch (e) {
+                console.log('Unassigned Click', e);
+            }
+
+        });
+        if (!$('#page-wrapper').find('section').is('.content')) {
+            $('#reservation1').closest('li').hide();
+            $('#RefreshDashboard').closest('li').hide();
+        }
+        else {
+            $('#reservation1').closest('li').show();
+            $('#RefreshDashboard').closest('li').show();
+        }
+        $('#ProjectProgress li').click(function () {
+            var title = $(this).find('span').html();
+            $('#ProjectProgress h3').html('<strong>Project <\/strong>' + title);
+        });
+    })
+
+
+</script>

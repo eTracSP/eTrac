@@ -1,0 +1,842 @@
+﻿@model WorkOrderEMS.Models.VendorDetailModel
+
+@{
+    ViewBag.Title = "Register Vendor";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+    long cookieLocationId = 0;
+    long locationId = 0;
+    string companyStateID = string.Empty, billingStateID = string.Empty, imgCompanyLogo = "no-profile-pic.jpg", imgVendorImage = "no-profile-pic.jpg";
+    if (Model != null)
+    {
+        if (Model.CompanyAddress != null && Model.CompanyAddress.StateId.HasValue)
+        { companyStateID = Convert.ToString(Model.CompanyAddress.StateId.Value); }
+        if (Model.BillingAddress != null && Model.BillingAddress.StateId.HasValue)
+        { billingStateID = Convert.ToString(Model.BillingAddress.StateId.Value); }
+        imgCompanyLogo = string.IsNullOrEmpty(Model.CompanyLogo) ? "no-profile-pic.jpg" : Model.CompanyLogo;
+        imgVendorImage = string.IsNullOrEmpty(Model.VendorImage1) ? "no-profile-pic.jpg" : Model.VendorImage1;
+        cookieLocationId = Model.LocationId;
+    }
+
+    if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+    { ViewBag.Title = "Update Vendor"; }
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;      
+    }
+
+}
+<script src="~/Scripts/common/Masking.js"></script>
+<script src="~/Scripts/ImageUpload/FileUpload.js"></script>
+<script src="~/Scripts/BindDropDown/DropDownList.js"></script>
+@Html.ValidationSummary(true)
+@*<script src="~/Scripts/BindDropDown/DropDownList.js"></script>*@
+<div class="col-lg-12 col-md-12  col-sm-12  col-xs-12">
+    @*<div class="panel panel-default">*@
+    @*<div class="panel-heading">
+            Personal Details
+        </div>*@
+
+    <div class="panel panel-default first-mar10">
+        <div class="panel-heading">
+
+            <a href="#collapseOne" data-parent="#accordion" data-toggle="collapse" class="accordion-toggle">
+                <h4 class="panel-title">
+                    Vendor <span>Details</span>
+                </h4>
+            </a>
+
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse in">
+            <div class="panel-body">
+
+                <div class="panel-body">
+                    @using (Html.BeginForm("RegisterVendor", "Manager", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+
+                        @Html.HiddenFor(model => Model.VendorID)
+                        @Html.HiddenFor(model => Model.UserId)
+                        @Html.HiddenFor(model => Model.CompanyAddress.AddressMasterId)
+                        @Html.HiddenFor(model => Model.BillingAddress.AddressMasterId)
+                        @Html.HiddenFor(model => Model.PermitType.PermitTypeId)
+
+                        @Html.AntiForgeryToken()
+                        <div class="row">
+                            <div class="">
+                                <div class="form-horizontal">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyName, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyName, new { @Placeholder = "Company Name", @class = "form-control" })
+                                            <span style="display:none;" data-valmsg-replace="true" class="field-validation-error"><span class="">Company Name already exists.</span></span>
+                                            @Html.ValidationMessageFor(model => Model.CompanyName)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.DBA, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.DBA, new { @Placeholder = "DBA", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => Model.DBA)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <div class="">
+                                            <label class="col-sm-4 control-label">Owner Or Registerd Agent</label>
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => Model.OwnerRegisterdAgent, new { @Placeholder = "Owner or Registerd Agent", @class = "form-control specialpermit isLetterOnly", @id = "OwnerRegisterdAgent" })
+                                                @Html.ValidationMessageFor(model => Model.OwnerRegisterdAgent)
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.ManagerPOC, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.ManagerPOC, new { @Placeholder = "Company Point of Contact", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => Model.ManagerPOC)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.MobilePOC, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.MobilePOC, new { @Placeholder = "Point of Contact Mobile No.", @class = "Phone form-control" })
+                                            @Html.ValidationMessageFor(model => Model.MobilePOC)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.VendorEmail, new { @class = "col-sm-4 control-label ValidEmail required requiredselect star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.VendorEmail, new { @Placeholder = "Email ID", @class = "form-control" })
+                                            <span style="display:none;" data-valmsg-replace="true" class="field-validation-error"><span class="">Email address already exists</span></span>
+                                            @Html.ValidationMessageFor(model => Model.VendorEmail)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="form-horizontal">
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.TaxIdNumber, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.TaxIdNumber, new { @Placeholder = "Tax ID No.", @class = "form-control", @maxLength = 9 })
+                                            <span style="display:none;" data-valmsg-replace="true" class="field-validation-error"><span class="">Tax Number already exists.</span></span>
+                                            @Html.ValidationMessageFor(model => Model.TaxIdNumber)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyLogo, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8 col-sm-offset-4">
+                                            <img id="ProfileImageog" src="@Url.Content("~/Content/Images/ProjectLogo/" + imgCompanyLogo)"
+                                                 class="img-rounded" alt="Rounded Image" style="width: 75px; height: 75px;">
+                                            <input type="file" id="imageog" name="CompanyLogoFile" onchange="readURL(this);" value=" upload image">
+                                            @*@Html.HiddenFor(model => Model.CompanyLogo, new { @id = "hiddnCompanyLogo" })*@
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.Label("Vendor Image", new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8 col-sm-offset-4">
+                                            <img id="ProfileImagevi" src="@Url.Content("~/Content/Images/ProjectLogo/" + imgVendorImage)"
+                                                 class="img-rounded" alt="Rounded Image" style="width: 75px; height: 75px;">
+                                            <input type="file" id="imagevi" name="VendorImageFile" onchange="readURL(this);" value=" upload image">
+                                            @*@Html.HiddenFor(model => Model.VendorImage, new { @id = "hiddnVendorImage" })*@
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*=================================*@
+
+                        <div class="row">
+
+                            <div class="form-horizontal">
+                                <div class="panel-heading">
+                                    Company Address
+                                </div>
+                                <div id="companyaddress">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.Address1, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.Address1, new { @Placeholder = "Address 1", @class = "form-control", @id = "CompanyAddress1" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.Address1)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.Address2, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.Address2, new { @Placeholder = "Address 2", @class = "form-control", @id = "CompanyAddress2" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.Address2)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.CountryId, new { @class = "col-sm-4 control-label", @id = "CountryId" })
+                                        <div class="col-sm-8">
+                                            @if (Model != null && ViewBag.Country != null)
+                                            { @Html.DropDownListFor(model => Model.CompanyAddress.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control requiredselect", @id = "CompanyCountry", @onchange = "BindState(false)" })}
+                                            else
+                                            {<select class="form-control requiredselect" id="CompanyCountry"><option>Select</option></select>}
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.CountryId)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.StateId, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            <select id="CompanyStates" name="CompanyAddress.StateId" class="form-control required requiredselect"><option value="0">--Select--</option></select>
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.StateId)
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.City, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.City, new { @Placeholder = "City", @class = "form-control isLetterOnly", @id = "CompanyCity" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.City)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.ZipCode, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.ZipCode, new { @Placeholder = "Zip Code", @class = "Postal form-control", @maxLength = 5, @id = "CompanyZipCode", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.ZipCode)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.Fax, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.Fax, new { @Placeholder = "Fax No.", @class = "Phone form-control", @id = "CompanyFax" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.Fax)
+                                        </div>
+                                    </div>
+
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => Model.CompanyAddress.Mobile, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => Model.CompanyAddress.Mobile, new { @Placeholder = "Mobile", @class = "Phone form-control", @id = "CompanyMobile" })
+                                                @Html.ValidationMessageFor(model => Model.CompanyAddress.Mobile)
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.CompanyAddress.Phone, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.CompanyAddress.Phone, new { @Placeholder = "Phone No.", @class = "Phone form-control required", @id = "CompanyPhone" })
+                                            @Html.ValidationMessageFor(model => Model.CompanyAddress.Phone)
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="panel-heading">
+                                    Billing Address@*@Html.Label("Billing Address", new { @class = "col-sm-2 control-label" })*@
+                                    <div class="form-group col-lg-12 col-md-12 col-sm-12  col-xs-12">
+
+                                        <div class="col-sm-8 checkbox">
+                                            @Html.CheckBox("Same as Company Address", new { @class = "checkbox", @onchange = "copycompanyaddress();", @id = "chkcopycompanyaddress" })
+                                            <label for="CompanyAddress_Mobile" style="font-size:small;">Same as Company Address</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                @*<div class="clearfix"></div>*@
+                                <div id="billingaddress">
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.Address1, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.Address1, new { @Placeholder = "Address 1", @class = "form-control", @id = "BillingAddress1" })
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.Address1)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.Address2, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.Address2, new { @Placeholder = "Address 2", @class = "form-control", @id = "BillingAddress2" })
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.Address2)
+                                        </div>
+                                    </div>
+                                    <div class="clearfix"></div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.CountryId, new { @class = "col-sm-4 control-label", @id = "CountryId" })
+                                        <div class="col-sm-8">
+                                            @if (Model != null && ViewBag.Country != null)
+                                            { @Html.DropDownListFor(model => Model.BillingAddress.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), WorkOrderEMS.Helper.Constants.ConfigCountryValue, new { @class = "form-control requiredselect", @id = "BillingCountry", @onchange = "BindState(true)" })}
+                                            else
+                                            {<select class="form-control requiredselect" id="BillingCountry" name="BillingAddress.CountryId"><option>Select</option></select>}
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.CountryId)
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.StateId, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            <select id="BillingStates" name="BillingAddress.StateId" class="form-control required requiredselect"><option value="0">--Select--</option></select>
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.StateId)
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.City, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.City, new { @Placeholder = "City", @class = "form-control isLetterOnly", @id = "BillingCity" })
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.City)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.ZipCode, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.ZipCode, new { @Placeholder = "Zip Code", @class = "Postal form-control", @maxLength = 5, @id = "BillingZipCode", onkeypress = "return isNumberKey(event)" })
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.ZipCode)
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix"></div>
+
+                                    @*<div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                            @Html.LabelFor(model => Model.BillingAddress.Mobile, new { @class = "col-sm-4 control-label star" })
+                                            <div class="col-sm-8">
+                                                @Html.TextBoxFor(model => Model.BillingAddress.Mobile, new { @Placeholder = "Mobile", @class = "Phone form-control", @id = "BillingMobile" })
+                                                @Html.ValidationMessageFor(model => Model.BillingAddress.Mobile)
+                                            </div>
+                                        </div>*@
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.Phone, new { @class = "col-sm-4 control-label star" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.Phone, new { @Placeholder = "Phone No.", @class = "Phone form-control required", @id = "BillingPhone" })
+                                            @Html.ValidationMessageFor(model => Model.BillingAddress.Phone)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                        @Html.LabelFor(model => Model.BillingAddress.Fax, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => Model.BillingAddress.Fax, new { @Placeholder = "Fax No.", @class = "Phone form-control", @id = "BillingFax" })
+
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.BusinessExpDate, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.BusinessExpDate, new { @Placeholder = "Business License Expiration Date", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.BusinessExpDate)
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        @Html.LabelFor(model => model.StateLicExpDate, new { @class = "col-sm-4 control-label" })
+                                        <div class="col-sm-8">
+                                            @Html.TextBoxFor(model => model.StateLicExpDate, new { @Placeholder = "State License Expiration Date", @class = "form-control" })
+                                            @Html.ValidationMessageFor(model => model.StateLicExpDate)
+                                            @*<input type="hidden" id="hiddnlblQRCName" />*@
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="panel-heading">
+                                    Permit Type
+                                </div>
+
+                                <div class="form-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="col-sm-12" id="permittypeDiv">
+                                        <div class="table-responsive">
+                                        <table class="table" id="permittypeTable">
+                                            <tr style="font-weight:bold;">
+                                                <td></td>
+                                                <td>Truck</td>
+                                                <td>SUV</td>
+                                                <td>Car</td>
+                                                <td>Limo</td>
+                                                <td>Motor Vehicle</td>
+                                                <td>Shuttle Bus</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Taxi Services</strong></td>
+                                                <td cid="55" rid="350"><div class="col-sm-2"><input type="checkbox" class="magic-checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_55, new { @class = "form-control required", @id = "c350_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="350"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_56, new { @class = "form-control required", @id = "c350_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="350"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_57, new { @class = "form-control required", @id = "c350_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="350"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_347, new { @class = "form-control required", @id = "c350_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="350"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_53, new { @class = "form-control required", @id = "c350_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="350"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c350_54, new { @class = "form-control required", @id = "c350_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Offsite Vendors</strong></td>
+                                                <td cid="55" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_55, new { @class = "form-control required", @id = "c351_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_56, new { @class = "form-control required", @id = "c351_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_57, new { @class = "form-control required", @id = "c351_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_347, new { @class = "form-control required", @id = "c351_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_53, new { @class = "form-control required", @id = "c351_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="351"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c351_54, new { @class = "form-control required", @id = "c351_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Hotel/Motel Permit</strong></td>
+                                                <td cid="55" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_55, new { @class = "form-control required", @id = "c352_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_56, new { @class = "form-control required", @id = "c352_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_57, new { @class = "form-control required", @id = "c352_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_347, new { @class = "form-control required", @id = "c352_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_53, new { @class = "form-control required", @id = "c352_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="352"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c352_54, new { @class = "form-control required", @id = "c352_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Tour Operator Permit</strong></td>
+                                                <td cid="55" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_55, new { @class = "form-control required", @id = "c353_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_56, new { @class = "form-control required", @id = "c353_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_57, new { @class = "form-control required", @id = "c353_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_347, new { @class = "form-control required", @id = "c353_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_53, new { @class = "form-control required", @id = "c353_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="353"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c353_54, new { @class = "form-control required", @id = "c353_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Vehicle for Hire Permit</strong></td>
+                                                <td cid="55" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_55, new { @class = "form-control", @id = "c354_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_56, new { @class = "form-control", @id = "c354_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_57, new { @class = "form-control", @id = "c354_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_347, new { @class = "form-control", @id = "c354_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_53, new { @class = "form-control", @id = "c354_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="354"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c354_54, new { @class = "form-control", @id = "c354_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Others</strong></td>
+                                                <td cid="55" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_55, new { @class = "form-control", @id = "c355_55", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="56" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_56, new { @class = "form-control", @id = "c355_56", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="57" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_57, new { @class = "form-control", @id = "c355_57", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="347" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_347, new { @class = "form-control", @id = "c355_347", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="53" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_53, new { @class = "form-control", @id = "c355_53", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                                <td cid="54" rid="355"><div class="col-sm-2"><input type="checkbox" /></div><div class="col-sm-2">@Html.TextBoxFor(model => Model.PermitType.c355_54, new { @class = "form-control", @id = "c355_54", @disabled = true, @onkeypress = "return isNumberKey(event)", @style = "width:50px" }) </div></td>
+                                            </tr>
+                                        </table>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="panel-heading">
+                                    Documents
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    <label class="col-sm-4 control-label">Acknowledgement Form</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" id="imagevi" name="AcknowledgementFormDoc" onchange="readDoc(this);" value=" upload Acknowledgement Form">
+                                    </div>
+                                </div>
+                                <div class="form-group col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                    <label class="col-sm-4 control-label">W9 Form</label>
+                                    <div class="col-sm-8">
+                                        <input type="file" id="imagevi" name="W9FormDoc" onchange="readDoc(this);" value="Upload W9 Form">
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                                <div class="margintop10"></div>
+                                <div class="pull-right">
+                                    @*<div class="col-sm-offset-4 col-sm-8">*@
+                                    <button class="btn btn-default bluebutton" type="submit" onclick="return ValidatePermitType();">Submit</button>
+                                    @*<a href='@Url.Action("Vendor", "Manager")' class="btn btn-default bluebutton">Cancel</a>*@
+                                    @if (Model != null && Model.VendorID != null && Model.VendorID > 0)
+                                    {
+                                        <a href="~/Manager/ListVendor" class="btn btn-default bluebutton">Cancel</a>
+                                        @*@Html.ActionLink("Cancel", "ListVendor", "Manager", null, new { @class = "btn btn-default bluebutton" })*@
+                                    }
+                                    else
+                                    {
+                                        <a href="~/GlobalAdmin" class="btn btn-default bluebutton">Cancel</a>
+                                        @*@Html.ActionLink("Cancel", "RegisterVendor", "Manager", null, new { @class = "btn btn-default bluebutton" })*@
+                                    }
+                                    @*</div>*@
+                                </div>
+
+                            </div>
+
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+@section scripts{
+    @*@Scripts.Render("~/bundles/jqueryval")*@
+
+    <script type="text/javascript">
+        $_GetStateByCountryIDUrl = '@Url.Action("GetStateByCountryID", "Dropdown")';
+        $_imagePath = '@Url.Action("UploadImage", "GlobalAdmin")';
+        var $_locationId = '@locationId';
+        var $_cookieLocId = '@cookieLocationId';
+        
+        function readURL(input) {
+            var FType = ["jpg", "JPG", "PNG", "png", "JPEG", "jpeg", "gif", "GIF"]
+            if (input.files && input.files[0]) {
+                var LoadImage = false;
+                var FileExtension = input.value.split(".")[1];
+                for (var v = 0; v < FType.length; v++) {
+                    if (FType[v] == FileExtension) {
+                        LoadImage = true;
+                    }
+                }
+                if (LoadImage == true) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        if ($(input).prop('id') == 'imageog') {
+                            $('#ProfileImageog')
+                                .attr('src', e.target.result)
+                                .width(75)
+                                .height(75);
+                        }
+                        else if ($(input).prop('id') == 'imagevi') {
+                            $('#ProfileImagevi')
+                                .attr('src', e.target.result)
+                                .width(75)
+                                .height(75);
+                        }
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                } else {
+                    $(input).val("");
+                    alert("Please select image to upload!")
+                    return false;
+                }
+            }
+        }
+
+        $(document).ready(function () {
+           
+            if ($_cookieLocId != $_locationId && '@ViewBag.UpdateMode' == "True") {
+                //Created By Bhushan Dod on 08/10/2015 for selected vehicle loc in drop down
+                $("#drp_MasterLocation").val(parseInt($_cookieLocId));
+                var LocationID = parseInt($_cookieLocId);
+                var LocationName = $("#drp_MasterLocation option:selected").text();
+                try {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("SetUserSelectedLocation", "Login")',
+                        data: { LocationID: LocationID, LocationName: LocationName },
+                        beforeSend: function () {
+                        },
+                        success: function (Data) {
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            window.location.href = $(location).attr('href');
+                        }
+                    });
+
+                } catch (e) {
+
+                }
+                //------END------//
+            }
+            $("#StateLicExpDate").datepicker({ format: 'mm/dd/yy', startDate: new Date, autoclose: true });
+            $("#BusinessExpDate").datepicker({ format: 'mm/dd/yy', startDate: new Date, autoclose: true });
+            $_StateID = '@billingStateID';
+            if ($("#BillingStates").val() != '') {
+                BindState(true);
+            }
+
+            $_StateID = '@companyStateID';
+            if ($("#CompanyStates").val() != '') {
+                BindState(false);
+            }
+
+
+            $(".isLetterOnly").keydown(function (e) {
+                var reg = new RegExp("^[a-zA-Z]+$");
+                return reg.test(e.key);
+            })
+            $(".isValidUserNameOnly").keydown(function (e) {
+                var reg = new RegExp("^[a-zA-Z0-9-_ &]+$");
+                return reg.test(e.key);
+            })
+            $("#CompanyName").focusout(function () {
+                if ($("#CompanyName").val().trim() != "") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("isCompanyNameExists", "GlobalAdmin")',
+                        data: { "companyName": $("#CompanyName").val(), "locationId": $("#drp_MasterLocation").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+                            if (Data.status > 0) {
+                                $("#CompanyName").addClass("form-control input-validation-error");
+                                $("#CompanyName").siblings('span').show();
+                                $("#CompanyName").val("");
+                                $("#CompanyName").focus();
+                            }
+                            else {
+                                $("#CompanyName").removeClass("input-validation-error");
+                                $("#CompanyName").siblings('span').hide();
+                            }
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#CompanyName").focus();
+                }
+            });// focusOut end.
+            $("#TaxIdNumber").focusout(function () {
+                if ($("#TaxIdNumber").val().trim() != "") {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("isTaxNumberExists", "GlobalAdmin")',
+                        data: { "taxNumber": $("#TaxIdNumber").val(), "locationId": $("#drp_MasterLocation").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+                            if (Data.status > 0) {
+                                $("#TaxIdNumber").addClass("form-control input-validation-error");
+                                $("#TaxIdNumber").siblings('span').show();
+                                $("#TaxIdNumber").val("");
+                                $("#TaxIdNumber").focus();
+                            }
+                            else {
+                                $("#TaxIdNumber").removeClass("input-validation-error");
+                                $("#TaxIdNumber").siblings('span').hide();
+                            }
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#TaxIdNumber").focus();
+                }
+            });// focusOut end.``
+
+            function validateEmail(email) {
+                var re = /^([\w-]+(?:\.[\w-]+)*)@@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+                return re.test(email);
+            }
+
+            $("#VendorEmail").focusout(function () {
+                console.log('dsafafasdfasfasdfsad');
+                if ($("#VendorEmail").val().trim() != "" && validateEmail($("#VendorEmail").val().trim())) {
+
+                    $.ajax({
+                        type: "POST",
+                        url: '@Url.Action("isVendorEmailExists", "GlobalAdmin")',
+                        data: { "email": $("#VendorEmail").val() },
+                        beforeSend: function () {
+                            new fn_showMaskloader('Please wait...');
+                        },
+                        success: function (Data) {
+                            console.log(Data);
+                            if (Data.status > 0) {
+                                $("#VendorEmail").addClass("form-control input-validation-error");
+                                $("#VendorEmail").siblings('span').show();
+                                $("#VendorEmail").val("");
+                                $("#VendorEmail").focus();
+                            }
+                            else {
+                                $("#VendorEmail").removeClass("input-validation-error");
+                                $("#VendorEmail").siblings('span').hide();
+                            }
+                        },
+                        error: function () {
+                        },
+                        complete: function () {
+                            fn_hideMaskloader();
+                        }
+                    });
+                }
+                else {
+                    $("#VendorEmail").focus();
+                }
+            });// focusOut end.
+
+        });
+
+        function checkValidation(strVal, strExpression) {
+
+            if ((strVal + "").length > 0) {
+                var reg = new RegExp(strExpression);
+                return reg.test(strVal);
+            }
+            else {
+                return true;
+            }
+        }
+
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function copycompanyaddress() {
+            if ($('#chkcopycompanyaddress').prop('checked') === true) {
+                
+                var ss = "";
+                $.each($('input:[id*=Company]'), function (index, valuee) {                        //ss= ss+ valuee.id+"\n";
+                    var billingcontrol = {}; billingcontrol.id = valuee.id.replace("Company", "Billing");
+                    if (valuee.type == 'text' || valuee.type == 'file') { if ($('#' + billingcontrol.id).val() != undefined) { $('#' + billingcontrol.id).val($('#' + valuee.id).val()); } }                        //alert($('#' + billingcontrol.id).val());                         //ss = ss + billingcontrol.id + "\n";
+                    ///else { alert(valuee.type); }
+                });
+
+
+                //country and state ddl load
+                $.each($('select:[id*=Company]'), function (index, valuee) {                        //ss= ss+ valuee.id+"\n";
+
+                    var billingcontrol = {};
+                    billingcontrol.id = valuee.id.replace("Company", "Billing");                       //$('#' + valuee.id).val('-1');
+
+                    $('#' + billingcontrol.id).val($('#' + valuee.id).val());
+
+                    if (billingcontrol.id === 'BillingCountry') {            //alert('found');
+                        $('#' + billingcontrol.id).trigger("onchange");     //alert(billingcontrol.id);                        //BindState(true);
+                    }   //alert($('#' + valuee.id).val());
+                });
+                //country and state ddl load end
+            }
+            else {
+                $.each($('input:[id*=Billing]'), function (index, valuee) { if (valuee.type == 'text' || valuee.type == 'file') { $('#' + valuee.id).val(''); } });
+                $.each($('select:[id*=Company]'), function (index, valuee) {
+                    var billingcontrol = {};
+                    billingcontrol.id = valuee.id.replace("Company", "Billing");
+                    $('#' + billingcontrol.id).val('-1'); BindState(true);
+                });   //alert(ss);
+            }
+        }
+
+        function copycompanyaddress_old() {
+
+
+            if ($('#chkcopycompanyaddress').prop('checked') === true) {
+
+                //final
+                var ss = "";
+                $.each($('input:[id*=Company]'), function (index, valuee) {                        //ss= ss+ valuee.id+"\n";
+                    var billingcontrol = {}; billingcontrol.id = valuee.id.replace("Company", "Billing");
+                    if (valuee.type == 'text' || valuee.type == 'file') { if ($('#' + billingcontrol.id).val() != undefined) { $('#' + billingcontrol.id).val($('#' + valuee.id).val()); } }                        //alert($('#' + billingcontrol.id).val());                         //ss = ss + billingcontrol.id + "\n";
+                });
+            }
+            else {
+                $.each($('input:[id*=Billing]'), function (index, valuee) { if (valuee.type == 'text' || valuee.type == 'file') { $('#' + valuee.id).val(''); } });
+            }   //alert(ss);
+            //final end
+
+            if (false) {
+                /*
+                var msgname = "msgname \n\n"
+                var msgtype = "msgtype \n\n"
+                $.each($('input:[id*=Company]'), function (index, valuee) {
+
+                    var billingcontrol = valuee.name.replace("Company", "Billing");
+                    alert(billingcontrol);
+
+                    //alert(billingcontrol);
+
+                    if (valuee.type == 'text') {
+                        $('#' + billingcontrol).val($(valuee.name).val());
+                    }
+                    else if (valuee.type == 'file') {
+                        $('#' + billingcontrol).val($(valuee.name).val());
+                        //alert(billingcontrol);
+                        alert(valuee.name);
+                    }
+                    else {
+                        //billingcontrol.val($(valuee).val());
+                        //alert(valuee.type);
+                        $(valuee).val();
+                    }
+                    //  $('[name=CompanyLogo]')
+
+                    /*
+
+                  msgname =msgname +  valuee.name+"\n";
+                    msgname =msgname +  $('#'+valuee.name).val()+"\n";
+                    msgtype = msgtype +valuee.type+"\n";
+                    *--/
+                });
+                */
+                /*
+                msgname = "<b>msgname:</b>\n"+msgname +"\n\n <b>msgtype:</b>\n"+msgtype;
+
+                $('.sidebar-collapse').html(msgname);
+                */
+            }
+            //$('input:[name*=Company]')[2].name    //var res = str.replace("Microsoft", "W3Schools");
+        }
+
+        $(function () {
+            $("#permittypeTable").find("input[type=checkbox]").click(function () {
+                if ($(this).is(":checked")) {
+                    $(this).parent().parent().find("input[type=text]").prop("disabled", false).focus();
+                }
+                else {
+                    $(this).parent().parent().find("input[type=text]").prop("disabled", true).val('').css("border", "1px solid #aaa");
+                }
+            });
+            $("#permittypeTable").find("input[type=text]").blur(function () {
+                if (!$(this).is(":disabled") && ($(this).val() == '' || $(this).val() == undefined || $(this).val() == null)) {
+                    $(this).css("border", "1px solid red");
+                }
+                else {
+                    $(this).css("border", "1px solid #aaa");
+                }
+            });
+            $("#permittypeTable").find("input[type=text]").each(function (data, index) {
+                if ($(this).val() != '' && $(this).val() != undefined && $(this).val() != null) {
+                    $(this).prop("disabled", false);
+                    $(this).parent().parent().find("input[type=checkbox]").prop("checked",true);
+                }
+                else {
+                    $(this).prop("disabled", true);
+                    $(this).parent().parent().find("input[type=checkbox]").prop("checked", false);
+                }
+            });
+            
+
+        });
+        function ValidatePermitType() {
+             
+            if ($("#permittypeDiv").find("input[type=checkbox]:checked").length <= 0) {
+                //alert(0);
+           
+                $("#permittypeDiv").css("border", "1px solid red");
+
+                return false;
+            }
+            else {
+                $("#permittypeDiv").css("border", "0px solid red");
+                //alert(1);
+                return true;
+            }
+        }
+
+        
+    </script>
+}

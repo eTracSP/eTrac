@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Daily Activity Report";
+    Layout = "~/Views/Shared/_ManagerLayout.cshtml";
+}
+<script src="~/Content/Report-NavBar/jquery.smooth-scroll.js"></script>
+<script src="~/Content/Report-NavBar/run_prettify.js"></script>
+<!-- stylesheets-->
+<link href="http://fonts.googleapis.com/css?family=Lustria|Lato:300,400,700,400italic" rel="stylesheet" type="text/css">
+<link href="~/Content/Report-NavBar/ohover.css" rel="stylesheet" />
+<link href="~/Content/Report-NavBar/main.css" rel="stylesheet" />
+<style>
+    #ReportBar li a {
+        border-radius: 4px 4px 0 0 !important;
+        border-color: lightgray;
+    }
+
+    .active a {
+        background-color: #0aa0cd !important;
+        color: white !important;
+    }
+</style>
+<div class="clearfix"></div>
+<div class="content-header ">
+    <div class="panel">
+        <div data-example-id="simple-nav-justified" class="bs-example">
+
+            <div class="row-2">
+                <div class="item-hover circle effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Customer Assistance">*@
+                        <a href="@Url.Action("CustomerAssistance","Report")">
+                            <div class="img"><img src="~/Content/Images/Report/Customer-Assistance.png"></div>
+                            <div class="info">
+                                <h5>Customer Assistance</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Jump Starts">*@
+                        <a href="@Url.Action("JumpStarts","Report")">
+                            <div class="img"><img src="~/Content/Images/Report/jumpstart.jpg" alt="img"></div>
+                            <div class="info">
+                                <h5>Jump Starts</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Tire Inflation">*@
+                    <a href="@Url.Action("TireInflation","Report")">
+                        <div class="img"><img src="~/Content/Images/Report/tireinflation.png" alt="img"></div>
+                        <div class="info">
+                            <h5>Tire Inflation</h5>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Space Count">*@
+                        <a href="@Url.Action("SpaceCount","Report")">
+                            <div class="img"><img src="~/Content/Images/Report/spacecount.png" alt="img"></div>
+                            <div class="info">
+                                <h5>Space Count</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+            <div class="row-2">
+                <div class="item-hover circle colored effect3 left_to_right">
+                    @*<a href="../Report/Reports?ReportName=Daily Activity Code">*@
+                        <a href="@Url.Action("DARCodes","Report")">
+                            <div class="img"><img src="~/Content/Images/Report/DARCode.png" alt="img"></div>
+                            <div class="info">
+                                <h5>DAR Codes</h5>
+                            </div>
+                        </a>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

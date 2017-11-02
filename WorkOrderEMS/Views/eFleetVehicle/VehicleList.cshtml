@@ -1,0 +1,300 @@
+﻿@model WorkOrderEMS.Models.eFleetVehicleModel
+@{
+    ViewBag.Title = "Vehicle List";
+    Layout = "~/Views/Shared/_QRCLayout.cshtml";
+
+    long locationId = 0;
+    long userType = 0;
+    WorkOrderEMS.Models.eTracLoginModel ObjLogin = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
+
+    if (ObjLogin != null)
+    {
+        locationId = ObjLogin.LocationID;
+        userType = ObjLogin.UserRoleId;
+    }
+}
+@section scripts{
+    <script type="text/javascript">
+    var $_locationId = '@locationId';
+    var $_userTypeId = '@userType';
+    </script>
+    <script src="~/Scripts/QRCode/jquery.qrcode-0.9.5.js"></script>
+    <script src="~/GridListing/JqGridScript/ListeFleetVehicle.js"></script>
+    <script type="text/javascript">
+        $(window).bind('resize', function () {
+            var width = $('#jqGrid_container').width();
+            $('#tbl_VehicleList').setGridWidth(width);
+        });
+
+
+        $('#btnMyModalFORQRC').live("click", function () {
+            $('#myModalLicence').modal('show');
+        });
+
+
+    </script>
+    <style>
+    .custom-size img {
+        width: 100px !important;
+        height: 100px !important;
+    }
+</style>
+}
+
+<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+    <div id="jqGrid_container">
+        <table id="tbl_VehicleList" border="0" cellpadding="0" cellspacing="0"></table>
+        <div id="divQRCListPager"></div>
+    </div>
+</div>
+<div class="modal fade preview" id="myModalFOReFleetVehicleQRC" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog ">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">X</span></button>
+                <h4 class="modal-title" id="myModalLabel">eFleet Vehicle Details</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="divDetailPreview" class="">
+                    <div class="row">
+                        <div class="" id="DivVehicleDetailsIndex">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label> Vehicle Number</label>
+                                    <div id="lblVehicleNumber" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Make</label>
+                                    <div id="lblMake" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Model</label>
+                                    <div id="lblModel" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Fuel Type</label>
+                                    <div id="lblFuelType" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group" id="divWoimg">
+                                    <label id="labelVehicleImage">Vehicle Image</label>
+                                    <div id="lblVehicleImage" class="custom-size">
+                                        <canvas style="width: 150px; height: 150px;"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <div class="form-group">
+                                    <label>QR CodeID</label>
+                                    <div id="lblQRCCodeID" class="form-control-static"></div>
+                                </div>
+                                <div class="form-group">
+                                    <label>Year</label>
+                                    <div id="lblYear" class="form-control-static"></div>
+                                </div>
+                                <label>GVWR</label>
+                                <div class="form-group">
+                                    <div id="lblGVWR" class="form-control-static"></div>
+                                </div>
+                                <label>Stoarage Address</label>
+                                <div class="form-group">
+                                    <div id="lblStorageAddress" class="form-control-static"></div>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+                                <label>QRC Code</label>
+                                <div id="container2" class="">
+                                    <canvas class="img-thumbnail"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel-footer">
+                <div class="text-right">
+                    <button type="button" class="btn btn-default bluebutton text-right" onclick="return PrintDivForVehicleDetails('DivVehicleDetailsIndex');" data-dismiss="modal">Print Details</button>
+                    <button data-dismiss="modal" class="btn btn-default bluebutton" id="btnCancelqwe">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function success(data) {
+
+        if (data != "") {
+            $("#myModallarge").modal('hide');
+            toastr.success(data.Message)
+        }
+    }
+</script>
+
+
+
+
+<div id="myModalLicence" class="modal fade bs-example-modal-lg">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Preview QR-Code</h4>
+            </div>
+            <div class="modal-body">
+
+                <div id="tblToPrint" style="text-align:center;">
+
+                    <div class="" style=" " id="ttere">
+                        <table cellpadding="6" cellspacing="0" style="margin-left: 120px; text-align: center; font-size: 12px;">
+                            <tbody>
+                                <tr>
+                                    <td><b>Client Logo</b></td>
+                                    <td><b>Driver</b></td>
+                                    <td><b style="margin-left:27px">QRC Code</b></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <img src="" id="imgClinetLogo" class="img-thumbnail" />
+
+                                    </td>
+
+                                    <td>
+
+                                        <img id="imgDriverProfilePic2" class="img-thumbnail" />
+
+                                    </td>
+                                    <td>
+                                        <div id="container3" style="width:80px;height:80px;margin-left:46px">
+                                            <canvas id="qrcprint" style="width:80px;"></canvas>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+
+                                    <td colspan="3" style="align-items:center;">
+                                        <center>
+                                            <p id="pDriverName" style="margin-right:132px"></p>
+
+
+                                            <p id="pCompanyName" style="margin-right:182px"></p>   @*Company Name*@
+
+                                        </center>
+                                    </td>
+                                </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+
+                </div>
+
+
+                @*</div>*@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default bluebutton" onclick="return PrintDivIndexForLicence('tblToPrint');" data-dismiss="modal">Print Licence</button>
+            </div>
+        </div>
+
+
+
+    </div>
+</div>
+
+<script>
+
+    (function ($) {
+        generatelistvehicleqrcode(null);
+    }(jQuery));
+
+    function generatelistvehicleqrcode(EncryptQRC) {    
+        try {
+            var size = '155';
+            size = (size != undefined && size != '' && size.trim() != '') ? size.trim() : '155';
+            size = size.trim();
+            'use strict';
+            var isOpera = Object.prototype.toString.call(window.opera) === '[object Opera]',
+
+                guiValuePairs = [
+                    ["size", "px"],
+                    ["minversion", ""],
+                    ["quiet", " modules"],
+                    ["radius", "%"],
+                    ["msize", "%"],
+                    ["mposx", "%"],
+                    ["mposy", "%"]
+                ],
+
+                updateGui = function () {
+                    $.each(guiValuePairs, function (idx, pair) {
+                        var $label = $('label[for="' + pair[0] + '"]');
+                        $label.text($label.text().replace(/:.*/, ': ' + $('#' + pair[0]).val() + pair[1]));
+                    });
+                },
+
+                updateQrCode = function (mykey, mycontainer) {
+                    
+                    var options = {
+                        render: "image",//render: "image",
+                        ecLevel: "Q",// L=Low, M=Medium,
+                        minVersion: parseInt(5, 10),
+                        fill: '#333333',
+                        background: '#ffffff',
+                        text: EncryptQRC,
+                        size: parseInt(size, 10),
+                        radius: parseInt(50, 10) * 0.01,
+                        quiet: parseInt(1, 10),
+                        mode: parseInt(0, 10),
+                        mSize: parseInt(11, 10) * 0.01,
+                        mPosX: parseInt(50, 10) * 0.01,
+                        mPosY: parseInt(50, 10) * 0.01,
+                        label: 'Smartian says',
+                        fontname: 'Ubuntu',
+                        fontcolor: '#ff9818',
+                        image: 'http://localhost:57572/Images/upload.jpg'
+                    };
+                    $('#container2').empty().qrcode(options);
+
+                },
+
+                update = function () {
+                    updateGui();                 
+                    updateQrCode('saadad', 'container2');
+                },
+                onImageInput = function () {
+                    var input = $("#image")[0];
+                    if (input.files && input.files[0]) {
+                        var reader = new FileReader();
+                        reader.onload = function (event) {
+                            $("#img-buffer").attr("src", event.target.result);
+                            $("#mode").val("4");
+                            setTimeout(update, 250);
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
+                },
+
+                download = function (event) {
+                    var data = $("#container2 canvas")[0].toDataURL('image/png');
+                    $("#download").attr("href", data);
+                };
+
+            $(function () {
+                
+                try {
+                    
+                    //if (_hddnUpdateMode != 'True' && EncryptLastQRC != undefined && EncryptLastQRC != '') {
+                    if (EncryptQRC != undefined && EncryptQRC != '') {
+                        updateGui();
+                        updateQrCode(EncryptQRC, 'container2');
+                    }
+                } catch (e) {
+                    console.log(e);
+                }
+            });
+        } catch (e) {
+            console.log(e);
+        }
+    }
+</script>
