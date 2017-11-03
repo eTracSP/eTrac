@@ -13,22 +13,30 @@ namespace WorkOrderEMS.Infrastructure
 {
     public class TokenAuthorizeFilter : AuthorizeAttribute // AuthorizationFilterAttribute
     {
+
         //readonly string _connString = ConfigurationManager.AppSettings["SQLConnection"].ToString();
         //private workorderEMSEntities db = new workorderEMSEntities();
         public override void OnAuthorization(HttpActionContext filterContext)
         {
+
             if (AuthorizationChecking.Authorize(filterContext))
             {
                 return;
             }
             else
             {
-                filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                filterContext.Response.Content = new StringContent("The token has been expired. Please login again.");
+
+                filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized,
+                                          new { Error = true, Message = "Token is invalid" });
+                //filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
+                //filterContext.Response.Content = new StringContent("The token has been expired. Please login again.");
                 return;
             }
-            // HandleUnauthorizedRequest(filterContext);
+
+
+
         }
+
 
 
         //public override void OnAuthorization(System.Web.Http.Controllers.HttpActionContext actionContext)

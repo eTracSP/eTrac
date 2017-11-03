@@ -278,6 +278,7 @@ namespace WorkOrderEMS.Controllers.Services
         }
 
         [HttpPost]
+        [TokenAuthorizeFilter]
         public IHttpActionResult GetMeterMilesHoursValueList(MeterModel objMeterModel)
         {
             var ObjServiceResponseModel = new ServiceResponseModel<List<eFleetMeterModel>>();
@@ -647,7 +648,7 @@ namespace WorkOrderEMS.Controllers.Services
         [HttpPost]
         public IHttpActionResult SaveeFleetHourseOfServices(HoursOfServicesModel obj)
         {
-           // var ObjHoursOfServicesManager = new HoursOfServicesManager();
+            // var ObjHoursOfServicesManager = new HoursOfServicesManager();
             var ObjServiceResponseModel = new ServiceResponseModel<string>();
             try
             {

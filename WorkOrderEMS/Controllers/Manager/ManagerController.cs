@@ -451,22 +451,7 @@ namespace WorkOrderEMS.Controllers.Manager
         #endregion
 
         #region Inventory
-        [HttpGet]
-        public ActionResult Inventory()
-        {
-            try
-            {
-                ViewBag.ItemTypeDrop = _ICommonMethod.GetGlobalCodeDataList(Convert.ToString(GlobalCodename.InventoryItem));
-                ViewBag.UpdateMode = false;
-                ViewBag.PurchType = _ICommonMethod.GetGlobalCodeDataList("ITEMOWNERSHIP");
 
-                return View();
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-        }
         [HttpPost]
         public ActionResult Inventory(InventoryMasterModel objInventoryMasterModel)
         {
@@ -495,7 +480,7 @@ namespace WorkOrderEMS.Controllers.Manager
                     ViewBag.UpdateMode = false;
 
                     objDAR.TaskType = (long)TaskTypeCategory.CreateInventory;
-                    objDAR.ActivityDetails = DarMessage.SaveNewInventoryDar(ObjLoginModel.Location);
+                    //objDAR.ActivityDetails = DarMessage.SaveNewInventoryDar(ObjLoginModel.Location);
                 }
                 else
                 {
@@ -508,7 +493,7 @@ namespace WorkOrderEMS.Controllers.Manager
                     ViewBag.UpdateMode = true;
 
                     objDAR.TaskType = (long)TaskTypeCategory.UpdateInventory;
-                    objDAR.ActivityDetails = DarMessage.UpdateInventoryDar(ObjLoginModel.Location);
+                    //objDAR.ActivityDetails = DarMessage.UpdateInventoryDar(ObjLoginModel.Location);
 
                 }
                 Result result = _IManageManager.SaveInventory(objInventoryMasterModel, objDAR);

@@ -47,7 +47,7 @@ namespace WorkOrderEMS
 
         protected void Application_Error(object sender, EventArgs e)
         {
-            var error = Server.GetLastError();
+            var error = Server.GetLastError();            
              WorkOrderEMS.BusinessLogic.Exception_B.Exception_B.exceptionHandel_Runtime(error, "Application_Error", error.Message, error.InnerException);
             //ViewBag.Message = error.Message;
             //ViewBag.Error = error.Message;
@@ -62,6 +62,5 @@ namespace WorkOrderEMS
                 //Server.Transfer(errorpagepath);
             }
         }
-
     }
 }

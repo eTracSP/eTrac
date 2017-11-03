@@ -98,16 +98,6 @@ namespace WorkOrderEMS.Helper
         {
             return string.Format(CultureInfo.InvariantCulture, "User : {0} has been manually verified.", userName);
         }
-
-        public static string SaveNewInventoryDar(string locationName)
-        {
-            return "New inventory for the location :" + locationName + " has been added.";
-        }
-
-        public static string UpdateInventoryDar(string locationName)
-        {
-            return "Inventory for the location :" + locationName + " has been updated.";
-        }
         public static string SaveNewRuleDar(string ruleName, string locationName)
         {
             return string.Format(CultureInfo.InvariantCulture, "New rule : {0} for the location : {1} has been created.", ruleName, locationName);
