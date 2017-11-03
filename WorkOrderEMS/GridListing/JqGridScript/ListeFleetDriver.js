@@ -80,13 +80,11 @@ function gridReload() {
     jQuery("#tbl_DriverList").jqGrid('setGridParam', { url: $_HostPrefix + DriverUrl + "?SearchText=" + txtSearch.trim() + "&statusType=" + statusType + "&LocationID=" + $_locationId, page: 1 }).trigger("reloadGrid");
 }
 $(".EditRecord").live("click", function (event) {
-    debugger
     var id = $(this).attr("Id");
     window.location.href = $_HostPrefix + editurl + '?id=' + id;
     //$("#largeeditpopup").load('../StaffUser/EditStaffUser/' + id);
 });
 $("#QRCGenerate").live("click", function (event) {
-    debugger
     var id = $(this).attr("data-value");
     var rowData = jQuery("#tbl_DriverList").getRowData(id);
     var DriverName = rowData['EmployeeNameList'];
@@ -103,13 +101,15 @@ $("#QRCGenerate").live("click", function (event) {
     $("#lblCDLType").html(CDLType);
     $("#lblCDLExpiration").html(CDLExpiration);
     $("#lblMVRExpiration").html(MVRExpiration);
-    $("#lblDriverImage").html(DriverImage).width(100).height(100);
+    $("#lblDriverImage").html(DriverImage);
     // $("#labellWorkRequestStatus").show();
     //$("#lblWorkRequestStatus").show();
     //$("#lblFuelType").html(FuelType);
     //$("#lblGVWR").html(GVWR);
     //$("#lblStorageAddress").html(StorageAddress);
     //$("#lblVehicleImage").html(VehicleImage);
+    $('div #lblDriverImage img').attr('width', '100px');
+    $('div #lblDriverImage img').attr('height', '100px');
     if (DriverImage == '' || DriverImage == null || DriverImage == "") {
         $("#labelDriverImage").hide();
         $("#lblDriverImage").hide();
