@@ -1542,6 +1542,7 @@
     <Content Include="Images\sort_both.png" />
     <Content Include="Images\upload.jpg" />
     <Content Include="Images\user.png" />
+    <Content Include="Images\version.png" />
     <Content Include="IOSTimePicker.html" />
     <Content Include="MailTemplate\CellphoneButtonsTemplate.html" />
     <Content Include="MailTemplate\CellphoneFunctionalTemplate.html" />
