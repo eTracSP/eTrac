@@ -75,7 +75,8 @@
                                     @foreach (var Vn in ViewBag.VehicleNumber)
                                     {
                                         <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID" data-codeid="@Vn.QRCodeID"
-                                                @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
+                                                @if (Vn.VehicleNumber == Model.VehicleNumber) { 
+                                                    @: selected="selected"
                                                                                                                                                                                                                                                     }>
                                             @Vn.VehicleNumber
                                         </option>
@@ -160,7 +161,7 @@
                                 Preventability<span class="req">*</span>
                             </label>
                             <div style="margin-left:150px;">
-                                @Html.RadioButtonFor(model => model.Preventability, true, new { @class = "yes" })Regular &nbsp; @Html.RadioButtonFor(model => model.Preventability, false, new { @class = "no"})Event
+                                @Html.RadioButtonFor(model => model.Preventability, true, new { @class = "yes" }) &nbsp;Yes @Html.RadioButtonFor(model => model.Preventability, false, new { @class = "no" })&nbsp;No
                             </div>
                             <div class="errorspace">
                                 @Html.ValidationMessageFor(model => model.Preventability)

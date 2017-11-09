@@ -2224,6 +2224,36 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
         }
 
+        /// <summary>Get the Employee under the Location
+        /// <CreatedBy>Gayatri Pal</CreatedBy>
+        /// <CreatedOn>Dec-23-2014</CreatedOn>
+        /// <CreatedFor>Get the Employee under the Location</CreatedFor>
+        /// </summary>
+        /// <param name="_LocationID"></param>
+        /// <param name="_AdminUserId"></param>
+        /// <param name="IsDelete"></param>
+        public List<EmployeeModel> GetLocationEmployeeforGenericLocServices(long locationId, long permissionid, long permisison)
+        {
+            EmployeeLocationMappingRepository objEmployeeLocationMappingRepository = new EmployeeLocationMappingRepository();
+            var lstEmployee = new List<EmployeeModel>();
+            try
+            {
+
+                return objEmployeeLocationMappingRepository.GetEmployeeByLocationGeneric(locationId, permissionid, permisison).Select(r => new EmployeeModel()
+                {
+                    FirstName = r.FirstName.ToTitleCase() + " " + r.LastName.ToTitleCase(),
+                    UserId = r.UserId,
+                    ProfileImage = r.ProfileImage == null ? "" : HostingPrefix + ProfileImagePath.Replace("~", "") + r.ProfileImage,
+                    UserType = r.UserType
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "List<EmployeeModel> GetLocationEmployeeforGenericLocServices(long locationId, long permissionid, long permisison)", "Exception While fetching employee loc", locationId);
+                throw;
+            }
+        }
+
         public WorkRequestAssignmentModel SaveWorkRequestAssignment(WorkRequestAssignmentModel objWorkRequestAssignmentModel)
         {
             string message = string.Empty;
@@ -3019,10 +3049,10 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                         //objEmailHelper.StartDate = obj.StartDate.ToString("MM'/'dd'/'yyyy");
                         if (obj.StartDate != null)
                             objEmailHelper.StartDate = obj.StartDate.ToString("MM'/'dd'/'yyyy");
-                            //objEmailHelper.StartDate = obj.StartDate.Value.ToClientTimeZoneinDateTime().ToString("MM'/'dd'/'yyyy");                            
-                            if (obj.EndDate != null)
+                        //objEmailHelper.StartDate = obj.StartDate.Value.ToClientTimeZoneinDateTime().ToString("MM'/'dd'/'yyyy");                            
+                        if (obj.EndDate != null)
                             objEmailHelper.EndDate = obj.EndDate.ToString("MM'/'dd'/'yyyy");
-                           // objEmailHelper.EndDate = obj.EndDate.Value.ToClientTimeZoneinDateTime().ToString("MM'/'dd'/'yyyy");
+                        // objEmailHelper.EndDate = obj.EndDate.Value.ToClientTimeZoneinDateTime().ToString("MM'/'dd'/'yyyy");
                         objEmailHelper.WeekDays = obj.WeekDayLst;
                         //objEmailHelper.StartTime = obj.StartTime.ToString("hh:mm tt");
                         if (obj.CrStartTime != null)
@@ -3525,7 +3555,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
         }
 
- 
+
     }
     public class loc
     {

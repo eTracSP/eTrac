@@ -68,6 +68,7 @@ namespace WorkOrderEMS.Infrastructure
                 For<IEfleetMaintenance>().Use<MaintenanceManager>();
                 For<IPassengerTracking>().Use<PassengerTrackingManager>();
                 For<IHoursOfServices>().Use<HoursOfServicesManager>();
+                For<IeFleetFuelingManager>().Use<eFleetCommonManager>();                
             }
         }
     }

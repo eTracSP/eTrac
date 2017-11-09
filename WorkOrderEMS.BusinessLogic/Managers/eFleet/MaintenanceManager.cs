@@ -62,16 +62,34 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
        public List<PendingPM> GetAllPendingPMReminderDescription(long LocationID)
         {         
                 List<PendingPM> lstReminderDescription = new List<PendingPM>();
-                try
-                {
-                    lstReminderDescription = objworkorderEMSEntities.eFleetPreventativeMaintenances.Where(a => a.IsCompleted == null && a.LocationID == LocationID && a.IsDeleted == false).Select(s => new PendingPM()
-                    {
-                        PmID = s.ID,
-                        ReminderMetricDesc = s.ReminderMetricDesc
 
-                    }).ToList();
-                    return lstReminderDescription;
-                }           
+                try
+            {
+
+                //lstReminderDescription = objworkorderEMSEntities.eFleetPreventativeMaintenances.Join(objworkorderEMSEntities.eFleetMaintenances, q => q.VehicleID, u => u.VehicleID, (q, u) => new { q, u }).
+                //                                    Where(x => x.q.IsCompleted == null && x.q.LocationID == LocationID && x.q.IsDeleted == false
+                //                                          && x.q.ServiceDueDate <= DateTime.UtcNow
+
+                //                                             ).Select(s => new PendingPM()
+                //                                             {
+                //                                                 PmID = s.q.ID,
+                //                                                 ReminderMetricDesc = s.q.ReminderMetricDesc,
+                //                                                 VehicleID = s.q.VehicleID
+                //                                             }).ToList();
+                //return lstReminderDescription;
+                
+                lstReminderDescription = objworkorderEMSEntities.eFleetPreventativeMaintenances.Where(a => a.IsCompleted == null
+                                                                                                  && a.LocationID == LocationID &&
+                                                                                                   a.IsDeleted == false &&
+                                                                                                   a.ServiceDueDate <= DateTime.UtcNow
+                                                                                                  ).Select(s => new PendingPM()
+                                                                                                  {
+                                                                                                      PmID = s.ID,
+                                                                                                      ReminderMetricDesc = s.ReminderMetricDesc,
+                                                                                                      VehicleID = s.VehicleID
+                                                                                                  }).ToList();
+                return lstReminderDescription;
+            }
             catch (Exception ex)
             {
                 Exception_B.Exception_B.exceptionHandel_Runtime(ex, " public List<eFleetPMModel> GetAllReminderDescription()", "Exception While Fetching all Reminder Metric Description.", null);

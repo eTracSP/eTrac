@@ -519,22 +519,25 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
             }
         }
 
-        public List<PendingPM> GetAllPendingPMReminderDescription(long LocationID)
+        public List<PendingPM> GetAllPendingPMReminderDescription(long LocationID, long VehicleID)
         {
             var lstReminderDescription = new List<PendingPM>();
             try
             {
                 var db = new workorderEMSEntities();
-                lstReminderDescription = db.eFleetPreventativeMaintenances.Where(a => a.IsCompleted == null && a.LocationID == LocationID && a.IsDeleted == false).Select(s => new PendingPM()
-                {
-                    PmID = s.ID,
-                    ReminderMetricDesc = s.ReminderMetricDesc,
-                    ServiceDueDate = s.ServiceDueDate
-                }).ToList();
+                var todaysDate = DateTime.UtcNow.Date;
+                lstReminderDescription = db.eFleetPreventativeMaintenances.Where(a => a.IsCompleted == null && a.LocationID == LocationID && a.IsDeleted == false
+                                                                                                        && a.ServiceDueDate <= todaysDate && a.VehicleID == VehicleID).Select(s => new PendingPM()
+                                                                                                        {
+                                                                                                            PmID = s.ID,
+                                                                                                            ReminderMetricDesc = s.ReminderMetricDesc,
+                                                                                                            ServiceDueDate = s.ServiceDueDate
+                                                                                                        }).ToList();
                 return lstReminderDescription;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "List<PendingPM> GetAllPendingPMReminderDescription(long LocationID, long VehicleID)", "Exception While Fetching all Reminder Metric Description for service.", null);
                 throw;
             }
         }

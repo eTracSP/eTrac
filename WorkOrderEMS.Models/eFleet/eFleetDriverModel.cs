@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Mvc;
 using WorkOrderEMS.Helper;
 
 namespace WorkOrderEMS.Models
@@ -27,6 +28,7 @@ namespace WorkOrderEMS.Models
         public string DriverImage { get; set; }
         public HttpPostedFileBase DriverImageFile { get; set; }
 
+        [Remote("doesLicenseNumberExist", "eFleetDriver", HttpMethod = "POST", ErrorMessage = "License Number already exists. Please enter a different License Number.")]
         [Required(ErrorMessage = "Driver License Number is required")]
         [RegularExpression("^[a-zA-Z0-9 ',-]+$", ErrorMessage = "Special characters are not allowed.")]
         public string DriverLicenseNo { get; set; }

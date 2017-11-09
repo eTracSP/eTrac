@@ -31,6 +31,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
               
                 if (objeFleetVehicleIncidentModel.IncidentID == 0)
                 {
+                    objeFleetVehicleIncidentModel.IsDeleted = false;
                     AutoMapper.Mapper.CreateMap<eFleetVehicleIncidentModel, eFleetVehicleIncident>();
                     var objfleetVehicleIncidentMapper = AutoMapper.Mapper.Map(objeFleetVehicleIncidentModel, objeFleetVehicleIncident);
                     objeFleetVehicleIncidentRepository.Add(objfleetVehicleIncidentMapper);
@@ -375,10 +376,10 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 Obj = AutoMapper.Mapper.Map(objModel, Obj);
                 Obj.CreatedBy = objModel.UserId;
                 Obj.CreatedDate = DateTime.UtcNow;
+                Obj.IsDeleted = false; 
                 objeFleetVehicleIncidentRepository.Add(Obj);
                 if (Obj.IncidentID > 0)
                 {
-
                    // objDAR.ActivityDetails = objModel.ActivityDetails;
                     objDAR.ActivityDetails = DarMessage.RegisterNeweFleetIncidentVehicle(objModel.LocationName);
                     objDAR.LocationId = objModel.LocationID;

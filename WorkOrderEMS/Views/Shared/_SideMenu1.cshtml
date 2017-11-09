@@ -279,6 +279,15 @@
 
                                             </ul>
                                         </li>
+                                        <li class="treeview">
+                                            <a href="#"> <i class="fa fa-truck"></i> <span>Fueling</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                            <ul class="treeview-menu">
+                                                <li>
+                                                    <a href="@Url.Action("listfueling", "fueling")"><i class="fa fa-list-alt"></i>List Fueling</a>
+                                                </li>
+
+                                            </ul>
+                                        </li>
                                         @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
                                         {
                                             <li>
@@ -471,6 +480,15 @@
                                         </li>
                                     </ul>
                                 </li>
+                                <li class="treeview">
+                                    <a href="#"> <i class="fa fa-truck"></i> <span>Fueling</span> <i class="fa fa-angle-left pull-right"></i> </a>
+                                    <ul class="treeview-menu">
+                                        <li>
+                                            <a href="@Url.Action("listfueling", "fueling")"><i class="fa fa-list-alt"></i>List Fueling</a>
+                                        </li>
+
+                                    </ul>
+                                </li>
                                 @if (EmployeeUser != true && ClientUser != true)//@if (!EmployeeUser || !ClientUser)
                                 {
                                     <li>
@@ -480,7 +498,7 @@
                             </ul>
                         </li>
                     }
-                    //} //Location Setup End here
+                    @*//} //Location Setup End here
 
                     //if (UserRoles.Contains("eFleet"))
                     //{
@@ -543,7 +561,7 @@
                                 }
                             </ul>
                         </li>
-                    }
+                    }*@
                     //}
                     if (GloblaAdminUser || ITAdminUser || OnlyAdminUser || ManagerUser || ClientUser)
                     {

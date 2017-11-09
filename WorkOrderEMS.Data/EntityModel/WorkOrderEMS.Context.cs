@@ -30,32 +30,23 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<AddressMaster> AddressMasters { get; set; }
         public virtual DbSet<AdminEmployeeMapping> AdminEmployeeMappings { get; set; }
         public virtual DbSet<AdminLocationMapping> AdminLocationMappings { get; set; }
-        public virtual DbSet<AssignInventory> AssignInventories { get; set; }
         public virtual DbSet<DARDetail> DARDetails { get; set; }
-        public virtual DbSet<DashbordSetting> DashbordSettings { get; set; }
         public virtual DbSet<EmailLog> EmailLogs { get; set; }
         public virtual DbSet<EMaintenanceSurvey> EMaintenanceSurveys { get; set; }
         public virtual DbSet<EmployeeLocationMapping> EmployeeLocationMappings { get; set; }
         public virtual DbSet<ExceptionLog> ExceptionLogs { get; set; }
-        public virtual DbSet<InsuranceMaster> InsuranceMasters { get; set; }
-        public virtual DbSet<InsurancePlanMaster> InsurancePlanMasters { get; set; }
-        public virtual DbSet<InventoryMaster> InventoryMasters { get; set; }
         public virtual DbSet<LocationClientMapping> LocationClientMappings { get; set; }
         public virtual DbSet<LocationMaster> LocationMasters { get; set; }
-        public virtual DbSet<LocationRuleMapping> LocationRuleMappings { get; set; }
         public virtual DbSet<LocationService> LocationServices { get; set; }
         public virtual DbSet<LoginLog> LoginLogs { get; set; }
         public virtual DbSet<ManagerEmployeeMapping> ManagerEmployeeMappings { get; set; }
         public virtual DbSet<ManagerLocationMapping> ManagerLocationMappings { get; set; }
         public virtual DbSet<MasterCountry> MasterCountries { get; set; }
         public virtual DbSet<MasterState> MasterStates { get; set; }
-        public virtual DbSet<MasterTimeZone> MasterTimeZones { get; set; }
         public virtual DbSet<PermissionDetail> PermissionDetails { get; set; }
         public virtual DbSet<QRCMasterLog> QRCMasterLogs { get; set; }
-        public virtual DbSet<RuleMaster> RuleMasters { get; set; }
         public virtual DbSet<ServiceMaster> ServiceMasters { get; set; }
         public virtual DbSet<TrackEmployeeStatu> TrackEmployeeStatus { get; set; }
-        public virtual DbSet<WeeklyVehicleCheck> WeeklyVehicleChecks { get; set; }
         public virtual DbSet<WorkAreaMaster> WorkAreaMasters { get; set; }
         public virtual DbSet<GlobalCode> GlobalCodes { get; set; }
         public virtual DbSet<QRCScanLog> QRCScanLogs { get; set; }

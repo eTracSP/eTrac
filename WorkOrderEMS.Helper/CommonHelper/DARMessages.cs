@@ -98,18 +98,6 @@ namespace WorkOrderEMS.Helper
         {
             return string.Format(CultureInfo.InvariantCulture, "User : {0} has been manually verified.", userName);
         }
-        public static string SaveNewRuleDar(string ruleName, string locationName)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "New rule : {0} for the location : {1} has been created.", ruleName, locationName);
-        }
-        public static string UpdateRuleDar(string ruleName, string locationName)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Rule : {0} for the location : {1} has been updated.", ruleName, locationName);
-        }
-        public static string DeleteRuleDar(string ruleName, string locationName)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "Rule : {0} for the location : {1} has been deleted.", ruleName, locationName);
-        }
         public static string UpdateVehicle(string QRCCodeID,string locationName)
         {          
             return "Vehicle: " + QRCCodeID + " for the location :" + locationName + " has been updated.";

@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using WorkOrderEMS.BusinessLogic.Interfaces;
 using WorkOrderEMS.BusinessLogic.Interfaces.eFleet;
 using WorkOrderEMS.Helper;
+using WorkOrderEMS.Helpers;
 using WorkOrderEMS.Models;
 
 namespace WorkOrderEMS.Controllers.eFleet
@@ -37,7 +38,6 @@ namespace WorkOrderEMS.Controllers.eFleet
             {
                 eTracLoginModel objeTracLoginModel = (eTracLoginModel)(Session["eTrac"]);
                 Result objStatus;
-                bool isUpdate = false;
                 if (Session != null)
                 {
                     if (Session["eTrac"] != null)
@@ -52,19 +52,19 @@ namespace WorkOrderEMS.Controllers.eFleet
                 if (objeFleetPassengerTrackingModel.RouteID == 0)
                 {
                     objeFleetPassengerTrackingModel.CreatedBy = objeTracLoginModel.UserId;
-                    objeFleetPassengerTrackingModel.CreatedDate = DateTime.UtcNow;                                    
+                    objeFleetPassengerTrackingModel.CreatedDate = DateTime.UtcNow;
                 }
                 else
                 {
-                    objeFleetPassengerTrackingModel.CreatedBy = objeTracLoginModel.UserId;
-                    objeFleetPassengerTrackingModel.CreatedDate = DateTime.UtcNow;                   
+                    objeFleetPassengerTrackingModel.ModifiedBy = objeTracLoginModel.UserId;
+                    objeFleetPassengerTrackingModel.ModifiedDate = DateTime.UtcNow;
                 }
                 objStatus = _IPassengerTracking.SavePassengerTrackingRoute(objeFleetPassengerTrackingModel);
 
                 if (objStatus == Result.Completed)
                 {
                     ModelState.Clear();
-                    ViewBag.Message = CommonMessage.WorkOrderSaveSuccessMessage();
+                    ViewBag.Message = CommonMessage.SaveSuccessMessage();
                     ViewBag.AlertMessageClass = ObjAlertMessageClass.Success;
                 }
                 else if (objStatus == Result.DuplicateRecord)
@@ -76,8 +76,10 @@ namespace WorkOrderEMS.Controllers.eFleet
                 {
 
                     ModelState.Clear();
-                    ViewBag.Message = CommonMessage.WorkOrderUpdateMessage();
+                    ViewBag.Message = CommonMessage.UpdateSuccessMessage();
                     ViewBag.AlertMessageClass = ObjAlertMessageClass.Success;// store the message for successful in tempdata to display in view.
+
+                    return RedirectToAction("listpassengerroute");
                 }
                 else
                 {
@@ -89,7 +91,8 @@ namespace WorkOrderEMS.Controllers.eFleet
             catch (Exception)
             {
 
-                throw;
+                ViewBag.Message = CommonMessage.FailureMessage();
+                ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger;// store the failure message in tempdata to display in view.
             }
             finally
             {
@@ -98,7 +101,7 @@ namespace WorkOrderEMS.Controllers.eFleet
             return View();
         }
         [HttpGet]
-        [Route("Edit")]
+        [Route("edit")]
         public ActionResult EditPassengerTrackingRoute(string id)
         {
             eTracLoginModel ObjLoginModel = null;
@@ -137,6 +140,7 @@ namespace WorkOrderEMS.Controllers.eFleet
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpPost]
+        [Route("delete")]
         public JsonResult DeleteeFleetPassengerTrackingRoute(string id)
         {
             try
@@ -151,7 +155,7 @@ namespace WorkOrderEMS.Controllers.eFleet
                 }
                 passenggerId = Convert.ToInt64(id);
 
-                Result result = _IPassengerTracking.DeleteeFleetPassengerTracking(passenggerId, loggedInUser, ObjLoginModel.Location);
+                Result result = _IPassengerTracking.DeleteeFleetPassengerTracking(passenggerId, loggedInUser);
                 if (result == Result.Delete)
                 {
                     ViewBag.Message = CommonMessage.DeleteSuccessMessage();
@@ -172,5 +176,68 @@ namespace WorkOrderEMS.Controllers.eFleet
             { throw ex; }
             return Json(new { Message = ViewBag.Message, AlertMessageClass = ViewBag.AlertMessageClass }, JsonRequestBehavior.AllowGet);
         }
+
+        		
+	        [HttpGet]		
+	        [Route("listpassengerroute")]		
+	        public ActionResult ListPassengerTrackingRoute()
+	        {		
+	            try		
+	            {		
+	                eTracLoginModel ObjLoginModel = null;		
+	                if (Session != null)		
+	                {		
+	                    if (Session["eTrac"] != null)		
+	                    {		
+	                        ObjLoginModel = (eTracLoginModel) (Session["eTrac"]);		
+	                        if (Convert.ToInt64(Session["eTrac_SelectedDasboardLocationID"]) == 0)		
+	                        {		
+	                            (Session["eTrac_SelectedDasboardLocationID"]) = ObjLoginModel.LocationID;		
+	                        }		
+	                    }		
+	                }		
+	            }		
+	            catch (Exception ex)		
+	            {		
+	                ViewBag.Message = ex.Message;		
+	                ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger;		
+	            }		
+	            return View("ListPassengerTrackingRoute");		
+	        }		
+			
+	        [HttpGet]		
+	        public JsonResult GetPassengerRouteList(string _search, int? rows = 20, int? page = 1, int? TotalRecords = 10, string sord = null, string txtSearch = null, string sidx = null, string statusType = null)
+	        {		
+	            var objeFleetPassengerTrackingModel = new eFleetPassengerTrackingModel();		
+	            JQGridResults result = new JQGridResults();		
+	            List<JQGridRow> rowss = new List<JQGridRow>();		
+	            sord = string.IsNullOrEmpty(sord) ? "desc" : sord;		
+	            sidx = string.IsNullOrEmpty(sidx) ? "StartDate" : sidx;		
+	            txtSearch = string.IsNullOrEmpty(txtSearch) ? "" : txtSearch; //UserType = Convert.ToInt64(Helper.UserType.ITAdministrator);		
+	            try		
+	            {		
+	                var eFleetPTList = _IPassengerTracking.GetListeFleetPassengerRoutewithJQGridDetails(rows, TotalRecords, sidx, sord, txtSearch, Convert.ToInt64(statusType));		
+	                foreach (var eFleetPT in eFleetPTList.rows)		
+	                {		
+	                    JQGridRow row = new JQGridRow();		
+	                    row.id = Cryptography.GetEncryptedData(Convert.ToString(eFleetPT.RouteID), true);		
+	                    row.cell = new string[6];		
+	                    row.cell[0] = eFleetPT.RouteName;		
+	                    row.cell[1] = eFleetPT.ServiceTypeName;		
+	                    row.cell[2] = eFleetPT.StartDate.ToString("dd/MM/yyyy");		
+	                    row.cell[3] = eFleetPT.EndDate.ToString("dd/MM/yyyy");		
+	                    row.cell[4] = eFleetPT.PickUpPoint;		
+	                    row.cell[5] = eFleetPT.DropPoint;		
+	                    rowss.Add(row);		
+	                }		
+	                result.rows = rowss.ToArray();		
+	                result.page = Convert.ToInt32(page);		
+	                result.total = (int) Math.Ceiling((decimal) Convert.ToInt32(TotalRecords.Value) / rows.Value);		
+	                result.records = Convert.ToInt32(TotalRecords.Value);		
+	            }		
+	            catch (Exception ex)		
+	            { return Json(ex.Message, JsonRequestBehavior.AllowGet); }		
+	            return Json(result, JsonRequestBehavior.AllowGet);		
+	        }
     }
 }

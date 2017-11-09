@@ -759,7 +759,11 @@ function generatevehicleqrcode() {
         //        alert("Please upload a valid image file.");
         //    }
         //});
-        $("#datepicker").datepicker();
+        
+        $('#datepicker').datepicker({
+            format: "mm/dd/yyyy",
+            startDate: new Date()
+        });
         $('.date-own').datepicker({
             minViewMode: 2,
             format: 'yyyy'
@@ -772,7 +776,7 @@ function generatevehicleqrcode() {
         $("input[id='grossrating']").focus();
         $("input[id='storageaddr']").focus();
         $("input[id='zipcode']").focus();
-        $("input[id='datepicker']").blur(); yeardatepicker
+        $("input[id='datepicker']").blur(); 
         $("input[id='yeardatepicker']").blur();
         $("input[id='vehicleNumber']").focus();
 

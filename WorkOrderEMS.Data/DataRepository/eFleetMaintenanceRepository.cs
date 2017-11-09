@@ -22,8 +22,7 @@ namespace WorkOrderEMS.Data.DataRepository
                         VehicleID = s.VehicleID,
                         QRCodeID = s.QRCodeID,
                         VehicleNumber = s.VehicleNumber
-
-                    }).ToList();
+                    }).Distinct().ToList();
                     return lstvehicle;
                 }
                 catch (Exception)

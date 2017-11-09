@@ -40,7 +40,6 @@
             GloblaAdminUser = ITAdminUser = OnlyAdminUser = ManagerUser = EmployeeUser = ClientUser = false;
             break;
     }
-
 }
 <!DOCTYPE html>
 <html>
@@ -49,79 +48,114 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="~/Images/logo.png" type="image/gif" sizes="16x16">
     <title>@ViewBag.Title - eTrac</title>
-    <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-3.2.1.min.js")></script>
-    @*@Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/jquery")
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/jQueryFile")*@
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/bundles/modernizr")
+        
+    @*@Styles.Render("~/Content/css")*@
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    @Scripts.Render("~/bundles/modernizr")
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+    @*desing mearg work 001*@
+
+    <!--Assign Timer & Continuous timer-->
+    @*<link rel="stylesheet" href="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.css" />
+    <script type="text/javascript" src="http://cdn.jtsage.com/external/jquery.mousewheel.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+    <script type="text/javascript" src="http://cdn.jtsage.com/jtsage-datebox/4.1.1/jtsage-datebox-4.1.1.bootstrap.min.js"></script>*@
+
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/bootstrap.min.css?v=" + eTracScriptVersion)">
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/Font-Awesome")
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome/css/font-awesome.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/font-awesome.min.css?v=" + eTracScriptVersion)" />
 
     <!-- Page-Level Plugin CSS - Dashboard -->
-    <link href="@Url.Content("~/Content/common/plugins/morris/morris-0.4.3.min.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/common/plugins/timeline/timeline.css?v=" + eTracScriptVersion)" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/common/plugins/morris/morris-0.4.3.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/common/plugins/timeline/timeline.css")" rel="stylesheet" />
     <!-- SB Admin CSS - Include with every page -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/jquery-ui")
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/JQGrid-Datepicker")
-    <link href="@Url.Content("~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/Wizard-Sb-Admin")
-    <link href="@Url.Content("~/Content/nanoscroller.css?v=" + eTracScriptVersion)" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.theme.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.core.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/ui.jqgrid.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/DilogPopup.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css")" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/formwizard.css")" />
+    <link href="@Url.Content("~/Content/SuperAdmin/sb-admin.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <link href="@Url.Content("~/Content/nanoscroller.css")" rel="stylesheet" />
 
     <!-- NEWLY ADDED CSS FOR DASHBOARD -->
     <!-- Ionicons -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/ionicons.min.css?v=" + eTracScriptVersion)" />
-
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/ionicons.min.css")" />
     <!-- daterange picker -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/DateTimepicker")
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.css")" />
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.css")" />
     <!-- Select2 -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/select2/select2.min.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/select2/select2.min.css")" />
     <!-- Theme style -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/AdminLTE.min.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/AdminLTE.min.css")" />
     <!-- AdminLTE Skins. Choose a skin from the css/skins folder instead of downloading all of them to reduce the load. -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/AdminLTE-Skins")
-
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/skins/_all-skins.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/component.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/flipcss.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/style.css?v=" + eTracScriptVersion)" />
     <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <!-- User Mini Chart-->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/components.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/components.css")" />
     <link href="@Url.Content("~/Content/Dashboard/bootstrap/css/devstyle.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/toastr.css?v=" + eTracScriptVersion)" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
+    
     <!-- NEWLY ADDED CSS FOR DASHBOARD END HERE-->
     <!--FOLLOWING  files are used for JqGrid Javascript-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.min.js?v=" + eTracScriptVersion)"></script>
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/JqGrid")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/DilogPopUP.js")"></script>
 
     <!--Validation-->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
+
     <!--DatePicker Javascript-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+
     <!--File Upload-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js?v=" + eTracScriptVersion)"></script>
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/JqueryFileUpload")
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js?v=" + eTracScriptVersion)"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
+
     <!-- Page-Level Plugin Scripts - Dashboard -->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="~/Scripts/common/plugins/morris/raphael-2.1.0.min.js"></script>
     <!-- SB Admin Scripts - Include with every page -->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/sb-admin.js?v=" + eTracScriptVersion)"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/toastr.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="~/Scripts/common/sb-admin.js"></script>
+    <script src="~/Scripts/toastr.js"></script>
     <!--DatePicker Javascript-->
-    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js?v=" + eTracScriptVersion)"></script>
-    <script src="@Url.Content("~/Content/common/plugins/Loader/maskLoader.js?v=" + eTracScriptVersion)"></script>
-    <script src="@Url.Content("~/Scripts/jquery.nanoscroller.min.js?v=" + eTracScriptVersion)"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+    <script src="@Url.Content("~/Content/common/plugins/Loader/maskLoader.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.nanoscroller.min.js")"></script>
 
     @*@Styles.Render("~/Scripts/ClockPickerCss")
-        @Scripts.Render("~/Scripts/ClockPickerJs")*@
+    @Scripts.Render("~/Scripts/ClockPickerJs")*@
 
     <!--Moment Javascript-->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/Moment")
-
+    <script src="@Url.Content("~/Scripts/moment.js")"></script>
+    <script src="@Url.Content("~/Scripts/moment-timezone-with-data.js")"></script>
     <script src="@Url.Content("~/Scripts/jstz.min.js")"></script>
     <script src="@Url.Content("~/Scripts/jquery.cookie.min.js")"></script>
+    <script src="~/Scripts/toastr.js"></script>
 
     <!--Assign Timer & Continuous timer-->
-    <link rel="stylesheet" href="@Url.Content("~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css?v=" + eTracScriptVersion)" />
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/DurationFlipbox")
-
+    <link href="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css" rel="stylesheet" />
+        <script src="~/Scripts/DurationFlipbox/jquery.mousewheel.min.js"></script>
+        <script src="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
@@ -178,6 +212,7 @@
                 -webkit-animation: spin 1.5s linear infinite; /* Chrome, Opera 15+, Safari 5+ */
                 animation: spin 1.5s linear infinite; /* Chrome, Firefox 16+, IE 10+, Opera */
             }
+                       
     </style>
 </head>
 <body class="hold-transition skin-blue sidebar-mini">
@@ -264,7 +299,7 @@
             <div id="loader"></div>
         </div>
         <section id="page-wrapper" class="content-wrapper">
-            <!-- Content Header (Page header) -->
+            <!-- Content Header (Page header) -->            
             <section class="content-header dashboardCountpanel">
                 <div class="headerBg ">
                     <h1> @ViewBag.Title <small>@ViewBag.TitleDesc</small> </h1>
@@ -272,7 +307,7 @@
                     @*<label id="message" class="@ViewBag.AlertMessageClass"> @ViewBag.Message</label>*@
                     <div class="clearfix"></div>
                 </div><div class="clearfix"></div>
-
+             
             </section>
             @RenderBody()
             <div class="clearfix"></div>
@@ -346,10 +381,10 @@
                                         <div class="noprint">
                                             @{int iz = 1;}
                                             @{if (ViewBag.QRCSize != null)
-                                                {@Html.DropDownListFor(x => iz, new SelectList(ViewBag.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCSize", @class = "form-control requiredselect", @onchange = "loadsizeselection()" });
-                                                }
-                                                else
-                                                {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
+                                            {@Html.DropDownListFor(x => iz, new SelectList(ViewBag.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCSize", @class = "form-control requiredselect", @onchange = "loadsizeselection()" });
+                                            }
+                                            else
+                                            {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
                                             }
                                         </div>
                                         <div id="lblQRCSize" class="col-sm-4 control-label onlyforprint" style="display:none;"></div>
@@ -457,103 +492,134 @@
     </div>
     @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
 
-        <div class="modal fade" id="UserRegistrationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999999999;">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Create User</h4>
-                    </div>
-                    <div class="modal-body clearfix RegistrationUserSelect" id="UserRegisterModel">
-                        <div class="row of-bar transparent-deepsea">
-                            @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin))
-                            {
-                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
-                                    <div class="form-group of-barcontainer">
-                                        <div class="col-sm-12">
-                                            <a href="@Url.Action("Create", "ITAdministrator")">
-                                                <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-apps">
-                                                    <span class="of-bt-icon">
-                                                        <i class="fa icon-user  fa-5x "></i>
-                                                    </span>
-                                                    <span class="of-bt-title ">IT Administrator</span>
-                                                </div>
-                                            </a>
-                                        </div>
+    <div class="modal fade" id="UserRegistrationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999999999;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Create User</h4>
+                </div>
+                <div class="modal-body clearfix RegistrationUserSelect" id="UserRegisterModel">
+                    <div class="row of-bar transparent-deepsea">
+                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin))
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                <div class="form-group of-barcontainer">
+                                    <div class="col-sm-12">
+                                        <a href="@Url.Action("Create", "ITAdministrator")">
+                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-apps">
+                                                <span class="of-bt-icon">
+                                                    <i class="fa icon-user  fa-5x "></i>
+                                                </span>
+                                                <span class="of-bt-title ">IT Administrator</span>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
-                            }
-                            @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator))
-                            {
-                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <a href="@Url.Action("Create", "Administrator")">
-                                                <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-settings">
-                                                    <span class="of-bt-icon">
-                                                        <i class="fa icon-user  fa-5x "></i>
-                                                    </span>
-                                                    <span class="of-bt-title">Administrator</span>
-                                                </div>
-                                            </a>
+                            </div>
+                        }
+                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator))
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <a href="@Url.Action("Create", "Administrator")">
+                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-settings">
+                                                <span class="of-bt-icon">
+                                                    <i class="fa icon-user  fa-5x "></i>
+                                                </span>
+                                                <span class="of-bt-title">Administrator</span>
+                                            </div>
+                                        </a>
 
-                                        </div>
                                     </div>
                                 </div>
-                            }
-                            @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator))
-                            {
-                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <a href="@Url.Action("Index", "Manager")">
-                                                <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-storage">
-                                                    <span class="of-bt-icon ">
-                                                        <i class="fa icon-user fa-5x"></i>
-                                                    </span>
-                                                    <span class="of-bt-title ">Manager</span>
-                                                </div>
-                                            </a>
-                                        </div>
+                            </div>
+                        }
+                        @if (ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.GlobalAdmin) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.ITAdministrator) || ObjLogin2.UserRoleId == Convert.ToInt64(WorkOrderEMS.Helper.UserType.Administrator))
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <a href="@Url.Action("Index", "Manager")">
+                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-storage">
+                                                <span class="of-bt-icon ">
+                                                    <i class="fa icon-user fa-5x"></i>
+                                                </span>
+                                                <span class="of-bt-title ">Manager</span>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
-                            }
-                            @if (ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) || ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client))
-                            {
-                                <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <a href="@Url.Action( "CreateEmployee","Employee")">
-                                                <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-social">
-                                                    <span class="of-bt-icon">
-                                                        <i class="fa fa-group fa-5x "></i>
-                                                    </span>
-                                                    <span class="of-bt-title ">Employee</span>
-                                                </div>
-                                            </a>
-                                        </div>
+                            </div>
+                        }
+                        @if (ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Employee) || ObjLogin2.UserRoleId != Convert.ToInt64(WorkOrderEMS.Helper.UserType.Client))
+                        {
+                            <div class="col-lg-6 col-md-6 col-sm-12  col-xs-12">
+                                <div class="form-group">
+                                    <div class="col-sm-12">
+                                        <a href="@Url.Action( "CreateEmployee","Employee")">
+                                            <div class="of-button texthover-bluelight themecolor " style="float:left;" data-ofid="of-social">
+                                                <span class="of-bt-icon">
+                                                    <i class="fa fa-group fa-5x "></i>
+                                                </span>
+                                                <span class="of-bt-title ">Employee</span>
+                                            </div>
+                                        </a>
                                     </div>
                                 </div>
-                            }
-                        </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
     }
-    <script src="@Url.Content("~/Scripts/bootstrap.js?v=" + eTracScriptVersion)"></script>  
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/Bootstrap-Multiselect")
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js?v=" + eTracScriptVersion)"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js?v=" + eTracScriptVersion)"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.js?v=" + eTracScriptVersion)"></script>
+    <script src="@Url.Content("~/Scripts/respond.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-multiselect.js")"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-tooltip.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-confirmation.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootbox.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js")"></script>
 
     <!--NEWLY ADDED JS FOR DASHBOARD-->
     <!-- DataTables -->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/DataTable-Select2")
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/input-mask")
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/Time-date-oll-icheck-demopurpose")
+    <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/jquery.dataTables.min.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/dataTables.bootstrap.min.js")"></script>
+    <!-- Select2 -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/select2/select2.full.min.js")"></script>
+    <!-- InputMask -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.date.extensions.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.extensions.js")"></script>
+    <!-- daterangepicker -->
+
+    <script src="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+    <!-- bootstrap color picker -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.js")"></script>
+    <!-- bootstrap time picker -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.js")"></script>
+    <!-- Slimscr"oll -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/slimScroll/jquery.slimscroll.min.js")"></script>
+    <!-- iCheck 1.0.1 -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/iCheck/icheck.min.js")"></script>
+    <!-- FastClick -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/fastclick/fastclick.min.js")"></script>
+    <!-- AdminLTE App -->
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/app.min.js")"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/demo.js")"></script>
+    <!-- AdminLTE for demo purposes -->
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/flip.js")"></script>
+
     <!-- jQuery UI 1.11.4 -->
-    <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+    <script src="@Url.Content("~/Content/Dashboard/bootstrap/js/jquery-ui.min.js")"></script>
+
     <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
     <script>
         $.widget.bridge('uibutton', $.ui.button);
@@ -561,21 +627,27 @@
     <!-- Sparkline -->
     <script src="@Url.Content("~/Content/Dashboard/plugins/sparkline/jquery.sparkline.min.js")"></script>
     <!-- jvectormap -->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/jvectormap")
+    <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-world-mill-en.js")"></script>
     <!-- jQuery Knob Chart -->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/KnobChart-BootstrapDatepicker-wysihtml5")
+    <script src="@Url.Content("~/Content/Dashboard/plugins/knob/jquery.knob.js")"></script>
+    <!-- datepicker -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/datepicker/bootstrap-datepicker.js")"></script>
+    <!-- Bootstrap WYSIHTML5 -->
+    <script src="@Url.Content("~/Content/Dashboard/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
     <!--Auto Draggable/Droppable JS -->
-    <script src="@Url.Content("~/Content/Dashboard/dist/js/pages/dash.all.min.js")"></script>
-    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/2.5.0/dash.all.min.js"></script>*@
-
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/pages/dashboard.js")"></script>
     <!-- USER Mini-chart-list -->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/MiniChartList")
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/jRespond.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/jquery_002.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/smart-resize.js")"></script>
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/layout.js")"></script>
 
-    <!-- AmChart (Work Order Status)- -->
-    <script src="@Url.Content("~/Content/Dashboard/dist/js/amcharts.js")"></script>
-    <script src="@Url.Content("~/Content/Dashboard/dist/js/Amchart.js")"></script>  
+    <!-- AmChart (Work Order Status) -->
+    <script src="@Url.Content("~/Content/Dashboard/dist/js/Amchart.js")"></script>
     <script src="@Url.Content("~/Content/Dashboard/dist/js/pie.js")"></script>
     <script src="@Url.Content("~/Content/Dashboard/dist/js/light.js")"></script>
+
     <script src="@Url.Content("~/Scripts/bootstrap-checkbox.js")"></script>
     <!--NEWLY ADDED JS FOR DASHBOARD END HERE-->
     @Html.Partial("_ControlSideBar")
@@ -649,6 +721,7 @@
 
         $(document).ready(function () {
 
+   
             if ($_HostPrefix + 'GlobalAdmin' == location.href || $_HostPrefix + 'GlobalAdmin/Index' == location.href || $_HostPrefix + 'ITAdministrator' == location.href || $_HostPrefix + 'GlobalAdmin/ITAdministrator' == location.href) {
                 $('#control-sidebar').show();
             } else {
@@ -707,84 +780,84 @@
             $('.daterangepicker').each(function (i) {
                 this.id = 'daterangepicker' + i;
             });
-
+ 
             //***************************** THIS SCRIPT COPY FROM _GLOBALADMINLAYOUT END HERE ***********************************//
         });
 
-        //function getDetailsForInfractionNotification() {
-        //    $.ajax({
-        //        type: "GET",
-        //        url: $_HostPrefix + 'Manager/InfractionDetailsForPushNotificaiton',
-        //        async: false,
-        //        data: { "id": $("#drp_MasterLocation").val(), "userType": 2 },
-        //        success: function (Data) {
-        //            if (Data != null) {
-        //                if (Data.re != null) {
-        //                    if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
-        //                        storedValues = JSON.parse(localStorage["Values"]);
+        function getDetailsForInfractionNotification() {
+            $.ajax({
+                type: "GET",
+                url: $_HostPrefix + 'Manager/InfractionDetailsForPushNotificaiton',
+                async: false,
+                data: { "id": $("#drp_MasterLocation").val(), "userType": 2 },
+                success: function (Data) {
+                    if (Data != null) {
+                        if (Data.re != null) {
+                            if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
+                                storedValues = JSON.parse(localStorage["Values"]);
 
-        //                        if ($("#pushNotificationForInfractionM").is(':visible') == true) {
-        //                            var locid = storedValues[4]; // localStorage.getItem("INFLoc");
-        //                            var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
-        //                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+                                if ($("#pushNotificationForInfractionM").is(':visible') == true) {
+                                    var locid = storedValues[4]; // localStorage.getItem("INFLoc");
+                                    var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                    if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
 
-        //                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+                                    } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
 
-        //                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
-        //                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+                                        if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                            $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
 
-        //                                } else {
-        //                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
-        //                                }
+                                        } else {
+                                            $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                        }
 
-        //                                $("#pushNotificationForInfractionM").show();
-        //                            }
-        //                        }
-        //                        else {
-        //                            $("#messageForPushNotificationM").html("");
-        //                            if (storedValues != null || storedValues != undefined) {
-        //                                var locid = storedValues[4]; //localStorage.getItem("INFLoc");
-        //                                var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
-        //                            }
-        //                            $("#messageForPushNotificationM").empty();
+                                        $("#pushNotificationForInfractionM").show();
+                                    }
+                                }
+                                else {
+                                    $("#messageForPushNotificationM").html("");
+                                    if (storedValues != null || storedValues != undefined) {
+                                        var locid = storedValues[4]; //localStorage.getItem("INFLoc");
+                                        var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                    }
+                                    $("#messageForPushNotificationM").empty();
 
-        //                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+                                    if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
 
-        //                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+                                    } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
 
-        //                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
-        //                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+                                        if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                            $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
 
-        //                                } else {
-        //                                    //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
-        //                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
-        //                                }
+                                        } else {
+                                            //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
+                                            $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                        }
 
-        //                                $("#pushNotificationForInfractionM").show();
-        //                            }
-        //                        }
-        //                    }
+                                        $("#pushNotificationForInfractionM").show();
+                                    }
+                                }
+                            }
 
-        //                    localStorage.clear();
-        //                    if (localStorage.length === 0) {
-        //                        Values[4] = JSON.stringify(Data.re.LocationId);
-        //                        Values[5] = JSON.stringify(Data.re.InfractionId);
-        //                        localStorage["Values"] = JSON.stringify(Values);
+                            localStorage.clear();
+                            if (localStorage.length === 0) {
+                                Values[4] = JSON.stringify(Data.re.LocationId);
+                                Values[5] = JSON.stringify(Data.re.InfractionId);
+                                localStorage["Values"] = JSON.stringify(Values);
 
-        //                        //localStorage.setItem("INFLoc", Data.re.LocationId);
-        //                        //localStorage.setItem("INFInfractionId", Data.re.InfractionId);
-        //                    }
-        //                }
-        //            }
+                                //localStorage.setItem("INFLoc", Data.re.LocationId);
+                                //localStorage.setItem("INFInfractionId", Data.re.InfractionId);
+                            }
+                        }
+                    }
 
 
-        //        },
-        //        error: function (err) {
-        //            console.log(err);
-        //        }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
 
-        //    });//ajax end block for getDetailsForWorkOrderDetailsNotification
-        //}
+            });//ajax end block for getDetailsForWorkOrderDetailsNotification
+        }
 
         function getEmployeeStatus() {
 
@@ -977,9 +1050,11 @@
                 async: false,
                 data: { "id": $("#drp_MasterLocation").val() },
                 success: function (Data) {
+
                     if (Data.re != null && Data.re != "" && Data.re == true) {
                         clearInterval(sendPushNotificationforCheckInNotPerformed);
                     }
+
                 },
                 error: function (err) {
                     console.log(err);
@@ -1060,10 +1135,10 @@
     </script>
 
 
-    @*<div id="pushNotificationForInfractionM" class="alert alert-info">
+    <div id="pushNotificationForInfractionM" class="alert alert-info">
         <a href="javascript:void(0)" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
         <strong>Infraction Submitted</strong> <p id="messageForPushNotificationM">.</p>
-    </div>*@
+    </div>
 
     <div id="pushNotificationForIdleEmployeeM" class="alert alert-info">
         <a href="javascript:void(0)" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
@@ -1106,7 +1181,6 @@
     .popover {
         z-index: 3000;
     }
-
     #daterangepicker0 {
         right: 0 !important;
         top: 43px !important;

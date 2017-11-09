@@ -237,25 +237,5 @@ namespace WorkOrderEMS.Controllers.Common
             }
 
         }
-
-        #region Insurance master
-
-        public JsonResult GetInsurancePlanByInsurance(string InsuranceCompanyId)
-        {
-            int _companyId = 0;
-            if (!string.IsNullOrEmpty(InsuranceCompanyId))
-            {
-                int.TryParse(InsuranceCompanyId, out _companyId);
-                InsurancePlanModel State = new InsurancePlanModel();
-                CommonMethodManager _CommonMethodManager = new CommonMethodManager();
-
-                State.InsurancePlanList = _ICommonMethod.GetPlanByInsuranceCompanyId(_companyId);
-                return Json(State, JsonRequestBehavior.AllowGet);
-            }
-            else { return Json(null, JsonRequestBehavior.AllowGet); }
-
-        }
-
-        #endregion Insurance master
     }
 }

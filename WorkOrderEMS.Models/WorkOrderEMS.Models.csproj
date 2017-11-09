@@ -79,8 +79,10 @@
     <Compile Include="CommonModels\EmailToUsers.cs" />
     <Compile Include="CommonModels\EmployeeWorkAssignmentCountModel.cs" />
     <Compile Include="CommonModels\GlobalCodeModel.cs" />
+    <Compile Include="CommonModels\JQGridModel.cs" />
     <Compile Include="CommonModels\LocationDetailModel.cs" />
     <Compile Include="CommonModels\LocationRuleMappingModel.cs" />
+    <Compile Include="CommonModels\LoginModel.cs" />
     <Compile Include="CommonModels\MethodResponse.cs" />
     <Compile Include="CommonModels\MyGenericDataReader.cs" />
     <Compile Include="CommonModels\PrintQRCModel.cs" />

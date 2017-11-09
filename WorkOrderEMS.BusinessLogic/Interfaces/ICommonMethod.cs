@@ -66,7 +66,6 @@ namespace WorkOrderEMS.BusinessLogic
         //List<SelectListItem> GetNotAssgnProject(string UserType, long ProjectId);
         List<SelectListItem> GetWorkArea();
         List<SelectListItem> GetEmployeeProject(long projectId);
-        List<SelectListItem> GetAllInventoryByProjectId(long projectId);
         //List<SelectListItem> GetAllAssetByWorkArea(long ProjectId, long WorkAreaId);
         //string GetAssetImage(long ProjectId, long AssetID);
         /// <summary>GenerateQRCode
@@ -85,14 +84,6 @@ namespace WorkOrderEMS.BusinessLogic
         /// <param name="QRCID"></param>
         /// <returns></returns>
         bool GenerateQRCode(string qrcName, long moduleId, long? projectCategoryId, long? projectId, long qrcDefaultSizeId, long qrcTypeId, string specialNotes, long? createdBy, out long qrcId);
-
-        /// <summary>GetPlanByInsuranceCompanyId
-        /// CreatedBy   :   Nagendra Upwanshi
-        /// CreatedOn   :   Oct-14-2014
-        /// </summary>
-        /// <param name="CompanyId"></param>
-        /// <returns></returns>
-        List<InsurancePlanModel> GetPlanByInsuranceCompanyId(long companyId);
 
         UserModel GetManagerByIdCode(long userId, string operationName, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, out long totalRecords);
 

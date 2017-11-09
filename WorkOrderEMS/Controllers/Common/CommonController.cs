@@ -391,23 +391,6 @@ namespace WorkOrderEMS.Controllers.Common
         }
 
         #endregion Verify Location
-        [HttpPost]
-        public JsonResult SaveUserDashboardSettings(string SelectedSettings)
-        {
-            if (Session["eTrac"] != null)
-            {
-                eTracLoginModel obj_eTracLoginModel = new eTracLoginModel();
-                obj_eTracLoginModel = (eTracLoginModel)Session["eTrac"];
-                Common_B obj_Common_B = new Common_B();
-                string result = obj_Common_B.Save_UpdateDashboardSettings(obj_eTracLoginModel.UserId, SelectedSettings);
-                Session["eTrac_DashboardSetting"] = obj_Common_B.getUserDasboardSettings(obj_eTracLoginModel.UserId);
-                return Json(result);
-            }
-            else
-            {
-                return Json("");
-            }
-        }
         /// <summary>
         /// TO DELETE USER FROM THE APPLICATION
         /// </summary>

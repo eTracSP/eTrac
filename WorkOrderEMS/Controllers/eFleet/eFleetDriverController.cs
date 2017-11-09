@@ -43,7 +43,9 @@ namespace WorkOrderEMS.Controllers.eFleet
                         }
                     }
                 }
-                ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees();
+               
+                objeFleetDriverModel.LocationID= ObjLoginModel.LocationID ;
+                ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees(objeFleetDriverModel.LocationID, objeFleetDriverModel.DriverID);
                 ViewBag.Country = _IEfleetDriver.GetAllcountries();
                 ViewBag.StateList = _IEfleetDriver.GetStateByCountryID();
                 return View("RegisterDriver", objeFleetDriverModel);
@@ -139,7 +141,7 @@ namespace WorkOrderEMS.Controllers.eFleet
             }
             finally
             {
-                ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees();
+                ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees(objeFleetDriverModel.LocationID, objeFleetDriverModel.DriverID);
                 ViewBag.Country = _IEfleetDriver.GetAllcountries();
                 ViewBag.StateList = _IEfleetDriver.GetStateByCountryID();
             }
@@ -151,6 +153,19 @@ namespace WorkOrderEMS.Controllers.eFleet
             ModelState.Clear();
             var objeFleetDriver = new eFleetDriverModel();
             return View("RegisterDriver", objeFleetDriver);
+        }
+        /// <summary>
+        /// Created by Ashwajit Bansod
+        /// Created Date : Nov-08-2017
+        /// For Chacking Existing Driver Licesnse
+        /// </summary>
+        /// <param name="LicenseNumber"></param>
+        /// <returns></returns>
+        [HttpPost]
+        public JsonResult doesLicenseNumberExist(string DriverLicenseNo)
+        {
+            var existVehicle = _IEfleetDriver.IsLicenseExist(DriverLicenseNo);
+            return Json(existVehicle, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -271,9 +286,9 @@ namespace WorkOrderEMS.Controllers.eFleet
                     id = Cryptography.GetDecryptedData(id, true);
                     long _driverId = 0;
                     long.TryParse(id, out _driverId);
-
+                    objeFleetDriverModel.LocationID = ObjLoginModel.LocationID;
                     var _UserModel = _IEfleetDriver.GetDriverDetailsById(_driverId);
-                    ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees();
+                    ViewBag.EmployeeList = _IEfleetDriver.GetAllEmployees(objeFleetDriverModel.LocationID, _driverId);
                     ViewBag.Country = _IEfleetDriver.GetAllcountries();
                     ViewBag.StateList = _IEfleetDriver.GetStateByCountryID();
                     return View("RegisterDriver", _UserModel);

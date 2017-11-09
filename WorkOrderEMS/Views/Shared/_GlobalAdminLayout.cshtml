@@ -47,84 +47,115 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" href="~/Images/logo.png" type="image/gif" sizes="16x16">
     <title>@ViewBag.Title - eTrac</title>
-    <script type="text/javascript" src=@Url.Content("~/Scripts/jquery-3.2.1.min.js")></script>
-    @*@Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/jquery")
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/jQueryFile")*@
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/bundles/modernizr")
+
+    @*<@Styles.Render("~/Content/css")*@
+    @*<link href="~/Content/Site.css" rel="stylesheet" />*@
+    @Scripts.Render("~/bundles/modernizr")
     <!-- Bootstrap 3.3.5 -->
     <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/bootstrap.min.css?v=" + eTracScriptVersion)">
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/Font-Awesome")
-    
+
+    <link rel="stylesheet" href="@Url.Content("~/Content/font-awesome/css/font-awesome.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/font-awesome.min.css?v=" + eTracScriptVersion)" />
+
     <!-- Page-Level Plugin CSS - Dashboard -->
-    <link href="@Url.Content("~/Content/common/plugins/morris/morris-0.4.3.min.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/common/plugins/timeline/timeline.css?v=" + eTracScriptVersion)" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/common/plugins/morris/morris-0.4.3.min.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/common/plugins/timeline/timeline.css")" rel="stylesheet" />
     <!-- SB Admin CSS - Include with every page -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/jquery-ui")
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/JQGrid-Datepicker")
-    <link href="@Url.Content("~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/Wizard-Sb-Admin")
-    <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    <link href="@Url.Content("~/Content/nanoscroller.css?v=" + eTracScriptVersion)" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.theme.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.core.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/themes/base/jquery.ui.all.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/ui.jqgrid.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/JqGridCSS/DilogPopup.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/datepicker.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Scripts/BootStrap-Multiselect/CSS/bootstrap-multiselect.css")" rel="stylesheet" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/formwizard.css")" />
+    <link href="@Url.Content("~/Content/SuperAdmin/sb-admin.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/bootstrap-datetimepicker.min.css")" rel="stylesheet" />
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery-1.10.2.min.js")"></script>
+    <link href="@Url.Content("~/Content/nanoscroller.css")" rel="stylesheet" />
 
     <!-- NEWLY ADDED CSS FOR DASHBOARD -->
     <!-- Ionicons -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/ionicons.min.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/ionicons.min.css")" />
     <!-- daterange picker -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/DateTimepicker")
-
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker-bs3.css")" />
+    <!-- Bootstrap Color Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.css")" />
+    <!-- Bootstrap time Picker -->
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.css")" />
     <!-- Select2 -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/select2/select2.min.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/plugins/select2/select2.min.css")" />
     <!-- Theme style -->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/AdminLTE.min.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/AdminLTE.min.css")" />
 
     <!-- AdminLTE Skins. Choose a skin from the css/skins
              folder instead of downloading all of them to reduce the load. -->
-    @Styles.RenderFormat(SiteKeys.StyleVersion, "~/Content/AdminLTE-Skins")
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/skins/_all-skins.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/component.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/flipcss.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/bootstrap/css/style.css?v=" + eTracScriptVersion)" />
     <link href='https://fonts.googleapis.com/css?family=Oswald:400,300,700' rel='stylesheet' type='text/css'>
     <!-- User Mini Chart-->
-    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/components.css?v=" + eTracScriptVersion)" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/Dashboard/dist/css/components.css")" />
     <link href="@Url.Content("~/Content/Dashboard/bootstrap/css/devstyle.css?v=" + eTracScriptVersion)" rel="stylesheet" />
-    <link rel="stylesheet" href="@Url.Content("~/Content/toastr.css?v=" + eTracScriptVersion)" />
+    <link href="~/Content/toastr.css" rel="stylesheet" />
     <link rel="stylesheet" href="@Url.Content("~/Content/VerticalVersion.css?v=" + eTracScriptVersion)" />
     <!-- NEWLY ADDED CSS FOR DASHBOARD END HERE-->
     <!--FOLLOWING  files are used for JqGrid Javascript-->
-    <!--Add bootstrap new version file by Ashwajit Bansod-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/bootstrap.min.js?v=" + eTracScriptVersion)"></script>
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/JqGrid")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/grid.common.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/jquery.jqGrid.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/i18n/grid.locale-en.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/JqGrid/DilogPopUP.js")"></script>
 
     <!--Validation-->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/bundles/jqueryval")
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.js")"></script>
 
     <!--DatePicker Javascript-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js?v=" + eTracScriptVersion)"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+
     <!--File Upload-->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js?v=" + eTracScriptVersion)"></script>
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/JqueryFileUpload")
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js?v=" + eTracScriptVersion)"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/1.9.1-js/jquery-ui-1.9.2.min.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.fileupload-ui.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/FileUpload/jquery.iframe-transport.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.maskedinput-1.3.min.js")"></script>
+    @*<script src="~/Scripts/ImageUpload/FileUpload.js"></script>*@
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.min.js")"></script>
     <!-- Page-Level Plugin Scripts - Dashboard -->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js")"></script>
     <!-- SB Admin Scripts - Include with every page -->
-    <script type="text/javascript" src="@Url.Content("~/Scripts/common/sb-admin.js?v=" + eTracScriptVersion)"></script>
-    <script type="text/javascript" src="@Url.Content("~/Scripts/toastr.js?v=" + eTracScriptVersion)"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/common/sb-admin.js")"></script>
+
+    <script src="~/Scripts/toastr.js"></script>
     <!--DatePicker Javascript-->
-    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js?v=" + eTracScriptVersion)"></script>
-    <script src="@Url.Content("~/Content/common/plugins/Loader/maskLoader.js?v=" + eTracScriptVersion)"></script>
-    <script src="@Url.Content("~/Scripts/jquery.nanoscroller.min.js?v=" + eTracScriptVersion)"></script>
+    @*<script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.datepicker.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/bootstrap-datepicker.js")"></script>
+    <script type="text/javascript" src="@Url.Content("~/Scripts/jquery.ui.core.js")"></script>
+    @*<script src="~/Content/common/plugins/Loader/maskLoader.js"></script>
+        <script src="~/Scripts/jquery.nanoscroller.min.js"></script>*@
+    <script src="@Url.Content("~/Content/common/plugins/Loader/maskLoader.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.nanoscroller.min.js")"></script>
     @*@Styles.Render("~/Scripts/ClockPickerCss")
-      @Scripts.Render("~/Scripts/ClockPickerJs")*@
+    @Scripts.Render("~/Scripts/ClockPickerJs")*@
 
     <!--Moment Javascript-->
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/Moment")
+    <script src="@Url.Content("~/Scripts/moment.js")"></script>
+    <script src="@Url.Content("~/Scripts/moment-timezone-with-data.js")"></script>
     <!--Assign Timer & Continuous timer-->
-    <link rel="stylesheet" href="@Url.Content("~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css?v=" + eTracScriptVersion)" />
-    @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/DurationFlipbox")
+    <link href="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.css" rel="stylesheet" />
+    <script src="~/Scripts/DurationFlipbox/jquery.mousewheel.min.js"></script>
+    <script src="~/Scripts/DurationFlipbox/jtsage-datebox-4.1.1.bootstrap.min.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Oswald:400,700,300' rel='stylesheet' type='text/css'>
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
     @RenderSection("scripts", required: false)
 
+
     <script type="text/javascript">
+
         @{string hostPrefix = System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"];};
         $_JqueryLoader = '@hostPrefix';
         $_HostPrefix = '@hostPrefix';
@@ -202,7 +233,9 @@
                                 {
                                     if (Session["eTrac_UserLocations"] != null)
                                     {
+
                                         @Html.DropDownList("drp_MasterLocation", new SelectList((List<WorkOrderEMS.Models.UserLocations>)Session["eTrac_UserLocations"], "LocationId", "LocationName"), null, new { @class = "form-control", @id = "drp_MasterLocation" })
+
                                     }
                                 }
                                 <i class="fa fa-map-marker location"></i>
@@ -215,11 +248,10 @@
                                 <img src="~/Images/version.png" />
                             </button>
                         </li>
-                    </ul>
+                  </ul>
                 </div>
             </nav>
         </header>
-      
         @Html.Partial("_SideMenu1")
 
         <div id="page-wrapper" class="content-wrapper">
@@ -276,10 +308,9 @@
                                                         @{if (ViewBag.QRCSize != null)
                                                             {@Html.DropDownListFor(x => iz, new SelectList(ViewBag.QRCSize, "GlobalCodeId", "CodeName"), "--Select--", new { @id = "QRCSize", @class = "form-control requiredselect", @onchange = "loadsizeselection()" });
                                                             }
+                                                            else
+                                                            {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
                                                         }
-                                                        else
-                                                        {<select id="QRCSize" class="form-control requiredselect"><option value="-1">--Select--</option> </select>}
-
                                                     </div>
                                                     <div id="lblQRCSize" class="col-sm-4 control-label onlyforprint" style="display:none;"></div>
                                                 </div>
@@ -368,7 +399,10 @@
                                     @*@Html.LabelFor(model => model.AssignedTime, new { @class = "col-sm-4 control-label" })*@
                                     <div class="clockpicker col-md-8" id="IdleClockpicker">
                                         <input class="form-control form-control2" id="txtTimeLimit" placeholder="Assign time limit" onkeypress="return isNumberKey(event)" type="text" data-role="datebox" data-options='{"mode":"durationflipbox","useFocus":true,"overrideDurationOrder":["h","i"],"overrideDurationFormat": "%Dl:%DM" }'>
+                                       
+                                        
 
+                                        
                                         @*<input type="text" class="form-control form-control2" id="txtTimeLimit" placeholder="Assign time limit" data-placement="bottom" data-align="bottom" data-autoclose="true">*@
                                         @*@Html.TextBoxFor(model => model.AssignedTimeInterval, new { @id = "txtAssignedTime", @class = "form-control form-control2", @onkeypress = "return isNumberKey(event)", @maxlength = "9", @placeholder = "Assigned Time Limit (Minutes)" })*@
 
@@ -387,7 +421,6 @@
                         </div>
                     </div>
                 </div>
-
                 <!--Adeed By Ashwajit Bansod --->
                 <!--Model For version--->
                 <div class="modal fade" id="versionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -464,19 +497,19 @@
                 <!--Verical menu Added bye ashwajit For version--->
                 <script>
                     $("#vertical-menu h3").click(function () {
-                        //Inner
-                        var jqInner = $(this).next();
-                        if (jqInner.is(":visible")) {
-                            jqInner.slideUp()
-                            $(this).find('span').html('-');
-                        }
-                        else {
-                            jqInner.slideDown()
-                            $(this).find('span').html('+');
-                        }
-                    })</script>
+                        debugger
+                            //inner
+                            var jqinner = $(this).next();
+                            if (jqinner.is(":visible")) {
+                                jqinner.slideToggle()
+                                $(this).find('span').html('-');
+                            }
+                            else {
+                                jqinner.slideToggle()
+                                $(this).find('span').html('+');
+                            }
+               })</script>
 
-                <!--//Model For version--->
                 @{ WorkOrderEMS.Models.eTracLoginModel ObjLogin2 = (WorkOrderEMS.Models.eTracLoginModel)Session["eTrac"];
 
                     <div class="modal fade" id="UserRegistrationModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="z-index:9999999999;">
@@ -565,10 +598,13 @@
                 }
 
                 <script src="@Url.Content("~/Scripts/bootstrap.js?v=" + eTracScriptVersion)"></script>
-                <script src="@Url.Content("~/Scripts/respond.js?v=" + eTracScriptVersion)"></script>
-                @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Scripts/Bootstrap-Multiselect")
-                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js?v=" + eTracScriptVersion)"></script>
-                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js?v=" + eTracScriptVersion)"></script>
+                <script src="@Url.Content("~/Scripts/respond.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-multiselect.js")"></script>
+                @*<script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-tooltip.js")"></script>*@
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootstrap-confirmation.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/BootStrap-Multiselect/JS/bootbox.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/metisMenu/jquery.metisMenu.js")"></script>
+                <script type="text/javascript" src="@Url.Content("~/Scripts/common/plugins/morris/raphael-2.1.0.min.js")"></script>
 
                 <script type="text/javascript">
 
@@ -578,7 +614,7 @@
                     });
                     $(".nano").nanoScroller();
                     function validateClientEmail(sEmail) {
-
+                        
                         var filter = /^([\w-\.]+@@([\w-]+\.)+[\w-]{2,4})?$/;
 if (filter.test(sEmail)) {
 return true;
@@ -590,7 +626,7 @@ return false;
                     //,#ManagerModel_UserEmail,#ManagerModel_AlternateEmail
                     //$("#UserModel_UserEmail,#UserModel_AlternateEmail").focusout(function () {
                     $("#ClientModel_UserEmail,#ClientModel_AlternateEmail,#ManagerModel_UserEmail,#ManagerModel_AlternateEmail,#UserEmail,#AlternateEmail,#UserModel_UserEmail,#UserModel_AlternateEmail").focusout(function () {
-
+                        
                         if (!validateClientEmail($(this).val())) {
                             $(this).addClass("form-control field-validation-error");
                             $(this).siblings('span').html("");
@@ -670,7 +706,7 @@ return false;
                                 $(this).focusout();
                             }
                         }
-
+        
 
                     });//end block
 
@@ -818,9 +854,11 @@ return false;
                 @Html.Partial("_ControlSideBar")
         </div>
 
+
         <!-- Page script -->
         <script>
-         $(function () {
+
+                    $(function () {
                         //Initialize Select2 Elements
                         $(".select2").select2();
 
@@ -882,7 +920,7 @@ return false;
                     });
         </script>
         <script>
-        $(document).ready(function () {
+                    $(document).ready(function () {
                         var i = 0;
                         $(".marqueeElement").last().addClass("last");
                         $(".marqueeElement").each(function () {
@@ -893,7 +931,7 @@ return false;
                         });
                     });
 
-        function doScroll($ele) {
+                    function doScroll($ele) {
                         var top = parseInt($ele.css("top"));
                         if (top < -80) { //bit arbitrary!
                             var $lastEle = $(".last");
@@ -906,137 +944,165 @@ return false;
                     }</script>
         <!--NEWLY ADDED JS FOR DASHBOARD-->
         <!-- DataTables -->
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/DataTable-Select2")
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/input-mask")
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/Time-date-oll-icheck-demopurpose")
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/jquery.dataTables.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datatables/dataTables.bootstrap.min.js")"></script>
+        <!-- Select2 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/select2/select2.full.min.js")"></script>
+        <!-- InputMask -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.date.extensions.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/input-mask/jquery.inputmask.extensions.js")"></script>
+        <!-- daterangepicker -->
+
+        <script src="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/daterangepicker/daterangepicker.js")"></script>
+        <!-- bootstrap color picker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/colorpicker/bootstrap-colorpicker.min.js")"></script>
+        <!-- bootstrap time picker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/timepicker/bootstrap-timepicker.min.js")"></script>
+        <!-- Slimscr"oll -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/slimScroll/jquery.slimscroll.min.js")"></script>
+        <!-- iCheck 1.0.1 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/iCheck/icheck.min.js")"></script>
+        <!-- FastClick -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/fastclick/fastclick.min.js")"></script>
+        <!-- AdminLTE App -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/app.min.js")"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/demo.js")"></script>
+        <!-- AdminLTE for demo purposes -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/flip.js")"></script>
+
+        <!-- jQuery UI 1.11.4 -->
+        <script src="@Url.Content("~/Content/Dashboard/bootstrap/js/jquery-ui.min.js")"></script>
 
         <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
         <script>
-         $.widget.bridge('uibutton', $.ui.button);
+                    $.widget.bridge('uibutton', $.ui.button);
         </script>
         <!-- Sparkline -->
         <script src="@Url.Content("~/Content/Dashboard/plugins/sparkline/jquery.sparkline.min.js")"></script>
         <!-- jvectormap -->
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/jvectormap")
-
+        <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/plugins/jvectormap/jquery-jvectormap-world-mill-en.js")"></script>
         <!-- jQuery Knob Chart -->
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/KnobChart-BootstrapDatepicker-wysihtml5")
-
-        <!-- Auto Draggable/Droppable JS -->
-        <script src="@Url.Content("~/Content/Dashboard/dist/js/pages/dash.all.min.js")"></script>
-        @*<script src="https://cdnjs.cloudflare.com/ajax/libs/dashjs/2.5.0/dash.all.min.js"></script>*@
-
+        <script src="@Url.Content("~/Content/Dashboard/plugins/knob/jquery.knob.js")"></script>
+        <!-- datepicker -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/datepicker/bootstrap-datepicker.js")"></script>
+        <!-- Bootstrap WYSIHTML5 -->
+        <script src="@Url.Content("~/Content/Dashboard/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js")"></script>
+        <!--Auto Draggable/Droppable JS -->
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/pages/dashboard.js")"></script>
         <!-- USER Mini-chart-list -->
-        @Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/MiniChartList")
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/jRespond.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/jquery_002.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/smart-resize.js")"></script>
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/layout.js")"></script>
 
-        <!-- AmChart (Work Order Status)- -->      
-        <script src="@Url.Content("~/Content/Dashboard/dist/js/amcharts.js")"></script>
+        <!-- AmChart (Work Order Status) -->
         <script src="@Url.Content("~/Content/Dashboard/dist/js/Amchart.js")"></script>
         <script src="@Url.Content("~/Content/Dashboard/dist/js/pie.js")"></script>
-        <script src="@Url.Content("~/Content/Dashboard/dist/js/light.js")"></script>       
+        <script src="@Url.Content("~/Content/Dashboard/dist/js/light.js")"></script>
+
         <script src="@Url.Content("~/Scripts/bootstrap-checkbox.js")"></script>
         <!--NEWLY ADDED JS FOR DASHBOARD END HERE-->
         <!--Moment Javascript-->
-        <script src="@Url.Content("~/Scripts/moment.min.js")"></script>
+        <script src="@Url.Content("https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.2/moment.min.js")"></script>
         <script src="@Url.Content("~/Scripts/moment-timezone-with-data.js")"></script>
         <script src="@Url.Content("~/Scripts/jstz.min.js")"></script>
         <script src="@Url.Content("~/Scripts/jquery.cookie.min.js")"></script>
-        @*@Scripts.RenderFormat(SiteKeys.ScriptVersion, "~/Content/MomentJavascript")*@
-      
+
         <script>
             var viewloc = '@viewallloc';
-                    var UserType = '@loginUserType';
-                    var refreshIntervalId = 0;
-                    var Values = [];
-                    var storedValues;
-                    var timer = 0;
+            var UserType = '@loginUserType';
+            var refreshIntervalId = 0;
+            var Values = [];
+            var storedValues;
+            var timer = 0;
             $(document).ready(function () {
-                        if ($_HostPrefix + 'GlobalAdmin' == location.href || $_HostPrefix + 'GlobalAdmin#' == location.href
-                            || $_HostPrefix + 'GlobalAdmin/Index' == location.href || $_HostPrefix + 'GlobalAdmin/Index#' == location.href
-                            || $_HostPrefix + 'ITAdministrator' == location.href || $_HostPrefix + 'ITAdministrator#' == location.href
-                            || $_HostPrefix + 'Administrator' == location.href || $_HostPrefix + 'Administrator#' == location.href
-                            || $_HostPrefix + 'Manager/Dashboard' == location.href || $_HostPrefix + 'Manager/Dashboard#' == location.href
-                            || $_HostPrefix + 'GlobalAdmin/ITAdministrator' == location.href || $_HostPrefix + 'GlobalAdmin/ITAdministrator#' == location.href) {
-                            $('#control-sidebar').show();
+                if ($_HostPrefix + 'GlobalAdmin' == location.href || $_HostPrefix + 'GlobalAdmin#' == location.href
+                    || $_HostPrefix + 'GlobalAdmin/Index' == location.href || $_HostPrefix + 'GlobalAdmin/Index#' == location.href
+                    || $_HostPrefix + 'ITAdministrator' == location.href || $_HostPrefix + 'ITAdministrator#' == location.href
+                    || $_HostPrefix + 'Administrator' == location.href || $_HostPrefix + 'Administrator#' == location.href
+                    || $_HostPrefix + 'Manager/Dashboard' == location.href || $_HostPrefix + 'Manager/Dashboard#' == location.href
+                    || $_HostPrefix + 'GlobalAdmin/ITAdministrator' == location.href || $_HostPrefix + 'GlobalAdmin/ITAdministrator#' == location.href) {
+                    $('#control-sidebar').show();
+                } else {
+                    $('#control-sidebar').hide();
+                }
+                //*********** Hide Display Message*********/
+                setInterval(hideDisplayMessage, 10000); //30000 MS == 30 Sec
 
-
-                        } else {
-                            $('#control-sidebar').hide();
-
-                        }
-                        //*********** Hide Display Message*********/
-                        setInterval(hideDisplayMessage, 10000); //30000 MS == 30 Sec
-
-                        function hideDisplayMessage() {
-                            if ($('#message').is(':hidden')) {
+                function hideDisplayMessage() {
+                    if ($('#message').is(':hidden')) {
                         $('#message').hide();
-                        }
                     }
-                    //This Function update dashboard details in every 40 sec
-                    refreshIntervalId = setInterval(function () {
-                        getAllDashboardData(true);
-                    }, 40000);
+                }
+                //This Function update dashboard details in every 40 sec
+                refreshIntervalId = setInterval(function () {
+                    getAllDashboardData(true);
+                }, 40000);
 
-                    //************************************--- THIS SCRIPT COPY FROM _MANAGERLAYOUT ---******************************************************//
+                //************************************--- THIS SCRIPT COPY FROM _MANAGERLAYOUT ---******************************************************//
 
-                    if (UserType == 2 || UserType == "2") {
-                        //Comment due to performance issue. Later implemented of GT we need to uncomment
-                        //setInterval(function () {
-                        //    getDetailsForInfractionNotification();
-                        //}, 40000);
+                if (UserType == 2 || UserType == "2") {
+                    //Comment due to performance issue. Later implemented of GT we need to uncomment
+                    //setInterval(function () {
+                    //    getDetailsForInfractionNotification();
+                    //}, 40000);
 
-                        setInterval(function () {
-                            getEmployeeStatus();
-                        }, 50000);
+                    setInterval(function () {
+                        getEmployeeStatus();
+                    }, 50000);
 
-                        setInterval(function () {
-                            getFacilityRequestStatus();
-                        }, 30000);
+                    setInterval(function () {
+                        getFacilityRequestStatus();
+                    }, 30000);
 
-                        setInterval(function () {
-                            sendPushNotificationforCheckInNotPerformed();
-                        }, 35000);
-                    }
+                    setInterval(function () {
+                        sendPushNotificationforCheckInNotPerformed();
+                    }, 35000);
+                }
                 $("#btnTimeAssign").click(function () {
                     $.ajax({
-                            type: "GET",
+                        type: "GET",
                         url: $_HostPrefix + 'Manager/ExtendEmployeeTimeLimit',
                         async: false,
                         data: { "id": $('#alertUserId').val(), "time": $('#txtTimeLimit').val() },
                         beforeSend: function () {
-                                new fn_showMaskloader('Please wait...Loading');
-                            },
+                            new fn_showMaskloader('Please wait...Loading');
+                        },
                         complete: function () {
-                                fn_hideMaskloader();
+                            fn_hideMaskloader();
                             $('#myModalTimeSpan').modal('hide');
-                            },
+                        },
 
                         success: function (Data) {
 
-                                if (Data != null) {
-                                    if (Data.re == 1 || Data.re == true) {
+                            if (Data != null) {
+                                if (Data.re == 1 || Data.re == true) {
                                     $('#myModalTimeSpan').modal('hide');
-                                    }
                                 }
-                            },
-                        error: function (err) {
-                                console.log(err);
-                            $('#myModalTimeSpan').modal('show');
                             }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                            $('#myModalTimeSpan').modal('show');
+                        }
 
-                        });//ajax end block for btnTimeAssign
+                    });//ajax end block for btnTimeAssign
 
-                    });
+                });
 
                 $("#menu-toggle").click(function (e) {
-                        e.preventDefault();
+                    e.preventDefault();
                     $("#wrapper").toggleClass("toggled");
-                    });
-                    //************************************--- _MANAGERLAYOUT SCRIPT END HERE ---******************************************************//
+                });
+                //************************************--- _MANAGERLAYOUT SCRIPT END HERE ---******************************************************//
 
-                    function closeRightCornerPopUP(e) {
+                function closeRightCornerPopUP(e) {
                     $(e).parent("div").hide();
-                    }
+                }
 
                 // Method 1 - uses 'data-toggle' to initialize
                 $('[data-toggle="myToolTip"]').tooltip();
@@ -1047,65 +1113,65 @@ return false;
 
                 // options set in JS by class
                 $(".tip-top").tooltip({
-                        placement: 'top'
+                    placement: 'top'
                 });
                 $(".tip-right").tooltip({
-                        placement: 'right'
+                    placement: 'right'
                 });
                 $(".tip-bottom").tooltip({
-                        placement: 'bottom'
+                    placement: 'bottom'
                 });
                 $(".tip-left").tooltip({
-                        placement: 'left',
+                    placement: 'left',
                     html: true
                 });
 
                 $(".tip-auto").tooltip({
-                        placement: 'auto',
+                    placement: 'auto',
                     html: true
                 });
 
                 $(".img-tip").tooltip({
-                        placement: 'top',
+                    placement: 'top',
                     html: true
                 });
 
                 $('.daterangepicker').each(function (i) {
-                        this.id = 'daterangepicker' + i;
-                    });
+                    this.id = 'daterangepicker' + i;
+                });
 
                 $('#daterangepicker0 .applyBtn').click(function () {
-                        RenderDashboardData(false);
-                    });
+                    RenderDashboardData(false);
+                });
 
                 $('.breadcrumb #RefreshDashboard').click(function () {
-                        RenderDashboardData(true);
-                        var date = new Date();
-                        var todaysDate = (date.toLocaleString("en-us", { month: "long" }) + ' ' + date.getDate() + ', ' + date.getFullYear());
+                    RenderDashboardData(true);
+                    var date = new Date();
+                    var todaysDate = (date.toLocaleString("en-us", { month: "long" }) + ' ' + date.getDate() + ', ' + date.getFullYear());
                     $('#daterangepicker0 .daterangepicker_start_input .input-mini').val(todaysDate);
                     $('#daterangepicker0 .daterangepicker_end_input .input-mini').val(todaysDate);
                     $('#reservation1').val(todaysDate + ' - ' + todaysDate);
-                    });
+                });
 
-                    function RenderDashboardData(IsRefresh) {
-                        try {
-                            var data;
-                            if (IsRefresh) {
-                                data = {};
-                                clearInterval(refreshIntervalId);
-                                refreshIntervalId = setInterval(function () {
-                                    getAllDashboardData(true);
-                                }, 40000);//30 Second
-                }
+                function RenderDashboardData(IsRefresh) {
+                    try {
+                        var data;
+                        if (IsRefresh) {
+                            data = {};
+                            clearInterval(refreshIntervalId);
+                            refreshIntervalId = setInterval(function () {
+                                getAllDashboardData(true);
+                            }, 40000);//30 Second
+                        }
                         else {
                             var fromDate = $('#daterangepicker0 .daterangepicker_start_input .input-mini').val();
-                var toDate = $('#daterangepicker0 .daterangepicker_end_input .input-mini').val();
-                data = { "fromDate": fromDate, "toDate": toDate };
+                            var toDate = $('#daterangepicker0 .daterangepicker_end_input .input-mini').val();
+                            data = { "fromDate": fromDate, "toDate": toDate };
                             clearInterval(refreshIntervalId);
-            //refreshIntervalId = setInterval(function () {
-            //    getAllDashboardData(true);
-            //}, 60000);//60 Second
-        }
+                            //refreshIntervalId = setInterval(function () {
+                            //    getAllDashboardData(true);
+                            //}, 60000);//60 Second
+                        }
                         $.ajax({
                             url: '@Url.Action("GetDashboardHeadCount", "GlobalAdmin")',
                             // url: $_HostPrefix + 'GlobalAdmin/GetDashboardHeadCount',
@@ -1113,18 +1179,19 @@ return false;
                             type: 'GET',
                             contentType: "application/json",
                             beforeSend: function () {
-                new fn_showMaskloader('Loading...');
-            },
+                                new fn_showMaskloader('Loading...');
+                            },
                             success: function (elementJSON) {
-                if (elementJSON != null && elementJSON != "" && elementJSON.dataJson.trim() != "") {
-                    // Disabled as clock refreshed by client side timer above instead of server timer, but left for example
-                    dataJSON = JSON.parse(elementJSON.dataJson);
+                                if (elementJSON != null && elementJSON != "" && elementJSON.dataJson.trim() != "") {
+                                    // Disabled as clock refreshed by client side timer above instead of server timer, but left for example
+                                    dataJSON = JSON.parse(elementJSON.dataJson);
                                     //*******************Count panel*******************************//
                                     $('#divCountPanel #QrcCount').text(dataJSON.CountPanel[0]['QrcCount']);
                                     $('#divCountPanel #WorkRequestCount').text(dataJSON.CountPanel[0]['WorkRequestCount']);
                                     $('#divCountPanel #UserCount').text(dataJSON.CountPanel[0]['UserCount']);
                                     $('#divCountPanel #VendorsVehicleCount').text(dataJSON.CountPanel[0]['VendorsVehicleCount']);
                                     $('#divPieUserGraph #pieEmpCount').data('percent', (dataJSON.CountPanel[0]['EmpCount']));
+
                                     $('#divPieUserGraph #EmpCount').html(dataJSON.CountPanel[0]['EmpCount']);
                                     $('#divPieUserGraph #AdminCount').html(dataJSON.CountPanel[0]['AdminCount']);
                                     $('#divPieUserGraph #ManagerCount').html(dataJSON.CountPanel[0]['ManagerCount']);
@@ -1151,59 +1218,60 @@ return false;
                                     $('#divScannedByPanel #ShuttleBus').text(dataJSON.CountPanel[0]['ShuttleBus']);
                                     $('#divScannedByPanel #GateArm').text(dataJSON.CountPanel[0]['GateArm']);
 
-                    //******************* Work Order Pie Chart ***********************************//
 
-                    if ($("#divWOProgress #dtWOProgress").length > 0) {
+                                    //******************* Work Order Pie Chart ***********************************//
+
+                                    if ($("#divWOProgress #dtWOProgress").length > 0) {
 
                                         $('#dtWOProgress').dataTable().fnDestroy();
                                         $('#dtWOProgress').remove();
-                        //*******************WO Progress data table*******************************//
-                        var WOProgressBody = '';
-                        WOProgressBody = "<div class='table-responsive'><table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
-                        if (dataJSON.Progress.length > 0) {
+                                        //*******************WO Progress data table*******************************//
+                                        var WOProgressBody = '';
+                                        WOProgressBody = "<div class='table-responsive'><table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
+                                        if (dataJSON.Progress.length > 0) {
 
-                            for (i = 0; (i < dataJSON.Progress.length) ; i++) {
-                                var ProgressTD = '';
-                                var progress = dataJSON.Progress[i]['ProgressBar'];
-                                if (progress != 296 && progress != 295) {
-                                    var progbar = progress
+                                            for (i = 0; (i < dataJSON.Progress.length) ; i++) {
+                                                var ProgressTD = '';
+                                                var progress = dataJSON.Progress[i]['ProgressBar'];
+                                                if (progress != 296 && progress != 295) {
+                                                    var progbar = progress
                                                 } if (dataJSON.Progress[i]['PauseStatus'] == 330 || dataJSON.Progress[i]['PauseStatus'] == null) {
-                                    switch (parseInt(progress)) {
-                                        case (296):
-                                            ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
-                                            break;
-                                        case (295):
-                                            ProgressTD = '<td><div class="text-green">No Limit</div></td>';
-                                            break;
-                                        case (progbar):
+                                                    switch (parseInt(progress)) {
+                                                        case (296):
+                                                            ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
+                                                            break;
+                                                        case (295):
+                                                            ProgressTD = '<td><div class="text-green">No Limit</div></td>';
+                                                            break;
+                                                        case (progbar):
 
-                                            if (progress > 75 && progress < 90) {
-                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                            }
-                                            else if (progress > 90 && progress <= 99) {
-                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                            }
-                                            else if (true) {
-                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                            }
+                                                                if (progress > 75 && progress < 90) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
+                                                                else if (progress > 90 && progress <= 99) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
+                                                                else if (true) {
+                                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                                }
 
-                                            break;
-                                        default:
-                                            ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
-                                            break
+                                                            break;
+                                                        default:
+                                                            ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
+                                                            break
                                                     }
-                                }
-                                else {
-                                    ProgressTD = '<td><div class="text-green">Pause</div></td>';
-                                }
-                                //var now = getStatusTime();
-                                WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
-                            }
-                            WOProgressBody += "</tbody></table></div>";
-                        }
+                                                }
+                                                else {
+                                                    ProgressTD = '<td><div class="text-green">Pause</div></td>';
+                                                }
+                                                //var now = getStatusTime();
+                                                WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
+                                            }
+                                            WOProgressBody += "</tbody></table></div>";
+                                        }
                                         $('#divWOProgress').html(WOProgressBody);
                                         $("#dtWOProgress").DataTable({
-                            "order": [[0, "desc"]]
+                                            "order": [[0, "desc"]]
                                         });
 
                                         updateProgressTime();
@@ -1213,9 +1281,9 @@ return false;
                                     if ($("#divWOPending #dtWOPending").length > 0) {
                                         $('#dtWOPending').dataTable().fnDestroy();
                                         $('#dtWOPending').remove();
-        //*******************WO Pending data table*******************************//
-        var WOPendingBody = '';
-        WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
+                                        //*******************WO Pending data table*******************************//
+                                        var WOPendingBody = '';
+                                        WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
                                         if (dataJSON.Pending.length > 0) {
                                             for (i = 0; (i < dataJSON.Pending.length) ; i++) {
                                                 WOPendingBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Pending[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Pending[i]['CodeID'] + '</td> <td>' + dataJSON.Pending[i]['LocationName'] + '</td><td>' + dataJSON.Pending[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Pending[i]['PriorityColor'] + '">' + dataJSON.Pending[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Pending[i]['AssignToUserName'] + '</td><td>' + dataJSON.Pending[i]['CreatedDate'] + '</td></tr>';
@@ -1224,16 +1292,16 @@ return false;
                                         }
                                         $('#divWOPending').html(WOPendingBody);
                                         $("#dtWOPending").DataTable({
-            "order": [[0, "desc"]]
+                                            "order": [[0, "desc"]]
                                         });
                                         //*******************WO Pending data table End*******************************//
                                     }
                                     if ($("#divWOComplete #dtWOComplete").length > 0) {
                                         $('#dtWOComplete').dataTable().fnDestroy();
                                         $('#dtWOComplete').remove();
-        //*******************WO Completed data table*******************************//
-        var WOCompleteBody = '';
-        WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
+                                        //*******************WO Completed data table*******************************//
+                                        var WOCompleteBody = '';
+                                        WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
                                         if (dataJSON.Completed.length > 0) {
                                             for (i = 0; (i < dataJSON.Completed.length) ; i++) {
                                                 WOCompleteBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Completed[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Completed[i]['CodeID'] + '</td> <td>' + dataJSON.Completed[i]['LocationName'] + '</td><td><span class="' + dataJSON.Completed[i]['PriorityColor'] + '">' + dataJSON.Completed[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Completed[i]['AssignToUserName'] + '</td><td>' + dataJSON.Completed[i]['CreatedDate'] + '</td><td>' + dataJSON.Completed[i]['EndTimeFull'] + '</td></tr>';
@@ -1242,7 +1310,7 @@ return false;
                                         }
                                         $('#divWOComplete').html(WOCompleteBody);
                                         $("#dtWOComplete").DataTable({
-            "order": [[0, "desc"]]
+                                            "order": [[0, "desc"]]
                                         });
                                         //*******************WO Completed data table End*******************************//
                                     }
@@ -1296,11 +1364,11 @@ return false;
                                             }
                                         });
                                         var title;
-        var html;
+                                        var html;
                                         // populate our custom legend when chart renders
                                         if (chart.dataProvider.length > 0) {
                                             $('#legend').html('');
-        html = '<div class="legend-item"><ul>';
+                                            html = '<div class="legend-item"><ul>';
                                             // populate our custom legend when chart renders
                                             // chart.customLegend = document.getElementById('legend');
                                             for (var i in chart.dataProvider) {
@@ -1321,8 +1389,8 @@ return false;
                                                     title = 'Pending';
                                                 // var title = row.title;
                                                 var color = chart.colors[i];
-        var value = row.value;
-        html += '<li><div class="legend-marker" style="background: ' + color + '"></div>' + title + '<span>' + value + '</span></li>';
+                                                var value = row.value;
+                                                html += '<li><div class="legend-marker" style="background: ' + color + '"></div>' + title + '<span>' + value + '</span></li>';
 
                                             }
                                             html += '</ul></div>';
@@ -1344,10 +1412,10 @@ return false;
                                         }
                                     }
                                     $('#divDarDetails #darDetail').html(DARBody);
-        //*******************DAR Marquee End*******************************//
+                                    //*******************DAR Marquee End*******************************//
 
-        //*******************UnAssigned WO Section*******************************//
-        var UnAssignedWOBody = '';
+                                    //*******************UnAssigned WO Section*******************************//
+                                    var UnAssignedWOBody = '';
                                     $('#divUnAssignedWODetails #UnAssignedDetails').append('');
 
                                     //This condition for client created WO on top of the list
@@ -1364,12 +1432,12 @@ return false;
                                         }
                                     }
                                     $('#divUnAssignedWODetails #UnAssignedDetails').html(UnAssignedWOBody);
-        var dynamicScript = "<script type='text/javascript'>$('#divUnAssignedWODetails #UnAssignedDetails .view').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var WorkRequestProjectTypeName = row.find('td').eq(1).html(); var WorkRequestTypeName = row.find('td').eq(2).html(); var PriorityLevelName = row.find('td').eq(3).html(); var AssignedWorkOrderImage = row.find('td').eq(4).html(); var WorkRequestStatusName = row.find('td').eq(5).html(); var Submittedon = row.find('td').eq(6).html(); var ProblemDesc = row.find('td').eq(7).html(); var CodeId = row.find('td').eq(8).html(); var LocationName = row.find('td').eq(9).html(); $('#lblProjectType').html(WorkRequestProjectTypeName); $('#lblWorkRequestType').html(WorkRequestTypeName); $('#lblAssignedWorkImage').html(AssignedWorkOrderImage); $('#lblPriorityLevel').html(PriorityLevelName); $('#lblWorkRequestStatus').html(WorkRequestStatusName); $('#lblSubmittedOn').html(Submittedon); if (ProblemDesc == null || ProblemDesc == '') { $('#labellProblemDescription').hide(); $('#lblProblemDescription').hide(); } else { $('#lblProblemDescription').html(ProblemDesc); $('#labellProblemDescription').show(); $('#lblProblemDescription').show(); } $('#lblCodeNo').html(CodeId); $('#lblLocationName').html(LocationName); if(WorkRequestProjectTypeName == 'Special Project'){$('#labelWorkRequestType').hide();$('#lblWorkRequestType').hide()}else{$('#labelWorkRequestType').show();$('#lblWorkRequestType').show()}  $('.modal-title').text('Work Order Details');$('#ModalDetailPreview').modal('show'); }); $('#divUnAssignedWODetails #UnAssignedDetails .assign').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var ProblemDesc = row.find('td').eq(7).html(); var PriorityLevel = row.find('td').eq(11).html(); var ProjectDesc = row.find('td').eq(7).html(); var locationId = row.find('td').eq(10).html(); var WorkRequestType = row.find('td').eq(1).html(); if (PriorityLevel == null || PriorityLevel == '' || PriorityLevel == 'undefined') { PriorityLevel = 0; } $.ajax({ type: 'GET', data: { 'id': id, 'ProblemDesc': ProblemDesc, 'PriorityLevel': PriorityLevel, 'ProjectDesc': ProjectDesc, 'WorkRequestType': WorkRequestType, 'locationId': locationId }, url: '" + $_HostPrefix + "GlobalAdmin/_AssignWorkAssignmentRequest/', contentType: 'application/json; charset=utf-8', error: function (xhr, status, error) { }, success: function (result) { $('.modal-title').text('Assign Work Order'); $('#largeeditpopup').html(result); $('#myModallarge').modal('show'); } }); });<\/script>";
+                                    var dynamicScript = "<script type='text/javascript'>$('#divUnAssignedWODetails #UnAssignedDetails .view').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var WorkRequestProjectTypeName = row.find('td').eq(1).html(); var WorkRequestTypeName = row.find('td').eq(2).html(); var PriorityLevelName = row.find('td').eq(3).html(); var AssignedWorkOrderImage = row.find('td').eq(4).html(); var WorkRequestStatusName = row.find('td').eq(5).html(); var Submittedon = row.find('td').eq(6).html(); var ProblemDesc = row.find('td').eq(7).html(); var CodeId = row.find('td').eq(8).html(); var LocationName = row.find('td').eq(9).html(); $('#lblProjectType').html(WorkRequestProjectTypeName); $('#lblWorkRequestType').html(WorkRequestTypeName); $('#lblAssignedWorkImage').html(AssignedWorkOrderImage); $('#lblPriorityLevel').html(PriorityLevelName); $('#lblWorkRequestStatus').html(WorkRequestStatusName); $('#lblSubmittedOn').html(Submittedon); if (ProblemDesc == null || ProblemDesc == '') { $('#labellProblemDescription').hide(); $('#lblProblemDescription').hide(); } else { $('#lblProblemDescription').html(ProblemDesc); $('#labellProblemDescription').show(); $('#lblProblemDescription').show(); } $('#lblCodeNo').html(CodeId); $('#lblLocationName').html(LocationName); if(WorkRequestProjectTypeName == 'Special Project'){$('#labelWorkRequestType').hide();$('#lblWorkRequestType').hide()}else{$('#labelWorkRequestType').show();$('#lblWorkRequestType').show()}  $('.modal-title').text('Work Order Details');$('#ModalDetailPreview').modal('show'); }); $('#divUnAssignedWODetails #UnAssignedDetails .assign').click(function () { var row = $(this).closest('tr'); var id = $(this).attr('id'); var ProblemDesc = row.find('td').eq(7).html(); var PriorityLevel = row.find('td').eq(11).html(); var ProjectDesc = row.find('td').eq(7).html(); var locationId = row.find('td').eq(10).html(); var WorkRequestType = row.find('td').eq(1).html(); if (PriorityLevel == null || PriorityLevel == '' || PriorityLevel == 'undefined') { PriorityLevel = 0; } $.ajax({ type: 'GET', data: { 'id': id, 'ProblemDesc': ProblemDesc, 'PriorityLevel': PriorityLevel, 'ProjectDesc': ProjectDesc, 'WorkRequestType': WorkRequestType, 'locationId': locationId }, url: '" + $_HostPrefix + "GlobalAdmin/_AssignWorkAssignmentRequest/', contentType: 'application/json; charset=utf-8', error: function (xhr, status, error) { }, success: function (result) { $('.modal-title').text('Assign Work Order'); $('#largeeditpopup').html(result); $('#myModallarge').modal('show'); } }); });<\/script>";
                                     $('#divUnAssignedWODetails').append(dynamicScript);
-        //*******************UnAssigned WO Section End*******************************//
+                                    //*******************UnAssigned WO Section End*******************************//
 
-        //******************* All Active User*******************************//
-        var AllActiveUser = '';
+                                    //******************* All Active User*******************************//
+                                    var AllActiveUser = '';
                                     $('#divAllActiveUser #AllActiverUser').append('');
                                     if (dataJSON.AllActiveUser.length > 0) {
                                         for (i = 0; (i < dataJSON.AllActiveUser.length) ; i++) {
@@ -1377,10 +1445,10 @@ return false;
                                         }
                                     }
                                     $('#divAllActiveUser #AllActiverUser').html(AllActiveUser);
-        //*******************All Active User End*******************************//
+                                    //*******************All Active User End*******************************//
 
-        //******************* WEB Active User*******************************//
-        var WebActiveUser = '';
+                                    //******************* WEB Active User*******************************//
+                                    var WebActiveUser = '';
                                     $('#divWebActiveUser #WebActiverUser').append('');
                                     if (dataJSON.WebActiveUser.length > 0) {
                                         for (i = 0; (i < dataJSON.WebActiveUser.length) ; i++) {
@@ -1388,10 +1456,10 @@ return false;
                                         }
                                     }
                                     $('#divWebActiveUser #WebActiverUser').html(WebActiveUser);
-        //*******************WEB Active User End*******************************//
+                                    //*******************WEB Active User End*******************************//
 
-        //******************* MOBILE Active User*******************************//
-        var MobActiveUser = '';
+                                    //******************* MOBILE Active User*******************************//
+                                    var MobActiveUser = '';
                                     $('#divMobActiveUser #MobActiverUser').append('');
                                     if (dataJSON.MobActiveUser.length > 0) {
                                         for (i = 0; (i < dataJSON.MobActiveUser.length) ; i++) {
@@ -1400,32 +1468,36 @@ return false;
                                     }
                                     $('#divMobActiveUser #MobActiverUser').html(MobActiveUser);
                                     //*******************MOBILE Active User End*******************************//
+
                                 }
+
                             },
                             complete: function () {
-            fn_hideMaskloader();
-        },
+                                fn_hideMaskloader();
+                            },
                             error: function (er) {
-            fn_hideMaskloader();
-        }
+                                fn_hideMaskloader();
+                            }
                         });//ajax end block
                     } catch (e) {
                         console.log('RenderDashboardData-', e);
                     }
+
                 }
                 function getAllDashboardData(isInterval) {
-            try {
+
+                    try {
                         $.ajax({
-                    type: 'GET',
+                            type: 'GET',
                             url: '@Url.Action("GetDashboardHeadCount", "GlobalAdmin")',
                             // url: $_HostPrefix + '/GlobalAdmin/GetDashboardHeadCount',
                             async: true,
                             data: {},
                         }).success(function (dataItems) {
 
-                    if (dataItems.dataJson != null && dataItems.dataJson != "") {
+                            if (dataItems.dataJson != null && dataItems.dataJson != "") {
 
-                        dataJSON = JSON.parse(dataItems.dataJson);
+                                dataJSON = JSON.parse(dataItems.dataJson);
                                 //*******************Count panel*******************************//
                                 $('#divCountPanel #QrcCount').text(dataJSON.CountPanel[0]['QrcCount']);
                                 $('#divCountPanel #WorkRequestCount').text(dataJSON.CountPanel[0]['WorkRequestCount']);
@@ -1459,57 +1531,57 @@ return false;
                                 $('#divScannedByPanel #ShuttleBus').text(dataJSON.CountPanel[0]['ShuttleBus']);
                                 $('#divScannedByPanel #GateArm').text(dataJSON.CountPanel[0]['GateArm']);
 
-                        //This condition for when interval hit we need to clear data table.
-                        if (isInterval) {
+                                //This condition for when interval hit we need to clear data table.
+                                if (isInterval) {
                                     $('#dtWOProgress').dataTable().fnDestroy();
                                     $('#dtWOProgress').remove();
-                            //*******************WO Progress data table*******************************//
-                            var WOProgressBody = '';
-                            WOProgressBody = "<table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
-                            if (dataJSON.Progress.length > 0) {
+                                    //*******************WO Progress data table*******************************//
+                                    var WOProgressBody = '';
+                                    WOProgressBody = "<table id='dtWOProgress' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:10%;'>Location<th style='width:10%;'>Project Type</th><th style='width:12%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:14%;'>Created On</th><th style='width:17%;'>Progress</th></tr></thead><tbody id='dtWOProgressbody'>";
+                                    if (dataJSON.Progress.length > 0) {
 
-                                for (i = 0; (i < dataJSON.Progress.length) ; i++) {
-                                    var ProgressTD = '';
-                                    var progress = dataJSON.Progress[i]['ProgressBar'];
-                                    if (progress != 296 && progress != 295) {
-                                        var progbar = progress
+                                        for (i = 0; (i < dataJSON.Progress.length) ; i++) {
+                                            var ProgressTD = '';
+                                            var progress = dataJSON.Progress[i]['ProgressBar'];
+                                            if (progress != 296 && progress != 295) {
+                                                var progbar = progress
                                             } if (dataJSON.Progress[i]['PauseStatus'] == 330 || dataJSON.Progress[i]['PauseStatus'] == null) {
-                                        switch (parseInt(progress)) {
-                                            case (296):
-                                                ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
-                                                break;
-                                            case (295):
-                                                ProgressTD = '<td><div class="text-green">No Limit</div></td>';
-                                                break;
-                                            case (progbar):
+                                                switch (parseInt(progress)) {
+                                                    case (296):
+                                                        ProgressTD = '<td><div class="text-red">Over Limit</div></td>';
+                                                        break;
+                                                    case (295):
+                                                        ProgressTD = '<td><div class="text-green">No Limit</div></td>';
+                                                        break;
+                                                    case (progbar):
 
-                                                if (progress > 75 && progress < 90) {
-                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                                }
-                                                else if (progress > 90 && progress <= 99) {
-                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                                }
-                                                else if (true) {
-                                                    ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
-                                                }
+                                                            if (progress > 75 && progress < 90) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color2" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div> <div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (progress > 90 && progress <= 99) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar color3" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
+                                                            else if (true) {
+                                                                ProgressTD = '<td class="IsProgress"><div data-perc="' + dataJSON.Progress[i]['ProgressBar'] + '" class="progressbar"><div class="bar" style="width: ' + dataJSON.Progress[i]['ProgressBar'] + '%; overflow: hidden;"><span></span></div><div class="label" style="left: 69px;"><span></span><div class="perc">' + dataJSON.Progress[i]['ProgressBar'] + '%</div></div></div><div class="timeTill">' + dataJSON.Progress[i]['TimeTill'] + '</div><div class="starttime" style="display:none">' + dataJSON.Progress[i]['StartTime'] + '</div><div class="endtime" style="display:none">' + dataJSON.Progress[i]['EndTimeTimer'] + '</div></td>';
+                                                            }
 
-                                                break;
-                                            default:
-                                                ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
-                                                break
+                                                        break;
+                                                    default:
+                                                        ProgressTD = '<td><div class="text-yellow">Not-Assigned</div></td>';
+                                                        break
                                                 }
+                                            }
+                                            else {
+                                                ProgressTD = '<td><div class="text-green">Pause</div></td>';
+                                            }
+                                            //var now = getStatusTime();
+                                            WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
+                                        }
+                                        WOProgressBody += "</tbody></table>";
                                     }
-                                    else {
-                                        ProgressTD = '<td><div class="text-green">Pause</div></td>';
-                                    }
-                                    //var now = getStatusTime();
-                                    WOProgressBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Progress[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Progress[i]['CodeID'] + '</td> <td>' + dataJSON.Progress[i]['LocationName'] + '</td><td>' + dataJSON.Progress[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Progress[i]['PriorityColor'] + '">' + dataJSON.Progress[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Progress[i]['AssignToUserName'] + '</td><td>' + dataJSON.Progress[i]['CreatedDate'] + '</td>' + ProgressTD + '</tr>';
-                                }
-                                WOProgressBody += "</tbody></table>";
-                            }
                                     $('#divWOProgress').html(WOProgressBody);
                                     $("#dtWOProgress").DataTable({
-                                "order": [[0, "desc"]]
+                                        "order": [[0, "desc"]]
                                     });
 
                                     updateProgressTime();
@@ -1519,9 +1591,9 @@ return false;
 
                                     $('#dtWOPending').dataTable().fnDestroy();
                                     $('#dtWOPending').remove();
-        //*******************WO Pending data table*******************************//
-        var WOPendingBody = '';
-        WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
+                                    //*******************WO Pending data table*******************************//
+                                    var WOPendingBody = '';
+                                    WOPendingBody = "<table id='dtWOPending' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:18%;'>Project Type</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Assign To</th><th style='width:16%;'>Created On</th></tr></thead><tbody id='dtWOPendingbody'>";
                                     if (dataJSON.Pending.length > 0) {
                                         for (i = 0; (i < dataJSON.Pending.length) ; i++) {
                                             WOPendingBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Pending[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Pending[i]['CodeID'] + '</td> <td>' + dataJSON.Pending[i]['LocationName'] + '</td><td>' + dataJSON.Pending[i]['WorkRequestProjectTypeName'] + '</td><td><span class="' + dataJSON.Pending[i]['PriorityColor'] + '">' + dataJSON.Pending[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Pending[i]['AssignToUserName'] + '</td><td>' + dataJSON.Pending[i]['CreatedDate'] + '</td></tr>';
@@ -1530,16 +1602,16 @@ return false;
                                     }
                                     $('#divWOPending').html(WOPendingBody);
                                     $("#dtWOPending").DataTable({
-            "order": [[0, "desc"]]
+                                        "order": [[0, "desc"]]
                                     });
                                     //*******************WO Pending data table End*******************************//
 
 
                                     $('#dtWOComplete').dataTable().fnDestroy();
                                     $('#dtWOComplete').remove();
-        //*******************WO Completed data table*******************************//
-        var WOCompleteBody = '';
-        WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
+                                    //*******************WO Completed data table*******************************//
+                                    var WOCompleteBody = '';
+                                    WOCompleteBody = "<table id='dtWOComplete' class='table table-bordered table-striped'><thead><tr><th style='display:none'>Code</th><th style='width:14%'>Code No. </th><th style='width:17%;'>Location</th><th style='width:15%;'>Priority</th><th style='width:20%;'>Completed By</th><th style='width:16%;'>Created On</th><th style='width:18%;'>Completed On</th></tr></thead><tbody id='dtWOCompletebody'>";
                                     if (dataJSON.Completed.length > 0) {
                                         for (i = 0; (i < dataJSON.Completed.length) ; i++) {
                                             WOCompleteBody += '<tr class="odd" role="row"> <td style="display:none">' + dataJSON.Completed[i]['WorkRequestAssignmentID'] + '</td><td class="sorting_1">' + dataJSON.Completed[i]['CodeID'] + '</td> <td>' + dataJSON.Completed[i]['LocationName'] + '</td><td><span class="' + dataJSON.Completed[i]['PriorityColor'] + '">' + dataJSON.Completed[i]['PriorityLevelName'] + '</span></td><td>' + dataJSON.Completed[i]['AssignToUserName'] + '</td><td>' + dataJSON.Completed[i]['CreatedDate'] + '</td><td>' + dataJSON.Completed[i]['EndTimeFull'] + '</td></tr>';
@@ -1548,7 +1620,7 @@ return false;
                                     }
                                     $('#divWOComplete').html(WOCompleteBody);
                                     $("#dtWOComplete").DataTable({
-            "order": [[0, "desc"]]
+                                        "order": [[0, "desc"]]
                                     });
                                     //*******************WO Completed data table End*******************************//
 
@@ -1802,85 +1874,85 @@ return false;
             });
 
             //************************************--- THIS SCRIPT COPY FROM _MANAGERLAYOUT ---******************************************************//
-            //function getDetailsForInfractionNotification() {
-            //    try {
-            //        $.ajax({
-            //            type: "GET",
-            //            url: $_HostPrefix + 'Manager/InfractionDetailsForPushNotificaiton',
-            //            async: false,
-            //            data: { "id": $("#drp_MasterLocation").val(), "userType": 2 },
-            //            success: function (Data) {
-            //                if (Data != null) {
-            //                    if (Data.re != null) {
-            //                        if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
-            //                            storedValues = JSON.parse(localStorage["Values"]);
+            function getDetailsForInfractionNotification() {
+                try {
+                    $.ajax({
+                        type: "GET",
+                        url: $_HostPrefix + 'Manager/InfractionDetailsForPushNotificaiton',
+                        async: false,
+                        data: { "id": $("#drp_MasterLocation").val(), "userType": 2 },
+                        success: function (Data) {
+                            if (Data != null) {
+                                if (Data.re != null) {
+                                    if (localStorage.length > 0 && (localStorage["Values"] != null || localStorage["Values"] != undefined)) {
+                                        storedValues = JSON.parse(localStorage["Values"]);
 
-            //                            if ($("#pushNotificationForInfractionM").is(':visible') == true) {
-            //                                var locid = storedValues[4]; // localStorage.getItem("INFLoc");
-            //                                var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
-            //                                if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+                                        if ($("#pushNotificationForInfractionM").is(':visible') == true) {
+                                            var locid = storedValues[4]; // localStorage.getItem("INFLoc");
+                                            var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
 
-            //                                } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+                                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
 
-            //                                    if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
-            //                                        $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
 
-            //                                    } else {
-            //                                        $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
-            //                                    }
+                                                } else {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                                }
 
-            //                                    $("#pushNotificationForInfractionM").show();
-            //                                }
-            //                            }
-            //                            else {
-            //                                $("#messageForPushNotificationM").html("");
-            //                                if (storedValues != null || storedValues != undefined) {
-            //                                    var locid = storedValues[4]; //localStorage.getItem("INFLoc");
-            //                                    var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
-            //                                }
-            //                                $("#messageForPushNotificationM").empty();
+                                                $("#pushNotificationForInfractionM").show();
+                                            }
+                                        }
+                                        else {
+                                            $("#messageForPushNotificationM").html("");
+                                            if (storedValues != null || storedValues != undefined) {
+                                                var locid = storedValues[4]; //localStorage.getItem("INFLoc");
+                                                var infractionId = storedValues[5]; //localStorage.getItem("INFInfractionId");
+                                            }
+                                            $("#messageForPushNotificationM").empty();
 
-            //                                if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
+                                            if (parseInt(infractionId) === parseInt(Data.re.InfractionId)) {
 
-            //                                } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
+                                            } else if (parseInt(infractionId) < parseInt(Data.re.InfractionId)) {
 
-            //                                    if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
-            //                                        $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
+                                                if (parseInt(Data.re.LocationId) != parseInt($("#drp_MasterLocation").val())) {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location. <br/> Kindly change your location if you want to see new infraction.</div>");
 
-            //                                    } else {
-            //                                        //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
-            //                                        $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
-            //                                    }
+                                                } else {
+                                                    //bootbox.alert("New work order request has been generated for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationID + "']").text() + "</strong>' location.", function () {
+                                                    $("#messageForPushNotificationM").append("<br><div id='" + Data.re.InfractionId + "'> <a href='#' class='close' onclick='return closeRightCornerPopUP(this)' id='" + Data.re.InfractionId + "'>&times;</a>New Infraction has been submitted for '<strong>" + $("#drp_MasterLocation option[value='" + Data.re.LocationId + "']").text() + "</strong>' location.</div>");
+                                                }
 
-            //                                    $("#pushNotificationForInfractionM").show();
-            //                                }
-            //                            }
-            //                        }
+                                                $("#pushNotificationForInfractionM").show();
+                                            }
+                                        }
+                                    }
 
-            //                        localStorage.clear();
-            //                        if (localStorage.length === 0) {
-            //                            Values[4] = JSON.stringify(Data.re.LocationId);
-            //                            Values[5] = JSON.stringify(Data.re.InfractionId);
-            //                            localStorage["Values"] = JSON.stringify(Values);
+                                    localStorage.clear();
+                                    if (localStorage.length === 0) {
+                                        Values[4] = JSON.stringify(Data.re.LocationId);
+                                        Values[5] = JSON.stringify(Data.re.InfractionId);
+                                        localStorage["Values"] = JSON.stringify(Values);
 
-            //                            //localStorage.setItem("INFLoc", Data.re.LocationId);
-            //                            //localStorage.setItem("INFInfractionId", Data.re.InfractionId);
-            //                        }
-            //                    }
-            //                }
+                                        //localStorage.setItem("INFLoc", Data.re.LocationId);
+                                        //localStorage.setItem("INFInfractionId", Data.re.InfractionId);
+                                    }
+                                }
+                            }
 
 
-            //            },
-            //            error: function (err) {
-            //                console.log(err);
-            //            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
 
-            //        });//ajax end block for getDetailsForWorkOrderDetailsNotification
-            //    } catch (e) {
-            //        console.log('catch', e);
-            //    }
+                    });//ajax end block for getDetailsForWorkOrderDetailsNotification
+                } catch (e) {
+                    console.log('catch', e);
+                }
 
-            //}
+            }
 
             function getEmployeeStatus() {
                 try {
@@ -2043,7 +2115,7 @@ return false;
 
             function sendPushNotificationforCheckInNotPerformed() {
                 try {
-                    $.ajax({
+                    $.ajax({      
                         type: "GET",
                         url: $_HostPrefix + 'GlobalAdmin/QRCDetailsForCheckOutStatus',
                         async: false,
@@ -2066,10 +2138,10 @@ return false;
 
             //************************************---SCRIPT _MANAGERLAYOUT END HERE ---******************************************************//
         </script>
-        @*<div id="pushNotificationForInfractionM" class="alert alert-info">
+        <div id="pushNotificationForInfractionM" class="alert alert-info">
             <a href="javascript:void(0)" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
             <strong>Infraction Submitted</strong> <p id="messageForPushNotificationM">.</p>
-        </div>*@
+        </div>
 
         <div id="pushNotificationForIdleEmployeeM" class="alert alert-info">
             <a href="javascript:void(0)" class="close" onclick="return closeRightCornerPopUP(this)" id="rightCornerClass">&times;</a>
@@ -2134,26 +2206,3 @@ return false;
     </script>
 }
 <script type="text/javascript" src="@Url.Content("~/Scripts/UserDefine/JobTitleChange.js")"></script>
-<style>
-    .button {
-        background-color: #004A7F;
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-        border: none;
-        color: #FFFFFF;
-        cursor: pointer;
-        display: inline-block;
-        font-family: Arial;
-        font-size: 20px;
-        padding: 5px 10px;
-        text-align: center;
-        text-decoration: none;
-    }
-
-    .button {
-        -webkit-animation: glowing 1500ms infinite;
-        -moz-animation: glowing 1500ms infinite;
-        -o-animation: glowing 1500ms infinite;
-        animation: glowing 1500ms infinite;
-    }
-</style>

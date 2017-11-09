@@ -18,8 +18,8 @@ namespace WorkOrderEMS
         {
             // Web API configuration and services
             // config.Formatters.Remove(config.Formatters.XmlFormatter);
-            var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
-            json.UseDataContractJsonSerializer = true;
+            //var json = GlobalConfiguration.Configuration.Formatters.JsonFormatter;
+            //json.UseDataContractJsonSerializer = true;
 
             // Web API routes
             config.MapHttpAttributeRoutes();
@@ -30,40 +30,40 @@ namespace WorkOrderEMS
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            //      var jsonFormatter = new JsonMediaTypeFormatter
-            //      {
-            //          SerializerSettings =
+            //var jsonFormatter = new JsonMediaTypeFormatter
+            //{
+            //    SerializerSettings =
             //{
             //    ContractResolver = new CamelCasePropertyNamesContractResolver(),
             //    NullValueHandling = NullValueHandling.Ignore
             //}
-            //      };
+            //};
+            var jsonFormatter = new JsonMediaTypeFormatter();
 
-
-            //      //optional: set serializer settings here
-            //      config.Services.Replace(typeof(IContentNegotiator), new JsonContentNegotiator(jsonFormatter));
-            //      config.EnableSystemDiagnosticsTracing();
+            //optional: set serializer settings here
+            config.Services.Replace(typeof(IContentNegotiator), new JsonContentNegotiator(jsonFormatter));
+            config.EnableSystemDiagnosticsTracing();
 
             StructuremapWebApi.Start();
         }
     }
-    //public class JsonContentNegotiator : IContentNegotiator
-    //{
-    //    private readonly JsonMediaTypeFormatter _jsonFormatter;
+    public class JsonContentNegotiator : IContentNegotiator
+    {
+        private readonly JsonMediaTypeFormatter _jsonFormatter;
 
-    //    public JsonContentNegotiator(JsonMediaTypeFormatter formatter)
-    //    {
-    //        _jsonFormatter = formatter;
-    //    }
+        public JsonContentNegotiator(JsonMediaTypeFormatter formatter)
+        {
+            _jsonFormatter = formatter;
+        }
 
-    //    public ContentNegotiationResult Negotiate(
-    //            Type type,
-    //            HttpRequestMessage request,
-    //            IEnumerable<MediaTypeFormatter> formatters)
-    //    {
-    //        return new ContentNegotiationResult(
-    //            _jsonFormatter,
-    //            new MediaTypeHeaderValue("application/json"));
-    //    }
-    //}
+        public ContentNegotiationResult Negotiate(
+                Type type,
+                HttpRequestMessage request,
+                IEnumerable<MediaTypeFormatter> formatters)
+        {
+            return new ContentNegotiationResult(
+                _jsonFormatter,
+                new MediaTypeHeaderValue("application/json"));
+        }
+    }
 }

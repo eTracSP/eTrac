@@ -162,6 +162,7 @@ namespace WorkOrderEMS.BusinessLogic
 
 
         List<SelectListItem> GetLocationEmployee(long locationId);
+        List<EmployeeModel> GetLocationEmployeeforGenericLocServices(long locationId, long permissionid, long permisison);
         WorkRequestAssignmentModel SaveWorkRequestAssignment(WorkRequestAssignmentModel objWorkRequestAssignmentModel);
         Result AssignedToWorkRequestAssignment(WorkRequestAssignmentModel workRequestAssignmentModel);
 

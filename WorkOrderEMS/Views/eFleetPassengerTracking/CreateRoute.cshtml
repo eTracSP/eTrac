@@ -5,7 +5,7 @@
 }
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-<meta name="HandheldFriendly" content="true">   
+<meta name="HandheldFriendly" content="true">
 <link href='https://fonts.googleapis.com/css?family=Titillium+Web:400,300,600' rel='stylesheet' type='text'>
 <link href="~/Content/eFleetVehicle/eFleetstyle.css" rel="stylesheet" />
 <style type="text/css">
@@ -30,48 +30,44 @@
                 <div class="form">
                     <div class="tab-content">
                         @*<form action="/" method="post" id="vehicle_form">*@
+                        @Html.HiddenFor(model => model.RouteID)
                         @Html.HiddenFor(model => model.PickupList)
                         @Html.HiddenFor(model => model.DropList)
-                        <div class="section group">
-                              <div class="row" style="margin-left:26px">
-                                  <div class="col-sm-6">
-                                      <div class="field-wrap" style="margin-top:-2px;">
-                                          <label style="margin-left:-13px;margin-top:-5px;">
-                                              Service Type<span class="req">*</span>
-                                          </label>
-                                          <div style="margin-left:110px;margin-top : -2px">
-                                              @Html.RadioButtonFor(model => model.ServiceType, "464", true)&nbsp;Regular &nbsp;&nbsp; @Html.RadioButtonFor(model => model.ServiceType, "465", false)Event
-                                          </div>
-                                          <div class="errorspace">
-                                              @Html.ValidationMessageFor(model => model.ServiceType)
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="col-sm-6">
-                                      <div style="max-width :100%;margin-left:-80px">
-                                          <label>
-                                              Route Name<span class="req">*</span>
-                                          </label>
-                                          @Html.TextBoxFor(model => model.RouteName)
-                                          <div class="errorspace">
-                                              @Html.ValidationMessageFor(model => model.RouteName)
-                                          </div>
-                                      </div>
-                                  </div>
+                        <div class="top-row">
+                            <div class="field-wrap">
+                                <label style="margin-left:-13px;margin-top:-5px;">
+                                    Service Type<span class="req">*</span>
+                                </label>
+                                <div style="margin-left:110px;margin-top : -2px">
+                                    @Html.RadioButtonFor(model => model.ServiceType, "464", true)&nbsp;Regular &nbsp;&nbsp; @Html.RadioButtonFor(model => model.ServiceType, "465", false)Event
+                                </div>
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.ServiceType)
+                                </div>
                             </div>
-                        </div><br>
 
-                        <div class="row" style="margin-left:26px">
-                            <div class="field-wrap" style="max-width : 40%">
+                            <div class="field-wrap" style="width : 40%; margin-left:-8%">
+                                <label>
+                                    Route Name<span class="req">*</span>
+                                </label>
+                                @Html.TextBoxFor(model => model.RouteName)
+                                <div class="errorspace">
+                                    @Html.ValidationMessageFor(model => model.RouteName)
+                                </div>
+                            </div>
+                        </div>
+                    <br>
+                        <div class="top-row">
+                            <div class="field-wrap" style="width : 40%">
                                 <label>
                                     Contract Start Date<span class="req">*</span>
                                 </label>
-                                @Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @id = "StartDate",@class= "form-control", @onkeydown = "return false;" })
+                                @Html.TextBoxFor(model => model.StartDate, "{0:MM/dd/yyyy}", new { @id = "StartDate", @class = "form-control", @onkeydown = "return false;" })
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.StartDate)
                                 </div>
                             </div>
-                            <div class="field-wrap" style="max-width : 40%">
+                            <div class="field-wrap" style="width : 40%">
                                 <label>
                                     Contract End Date<span class="req">*</span>
                                 </label>
@@ -80,9 +76,9 @@
                                     @Html.ValidationMessageFor(model => model.EndDate)
                                 </div>
                             </div>
-                        </div>
-                        <div class="row" style="margin-left:20px;margin-top:14px;">
-                            <div class="field-wrap" style="max-width:40%;margin-left:-436px;">
+                        </div><br>
+                        <div class="top-row">
+                            <div class="field-wrap" style="width :40%; margin-left:-0%;">
                                 <label>
                                     Route Pick Up Point<span class="req">*</span>
                                 </label>
@@ -97,8 +93,8 @@
                                 </label>
                                 @Html.TextBoxFor(model => model.DropPoint, new { @id = "DropPoint", @class = "form-control" })
                                 @*<div>
-                                        <input type="button" value="+" id="increment" />
-                                    </div>*@
+                        <input type="button" value="+" id="increment" />
+                    </div>*@
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.DropPoint)
                                 </div>
@@ -114,41 +110,40 @@
                             </span>
                         </div>
                         @*<div class="top-row" style="margin-left : 20px;">
-                                <div class="field-wrap" style="width : 40%">
-                                    <label>
-                                        Route Pick Up Point<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.PickUpPoint, new { @id = "PickUpPoint" })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.PickUpPoint)
-                                    </div>
-                                </div>
-                                <div class="field-wrap" style="width : 40%">
-                                    <label>
-                                        Route Drop Point<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.DropPoint, new { @id = "DropPoint" })
+                <div class="field-wrap" style="width : 40%">
+                    <label>
+                        Route Pick Up Point<span class="req">*</span>
+                    </label>
+                    @Html.TextBoxFor(model => model.PickUpPoint, new { @id = "PickUpPoint" })
+                    <div class="errorspace">
+                        @Html.ValidationMessageFor(model => model.PickUpPoint)
+                    </div>
+                </div>
+                <div class="field-wrap" style="width : 40%">
+                    <label>
+                        Route Drop Point<span class="req">*</span>
+                    </label>
+                    @Html.TextBoxFor(model => model.DropPoint, new { @id = "DropPoint" })
 
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.DropPoint)
-                                    </div>
-                                </div>
+                    <div class="errorspace">
+                        @Html.ValidationMessageFor(model => model.DropPoint)
+                    </div>
+                </div>
 
-                                <div style="margin-top:-7%;margin-left:87%;position:relative" class="field-wrap">
-                                    <div><a class="addrows"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></div>
-                                </div>
+                <div style="margin-top:-7%;margin-left:87%;position:relative" class="field-wrap">
+                    <div><a class="addrows"><i class="fa fa-minus-circle fa-2x" aria-hidden="true"></i></a></div>
+                </div>
 
 
-                            </div>*@
-
-                        @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
-                        {
-                            <button type="submit" class="btn btn-block" id="btnSaveRoute">Update</button>
-                        }
-                        else
-                        {
-                            <button type="submit" class="btn btn-block" id="btnSaveRoute" onclick=" return createArrays()">Save</button>
-                        }
+            </div>*@
+                       @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
+                       {
+                        <button type="submit" class="button button-block" id="btnSaveRoute" onclick="return createArrays()">Update</button>
+                       }
+                       else
+                       {
+                        <button type="submit" class="button button-block" id="btnSaveRoute" onclick=" return createArrays()">Save</button>
+                       }                 
                     </div><!-- tab-content -->
                 </div> <!-- /form -->
                 <div class="marbottom"></div>

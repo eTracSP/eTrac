@@ -11,6 +11,7 @@ using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Helper.SerializationHelper;
 using WorkOrderEMS.Models;
+using WorkOrderEMS.Models.CommonModels;
 using WorkOrderEMS.Models.ServiceModel;
 
 namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
@@ -33,11 +34,10 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 var objFuelingRepository = new FuelingRepository();
                 var objDARRepository = new DARRepository();
                 var objDARDetail = new DARDetail();
-                var objDAR = new DARModel();
                 var Obj = new eFleetFueling();
                 AutoMapper.Mapper.CreateMap<eFleetFuelingModelForService, eFleetFueling>();
                 Obj = AutoMapper.Mapper.Map(objModel, Obj);
-                Obj.CreatedBy = objModel.UserId;           
+                Obj.CreatedBy = objModel.UserId;
                 Obj.CreatedDate = DateTime.UtcNow;
                 objFuelingRepository.Add(Obj);
                 if (Obj.FuelID > 0)
@@ -54,12 +54,12 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                     objDARDetail.IsManual = false;
                     objDARDetail.ModifiedBy = null;
                     objDARDetail.ModifiedOn = null;
-                    
+
                     objDARDetail.UserId = objModel.UserId;
                     objDARDetail.StartTime = objModel.FuelingDate;
                     objDARDetail.EndTime = DateTime.UtcNow;
                     objDARRepository.Add(objDARDetail);
-                  //Result result = _ICommonMethod.SaveDAR(objDARDetail);
+                    //Result result = _ICommonMethod.SaveDAR(objDARDetail);
 
                     #region Email
                     var objEmailLogRepository = new EmailLogRepository();
@@ -184,38 +184,38 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
             ServiceDARModel obj = new ServiceDARModel();
             ServiceResponseModel<VehicleScanModel> ObjServiceResponseModel = new ServiceResponseModel<VehicleScanModel>();
             try
-            {               
-                    var authuser = ObjUserRepository.GetSingleOrDefault(x => x.ServiceAuthKey == ObjServiceVehicleModel.ServiceAuthKey && x.IsDeleted == false);
-                    if (authuser != null && authuser.UserId > 0)
+            {
+                var authuser = ObjUserRepository.GetSingleOrDefault(x => x.ServiceAuthKey == ObjServiceVehicleModel.ServiceAuthKey && x.IsDeleted == false);
+                if (authuser != null && authuser.UserId > 0)
+                {
+                    var result = GeteFleetVehicleById(ObjServiceVehicleModel.QRCodeID, ObjServiceVehicleModel.LocationID);
+
+                    ObjServiceResponseModel.Message = (result != null && result.VehicleID > 0) ? CommonMessage.Successful() : CommonMessage.DoesNotExistsRecordMessage();
+                    ObjServiceResponseModel.Response = (result != null && result.VehicleID > 0) ? Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture) : Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Data = result;
+                    if (result.VehicleID > 0)
                     {
-                        var result = GeteFleetVehicleById(ObjServiceVehicleModel.QRCodeID, ObjServiceVehicleModel.LocationID);
+                        //For Scan log maintian
+                        long VehScanLogId = objeFleetVehicleScanLogRepository.SaveeFleetVehicleScanLog(result.VehicleID, Convert.ToInt64(eFleetEnum.VehicleScan), authuser.UserId, Convert.ToInt64(result.LocationID));
+                        ObjServiceResponseModel.Data.VehicleScanLogId = VehScanLogId;
 
-                        ObjServiceResponseModel.Message = (result != null && result.VehicleID > 0) ? CommonMessage.Successful() : CommonMessage.DoesNotExistsRecordMessage();
-                        ObjServiceResponseModel.Response = (result != null && result.VehicleID > 0) ? Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture) : Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
-                        ObjServiceResponseModel.Data = result;
-                        if (result.VehicleID > 0)
-                        {
-                            //For Scan log maintian
-                            long VehScanLogId = objeFleetVehicleScanLogRepository.SaveeFleetVehicleScanLog(result.VehicleID, Convert.ToInt64(eFleetEnum.VehicleScan), authuser.UserId, Convert.ToInt64(result.LocationID));
-                            ObjServiceResponseModel.Data.VehicleScanLogId = VehScanLogId;
-
-                            //For DAR log maintian
-                            obj.CreatedBy = authuser.UserId;
-                            obj.ActivityDetails = DarMessage.VehicleScanMessage((authuser.FirstName + " " + authuser.LastName), result.VehicleNumber, result.QRCodeID);
-                            obj.LocationId = Convert.ToInt64(result.LocationID);
-                            obj.UserId = authuser.UserId;
-                            obj.TaskType = (long)eFleetEnum.VehicleScan;
-                            long DarId = objDARRepository.SaveDARDetails(obj);
-                            ObjServiceResponseModel.Data.DarID = DarId;
-                        }
+                        //For DAR log maintian
+                        obj.CreatedBy = authuser.UserId;
+                        obj.ActivityDetails = DarMessage.VehicleScanMessage((authuser.FirstName + " " + authuser.LastName), result.VehicleNumber, result.QRCodeID);
+                        obj.LocationId = Convert.ToInt64(result.LocationID);
+                        obj.UserId = authuser.UserId;
+                        obj.TaskType = (long)eFleetEnum.VehicleScan;
+                        long DarId = objDARRepository.SaveDARDetails(obj);
+                        ObjServiceResponseModel.Data.DarID = DarId;
                     }
-                    else
-                    {
+                }
+                else
+                {
 
-                        ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.InvalidSessionResponse, CultureInfo.CurrentCulture);
-                        ObjServiceResponseModel.Message = CommonMessage.InvalidUser();
-                    }
-               
+                    ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.InvalidSessionResponse, CultureInfo.CurrentCulture);
+                    ObjServiceResponseModel.Message = CommonMessage.InvalidUser();
+                }
+
             }
             catch (Exception ex)
             {
@@ -270,7 +270,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                     objInteriorMileageDriverDetails = GenericDataContractSerializer<eFleetInteriorMileageDriverModel>.DeserializeXml(ObjVehicleDetail.InteriorMileageDriverDetails);
                     ObjReturn.ChShDescription = objInteriorMileageDriverDetails.Mileage.ChShDescription;
                     ObjReturn.OldChShDescription = objInteriorMileageDriverDetails.Mileage.OldChShDescription;
-                   
+
                     //ObjReturn.InteriorMileageDriver = objInteriorMileageDriverDetails;
                 }
                 //Added By Bhushan Dod on 06/09/2017 for Damage in mobile app
@@ -295,5 +295,64 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 return null;
             }
         }
+
+        /// <summary>
+        /// Created By: Bhushan Dod 
+        /// Created Date: Nov-08-2017
+        /// List of fueling according to service type in jqgrid list.
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="numberOfRows"></param>
+        /// <param name="sortColumnName"></param>
+        /// <param name="sortOrderBy"></param>
+        /// <param name="locationId"></param>
+        /// <param name="textSearch"></param>
+        /// <param name="statusType"></param>
+        /// <returns></returns>
+        public JQGridModel<FuelJQGridList> GetListeFleetFuelingForJQGridDetails(long? locationid, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long? statusType)
+        {
+            try
+            {
+                workorderEMSEntities db = new workorderEMSEntities();
+                var objeeFleetFuelingModelForService = new JQGridModel<FuelJQGridList>();
+                int pageindex = Convert.ToInt32(pageIndex) - 1;
+                int pageSize = Convert.ToInt32(numberOfRows);
+                var objeFleetFuel = new FuelJQGridList();
+                var Results = db.eFleetFuelings.Where(a => (a.IsDeleted == false)
+                            && (((locationid == 0) ? null : locationid) == null || a.LocationID == locationid)
+                            //&& (((textSearch == null) ? null : textSearch) == null || a.VehicleNumber == textSearch)
+                            ).Select(a => new FuelJQGridList()
+                            {
+                                FuelID = a.FuelID,
+                                VehicleNumber = a.VehicleNumber,
+                                QRCodeID = a.QRCodeID,
+                                Mileage = a.Mileage,
+                                CurrentFuel = a.CurrentFuel,
+                                FuelTypeName = a.GlobalCode.CodeName,
+                                ReceiptNo = a.ReceiptNo,
+                                FuelingDate = a.FuelingDate,
+                                Gallons = a.Gallons,
+                                PricePerGallon = a.PricePerGallon,
+                                Total = a.Total,
+                                GasStatioName = a.GasStatioName,
+                                CardNo = a.CardNo,
+                                DriverName = a.DriverName
+                            }).OrderByDescending(x => x.FuelingDate).ToList();
+                int totRecords = Results.Count();
+                var totalPages = (int)Math.Ceiling((float)totRecords / (float)numberOfRows);
+                objeeFleetFuelingModelForService.pageindex = pageindex;
+                objeeFleetFuelingModelForService.total = totalPages;
+                objeeFleetFuelingModelForService.records = totRecords;
+                objeeFleetFuelingModelForService.rows = Results.ToList();
+                return objeeFleetFuelingModelForService;
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "JQGridModel<eFleetPassengerTrackingModel> GetListeFleetPassengerRoutewithJQGridDetails(int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long? statusType)", "Exception While fetching ", statusType);
+                throw;
+            }
+        }
+
     }
 }

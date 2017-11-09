@@ -551,46 +551,7 @@ namespace WorkOrderEMS.Helper
                         strMailBody = strMailBody.Replace("##Sign", "<img height='50px' src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">");
 
                         break;
-                    //Added By Bhushan Dod on March-18-2015 for INVENTORYSTOCKCREATE
-                    case "INVENTORYSTOCKCREATE":
-                        LogoPath = "<img src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">";
-                        TemplatePath = ConfigurationManager.AppSettings["InventoryStockCreate"];
-                        Subject = "eTrac: Inventory Created at " + LocationName;
-                        strMailHeading = "Welcome to eTrac";
-                        strMailBody = GetMailBody(TemplatePath);
-                        strMailBody = strMailBody.Replace("##Year", Year);
-                        strMailBody = strMailBody.Replace("##Logo", LogoPath);
-                        strMailBody = strMailBody.Replace("##MailHeading", strMailHeading);
-                        strMailBody = strMailBody.Replace("##ManagerName", ManagerName);
-                        strMailBody = strMailBody.Replace("##UserName", UserName);
-                        strMailBody = strMailBody.Replace("##LocationName", LocationName);
-                        strMailBody = strMailBody.Replace("##ItemCode", ItemCode);
-                        strMailBody = strMailBody.Replace("##ItemName", ItemName);
-                        strMailBody = strMailBody.Replace("##ItemDescription", ItemDescription);
-                        strMailBody = strMailBody.Replace("##ItemQuantity", ItemQuantity.ToString());
-                        strMailBody = strMailBody.Replace("##Sign", "<img height='50px' src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">");
-
-                        break;
-                    //Added By Bhushan Dod on March-18-2015 for INVENTORYSTOCKCREATE
-                    case "INVENTORYSTOCKUPDATE":
-                        LogoPath = "<img src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">";
-                        TemplatePath = ConfigurationManager.AppSettings["InventoryStockCreate"];
-                        Subject = "eTrac: Inventory Ppdated at " + LocationName;
-                        strMailHeading = "Welcome to eTrac";
-                        strMailBody = GetMailBody(TemplatePath);
-                        strMailBody = strMailBody.Replace("##Year", Year);
-                        strMailBody = strMailBody.Replace("##Logo", LogoPath);
-                        strMailBody = strMailBody.Replace("##MailHeading", strMailHeading);
-                        strMailBody = strMailBody.Replace("##ManagerName", ManagerName);
-                        strMailBody = strMailBody.Replace("##UserName", UserName);
-                        strMailBody = strMailBody.Replace("##LocationName", LocationName);
-                        strMailBody = strMailBody.Replace("##ItemCode", ItemCode);
-                        strMailBody = strMailBody.Replace("##ItemName", ItemName);
-                        strMailBody = strMailBody.Replace("##ItemDescription", ItemDescription);
-                        strMailBody = strMailBody.Replace("##ItemQuantity", ItemQuantity.ToString());
-                        strMailBody = strMailBody.Replace("##Sign", "<img height='50px' src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">");
-
-                        break;
+                    
                     //Added By Bhushan Dod on March-18-2015 for INVENTORYSTOCKASSIGNED
                     case "INVENTORYSTOCKASSIGNED":
                         LogoPath = "<img src=" + ConfigurationManager.AppSettings["hostingPrefix"] + "Images/logo2.png" + ">";

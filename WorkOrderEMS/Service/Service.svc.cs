@@ -2654,39 +2654,6 @@ namespace WorkOrderEMS.Service
         }
         #endregion For Push Notification
 
-        #region For RuleMaster
-
-        public ServiceResponseModel<List<RuleMasterModelList>> GetListofRuleByLocation(RuleMasterModelList objRuleMasterModelList)
-        {
-            ServiceResponseModel<List<RuleMasterModelList>> serviceresponse = new ServiceResponseModel<List<RuleMasterModelList>>();
-            RuleManager objRuleManager = new RuleManager();
-            try
-            {
-                if (objRuleMasterModelList != null && objRuleMasterModelList.ServiceAuthKey != null && objRuleMasterModelList.LocationId != null)
-                {
-
-                    serviceresponse = objRuleManager.GetListOfAllRule(objRuleMasterModelList);
-                }
-                else
-                {
-
-                    serviceresponse.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
-                    serviceresponse.Message = CommonMessage.WrongParameterMessage();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                serviceresponse.Message = ex.Message;
-                serviceresponse.Response = Convert.ToInt32(ServiceResponse.ExeptionResponse, CultureInfo.CurrentCulture);
-                serviceresponse.Data = null;
-            }
-
-            return serviceresponse;
-        }
-
-        #endregion For RuleMaster
-
         #region for Tracking Employee Idle
 
         /// <summary>EmployeeIdleStatus

@@ -26,6 +26,6 @@ namespace WorkOrderEMS.BusinessLogic
         eFleetPMModel GeteFleetPMDetailsById(long pmId);
         Result DeleteeFleetPM(long VehicleId, long loggedInUserId, string location);
         List<GlobalCodeModelDDL> GetAllCategory();
-        List<PendingPM> GetAllPendingPMReminderDescription(long LocationID);
+        List<PendingPM> GetAllPendingPMReminderDescription(long LocationID, long VehicleID);
     }
 }

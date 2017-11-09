@@ -10,6 +10,7 @@ using WorkOrderEMS.Data.DataRepository;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Helper;
 using WorkOrderEMS.Models;
+using WorkOrderEMS.Models.CommonModels;
 using WorkOrderEMS.Models.ServiceModel.ApiModel;
 
 namespace WorkOrderEMS.BusinessLogic.Managers
@@ -23,31 +24,117 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         /// </summary>
         /// <param name="objeFleetPassengerTrackingModel"></param>
         /// <returns></returns>
+        /// 
         public Result SavePassengerTrackingRoute(eFleetPassengerTrackingModel objeFleetPassengerTrackingModel)
         {
             Result obj;
             try
-            {                
+            {               
                 var objeFleetPassengerTrackingRoute = new eFleetPassengerTrackingRoute();
                 var objeFleetPassengerTrackingRepository = new eFleetPassengerTrackingRepository();
                 var objeTracLoginModel = new eTracLoginModel();
 
                 if (objeFleetPassengerTrackingModel.RouteID == 0)
                 {
-                    AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingRoute, eFleetPassengerTrackingModel>();
-                    var objfleetMaintenanceMapper = AutoMapper.Mapper.Map(objeFleetPassengerTrackingModel, objeFleetPassengerTrackingRoute);
-                    objeFleetPassengerTrackingRepository.Add(objfleetMaintenanceMapper);                  
-                    objeFleetPassengerTrackingRepository.SaveChanges();
-                    obj = Result.Completed;                    
+                    //code to insert new record if user added new route while edit
+                    if (( objeFleetPassengerTrackingModel.PickupList != null || objeFleetPassengerTrackingModel.PickupList != "") &&
+                       (objeFleetPassengerTrackingModel.DropList != null || objeFleetPassengerTrackingModel.DropList != ""))
+                    {
+                        objeFleetPassengerTrackingModel.PickupList = objeFleetPassengerTrackingModel.PickupList.Remove(objeFleetPassengerTrackingModel.PickupList.ToString().LastIndexOf(','), 1);
+                        objeFleetPassengerTrackingModel.DropList = objeFleetPassengerTrackingModel.DropList.Remove(objeFleetPassengerTrackingModel.DropList.ToString().LastIndexOf(','), 1);
+
+                        var picklist = objeFleetPassengerTrackingModel.PickupList.Split(',').ToList();
+                        var droplist = objeFleetPassengerTrackingModel.DropList.Split(',').ToList();
+
+                        //AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingModel, eFleetPassengerTrackingRoute>();
+                        if (picklist.Count == droplist.Count)
+                        {
+                            var listPassengerRoutemodel1 = new List<eFleetPassengerTrackingRoute>();
+                            for (int i = 0; i < picklist.Count; i++)
+                            {
+                                var objfleetPTMapperLoop = new eFleetPassengerTrackingRoute();
+                                //AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingModel, eFleetPassengerTrackingRoute>();
+                                // objfleetPTMapperLoop = AutoMapper.Mapper.Map(objeFleetPassengerTrackingModel, objeFleetPassengerTrackingRoute);
+                                objfleetPTMapperLoop.PickUpPoint = picklist[i];
+                                objfleetPTMapperLoop.DropPoint = droplist[i];
+                                objfleetPTMapperLoop.CreatedBy = objeFleetPassengerTrackingModel.CreatedBy;
+                                objfleetPTMapperLoop.CreatedDate = DateTime.UtcNow;
+                                objfleetPTMapperLoop.EndDate = objeFleetPassengerTrackingModel.EndDate;
+                                objfleetPTMapperLoop.StartDate = objeFleetPassengerTrackingModel.StartDate;
+                                objfleetPTMapperLoop.ServiceType = objeFleetPassengerTrackingModel.ServiceType;
+                                objfleetPTMapperLoop.RouteName = objeFleetPassengerTrackingModel.RouteName;
+                                // objfleetPTMapperLoop. = objeFleetPassengerTrackingModel.RouteName;
+
+                                listPassengerRoutemodel1.Add(objfleetPTMapperLoop);
+
+                            }
+                            using (var context = new workorderEMSEntities())
+                            {
+                                context.eFleetPassengerTrackingRoutes.AddRange(listPassengerRoutemodel1);
+                                context.SaveChanges();
+                            }
+                            //objeFleetPassengerTrackingRepository.BulkAdd(listPassengerRoutemodel);
+                        }
+                    }
+
+                    obj = Result.Completed;
                 }
                 //edit Data
                 else
                 {
                     var RouteData = objeFleetPassengerTrackingRepository.GetAll(v => v.IsDeleted == false && v.RouteID == objeFleetPassengerTrackingModel.RouteID).SingleOrDefault();
-                    AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingModel, eFleetPassengerTrackingRoute>();
-                    var objfleetDriverMapper = AutoMapper.Mapper.Map(objeFleetPassengerTrackingModel, RouteData);
-                    objeFleetPassengerTrackingRepository.SaveChanges();
-                    obj = Result.UpdatedSuccessfully;                  
+                    RouteData.ModifiedBy = objeFleetPassengerTrackingModel.ModifiedBy;
+                    RouteData.ModifiedDate = objeFleetPassengerTrackingModel.ModifiedDate;
+                    RouteData.DropPoint = objeFleetPassengerTrackingModel.DropPoint;
+                    RouteData.PickUpPoint = objeFleetPassengerTrackingModel.PickUpPoint;
+                    RouteData.RouteName = objeFleetPassengerTrackingModel.RouteName;
+                    RouteData.ServiceType = objeFleetPassengerTrackingModel.ServiceType;
+                    RouteData.StartDate = objeFleetPassengerTrackingModel.StartDate;
+                    RouteData.EndDate = objeFleetPassengerTrackingModel.EndDate;
+                    objeFleetPassengerTrackingRepository.Update(RouteData);
+
+                    //code to insert new record if user added new route while edit
+                    if ((objeFleetPassengerTrackingModel.PickupList != null && objeFleetPassengerTrackingModel.PickupList != "") &&
+                       (objeFleetPassengerTrackingModel.DropList != null && objeFleetPassengerTrackingModel.DropList != ""))
+                    {
+                        objeFleetPassengerTrackingModel.PickupList = objeFleetPassengerTrackingModel.PickupList.Remove(objeFleetPassengerTrackingModel.PickupList.ToString().LastIndexOf(','), 1);
+                        objeFleetPassengerTrackingModel.DropList = objeFleetPassengerTrackingModel.DropList.Remove(objeFleetPassengerTrackingModel.DropList.ToString().LastIndexOf(','), 1);
+
+                        var picklist = objeFleetPassengerTrackingModel.PickupList.Split(',').ToList();
+                        var droplist = objeFleetPassengerTrackingModel.DropList.Split(',').ToList();
+                        picklist.RemoveAt(0); //for no need to first entry to insert as above code already updating
+                        droplist.RemoveAt(0);
+                        //AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingModel, eFleetPassengerTrackingRoute>();
+                        if (picklist.Count == droplist.Count)
+                        {
+                            var listPassengerRoutemodel11 = new List<eFleetPassengerTrackingRoute>();
+                            for (int i = 0; i < picklist.Count; i++)
+                            {
+                                var objfleetPTMapperLoop = new eFleetPassengerTrackingRoute();
+                                //AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingModel, eFleetPassengerTrackingRoute>();
+                               // objfleetPTMapperLoop = AutoMapper.Mapper.Map(objeFleetPassengerTrackingModel, objeFleetPassengerTrackingRoute);
+                                objfleetPTMapperLoop.PickUpPoint = picklist[i];
+                                objfleetPTMapperLoop.DropPoint = droplist[i];
+                                objfleetPTMapperLoop.CreatedBy = objeFleetPassengerTrackingModel.ModifiedBy ?? RouteData.CreatedBy;
+                                objfleetPTMapperLoop.CreatedDate = DateTime.UtcNow;
+                                objfleetPTMapperLoop.EndDate = objeFleetPassengerTrackingModel.EndDate;
+                                objfleetPTMapperLoop.StartDate = objeFleetPassengerTrackingModel.StartDate;
+                                objfleetPTMapperLoop.ServiceType = objeFleetPassengerTrackingModel.ServiceType;
+                                objfleetPTMapperLoop.RouteName = objeFleetPassengerTrackingModel.RouteName;
+                               // objfleetPTMapperLoop. = objeFleetPassengerTrackingModel.RouteName;
+
+                                listPassengerRoutemodel11.Add(objfleetPTMapperLoop);
+
+                            }
+                            using (var context = new workorderEMSEntities())
+                            {
+                                context.eFleetPassengerTrackingRoutes.AddRange(listPassengerRoutemodel11);
+                                context.SaveChanges();
+                            }
+                            //objeFleetPassengerTrackingRepository.BulkAdd(listPassengerRoutemodel);
+                        }
+                    }
+                    obj = Result.UpdatedSuccessfully;
                 }
                 return obj;
             }
@@ -57,12 +144,14 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
         }
+
         /// <summary>
         /// Created By Ashwajit Bansod Date : 12 - Oct - 2017
         /// For Fetching the List of Route table according to service type
         /// </summary>
         /// <param name="obj"></param>
         /// <returns></returns>
+        /// 
         public List<eFleetPassengerTrackingRouteModel> GetAllPassengerTrackingRouteDetails(eFleetPassengerTrackingRouteServiceModel obj)
         {
             var objeFleetPassengerTrackingRouteModel = new eFleetPassengerTrackingRouteModel();
@@ -85,19 +174,21 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                 return Results;
             }
-                                                                                           
+
             catch (Exception ex)
             {
                 Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<eFleetPassengerTrackingRouteModel> GetAllPassengerTrackingRouteDetails(eFleetPassengerTrackingRouteServiceModel obj)", "Exception While Listing Route detail.", obj.UserId);
                 throw;
             }
         }
+      
         /// <summary>
         /// Created By Ashwajit Bansod Dated : 12 - Oct - 2017
         /// For Saving the Passenger Tracking Count into database
         /// </summary>
         /// <param name="objModel"></param>
         /// <returns></returns>
+        /// s
         public ServiceResponseModel<string> InsertPassengerTrackingCount(eFleetPassengerTrackingCountModelForService objModel)
         {
             var objReturnModel = new ServiceResponseModel<string>();
@@ -111,10 +202,22 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 Obj.CreatedDate = DateTime.UtcNow;
                 objPassengerTrackingCountRepository.Add(Obj);
                 if (Obj.PassengerCountID > 0)
-                { 
+                {
                     var Data = objPassengerTrackingCountRepository.GetAll(pm => pm.PassengerCountID == objModel.PassengerCountID && pm.IsDeleted == false).FirstOrDefault();
                     objReturnModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.InvariantCulture);
                     objReturnModel.Message = CommonMessage.Successful();
+
+                    //if (Data != null && Data.PassengerCountID > 0)
+                    //{
+                    //    objPassengerTrackingCountRepository.Update(Data);
+                    //    objReturnModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.InvariantCulture);
+                    //    objReturnModel.Message = CommonMessage.Successful();
+                    //}
+                    //else
+                    //{
+                    //    objReturnModel.Response = Convert.ToInt32(ServiceResponse.NoRecord, CultureInfo.InvariantCulture);
+                    //    objReturnModel.Message = CommonMessage.NoRecordMessage();
+                    //}
                 }
                 else
                 {
@@ -124,13 +227,64 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             catch (Exception ex)
             {
-                WorkOrderEMS.BusinessLogic.Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public ServiceResponseModel<string> InsertPassengerTrackingCount(eFleetPassengerTrackingCountModelForService objModel)", "while insert Passenger Tracking Count", objModel);
+                WorkOrderEMS.BusinessLogic.Exception_B.Exception_B.exceptionHandel_Runtime(ex, "ServiceResponseModel<string> InsertMaintenance(eFleetMaintenanceModel objModel)", "while insert maintenance", objModel);
                 objReturnModel.Message = ex.Message;
                 objReturnModel.Response = Convert.ToInt32(ServiceResponse.ExeptionResponse, CultureInfo.CurrentCulture);
                 objReturnModel.Data = null;
             }
             return objReturnModel;
         }
+
+        /// <summary>
+        /// Created By: Bhushan Dod 
+        /// Created Date: Oct-13-2017
+        /// List of Passenger tracking route according to service type in jqgrid list.
+        /// </summary>
+        /// <param name="UserId"></param>
+        /// <param name="pageIndex"></param>
+        /// <param name="numberOfRows"></param>
+        /// <param name="sortColumnName"></param>
+        /// <param name="sortOrderBy"></param>
+        /// <param name="locationId"></param>
+        /// <param name="textSearch"></param>
+        /// <param name="statusType"></param>
+        /// <returns></returns>
+        public JQGridModel<eFleetPassengerTrackingModel> GetListeFleetPassengerRoutewithJQGridDetails(int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long? statusType)
+        {
+            try
+            {
+                workorderEMSEntities db = new workorderEMSEntities();
+                var objeFleetPassengerTrackingModel = new JQGridModel<eFleetPassengerTrackingModel>();
+                int pageindex = Convert.ToInt32(pageIndex) - 1;
+                int pageSize = Convert.ToInt32(numberOfRows);
+                var objeFleetRoute = new eFleetPassengerTrackingModel();
+                var Results = db.eFleetPassengerTrackingRoutes.Where(a => (a.IsDeleted == false)
+                            && (((statusType == 0) ? null : statusType) == null || a.ServiceType == statusType)).Select(a => new eFleetPassengerTrackingModel()
+                            {
+                                DropPoint = a.DropPoint,
+                                EndDate = a.EndDate,
+                                PickUpPoint = a.PickUpPoint,
+                                ServiceTypeName = a.GlobalCode.CodeName,
+                                StartDate = a.StartDate,
+                                RouteID = a.RouteID,
+                                RouteName = a.RouteName,
+                                CreatedDate = a.CreatedDate
+                            }).OrderByDescending(x => x.CreatedDate).ToList();
+                int totRecords = Results.Count();
+                var totalPages = (int)Math.Ceiling((float)totRecords / (float)numberOfRows);
+                objeFleetPassengerTrackingModel.pageindex = pageindex;
+                objeFleetPassengerTrackingModel.total = totalPages;
+                objeFleetPassengerTrackingModel.records = totRecords;
+                objeFleetPassengerTrackingModel.rows = Results.ToList();
+                return objeFleetPassengerTrackingModel;
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "JQGridModel<eFleetPassengerTrackingModel> GetListeFleetPassengerRoutewithJQGridDetails(int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, long? statusType)", "Exception While fetching ", statusType);
+                throw;
+            }
+        }
+
         /// <summary>
         /// Created By Ashwajit Bansod
         /// Dated : Oct/13/2017
@@ -142,13 +296,14 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         {
             try
             {
+                var db = new workorderEMSEntities();
                 var objeFleetPassengerTrackingRepository = new eFleetPassengerTrackingRepository();
                 var editeFleetPassengerTrackingDetails = new eFleetPassengerTrackingModel();
                 var PassengerTrackingDetails = objeFleetPassengerTrackingRepository.GetSingleOrDefault(u => u.RouteID == RouteId);
                 if (PassengerTrackingDetails.RouteID > 0) // PmID in Ashwajit created Table
                 {
                     AutoMapper.Mapper.CreateMap<eFleetPassengerTrackingRoute, eFleetPassengerTrackingModel>();
-                    editeFleetPassengerTrackingDetails.RouteID = PassengerTrackingDetails.RouteID;
+                    //editeFleetPassengerTrackingDetails.RouteID = PassengerTrackingDetails.RouteID;
                     var objfleetPassengerTackMapper = AutoMapper.Mapper.Map(PassengerTrackingDetails, editeFleetPassengerTrackingDetails);
                 }
                 return editeFleetPassengerTrackingDetails;
@@ -159,6 +314,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
         }
+
         /// <summary>
         /// Created By Ashwajit Bansod
         /// Dated : Oct/13/2017
@@ -168,9 +324,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         /// <param name="loggedInUserId"></param>
         /// <param name="location"></param>
         /// <returns></returns>
-        public Result DeleteeFleetPassengerTracking(long passengerId, long loggedInUserId, string location)
+        public Result DeleteeFleetPassengerTracking(long passengerId, long loggedInUserId)
         {
-            var objDAR = new DARModel();
             try
             {
                 if (passengerId > 0)
@@ -184,17 +339,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                         data.DeletedDate = DateTime.UtcNow;
                         objeFleetPassengerTrackingRepository.Update(data);
                         objeFleetPassengerTrackingRepository.SaveChanges();
-
-                        //objDAR.ActivityDetails = DarMessage.DeleteFleetPM(location);
-                        //objDAR.TaskType = (long)TaskTypeCategory.DeletePreventativeMaintenance;
-
-                        //#region Save DAR
-                        //objDAR.LocationId = data.LocationID;
-                        //objDAR.UserId = loggedInUserId;
-                        //objDAR.DeletedBy = data.DeletedBy;
-                        //objDAR.DeletedOn = DateTime.UtcNow;
-                        //result = _ICommonMethod.SaveDAR(objDAR);
-                        //#endregion Save DAR
                         return Result.Delete;
                     }
                 }
@@ -203,7 +347,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
             }
             catch (Exception ex)
             {
-                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public Result DeleteeFleetPassengerTracking(long passengerId, long loggedInUserId, string location)", "Exception While Deleting eFleet Passenger Tracking.", null);
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public Result DeleteeFleetPM(long VehicleId, long loggedInUserId)", "Exception While Deleting Preventative Maintenence.", null);
                 throw;
             }
         }

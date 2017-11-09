@@ -18,9 +18,11 @@ namespace WorkOrderEMS.BusinessLogic
         eFleetDriverModel GetDriverDetailsById(long DriverId);
         eFleetDriverModel GetAllDriverList(eFleetDriverModel objeFleetDriverList);
         List<StateModel> GetStateByCountryID();
+
         Result DeleteeFleetDriver(long driverId, long loggedInUserId, string location);
         eDriverDetails GetListDriverDetails(long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
-        List<EmployeeModel> GetAllEmployees();
+        List<EmployeeModel> GetAllEmployees(long LocationId, long DriverID);
+        bool IsLicenseExist(string LicenseNumber);
 
     }
 }

@@ -171,7 +171,7 @@
                                 <label>
                                     Comment<span class="req"></span>
                                 </label>
-                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @id = "Comment" })
+                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @onkeypress = "return isNumberKey(event) ",  @id = "Comment" })
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.OtherMilesComment)
                                 </div>
@@ -183,7 +183,7 @@
                                 <label>
                                     Comment<span class="req"></span>
                                 </label>
-                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @id = "Comment" })
+                                @Html.TextBoxFor(model => model.OtherMilesComment, new { @onkeypress = "return isNumberKey(event) ",  @id = "Comment" })
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.OtherMilesComment)
                                 </div>
@@ -228,7 +228,7 @@
                                     <label>
                                         Hours Value<span class="req">*</span>
                                     </label>
-                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @onkeypress = "return isNumberKey(event) ",  @id = "HoursValue" })
                                     <div class="errorspace">
                                         @Html.ValidationMessageFor(model => model.ReminderMetric)
                                     </div>
@@ -240,7 +240,7 @@
                                     <label>
                                         Hours Value<span class="req">*</span>
                                     </label>
-                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @onkeypress = "return isNumberKey(event) ", @id = "HoursValue" })
                                     <div class="errorspace">
                                         @Html.ValidationMessageFor(model => model.ReminderMetric)
                                     </div>
@@ -282,7 +282,7 @@
                                     <label>
                                         Hours Value<span class="req">*</span>
                                     </label>
-                                    @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                    @Html.TextBoxFor(model => model.HoursValue, new { @onkeypress = "return isNumberKey(event) ", @id = "HoursValue" })
                                     <div class="errorspace">
                                         @Html.ValidationMessageFor(model => model.ReminderMetric)
                                     </div>
@@ -321,7 +321,7 @@
                                 <label>
                                     Hours Value<span class="req">*</span>
                                 </label>
-                                @Html.TextBoxFor(model => model.HoursValue, new { @id = "HoursValue" })
+                                @Html.TextBoxFor(model => model.HoursValue, new { @onkeypress = "return isNumberKey(event) ", @id = "HoursValue"})
                                 <div class="errorspace">
                                     @Html.ValidationMessageFor(model => model.ReminderMetric)
                                 </div>
@@ -543,9 +543,13 @@
         //        alert("Please upload a valid image file.");
         //    }
         //});
+
+        $('#ServiceDueDate').datepicker({           
+            format: "mm/dd/yyyy",
+            startDate: new Date()
+        })
         $("#ServiceDueDate").datepicker();
-        $("select").blur();
-        
+        $("select").blur();       
         //$("input[type='text']").focus();        
         $("input[id='Meter']").focus();
         $("input[id='Category']").focus();

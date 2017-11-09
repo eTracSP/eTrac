@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace WorkOrderEMS.Models.ServiceModel
 {
     public class eFleetFuelingModelForService
-    {
+    {        
         public string ServiceAuthKey { get; set; }
         public long UserId { get; set; }
         public long VehicleID { get; set; }
@@ -30,5 +30,11 @@ namespace WorkOrderEMS.Models.ServiceModel
         public string ActivityDetails { get; set; }
         public long TaskType { get; set; }
         public string LocationName { get; set; }
+    }
+
+    public class FuelJQGridList : eFleetFuelingModelForService
+    {
+        public long FuelID { get; set; }
+        public string FuelTypeName { get; set; }
     }
 }

@@ -316,17 +316,6 @@ namespace WorkOrderEMS
 
         #endregion For Push Notification
 
-        #region for Rule Master
-
-        [OperationContract]
-        [WebInvoke(Method = "POST",
-                    RequestFormat = WebMessageFormat.Json,
-                    ResponseFormat = WebMessageFormat.Json,
-                    BodyStyle = WebMessageBodyStyle.Bare)]
-        ServiceResponseModel<List<RuleMasterModelList>> GetListofRuleByLocation(RuleMasterModelList objRuleMasterModelList);
-
-        #endregion for Rule Master
-
         //Dummy Web Service For testing
         [OperationContract]
         [WebInvoke(Method = "POST",

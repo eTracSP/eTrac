@@ -31,6 +31,7 @@ namespace WorkOrderEMS.Models
         public string ListHoursValue { get; set; }
 
         [Required(ErrorMessage = "Hours Value is required")]
+        [RegularExpression(@"^[0-9 .&']+$", ErrorMessage = "Special characters and Letters are not allowed.")]
         public long? HoursValue { get; set; }
         
 
@@ -57,6 +58,7 @@ namespace WorkOrderEMS.Models
 
         public string OtherComment { get; set; }
         [Required(ErrorMessage = "Comment for other miles value is required")]
+        [RegularExpression(@"^[0-9 .&']+$", ErrorMessage = "Special characters and Letters are not allowed.")]
         public Nullable<int> OtherMilesComment { get; set; }
 
         [Required(ErrorMessage = "Service Due Date is required")]
@@ -84,6 +86,8 @@ namespace WorkOrderEMS.Models
     {
         public long PmID { get; set; }
         public string ReminderMetricDesc { get; set; }
+        public long VehicleID
+        { get; set;}
         public Nullable<System.DateTime> ServiceDueDate { get; set; }
     }
 }

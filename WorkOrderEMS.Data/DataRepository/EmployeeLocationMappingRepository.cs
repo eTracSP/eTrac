@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WorkOrderEMS.Data.EntityModel;
 using WorkOrderEMS.Models;
+using WorkOrderEMS.Models.UserModels;
 
 namespace WorkOrderEMS.Data
 {
@@ -69,7 +70,7 @@ namespace WorkOrderEMS.Data
             workorderEMSEntities obj_workorderEMSEntities = new workorderEMSEntities();
             List<UserModel> objlist = obj_workorderEMSEntities.EmployeeLocationMappings
                                       .Join(obj_workorderEMSEntities.UserRegistrations, (x => x.EmployeeUserId), (y => y.UserId), ((x, y) => new { x, y }))
-                                      .Join(obj_workorderEMSEntities.PermissionDetails, (z => z.x.EmployeeUserId), (t => t.UserId), (z, t) => new { z,t})
+                                      .Join(obj_workorderEMSEntities.PermissionDetails, (z => z.x.EmployeeUserId), (t => t.UserId), (z, t) => new { z, t })
                                       .Where(m => m.z.x.LocationId == LocationId && m.z.x.IsDeleted == false && m.z.y.IsLoginActive == true && m.z.x.IsDeleted == false
                                                && m.t.LocationId == LocationId && (m.t.PermissionId == 190 || m.t.PermissionId == 4))//190 code for eMaintenance
                .Select(s => new UserModel()
@@ -81,7 +82,33 @@ namespace WorkOrderEMS.Data
                }).ToList<UserModel>();
             return objlist;
         }
+        /// <summary>
+        /// To Get Employees According to User Locations those have permission of eMaintenance
+        /// Note :- If something went wrong in application upper code is the backup of previous method
+        /// </summary>
+        /// <CreatedBy>Bhushan Dod</CreatedBy>
+        /// <CreatedDate>2015/06/25</CreatedDate>
+        /// <param name="UserID"></param>
+        /// <returns></returns>
+        public List<EmployeeModel> GetEmployeeByLocationGeneric(long LocationId, long permissionid, long permisison)
+        {
+            workorderEMSEntities obj_workorderEMSEntities = new workorderEMSEntities();
+            var objlist = obj_workorderEMSEntities.EmployeeLocationMappings
+                                      .Join(obj_workorderEMSEntities.UserRegistrations, (x => x.EmployeeUserId), (y => y.UserId), ((x, y) => new { x, y }))
+                                      .Join(obj_workorderEMSEntities.PermissionDetails, (z => z.x.EmployeeUserId), (t => t.UserId), (z, t) => new { z, t })
+                                      .Where(m => m.z.x.LocationId == LocationId && m.z.x.IsDeleted == false && m.z.y.IsLoginActive == true && m.z.x.IsDeleted == false
+                                               && m.t.LocationId == LocationId && (m.t.PermissionId == permissionid || m.t.PermissionId == permisison))
+               .Select(s => new EmployeeModel()
+               {
+                   FirstName = s.z.y.FirstName,
+                   LastName = s.z.y.LastName,
+                   UserId = s.z.y.UserId,
+                   ProfileImage = s.z.y.ProfileImage,
+                   UserType = s.z.y.UserType
 
+               }).ToList<EmployeeModel>();
+            return objlist;
+        }
         public List<SP_GetEmployeeByLocation_Result> GetEmployeeByLocDetailed(long Loc_ID)
         {
             workorderEMSEntities obj_workorderEMSEntities = new workorderEMSEntities();

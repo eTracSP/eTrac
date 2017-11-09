@@ -277,8 +277,9 @@ namespace WorkOrderEMS.Controllers.Services
             }
         }
 
+
+        //[TokenAuthorizeFilter]
         [HttpPost]
-        [TokenAuthorizeFilter]
         public IHttpActionResult GetMeterMilesHoursValueList(MeterModel objMeterModel)
         {
             var ObjServiceResponseModel = new ServiceResponseModel<List<eFleetMeterModel>>();
@@ -382,21 +383,21 @@ namespace WorkOrderEMS.Controllers.Services
         }
 
         [HttpPost]
-        public IHttpActionResult SaveeFleetIncident(eFleetIncidentModel objeeFleetIncidentModel)
+        public IHttpActionResult SaveeFleetIncident(eFleetIncidentModel objeFleetIncidentModel)
         {
             var ObjServiceResponseModel = new ServiceResponseModel<string>();
             try
             {
                 // var objVehicleIncidentManager = new VehicleIncidentManager();
-                if (objeeFleetIncidentModel != null && objeeFleetIncidentModel.ServiceAuthKey != null && objeeFleetIncidentModel.UserId > 0)
+                if (objeFleetIncidentModel != null && objeFleetIncidentModel.ServiceAuthKey != null && objeFleetIncidentModel.UserId > 0)
                 {
-                    var ObjRespnse = _IEfleetVehicleIncidentReport.InsertVehicleIncident(objeeFleetIncidentModel);
+                    var ObjRespnse = _IEfleetVehicleIncidentReport.InsertVehicleIncident(objeFleetIncidentModel);
                     return Ok(ObjRespnse);
                 }
                 else
                 {
                     ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
-                    ObjServiceResponseModel.Message = CommonMessage.InvalidUser();
+                    ObjServiceResponseModel.Message = CommonMessage.WrongParameterMessage();
                     return Ok(ObjServiceResponseModel);
                 }
             }
@@ -479,15 +480,15 @@ namespace WorkOrderEMS.Controllers.Services
         }
 
         [HttpPost]
-        public IHttpActionResult GetAllPendingPreventativeMaintenanceList(ServiceBaseModel obj)
+        public IHttpActionResult GetAllPendingPreventativeMaintenanceList(eFleetIncidentModelPMPending obj)
         {
             var ObjServiceResponseModel = new ServiceResponseModel<List<PendingPM>>();
             try
             {
-                if (obj != null && obj.ServiceAuthKey != null && obj.UserId > 0 && obj.LocationID > 0)
+                if (obj != null && obj.ServiceAuthKey != null && obj.UserId > 0 && obj.LocationID > 0 && obj.VehicleID > 0)
                 {
                     //var ObjPreventativeMaintenaceManager = new PreventativeMaintenaceManager();
-                    var PMList = _IEfleetPM.GetAllPendingPMReminderDescription(obj.LocationID);
+                    var PMList = _IEfleetPM.GetAllPendingPMReminderDescription(obj.LocationID, obj.VehicleID);
                     if (PMList.Count > 0)
                     {
                         ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.SuccessResponse, CultureInfo.CurrentCulture);

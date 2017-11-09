@@ -41,7 +41,7 @@
 </style>
 @section scripts{
     <script type="text/javascript">
-        debugger
+
     var $_locationId = '@locationId';
     var $_userTypeId = '@userType';
     </script>
@@ -88,7 +88,7 @@
                                     {
                                         <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID"
                                                 @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
-                                                                                                                                                                                                                                                                                                                                                    }>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
                                             @Vn.VehicleNumber
                                         </option>
                                     }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
@@ -114,7 +114,7 @@
                                     {
                                         <option value="@Vn.GlobalCodeId" data-vid="@Vn.CodeName"
                                                 @if (Vn.GlobalCodeId == Model.MaintenanceType) { @: selected="selected"
-                                                                                                                                                                                                                                                                                                                                                                                                    }>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
                                             @Vn.CodeName
                                         </option>
                                     }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
@@ -134,25 +134,28 @@
                             <label style="margin-left:40px; ">Scheduled PM</label><br><br>
                             @if (ViewBag.RemainderMetricDesc != null)
                             {
-                                foreach (var rmd in ViewBag.RemainderMetricDesc)
-                                {
-                                    <span>
+                                <ul class="filter">
+                                    @foreach (var rmd in ViewBag.RemainderMetricDesc)
+                                    {
+                                    <li>
                                         @if (rmd.PmID == Model.PmID)
                                         {
-                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" checked="checked" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" data-vid="@rmd.VehicleID" checked="checked" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
                                         }
                                         else
                                         {
-                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" /> <span>&nbsp;&nbsp;</span> @rmd.ReminderMetricDesc
+                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /> <span>&nbsp;&nbsp;</span> @rmd.ReminderMetricDesc
                                         }
 
                                         @*<input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM"
                                             @if (rmd.PmID == Model.PmID) { @: checked="checked" />  @rmd.ReminderMetricDesc*@
                                         @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
-                                    </span><br><br>
-                                }
-                            }
-                        </div>
+                                    </li>
+                                   
+                                    }
+                                    </ul>
+                                    }
+</div>
                     }
                     else
                     {
@@ -160,22 +163,25 @@
                             <label style="margin-left:40px; ">Scheduled PM</label><br><br>
                             @if (ViewBag.RemainderMetricDesc != null || Model.MaintenanceType == 445)
                             {
-                                foreach (var rmd in ViewBag.RemainderMetricDesc)
-                                {
-                                    <span>
-                                        <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                <ul class="filter">
+                                    @foreach (var rmd in ViewBag.RemainderMetricDesc)
+                                    {
+                                        <li class="@rmd.PmID">
+                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                        </li>
                                         @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
-                                    </span><br><br>
-                                }
+
+                                    }
+                                </ul>
                             }
                         </div>
                     }
-                   @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true || Model.MaintenanceType == 445)
-                   {
-                      <div style="display:none;" id="brfordate">
-                       <br>
-                      </div>
-                   }
+                    @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true || Model.MaintenanceType == 445)
+                    {
+                        <div style="display:none;" id="brfordate">
+                            <br>
+                        </div>
+                    }
                     <br>
                     <div class="top-row">
                         <div class="field-wrap">
@@ -497,6 +503,7 @@
         return true;
     }
     function BindVehicleID() {
+        debugger
         var vid = $('#VehicleNumber').find('option:selected').attr('data-vid');
         // var codeId = $('#VehicleNumber').find('option:selected').attr('data-codeid');
         // var vid = $(this).find('selected').attr('data-vid');
@@ -513,8 +520,40 @@
         }
     }
     function BindSchedulePM() {
+        //$('[data-vid]').each(function () {
+        //    debugger
+        //    var vid = $('#VehicleID').val();
+        //    var $this = $(this);
+        //    if (vid[$this.data('id')]) {
+        //        $this.remove();
+        //    }
+        //    else {
+        //        found[$this.data('id')] = true;
+        //    }
+        //});
         if ($('#MaintenanceType').val() == 445) {
             debugger
+            var vid = $('#VehicleID').val();
+            $('#IssueDetailsShow ul li').each(function (i, v) {
+                debugger
+                var idli = $(this).attr('class');
+                var radio = $('.' + idli).find('input').attr('data-vid');
+                if (radio != vid) {
+                    $('.' + idli).remove();
+                    //$('#' + radio).parent('li').remove();
+                }
+
+            });          
+            $('#IssueDetailsShow ul li').each(function (i, v) {
+                debugger
+                var idliedit = $(this).attr('class');
+                var radioedit = $('.' + idliedit).find('input').attr('data-vid');
+                if (radioedit != vid) {
+                    $('.' + idliedit).remove();
+                    //$('#' + radio).parent('li').remove();
+                }
+
+            });
             $("#IssueDetailsShow").show();
             $("#brfordate").show();
             // $("#IssueDetailsShowonRadioSelected").show();
@@ -524,9 +563,15 @@
             $("#brfordate").hide();
             //  $("#IssueDetailsShowonRadioSelected").hide();
         }
+
     }
     $(function () {
-        $("#MaintenanceDate").datepicker({ defaultDate: -1 });
+        $("#MaintenanceDate").datepicker({
+            format: "mm/dd/yyyy",
+            startDate: new Date(),
+            maxDate:2
+        });
+        //$("#MaintenanceDate").datepicker({ defaultDate: -1 });
         // $("input[type='text']").focus();
         $("input[id='Miles']").blur();
         $("input[id='TotalCost']").blur();

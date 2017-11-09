@@ -17,6 +17,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
 {
     public class DriverManager : IDriverEfleet
     {
+
         private string HostingPrefix = Convert.ToString(System.Configuration.ConfigurationManager.AppSettings["hostingPrefix"], CultureInfo.InvariantCulture);
         private string ProfilePicPath = ConfigurationManager.AppSettings["ProfilePicPath"];//Image save path declared in webConfig File
         //string EmployeeProfilePicPath = ConfigurationManager.AppSettings["ProfilePicPath"];
@@ -117,24 +118,35 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
         /// For Fetching only employee records from UserRegistration 
         /// </summary>
         /// <returns></returns>
-        public List<EmployeeModel> GetAllEmployees()
+        public List<EmployeeModel> GetAllEmployees(long LocationId, long DriverID)
         {
             try
             {
                 workorderEMSEntities objworkorderEMSEntities = new workorderEMSEntities();
                 var objeFleetDriverRepository = new eFleetDriverRepository();
+                var objeFleetDriver = new eFleetDriver();
                 List<EmployeeModel> lstEmployee = new List<EmployeeModel>();
-                lstEmployee = objworkorderEMSEntities.UserRegistrations.Where(d => d.UserType == 3 && d.IsDeleted == false && d.JobTitle == "389").Select(c => new EmployeeModel()
-                {
-                    FirstName = c.FirstName + " " + c.LastName,
-                    //LastName = c.LastName,
-                    UserId = c.UserId,
-                    ProfileImage = c.ProfileImage == null ? "" : HostingPrefix + ProfilePicPath.Replace("~", "") + c.ProfileImage,
-                    // ProfileImage = c.ProfileImage,
-                    UserType = c.UserType
 
-                }).ToList();
-                return lstEmployee;
+                var objGlobalAdminManager = new GlobalAdminManager();
+                lstEmployee = objGlobalAdminManager.GetLocationEmployeeforGenericLocServices(LocationId, 190, 4);
+
+                //lstEmployee = objworkorderEMSEntities.UserRegistrations.Where(d => d.IsDeleted == false && d.UserType == 3 ).Select(c => new EmployeeModel()
+                //{
+                //    FirstName = c.FirstName + " " + c.LastName,
+                //    UserId = c.UserId,
+                //    ProfileImage = c.ProfileImage == null ? "" : HostingPrefix + ProfilePicPath.Replace("~", "") + c.ProfileImage,
+                //    // ProfileImage = c.ProfileImage,
+                //    UserType = c.UserType
+                //}).ToList();
+                var listDriver = objworkorderEMSEntities.eFleetDrivers.Where(x => x.IsDeleted == false && x.LocationID == LocationId).Select(r => new EmployeeModel()
+                {
+                    FirstName = r.UserRegistration.FirstName + " " + r.UserRegistration.LastName,
+                    UserId = r.EmployeeName.Value,
+                    ProfileImage = r.UserRegistration.ProfileImage == null ? "" : HostingPrefix + ProfilePicPath.Replace("~", "") + r.UserRegistration.ProfileImage,
+                    UserType = r.UserRegistration.UserType
+                }).Distinct().ToList();
+              var t = lstEmployee.Where(a => !listDriver.Any(b => a.UserId == b.UserId)).ToList();
+                return t;
             }
             catch (Exception ex)
             {
@@ -216,6 +228,13 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 Exception_B.Exception_B.exceptionHandel_Runtime(ex, " public eDriverDetails GetListDriverDetails(long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType)", "Exception While Getting List of Driver.", null);
                 throw;
             }
+        }
+
+        public bool IsLicenseExist(string DriverLicenseNo)
+        {
+            var db = new workorderEMSEntities();
+            var LicenseExist = (!db.eFleetDrivers.Any(x => x.DriverLicenseNo == DriverLicenseNo));
+            return LicenseExist;
         }
         /// <summary>
         /// Added by Ashwajit Bansod 

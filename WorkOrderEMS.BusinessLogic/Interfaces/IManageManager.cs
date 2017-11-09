@@ -18,26 +18,8 @@ namespace WorkOrderEMS.BusinessLogic
         UserModel GetEmployeeById(long userId, string operationName, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, string textSearch, ObjectParameter totalRecords);
         Result SaveEmployee(UserModel objUserModel, out long QRCID, bool isEmployeeRegistration);
         Result AssignProfile(UserModel objUserModel);
-        Result SaveInventory(InventoryMasterModel inventoryMasterModel, DARModel ObjDARModel);
-        Result DeleteInventory(long id);
         //Result SaveWorkRequest(WorkRequestModel objWorkRequestModel);
         //Result SaveWorkOrder(WorkOrderModel objWorkOrderModel);
-        //Result DeleteWorkRequest(long id);
-        Result AssignedInventory(AssignInventoryModel assignInventoryModel);
-        Result SaveRule(RuleMasterModel ruleMasterModel, DARModel objDAR);
-
-
-        /// <summary>Delete Rule
-        /// CreatedBy   :   Roshan Rahood
-        /// CreatedOn   :   Feb 10 2015
-        /// CreatedFor  :   Delete Rule by ID
-        /// </summary>
-        /// <param name="VendorID"></param>
-        /// <returns></returns>
-        Result DeleteRule(long ruleId, long loggedInUserId, string location, DARModel objDAR);
-
-
-        RuleMasterModel EditRule(long ruleId, long locationId);
 
         /// <summary>
         /// CreatedOn   :   Oct-06-2014
@@ -51,31 +33,8 @@ namespace WorkOrderEMS.BusinessLogic
 
         bool CheckDuplicateUser(string userEmail, long userId, out long qrcId, out UserRegistration objUserRegistration);
 
-        //Result SaveAsset(AssetMasterModel _AssetMasterModel);
-
-        #region Insurance Master
-
-        /// <summary>GetAllInsuranceCompany
-        /// CreatedFor      :   Get All Insurance Company
-        /// CreatedBy       :   Nagendra Upwanshi
-        /// CreatedOn       :   Oct-14-2014
-        /// </summary>
-        /// <returns></returns>
-        InsuranceModel GetAllInsuranceCompany();
-
-        #endregion Insurance Master
-
         long GetTotalManagerCount(string LoginUserType, long LocationID, long iUserID);
         List<ManagerModel> GetUserByManager(string LoginUserType, long LocationID, long iUserID);
-
-        /// <summary>
-        /// To edit the inventory details.
-        /// CreatedBy   :   Roshan Rahood
-        /// CreatedOn   :   Apr 01 2015
-        /// CreatedFor  :   Edit the inventory details by the Id
-        /// </summary>
-        /// <param name="id"></param>
-        InventoryMasterModel EditInventory(long id);
 
         dynamic EmployeeIdleStatus(long locationId, long userId);
 

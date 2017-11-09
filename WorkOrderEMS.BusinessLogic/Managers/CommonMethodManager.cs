@@ -28,12 +28,10 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         ServiceMasterRepository objServiceMasterRepository = new ServiceMasterRepository();
         QRCMasterRepository ObjQRCMasterRepository;
         //ProjectRepository objProjectRepository = new ProjectRepository();
-        WorkAreaMasterRepository objWorkAreaMasterRepository = new WorkAreaMasterRepository();
-        InventoryMasterRepository objInventoryMasterRepository = new InventoryMasterRepository();
+        WorkAreaMasterRepository objWorkAreaMasterRepository = new WorkAreaMasterRepository();        
         UserRepository ObjUserRepository;
         GlobalCodesRepository ObjGlobalCodesRepository;
         //AssetMasterRepository objAssetMasterRepository = new AssetMasterRepository();
-        InsuranceRepository objInsuranceRepository;
         LocationClientMappingRepository ObjLocationClientMappingRepository;
         //LocationRepository objLocationRepository = new LocationRepository();
         AdminLocationMappingRepository objAdminLocationMappingRepository = new AdminLocationMappingRepository();
@@ -375,24 +373,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         //    }
         //}
 
-        public List<SelectListItem> GetAllInventoryByProjectId(long projectId)
-        {
-            try
-            {
-                List<SelectListItem> lstInventory = objInventoryMasterRepository.GetAll(i => i.IsDeleted == false && i.LocationId == projectId).Select(t => new SelectListItem()
-                {
-                    Value = Convert.ToString(t.InventoryID, CultureInfo.InvariantCulture),
-                    Text = Convert.ToString(t.ItemName, CultureInfo.InvariantCulture) + " (" + Convert.ToString(t.ItemCode, CultureInfo.InvariantCulture) + ")"
-                }).ToList();
-
-                return lstInventory;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
-        }
-
         ////Created by Gayatri
         ////created on 07-oct-2014
         ////To get All Asset by Work area
@@ -419,17 +399,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
         #endregion
 
-        /// <summary>GetPlanByInsuranceCompanyId
-        /// CreatedBy   :   Nagendra Upwanshi
-        /// CreatedOn   :   Oct-14-2014
-        /// </summary>
-        /// <param name="CompanyId"></param>
-        /// <returns></returns>
-        public List<InsurancePlanModel> GetPlanByInsuranceCompanyId(long insuranceCompanyId)
-        {
-            objInsuranceRepository = new InsuranceRepository();
-            return objInsuranceRepository.GetStateByInsuranceCompanyId(insuranceCompanyId);
-        }
 
         /// <summary>
         /// This function is used to verify the email.

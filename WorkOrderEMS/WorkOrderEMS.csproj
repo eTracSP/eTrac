@@ -297,6 +297,7 @@
     <Compile Include="Controllers\Common\DropDownController.cs" />
     <Compile Include="Controllers\DAR\DARController.cs" />
     <Compile Include="Controllers\eFleet\eFleetDriverController.cs" />
+    <Compile Include="Controllers\eFleet\eFleetFuelingController.cs" />
     <Compile Include="Controllers\eFleet\eFleetMaintenanceController.cs" />
     <Compile Include="Controllers\eFleet\eFleetPassengerTrackingController.cs" />
     <Compile Include="Controllers\eFleet\eFleetPreventativeMaintenanceController.cs" />
@@ -330,9 +331,6 @@
     <Compile Include="GridListing\JqGridHandler\DARDetailsList.ashx.cs">
       <DependentUpon>DARDetailsList.ashx</DependentUpon>
     </Compile>
-    <Compile Include="GridListing\JqGridHandler\InventoryList.ashx.cs">
-      <DependentUpon>InventoryList.ashx</DependentUpon>
-    </Compile>
     <Compile Include="GridListing\JqGridHandler\ListLocation.ashx.cs">
       <DependentUpon>ListLocation.ashx</DependentUpon>
     </Compile>
@@ -350,9 +348,6 @@
     </Compile>
     <Compile Include="GridListing\JqGridHandler\PendingWorkRequests.ashx.cs">
       <DependentUpon>PendingWorkRequests.ashx</DependentUpon>
-    </Compile>
-    <Compile Include="GridListing\JqGridHandler\RuleMasterList.ashx.cs">
-      <DependentUpon>RuleMasterList.ashx</DependentUpon>
     </Compile>
     <Compile Include="GridListing\JqGridHandler\VerifiedMnagaerList.ashx.cs">
       <DependentUpon>VerifiedMnagaerList.ashx</DependentUpon>
@@ -1484,8 +1479,6 @@
     <Content Include="fonts\helvetica-neue.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="GridListing\JqGridScript\AssignedInventoryList.js" />
-    <Content Include="GridListing\JqGridScript\InventoryList.js" />
     <Content Include="GridListing\JqGridScript\ListDAR.js" />
     <Content Include="GridListing\JqGridScript\ListeFleetDriver.js" />
     <Content Include="GridListing\JqGridScript\ListeFleetMaintenance.js" />
@@ -1493,6 +1486,7 @@
     <Content Include="GridListing\JqGridScript\ListeFleetVehicle.js" />
     <Content Include="GridListing\JqGridScript\ListeFleetVehicleIncident.js" />
     <Content Include="GridListing\JqGridScript\ListEmail.js" />
+    <Content Include="GridListing\JqGridScript\ListFueling.js" />
     <Content Include="GridListing\JqGridScript\ListLocation.js" />
     <Content Include="GridListing\JqGridScript\ListPassengerTrackingRoute.js" />
     <Content Include="GridListing\JqGridScript\ListUserForPermission.js" />
@@ -1504,7 +1498,6 @@
     <Content Include="GridListing\JqGridScript\ProjectList.js" />
     <Content Include="GridListing\JqGridScript\ListQRC.js" />
     <Content Include="GridListing\JqGridScript\QRCList.js" />
-    <Content Include="GridListing\JqGridScript\RuleList.js" />
     <Content Include="GridListing\JqGridScript\UnverifiedUsers.js" />
     <Content Include="GridListing\JqGridScript\VerifiedMnagaerList.js" />
     <Content Include="GridListing\JqGridScript\UserList.js" />
@@ -1557,9 +1550,6 @@
     <Content Include="MailTemplate\ElevatorInspectionTemplate.html" />
     <Content Include="MailTemplate\EmployeeIdleTemplate.html" />
     <Content Include="MailTemplate\ForgotPasswordTemplate.html" />
-    <Content Include="MailTemplate\InventoryStockAssigned.html" />
-    <Content Include="MailTemplate\InventoryStockCreate.html" />
-    <Content Include="MailTemplate\InventoryStockUpdate.html" />
     <Content Include="MailTemplate\ItemMissing.html" />
     <Content Include="MailTemplate\LocationVerificationByManagerTemplate.html" />
     <Content Include="MailTemplate\CreateUserTemplate.html" />
@@ -1603,9 +1593,7 @@
     <Content Include="Content\font-awesome\scss\_path.scss" />
     <Content Include="Content\font-awesome\scss\_variables.scss" />
     <Content Include="GridListing\JqGridHandler\VerifiedMnagaerList.ashx" />
-    <Content Include="GridListing\JqGridHandler\InventoryList.ashx" />
     <Content Include="GridListing\JqGridHandler\VerifiedUserList.ashx" />
-    <Content Include="GridListing\JqGridHandler\RuleMasterList.ashx" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.eot" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.ttf" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.woff" />
@@ -1969,15 +1957,6 @@
     <Content Include="Views\Shared\_QRCLayout.cshtml" />
     <Content Include="Views\Shared\_Registration.cshtml" />
     <Content Include="Views\Shared\_Vehicle.cshtml" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Scripts\jquery-1.10.2.min.map" />
     <Content Include="Views\Web.config">
       <SubType>Designer</SubType>
@@ -1995,14 +1974,11 @@
     <Content Include="Views\GlobalAdmin\_AssignProject.cshtml" />
     <Content Include="Views\Manager\Employee.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
-    <Content Include="Views\Manager\Inventory.cshtml" />
     <Content Include="Views\Manager\InviteEmployee.cshtml" />
-    <Content Include="Views\Manager\ListInventory.cshtml" />
     <Content Include="Views\Manager\ListVerifiedUser.cshtml" />
     <Content Include="Views\Manager\_AssignProfile.cshtml" />
     <Content Include="Views\QRCSetup\QRCList.cshtml" />
     <Content Include="Views\Shared\_InvitationLayout.cshtml" />
-    <Content Include="Views\Manager\AssignInventory.cshtml" />
     <Content Include="Views\Manager\WorkRequest.cshtml" />
     <Content Include="Views\Shared\_WorkRequest.cshtml" />
     <Content Include="Views\Manager\_WorkOrder.cshtml" />
@@ -2023,11 +1999,8 @@
     <Content Include="Views\Report\Reports.cshtml" />
     <Content Include="Views\Manager\ListRule.cshtml" />
     <Content Include="Views\Manager\ManageAsset.cshtml" />
-    <Content Include="Views\Manager\ManageRule.cshtml" />
     <Content Include="Views\Report\Chart.cshtml" />
     <Content Include="Views\Report\Index.cshtml" />
-    <Content Include="Views\Manager\_AssignInventory.cshtml" />
-    <Content Include="Views\Manager\RegisterVendor.cshtml" />
     <Content Include="Views\Manager\Client.cshtml" />
     <Content Include="Views\GlobalAdmin\LocationSetup.cshtml" />
     <Content Include="Views\Shared\_UserRegistration.cshtml" />
@@ -2056,7 +2029,6 @@
     <Content Include="Views\Employee\WorkAssignmentList.cshtml" />
     <Content Include="Views\GlobalAdmin\WorkAssignmentList.cshtml" />
     <Content Include="Views\RolesAndPermissions\ListUsers.cshtml" />
-    <Content Include="Views\Manager\ListAssignedInventory.cshtml" />
     <Content Include="Views\RolesAndPermissions\_Permissions.cshtml" />
     <Content Include="Views\EmailDetails\ListEmail.cshtml" />
     <Content Include="Views\DAR\_EditDARDetails.cshtml" />
@@ -2114,6 +2086,15 @@
     <Content Include="Views\eFleetVehicleIncidentReporting\ListeFleetVehicleIncident.cshtml" />
     <Content Include="Views\eFleetVehicleIncidentReporting\RegisterVehicleIncident.cshtml" />
     <Content Include="Views\eFleetPassengerTracking\CreateRoute.cshtml" />
+    <Content Include="Web.config" />
+    <Content Include="Views\eFleetPassengerTracking\ListPassengerTrackingRoute.cshtml" />
+    <Content Include="Views\eFleetFueling\ListFueling.cshtml" />
+    <None Include="Web.Debug.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
+    <None Include="Web.Release.config">
+      <DependentUpon>Web.config</DependentUpon>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

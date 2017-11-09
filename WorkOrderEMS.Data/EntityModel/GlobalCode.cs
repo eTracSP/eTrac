@@ -17,13 +17,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public GlobalCode()
         {
             this.EMaintenanceSurveys = new HashSet<EMaintenanceSurvey>();
-            this.InventoryMasters = new HashSet<InventoryMaster>();
             this.LocationMasters = new HashSet<LocationMaster>();
-            this.WeeklyVehicleChecks = new HashSet<WeeklyVehicleCheck>();
-            this.WeeklyVehicleChecks1 = new HashSet<WeeklyVehicleCheck>();
-            this.WeeklyVehicleChecks2 = new HashSet<WeeklyVehicleCheck>();
-            this.WeeklyVehicleChecks3 = new HashSet<WeeklyVehicleCheck>();
-            this.WeeklyVehicleChecks4 = new HashSet<WeeklyVehicleCheck>();
             this.QRCScanLogs = new HashSet<QRCScanLog>();
             this.QRCScanLogs1 = new HashSet<QRCScanLog>();
             this.DashboardWidgetSettings = new HashSet<DashboardWidgetSetting>();
@@ -66,13 +60,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<System.DateTime> DeletedDate { get; set; }
     
         public virtual ICollection<EMaintenanceSurvey> EMaintenanceSurveys { get; set; }
-        public virtual ICollection<InventoryMaster> InventoryMasters { get; set; }
         public virtual ICollection<LocationMaster> LocationMasters { get; set; }
-        public virtual ICollection<WeeklyVehicleCheck> WeeklyVehicleChecks { get; set; }
-        public virtual ICollection<WeeklyVehicleCheck> WeeklyVehicleChecks1 { get; set; }
-        public virtual ICollection<WeeklyVehicleCheck> WeeklyVehicleChecks2 { get; set; }
-        public virtual ICollection<WeeklyVehicleCheck> WeeklyVehicleChecks3 { get; set; }
-        public virtual ICollection<WeeklyVehicleCheck> WeeklyVehicleChecks4 { get; set; }
         public virtual ICollection<QRCScanLog> QRCScanLogs { get; set; }
         public virtual ICollection<QRCScanLog> QRCScanLogs1 { get; set; }
         public virtual ICollection<DashboardWidgetSetting> DashboardWidgetSettings { get; set; }

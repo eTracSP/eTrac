@@ -68,7 +68,7 @@
                             @Html.HiddenFor(model => model.DOB)*@
                             @Html.HiddenFor(model => model.UserID)
                             <label>
-                                Employee Name<span class="req">*</span>
+                                Driver Name<span class="req">*</span>
                             </label>
                             @if (ViewBag.EmployeeList != null)
                             {
@@ -199,88 +199,7 @@
                                 </div>
                             </div>
                             @* ======================================================== *@
-                            @*<div class="panel-heading">
-                                Contact Details
-                            </div>
-                            <br>
-                            <div class="top-row">
-                                <div class="field-wrap">
-                                    <label>
-                                        Address 1<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.Address1, new { @id = "Address1" })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.Address1)
-                                    </div>
-                                </div>
-                                <div class="field-wrap">
-                                    <label>
-                                        Address 2<span class="req"></span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.Address2, new { @id = "Address2" })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.Address2)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="top-row">
-                                <div class="field-wrap">
-                                    <label>
-                                        City<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.City, new { @id = "City" })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.City)
-                                    </div>
-                                </div>
-                                <div class="field-wrap">
-                                    <label>
-                                        State<span class="req">*</span>
-                                    </label>
-                                    @if (ViewBag.StateList != null)
-                                    {@Html.DropDownListFor(model => model.StateIDForPersonal, new SelectList(ViewBag.StateList, "StateId", "StateName"), "--Select--", new { @id = "State1", @onchange = "BindState()" })}
-                                    else
-                                    {<select id="State"><option value="-1">--Select--</option></select>}
-                                    @Html.ValidationMessageFor(model => model.StateIDForPersonal)
-                                </div>
-                            </div>
-
-                            <div class="top-row">
-                                <div class="field-wrap">
-                                    <label>
-                                        Country<span class="req">*</span>
-                                    </label>
-                                    @if (ViewBag.Country != null)
-                                    {@Html.DropDownListFor(model => model.CountryId, new SelectList(ViewBag.Country, "CountryID", "CountryName"), "--Select--", new { @id = "idCountry", @onchange = "BindState()" })}
-                                    else
-                                    {<select id="Country"><option>Select</option></select>}
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.City)
-                                    </div>
-                                </div>
-                                <div class="field-wrap">
-                                    <label>
-                                        ZipCode<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.ZipCode, new { @id = "ZipCode", @maxLength = "5", onkeypress = "return isNumberKey(event) " })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.ZipCode)
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="top-row">
-                                <div class="field-wrap">
-                                    <label>
-                                        MobileNo<span class="req">*</span>
-                                    </label>
-                                    @Html.TextBoxFor(model => model.Mobile, new { @id = "Mobile" })
-                                    <div class="errorspace">
-                                        @Html.ValidationMessageFor(model => model.Mobile)
-                                        @*<input type="text" required autocomplete="off" id="zipcode"/>*@
-                                    @*</div>
-                                </div>
-
-                            </div>*@
+                           
                             @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true)
                             {
                                 <button type="submit" class="button button-block" onclick="validatetextbox()" id="btnSaveVehicle">Update</button>
@@ -474,7 +393,10 @@
                 $("#Password").attr("disabled", "true").css({ "background-color":"#CACFD2" });// "background-color:#CACFD2"
             }
             //Password Code End
-            
+            $('#CDLExpiration,#MedicleCardExpiration,#MVRExpiration').datepicker({
+                format: "mm/dd/yyyy",
+                startDate: new Date()
+            });            
             $("#CDLExpiration").datepicker();
             $("#MedicleCardExpiration").datepicker();
             $("#MVRExpiration").datepicker();         

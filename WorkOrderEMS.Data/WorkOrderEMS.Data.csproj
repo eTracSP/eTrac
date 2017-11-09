@@ -81,10 +81,8 @@
     <Compile Include="DataRepository\AddressMasterRepository.cs" />
     <Compile Include="DataRepository\AdminCommonRepository.cs" />
     <Compile Include="DataRepository\AdminLocationMappingRepository.cs" />
-    <Compile Include="DataRepository\AssignInventoryRepository.cs" />
     <Compile Include="DataRepository\CommonRepository.cs" />
     <Compile Include="DataRepository\DARRepository.cs" />
-    <Compile Include="DataRepository\DashboardSettingsRepository.cs" />
     <Compile Include="DataRepository\DashboardWidgetSettingRepository.cs" />
     <Compile Include="DataRepository\eFleetDriverRepository.cs" />
     <Compile Include="DataRepository\eFleetMaintenanceRepository.cs" />
@@ -99,12 +97,9 @@
     <Compile Include="DataRepository\GlobalAdminRepository.cs" />
     <Compile Include="DataRepository\GlobalCodesRepository.cs" />
     <Compile Include="DataRepository\HoursOfServicesRepository.cs" />
-    <Compile Include="DataRepository\InsuranceRepository.cs" />
-    <Compile Include="DataRepository\InventoryMasterRepository.cs" />
     <Compile Include="DataRepository\LocationClientMappingRepository.cs" />
     <Compile Include="DataRepository\LocationMasterRepository.cs" />
     <Compile Include="DataRepository\LocationRepository.cs" />
-    <Compile Include="DataRepository\LocationRuleMappingRepository.cs" />
     <Compile Include="DataRepository\LocationServices.cs" />
     <Compile Include="DataRepository\LocationServicesRepository.cs" />
     <Compile Include="DataRepository\LoginLogRepository.cs" />
@@ -115,7 +110,6 @@
     <Compile Include="DataRepository\QRCMasterRepository.cs" />
     <Compile Include="DataRepository\QRCScanLogRepository.cs" />
     <Compile Include="DataRepository\ReportRepository.cs" />
-    <Compile Include="DataRepository\RuleRepository.cs" />
     <Compile Include="DataRepository\ServiceMasterRepository.cs" />
     <Compile Include="DataRepository\UserRepository.cs" />
     <Compile Include="DataRepository\WorkAreaMasterRepository.cs" />
@@ -129,9 +123,6 @@
     <Compile Include="EntityModel\AdminLocationMapping.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModel\AssignInventory.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModel\CommonQeriesByVijay_Result.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -139,9 +130,6 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\DashboardWidgetSetting.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\DashbordSetting.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\eFleetDriver.cs">
@@ -201,22 +189,10 @@
     <Compile Include="EntityModel\HoursOfService.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModel\InsuranceMaster.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\InsurancePlanMaster.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\InventoryMaster.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModel\LocationClientMapping.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\LocationMaster.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\LocationRuleMapping.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\LocationService.cs">
@@ -235,9 +211,6 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\MasterState.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\MasterTimeZone.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\parseJSON_Result.cs">
@@ -268,9 +241,6 @@
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\QRCScanLog.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
-    <Compile Include="EntityModel\RuleMaster.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
     <Compile Include="EntityModel\ServiceMaster.cs">
@@ -495,9 +465,6 @@
     <Compile Include="EntityModel\UserRegistration.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
-    <Compile Include="EntityModel\WeeklyVehicleCheck.cs">
-      <DependentUpon>WorkOrderEMS.tt</DependentUpon>
-    </Compile>
     <Compile Include="EntityModel\WorkAreaMaster.cs">
       <DependentUpon>WorkOrderEMS.tt</DependentUpon>
     </Compile>
@@ -529,7 +496,6 @@
     <Compile Include="Interfaces\IGlobalCodesRepository.cs" />
     <Compile Include="Interfaces\IHoursOfServicesRepository.cs" />
     <Compile Include="Interfaces\IInsurance.cs" />
-    <Compile Include="Interfaces\IInventoryMasterRepository.cs" />
     <Compile Include="Interfaces\ILocationClientMappingRepository.cs" />
     <Compile Include="Interfaces\ILocationRepository.cs" />
     <Compile Include="Interfaces\ILocationServicesRepository.cs" />

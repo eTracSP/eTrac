@@ -137,7 +137,6 @@
     <Compile Include="Interfaces\IPushNotification.cs" />
     <Compile Include="Interfaces\IQRCSetup.cs" />
     <Compile Include="Interfaces\IReportManager.cs" />
-    <Compile Include="Interfaces\IRuleManager.cs" />
     <Compile Include="Interfaces\ISearch.cs" />
     <Compile Include="Interfaces\IGlobalAdmin.cs" />
     <Compile Include="Interfaces\IUser.cs" />
@@ -170,7 +169,6 @@
     <Compile Include="Managers\PushNotificationManager.cs" />
     <Compile Include="Managers\QRCSetupManager.cs" />
     <Compile Include="Managers\ReportManager.cs" />
-    <Compile Include="Managers\RuleManager.cs" />
     <Compile Include="Managers\SearchManager.cs" />
     <Compile Include="Managers\UserManager.cs" />
     <Compile Include="Managers\WorkRequestManager.cs" />

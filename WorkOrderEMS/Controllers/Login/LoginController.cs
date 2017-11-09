@@ -222,8 +222,7 @@ namespace WorkOrderEMS.Controllers.Login
                     if (result.UserId > 0)
                     {
                         this.CreateAuthenticateFormsTicket(result);
-                        Common_B obj_Common_B = new Common_B();
-                        Session["eTrac_DashboardSetting"] = obj_Common_B.getUserDasboardSettings(result.UserId);
+                        Common_B obj_Common_B = new Common_B();                      
                         Session["eTrac_SelectedDasboardLocationID"] = result.LocationID;
                         Session["eTrac_UserRoles"] = this.Get_UserAssignedRoles();
                         Session["eTrac_DashboardWidget"] = this.GetUserDashboardWidget();
@@ -717,7 +716,7 @@ namespace WorkOrderEMS.Controllers.Login
                     obj_eTracLoginModel.LogId = objNewLogID.LogId;
 
                     Session["eTrac"] = obj_eTracLoginModel;
-                    Session["eTrac_DashboardSetting"] = obj_Common_B.getUserDasboardSettings(obj_eTracLoginModel.UserId);
+          
                     Session["eTrac_SelectedDasboardLocationID"] = LocationId;
                     Session["eTrac_UserRoles"] = this.Get_UserAssignedRoles();
 

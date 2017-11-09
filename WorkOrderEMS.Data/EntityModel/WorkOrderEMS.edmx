@@ -63,25 +63,6 @@
           <Property Name="DeletedBy" Type="bigint" />
           <Property Name="DeletedOn" Type="datetime" />
         </EntityType>
-        <EntityType Name="AssignInventory">
-          <Key>
-            <PropertyRef Name="AssignInventoryID" />
-          </Key>
-          <Property Name="AssignInventoryID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InventoryID" Type="bigint" Nullable="false" />
-          <Property Name="AssignedUserID" Type="bigint" Nullable="false" />
-          <Property Name="IssueDate" Type="datetime" Nullable="false" />
-          <Property Name="IssuedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedOn" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedOn" Type="datetime" />
-          <Property Name="ReturnDate" Type="datetime" />
-          <Property Name="AssginedQuantity" Type="bigint" />
-        </EntityType>
         <EntityType Name="DARDetails">
           <Key>
             <PropertyRef Name="DARId" />
@@ -131,22 +112,6 @@
           <Property Name="WidgetID" Type="bigint" Nullable="false" />
           <Property Name="UserID" Type="bigint" Nullable="false" />
           <Property Name="LocationId" Type="bigint" Nullable="false" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="DashbordSetting">
-          <Key>
-            <PropertyRef Name="DisplayID" />
-          </Key>
-          <Property Name="DisplayID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="UserID" Type="bigint" Nullable="false" />
-          <Property Name="DisplaySettings" Type="nvarchar(max)" />
           <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="bigint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
@@ -519,58 +484,6 @@
           <Property Name="ModifiedBy" Type="bigint" />
           <Property Name="ModifiedDate" Type="datetime" />
         </EntityType>
-        <EntityType Name="InsuranceMaster">
-          <Key>
-            <PropertyRef Name="InsuranceId" />
-          </Key>
-          <Property Name="InsuranceId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InsuranceCompany" Type="varchar" MaxLength="200" />
-          <Property Name="Description" Type="varchar" MaxLength="300" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="InsurancePlanMaster">
-          <Key>
-            <PropertyRef Name="InsurancePlanID" />
-          </Key>
-          <Property Name="InsurancePlanID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="InsuranceId" Type="bigint" Nullable="false" />
-          <Property Name="InsurancePlan" Type="varchar" MaxLength="100" />
-          <Property Name="Description" Type="varchar" MaxLength="300" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="InventoryMaster">
-          <Key>
-            <PropertyRef Name="InventoryID" />
-          </Key>
-          <Property Name="InventoryID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="ItemName" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="ItemCode" Type="varchar" MaxLength="200" />
-          <Property Name="ItemType" Type="bigint" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="300" />
-          <Property Name="Quantity" Type="bigint" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedOn" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedOn" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedOn" Type="datetime" />
-          <Property Name="LocationId" Type="bigint" Nullable="false" />
-          <Property Name="ItemOwnership" Type="int" />
-        </EntityType>
         <EntityType Name="LocationClientMapping">
           <Key>
             <PropertyRef Name="LocationClientMappingID" />
@@ -616,23 +529,6 @@
           <Property Name="IsVerifiedByManager" Type="bit" Nullable="false" />
           <Property Name="IsVerifiedByClient" Type="bit" Nullable="false" />
           <Property Name="LocationSubTypeDesc" Type="varchar(max)" />
-        </EntityType>
-        <EntityType Name="LocationRuleMapping">
-          <Key>
-            <PropertyRef Name="RuleMappingId" />
-          </Key>
-          <Property Name="RuleMappingId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RuleID" Type="bigint" Nullable="false" />
-          <Property Name="VoilationCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="LocationID" Type="bigint" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="LocationServices">
           <Key>
@@ -722,24 +618,6 @@
           <Property Name="CountryId" Type="int" Nullable="false" />
           <Property Name="StateName" Type="varchar" MaxLength="100" Nullable="false" />
           <Property Name="StateCode" Type="varchar" MaxLength="10" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
-        </EntityType>
-        <EntityType Name="MasterTimeZone">
-          <Key>
-            <PropertyRef Name="TimeZoneID" />
-          </Key>
-          <Property Name="TimeZoneID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="TimezoneOffset" Type="decimal" Precision="3" Scale="1" Nullable="false" />
-          <Property Name="ClientTimeOffset" Type="int" Nullable="false" />
-          <Property Name="TimeZoneValue" Type="varchar" MaxLength="300" />
-          <Property Name="TimezoneName" Type="varchar" MaxLength="300" Nullable="false" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
           <Property Name="CreatedBy" Type="bigint" Nullable="false" />
           <Property Name="CreatedDate" Type="datetime" Nullable="false" />
           <Property Name="ModifiedBy" Type="bigint" />
@@ -851,24 +729,6 @@
           <Property Name="DeletedOn" Type="datetime" />
           <Property Name="IsValidPermit" Type="bigint" />
         </EntityType>
-        <EntityType Name="RuleMaster">
-          <Key>
-            <PropertyRef Name="RuleID" />
-          </Key>
-          <Property Name="RuleID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="RuleName" Type="varchar" MaxLength="200" Nullable="false" />
-          <Property Name="Description" Type="varchar" MaxLength="300" />
-          <Property Name="VoilationCharges" Type="decimal" Precision="18" Scale="2" Nullable="false" />
-          <Property Name="IsActive" Type="bit" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
-          <Property Name="ProjectID" Type="bigint" />
-        </EntityType>
         <EntityType Name="ServiceMaster">
           <Key>
             <PropertyRef Name="ServiceID" />
@@ -951,34 +811,6 @@
           <Property Name="TimeZoneName" Type="varchar" MaxLength="200" />
           <Property Name="TimeZoneOffsetName" Type="varchar" MaxLength="200" />
           <Property Name="TokenExpiresOn" Type="datetime" />
-        </EntityType>
-        <EntityType Name="WeeklyVehicleCheck">
-          <Key>
-            <PropertyRef Name="WeeklyVehicleCheckID" />
-          </Key>
-          <Property Name="WeeklyVehicleCheckID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="VehicleID" Type="bigint" Nullable="false" />
-          <Property Name="IsDamage" Type="bit" Nullable="false" />
-          <Property Name="DamageToReportImage" Type="varchar" MaxLength="300" />
-          <Property Name="DamageToReportRemarks" Type="varchar" MaxLength="300" />
-          <Property Name="CurrentMileage" Type="bigint" Nullable="false" />
-          <Property Name="IsInteriorClean" Type="bit" Nullable="false" />
-          <Property Name="InteriorCleanRemarks" Type="varchar" MaxLength="300" />
-          <Property Name="IsExteriorClean" Type="bit" Nullable="false" />
-          <Property Name="ExteriorCleanRemarks" Type="varchar" MaxLength="300" />
-          <Property Name="VehicleTransmission" Type="bigint" Nullable="false" />
-          <Property Name="FuelLevel" Type="bigint" Nullable="false" />
-          <Property Name="VehicleTires" Type="bigint" Nullable="false" />
-          <Property Name="VehicleWindows" Type="bigint" Nullable="false" />
-          <Property Name="VehicleBrakes" Type="bigint" Nullable="false" />
-          <Property Name="VehicleCheckDate" Type="datetime" Nullable="false" />
-          <Property Name="CreatedBy" Type="bigint" Nullable="false" />
-          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
-          <Property Name="ModifiedBy" Type="bigint" />
-          <Property Name="ModifiedDate" Type="datetime" />
-          <Property Name="IsDeleted" Type="bit" Nullable="false" />
-          <Property Name="DeletedBy" Type="bigint" />
-          <Property Name="DeletedDate" Type="datetime" />
         </EntityType>
         <EntityType Name="WorkAreaMaster">
           <Key>
@@ -1114,18 +946,6 @@
             </Principal>
             <Dependent Role="AdminLocationMapping">
               <PropertyRef Name="LocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_AssignInventory_InventoryMaster">
-          <End Role="InventoryMaster" Type="Self.InventoryMaster" Multiplicity="1" />
-          <End Role="AssignInventory" Type="Self.AssignInventory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InventoryMaster">
-              <PropertyRef Name="InventoryID" />
-            </Principal>
-            <Dependent Role="AssignInventory">
-              <PropertyRef Name="InventoryID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -1585,42 +1405,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_InsurancePlanMaster_Insurance">
-          <End Role="InsuranceMaster" Type="Self.InsuranceMaster" Multiplicity="1" />
-          <End Role="InsurancePlanMaster" Type="Self.InsurancePlanMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InsuranceMaster">
-              <PropertyRef Name="InsuranceId" />
-            </Principal>
-            <Dependent Role="InsurancePlanMaster">
-              <PropertyRef Name="InsuranceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InventoryMaster_GlobalCodes_Type">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="InventoryMaster" Type="Self.InventoryMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="InventoryMaster">
-              <PropertyRef Name="ItemType" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InventoryMaster_LocationMaster">
-          <End Role="LocationMaster" Type="Self.LocationMaster" Multiplicity="1" />
-          <End Role="InventoryMaster" Type="Self.InventoryMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LocationMaster">
-              <PropertyRef Name="LocationId" />
-            </Principal>
-            <Dependent Role="InventoryMaster">
-              <PropertyRef Name="LocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_LocationClientMapping_LocationMaster">
           <End Role="LocationMaster" Type="Self.LocationMaster" Multiplicity="1" />
           <End Role="LocationClientMapping" Type="Self.LocationClientMapping" Multiplicity="*" />
@@ -1933,18 +1717,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_RuleMaster_LocationRuleMapping">
-          <End Role="RuleMaster" Type="Self.RuleMaster" Multiplicity="1" />
-          <End Role="LocationRuleMapping" Type="Self.LocationRuleMapping" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RuleMaster">
-              <PropertyRef Name="RuleID" />
-            </Principal>
-            <Dependent Role="LocationRuleMapping">
-              <PropertyRef Name="RuleID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_TrackEmployeeStatus_LocationMaster">
           <End Role="LocationMaster" Type="Self.LocationMaster" Multiplicity="0..1" />
           <End Role="LoginLog" Type="Self.LoginLog" Multiplicity="*" />
@@ -2026,66 +1798,6 @@
             </Principal>
             <Dependent Role="UserRegistrations">
               <PropertyRef Name="QRCID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Brakes">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="WeeklyVehicleCheck" Type="Self.WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleBrakes" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="WeeklyVehicleCheck" Type="Self.WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="FuelLevel" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Tires">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="WeeklyVehicleCheck" Type="Self.WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleTires" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Transmission">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="WeeklyVehicleCheck" Type="Self.WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleTransmission" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Windows">
-          <End Role="GlobalCodes" Type="Self.GlobalCodes" Multiplicity="1" />
-          <End Role="WeeklyVehicleCheck" Type="Self.WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCodes">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleWindows" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -2704,10 +2416,8 @@
           <EntitySet Name="AddressMaster" EntityType="Self.AddressMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminEmployeeMapping" EntityType="Self.AdminEmployeeMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AdminLocationMapping" EntityType="Self.AdminLocationMapping" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="AssignInventory" EntityType="Self.AssignInventory" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DARDetails" EntityType="Self.DARDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="DashboardWidgetSetting" EntityType="Self.DashboardWidgetSetting" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="DashbordSetting" EntityType="Self.DashbordSetting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eFleetDriver" EntityType="Self.eFleetDriver" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eFleetFueling" EntityType="Self.eFleetFueling" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="eFleetMaintenance" EntityType="Self.eFleetMaintenance" Schema="dbo" store:Type="Tables" />
@@ -2725,29 +2435,22 @@
           <EntitySet Name="ExceptionLog" EntityType="Self.ExceptionLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="GlobalCodes" EntityType="Self.GlobalCodes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HoursOfServices" EntityType="Self.HoursOfServices" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InsuranceMaster" EntityType="Self.InsuranceMaster" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InsurancePlanMaster" EntityType="Self.InsurancePlanMaster" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="InventoryMaster" EntityType="Self.InventoryMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationClientMapping" EntityType="Self.LocationClientMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationMaster" EntityType="Self.LocationMaster" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="LocationRuleMapping" EntityType="Self.LocationRuleMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LocationServices" EntityType="Self.LocationServices" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="LoginLog" EntityType="Self.LoginLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ManagerEmployeeMapping" EntityType="Self.ManagerEmployeeMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ManagerLocationMapping" EntityType="Self.ManagerLocationMapping" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterCountries" EntityType="Self.MasterCountries" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="MasterStates" EntityType="Self.MasterStates" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="MasterTimeZone" EntityType="Self.MasterTimeZone" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PermissionDetails" EntityType="Self.PermissionDetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QRCMaster" EntityType="Self.QRCMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QRCMasterLog" EntityType="Self.QRCMasterLog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="QRCScanLog" EntityType="Self.QRCScanLog" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="RuleMaster" EntityType="Self.RuleMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ServiceMaster" EntityType="Self.ServiceMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TimeZones" EntityType="Self.TimeZones" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="TrackEmployeeStatus" EntityType="Self.TrackEmployeeStatus" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="UserRegistrations" EntityType="Self.UserRegistrations" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="WeeklyVehicleCheck" EntityType="Self.WeeklyVehicleCheck" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkAreaMaster" EntityType="Self.WorkAreaMaster" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="WorkRequestAssignment" EntityType="Self.WorkRequestAssignment" Schema="dbo" store:Type="Tables" />
           <AssociationSet Name="FK_AddressMaster_MasterCountries" Association="Self.FK_AddressMaster_MasterCountries">
@@ -2769,10 +2472,6 @@
           <AssociationSet Name="FK_AdminLocationMapping_LocationMaster" Association="Self.FK_AdminLocationMapping_LocationMaster">
             <End Role="LocationMaster" EntitySet="LocationMaster" />
             <End Role="AdminLocationMapping" EntitySet="AdminLocationMapping" />
-          </AssociationSet>
-          <AssociationSet Name="FK_AssignInventory_InventoryMaster" Association="Self.FK_AssignInventory_InventoryMaster">
-            <End Role="InventoryMaster" EntitySet="InventoryMaster" />
-            <End Role="AssignInventory" EntitySet="AssignInventory" />
           </AssociationSet>
           <AssociationSet Name="FK_DashboardWidgetSetting_GlobalCodes" Association="Self.FK_DashboardWidgetSetting_GlobalCodes">
             <End Role="GlobalCodes" EntitySet="GlobalCodes" />
@@ -2926,18 +2625,6 @@
             <End Role="UserRegistrations" EntitySet="UserRegistrations" />
             <End Role="HoursOfServices" EntitySet="HoursOfServices" />
           </AssociationSet>
-          <AssociationSet Name="FK_InsurancePlanMaster_Insurance" Association="Self.FK_InsurancePlanMaster_Insurance">
-            <End Role="InsuranceMaster" EntitySet="InsuranceMaster" />
-            <End Role="InsurancePlanMaster" EntitySet="InsurancePlanMaster" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InventoryMaster_GlobalCodes_Type" Association="Self.FK_InventoryMaster_GlobalCodes_Type">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="InventoryMaster" EntitySet="InventoryMaster" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InventoryMaster_LocationMaster" Association="Self.FK_InventoryMaster_LocationMaster">
-            <End Role="LocationMaster" EntitySet="LocationMaster" />
-            <End Role="InventoryMaster" EntitySet="InventoryMaster" />
-          </AssociationSet>
           <AssociationSet Name="FK_LocationClientMapping_LocationMaster" Association="Self.FK_LocationClientMapping_LocationMaster">
             <End Role="LocationMaster" EntitySet="LocationMaster" />
             <End Role="LocationClientMapping" EntitySet="LocationClientMapping" />
@@ -3042,10 +2729,6 @@
             <End Role="UserRegistrations" EntitySet="UserRegistrations" />
             <End Role="QRCScanLog" EntitySet="QRCScanLog" />
           </AssociationSet>
-          <AssociationSet Name="FK_RuleMaster_LocationRuleMapping" Association="Self.FK_RuleMaster_LocationRuleMapping">
-            <End Role="RuleMaster" EntitySet="RuleMaster" />
-            <End Role="LocationRuleMapping" EntitySet="LocationRuleMapping" />
-          </AssociationSet>
           <AssociationSet Name="FK_TrackEmployeeStatus_LocationMaster" Association="Self.FK_TrackEmployeeStatus_LocationMaster">
             <End Role="LocationMaster" EntitySet="LocationMaster" />
             <End Role="LoginLog" EntitySet="LoginLog" />
@@ -3073,26 +2756,6 @@
           <AssociationSet Name="FK_UserRegistrations_QRCMaster" Association="Self.FK_UserRegistrations_QRCMaster">
             <End Role="QRCMaster" EntitySet="QRCMaster" />
             <End Role="UserRegistrations" EntitySet="UserRegistrations" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Brakes" Association="Self.FK_WeeklyVehicleCheck_GlobalCodes_Brakes">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleCheck" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel" Association="Self.FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleCheck" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Tires" Association="Self.FK_WeeklyVehicleCheck_GlobalCodes_Tires">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleCheck" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Transmission" Association="Self.FK_WeeklyVehicleCheck_GlobalCodes_Transmission">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleCheck" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Windows" Association="Self.FK_WeeklyVehicleCheck_GlobalCodes_Windows">
-            <End Role="GlobalCodes" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleCheck" />
           </AssociationSet>
           <AssociationSet Name="FK_WorkRequestAssignment_GlobalCodes_PriorityLevel" Association="Self.FK_WorkRequestAssignment_GlobalCodes_PriorityLevel">
             <End Role="GlobalCodes" EntitySet="GlobalCodes" />
@@ -3430,32 +3093,23 @@
           <EntitySet Name="AddressMasters" EntityType="workorderEMSModel.AddressMaster" />
           <EntitySet Name="AdminEmployeeMappings" EntityType="workorderEMSModel.AdminEmployeeMapping" />
           <EntitySet Name="AdminLocationMappings" EntityType="workorderEMSModel.AdminLocationMapping" />
-          <EntitySet Name="AssignInventories" EntityType="workorderEMSModel.AssignInventory" />
           <EntitySet Name="DARDetails" EntityType="workorderEMSModel.DARDetail" />
-          <EntitySet Name="DashbordSettings" EntityType="workorderEMSModel.DashbordSetting" />
           <EntitySet Name="EmailLogs" EntityType="workorderEMSModel.EmailLog" />
           <EntitySet Name="EMaintenanceSurveys" EntityType="workorderEMSModel.EMaintenanceSurvey" />
           <EntitySet Name="EmployeeLocationMappings" EntityType="workorderEMSModel.EmployeeLocationMapping" />
           <EntitySet Name="ExceptionLogs" EntityType="workorderEMSModel.ExceptionLog" />
-          <EntitySet Name="InsuranceMasters" EntityType="workorderEMSModel.InsuranceMaster" />
-          <EntitySet Name="InsurancePlanMasters" EntityType="workorderEMSModel.InsurancePlanMaster" />
-          <EntitySet Name="InventoryMasters" EntityType="workorderEMSModel.InventoryMaster" />
           <EntitySet Name="LocationClientMappings" EntityType="workorderEMSModel.LocationClientMapping" />
           <EntitySet Name="LocationMasters" EntityType="workorderEMSModel.LocationMaster" />
-          <EntitySet Name="LocationRuleMappings" EntityType="workorderEMSModel.LocationRuleMapping" />
           <EntitySet Name="LocationServices" EntityType="workorderEMSModel.LocationService" />
           <EntitySet Name="LoginLogs" EntityType="workorderEMSModel.LoginLog" />
           <EntitySet Name="ManagerEmployeeMappings" EntityType="workorderEMSModel.ManagerEmployeeMapping" />
           <EntitySet Name="ManagerLocationMappings" EntityType="workorderEMSModel.ManagerLocationMapping" />
           <EntitySet Name="MasterCountries" EntityType="workorderEMSModel.MasterCountry" />
           <EntitySet Name="MasterStates" EntityType="workorderEMSModel.MasterState" />
-          <EntitySet Name="MasterTimeZones" EntityType="workorderEMSModel.MasterTimeZone" />
           <EntitySet Name="PermissionDetails" EntityType="workorderEMSModel.PermissionDetail" />
           <EntitySet Name="QRCMasterLogs" EntityType="workorderEMSModel.QRCMasterLog" />
-          <EntitySet Name="RuleMasters" EntityType="workorderEMSModel.RuleMaster" />
           <EntitySet Name="ServiceMasters" EntityType="workorderEMSModel.ServiceMaster" />
           <EntitySet Name="TrackEmployeeStatus" EntityType="workorderEMSModel.TrackEmployeeStatu" />
-          <EntitySet Name="WeeklyVehicleChecks" EntityType="workorderEMSModel.WeeklyVehicleCheck" />
           <EntitySet Name="WorkAreaMasters" EntityType="workorderEMSModel.WorkAreaMaster" />
           <AssociationSet Name="FK_AddressMaster_MasterCountries" Association="workorderEMSModel.FK_AddressMaster_MasterCountries">
             <End Role="MasterCountry" EntitySet="MasterCountries" />
@@ -3469,10 +3123,6 @@
             <End Role="LocationMaster" EntitySet="LocationMasters" />
             <End Role="AdminLocationMapping" EntitySet="AdminLocationMappings" />
           </AssociationSet>
-          <AssociationSet Name="FK_AssignInventory_InventoryMaster" Association="workorderEMSModel.FK_AssignInventory_InventoryMaster">
-            <End Role="InventoryMaster" EntitySet="InventoryMasters" />
-            <End Role="AssignInventory" EntitySet="AssignInventories" />
-          </AssociationSet>
           <AssociationSet Name="FK_EmailLog_locationmaster" Association="workorderEMSModel.FK_EmailLog_locationmaster">
             <End Role="LocationMaster" EntitySet="LocationMasters" />
             <End Role="EmailLog" EntitySet="EmailLogs" />
@@ -3480,14 +3130,6 @@
           <AssociationSet Name="FK_EmployeeLocationMapping_LocationMaster" Association="workorderEMSModel.FK_EmployeeLocationMapping_LocationMaster">
             <End Role="LocationMaster" EntitySet="LocationMasters" />
             <End Role="EmployeeLocationMapping" EntitySet="EmployeeLocationMappings" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InsurancePlanMaster_Insurance" Association="workorderEMSModel.FK_InsurancePlanMaster_Insurance">
-            <End Role="InsuranceMaster" EntitySet="InsuranceMasters" />
-            <End Role="InsurancePlanMaster" EntitySet="InsurancePlanMasters" />
-          </AssociationSet>
-          <AssociationSet Name="FK_InventoryMaster_LocationMaster" Association="workorderEMSModel.FK_InventoryMaster_LocationMaster">
-            <End Role="LocationMaster" EntitySet="LocationMasters" />
-            <End Role="InventoryMaster" EntitySet="InventoryMasters" />
           </AssociationSet>
           <AssociationSet Name="FK_LocationClientMapping_LocationMaster" Association="workorderEMSModel.FK_LocationClientMapping_LocationMaster">
             <End Role="LocationMaster" EntitySet="LocationMasters" />
@@ -3509,10 +3151,6 @@
             <End Role="LocationMaster" EntitySet="LocationMasters" />
             <End Role="LoginLog" EntitySet="LoginLogs" />
           </AssociationSet>
-          <AssociationSet Name="FK_RuleMaster_LocationRuleMapping" Association="workorderEMSModel.FK_RuleMaster_LocationRuleMapping">
-            <End Role="RuleMaster" EntitySet="RuleMasters" />
-            <End Role="LocationRuleMapping" EntitySet="LocationRuleMappings" />
-          </AssociationSet>
           <AssociationSet Name="FK_LocationServices_ServiceMaster" Association="workorderEMSModel.FK_LocationServices_ServiceMaster">
             <End Role="ServiceMaster" EntitySet="ServiceMasters" />
             <End Role="LocationService" EntitySet="LocationServices" />
@@ -3533,33 +3171,9 @@
             <End Role="GlobalCode" EntitySet="GlobalCodes" />
             <End Role="EMaintenanceSurvey" EntitySet="EMaintenanceSurveys" />
           </AssociationSet>
-          <AssociationSet Name="FK_InventoryMaster_GlobalCodes_Type" Association="workorderEMSModel.FK_InventoryMaster_GlobalCodes_Type">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="InventoryMaster" EntitySet="InventoryMasters" />
-          </AssociationSet>
           <AssociationSet Name="FK_LocationMaster_GlobalCodes_SubType" Association="workorderEMSModel.FK_LocationMaster_GlobalCodes_SubType">
             <End Role="GlobalCode" EntitySet="GlobalCodes" />
             <End Role="LocationMaster" EntitySet="LocationMasters" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Brakes" Association="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Brakes">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleChecks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel" Association="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleChecks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Tires" Association="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Tires">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleChecks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Transmission" Association="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Transmission">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleChecks" />
-          </AssociationSet>
-          <AssociationSet Name="FK_WeeklyVehicleCheck_GlobalCodes_Windows" Association="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Windows">
-            <End Role="GlobalCode" EntitySet="GlobalCodes" />
-            <End Role="WeeklyVehicleCheck" EntitySet="WeeklyVehicleChecks" />
           </AssociationSet>
           <FunctionImport Name="ssp_getManagerWhoHaveGTTracker" ReturnType="Collection(workorderEMSModel.ssp_getManagerWhoHaveGTTracker_Result)">
           <Parameter Name="LocationID" Mode="In" Type="Int64" />
@@ -4623,26 +4237,6 @@
           <Property Name="DeletedOn" Type="DateTime" Precision="3" />
           <NavigationProperty Name="LocationMaster" Relationship="workorderEMSModel.FK_AdminLocationMapping_LocationMaster" FromRole="AdminLocationMapping" ToRole="LocationMaster" />
         </EntityType>
-        <EntityType Name="AssignInventory">
-          <Key>
-            <PropertyRef Name="AssignInventoryID" />
-          </Key>
-          <Property Name="AssignInventoryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InventoryID" Type="Int64" Nullable="false" />
-          <Property Name="AssignedUserID" Type="Int64" Nullable="false" />
-          <Property Name="IssueDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="IssuedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedOn" Type="DateTime" Precision="3" />
-          <Property Name="ReturnDate" Type="DateTime" Precision="3" />
-          <Property Name="AssginedQuantity" Type="Int64" />
-          <NavigationProperty Name="InventoryMaster" Relationship="workorderEMSModel.FK_AssignInventory_InventoryMaster" FromRole="AssignInventory" ToRole="InventoryMaster" />
-        </EntityType>
         <EntityType Name="DARDetail">
           <Key>
             <PropertyRef Name="DARId" />
@@ -4684,22 +4278,6 @@
           <Property Name="CustomerSignatureImage" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="DisclaimerFormFile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="eFleetFuelings" Relationship="workorderEMSModel.FK_eFleetFueling_DARDetails" FromRole="DARDetail" ToRole="eFleetFueling" />
-        </EntityType>
-        <EntityType Name="DashbordSetting">
-          <Key>
-            <PropertyRef Name="DisplayID" />
-          </Key>
-          <Property Name="DisplayID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="UserID" Type="Int64" Nullable="false" />
-          <Property Name="DisplaySettings" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="EmailLog">
           <Key>
@@ -4765,63 +4343,6 @@
           <Property Name="createdDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Parameters" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
-        <EntityType Name="InsuranceMaster">
-          <Key>
-            <PropertyRef Name="InsuranceId" />
-          </Key>
-          <Property Name="InsuranceId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InsuranceCompany" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="InsurancePlanMasters" Relationship="workorderEMSModel.FK_InsurancePlanMaster_Insurance" FromRole="InsuranceMaster" ToRole="InsurancePlanMaster" />
-        </EntityType>
-        <EntityType Name="InsurancePlanMaster">
-          <Key>
-            <PropertyRef Name="InsurancePlanID" />
-          </Key>
-          <Property Name="InsurancePlanID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InsuranceId" Type="Int64" Nullable="false" />
-          <Property Name="InsurancePlan" Type="String" MaxLength="100" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="InsuranceMaster" Relationship="workorderEMSModel.FK_InsurancePlanMaster_Insurance" FromRole="InsurancePlanMaster" ToRole="InsuranceMaster" />
-        </EntityType>
-        <EntityType Name="InventoryMaster">
-          <Key>
-            <PropertyRef Name="InventoryID" />
-          </Key>
-          <Property Name="InventoryID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="ItemName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ItemCode" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="ItemType" Type="Int64" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="Quantity" Type="Int64" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedOn" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedOn" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedOn" Type="DateTime" Precision="3" />
-          <Property Name="LocationId" Type="Int64" Nullable="false" />
-          <Property Name="ItemOwnership" Type="Int32" />
-          <NavigationProperty Name="AssignInventories" Relationship="workorderEMSModel.FK_AssignInventory_InventoryMaster" FromRole="InventoryMaster" ToRole="AssignInventory" />
-          <NavigationProperty Name="LocationMaster" Relationship="workorderEMSModel.FK_InventoryMaster_LocationMaster" FromRole="InventoryMaster" ToRole="LocationMaster" />
-          <NavigationProperty Name="GlobalCode" Relationship="workorderEMSModel.FK_InventoryMaster_GlobalCodes_Type" FromRole="InventoryMaster" ToRole="GlobalCode" />
-        </EntityType>
         <EntityType Name="LocationClientMapping">
           <Key>
             <PropertyRef Name="LocationClientMappingID" />
@@ -4872,7 +4393,6 @@
           <NavigationProperty Name="AdminLocationMappings" Relationship="workorderEMSModel.FK_AdminLocationMapping_LocationMaster" FromRole="LocationMaster" ToRole="AdminLocationMapping" />
           <NavigationProperty Name="EmailLogs" Relationship="workorderEMSModel.FK_EmailLog_locationmaster" FromRole="LocationMaster" ToRole="EmailLog" />
           <NavigationProperty Name="EmployeeLocationMappings" Relationship="workorderEMSModel.FK_EmployeeLocationMapping_LocationMaster" FromRole="LocationMaster" ToRole="EmployeeLocationMapping" />
-          <NavigationProperty Name="InventoryMasters" Relationship="workorderEMSModel.FK_InventoryMaster_LocationMaster" FromRole="LocationMaster" ToRole="InventoryMaster" />
           <NavigationProperty Name="LocationClientMappings" Relationship="workorderEMSModel.FK_LocationClientMapping_LocationMaster" FromRole="LocationMaster" ToRole="LocationClientMapping" />
           <NavigationProperty Name="LocationServices" Relationship="workorderEMSModel.FK_LocationServices_LocationMaster" FromRole="LocationMaster" ToRole="LocationService" />
           <NavigationProperty Name="LoginLogs" Relationship="workorderEMSModel.FK_LoginLog_LocationMaster" FromRole="LocationMaster" ToRole="LoginLog" />
@@ -4889,24 +4409,6 @@
           <NavigationProperty Name="eFleetDrivers" Relationship="workorderEMSModel.FK_eFleetDriver_LocationMaster" FromRole="LocationMaster" ToRole="eFleetDriver" />
           <NavigationProperty Name="eFleetMaintenances" Relationship="workorderEMSModel.FK_eFleetMaintenance_LocationMaster" FromRole="LocationMaster" ToRole="eFleetMaintenance" />
           <NavigationProperty Name="eFleetVehicleIncidents" Relationship="workorderEMSModel.FK_eFleetVehicleIncident_eFleetVehicleIncident" FromRole="LocationMaster" ToRole="eFleetVehicleIncident" />
-        </EntityType>
-        <EntityType Name="LocationRuleMapping">
-          <Key>
-            <PropertyRef Name="RuleMappingId" />
-          </Key>
-          <Property Name="RuleMappingId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RuleID" Type="Int64" Nullable="false" />
-          <Property Name="VoilationCharges" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="LocationID" Type="Int64" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="RuleMaster" Relationship="workorderEMSModel.FK_RuleMaster_LocationRuleMapping" FromRole="LocationRuleMapping" ToRole="RuleMaster" />
         </EntityType>
         <EntityType Name="LocationService">
           <Key>
@@ -5016,24 +4518,6 @@
           <NavigationProperty Name="AddressMasters" Relationship="workorderEMSModel.FK_AddressMaster_MasterStates" FromRole="MasterState" ToRole="AddressMaster" />
           <NavigationProperty Name="MasterCountry" Relationship="workorderEMSModel.FK_MasterStates_MasterCountries" FromRole="MasterState" ToRole="MasterCountry" />
         </EntityType>
-        <EntityType Name="MasterTimeZone">
-          <Key>
-            <PropertyRef Name="TimeZoneID" />
-          </Key>
-          <Property Name="TimeZoneID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="TimezoneOffset" Type="Decimal" Nullable="false" Precision="3" Scale="1" />
-          <Property Name="ClientTimeOffset" Type="Int32" Nullable="false" />
-          <Property Name="TimeZoneValue" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="TimezoneName" Type="String" Nullable="false" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-        </EntityType>
         <EntityType Name="PermissionDetail">
           <Key>
             <PropertyRef Name="PermissionDetailId" />
@@ -5069,25 +4553,6 @@
           <NavigationProperty Name="QRCMaster" Relationship="workorderEMSModel.FK_QRCMasterLog_QRCMaster" FromRole="QRCMasterLog" ToRole="QRCMaster" />
           <NavigationProperty Name="UserRegistration" Relationship="workorderEMSModel.FK_QRCMasterLog_UserRegistrations" FromRole="QRCMasterLog" ToRole="UserRegistration" />
         </EntityType>
-        <EntityType Name="RuleMaster">
-          <Key>
-            <PropertyRef Name="RuleID" />
-          </Key>
-          <Property Name="RuleID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="RuleName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="Description" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="VoilationCharges" Type="Decimal" Nullable="false" Precision="18" Scale="2" />
-          <Property Name="IsActive" Type="Boolean" Nullable="false" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-          <Property Name="ProjectID" Type="Int64" />
-          <NavigationProperty Name="LocationRuleMappings" Relationship="workorderEMSModel.FK_RuleMaster_LocationRuleMapping" FromRole="RuleMaster" ToRole="LocationRuleMapping" />
-        </EntityType>
         <EntityType Name="ServiceMaster">
           <Key>
             <PropertyRef Name="ServiceID" />
@@ -5119,39 +4584,6 @@
           <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
           <Property Name="DeletedBy" Type="Int64" />
           <Property Name="DeletedOn" Type="DateTime" Precision="3" />
-        </EntityType>
-        <EntityType Name="WeeklyVehicleCheck">
-          <Key>
-            <PropertyRef Name="WeeklyVehicleCheckID" />
-          </Key>
-          <Property Name="WeeklyVehicleCheckID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VehicleID" Type="Int64" Nullable="false" />
-          <Property Name="IsDamage" Type="Boolean" Nullable="false" />
-          <Property Name="DamageToReportImage" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="DamageToReportRemarks" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="CurrentMileage" Type="Int64" Nullable="false" />
-          <Property Name="IsInteriorClean" Type="Boolean" Nullable="false" />
-          <Property Name="InteriorCleanRemarks" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="IsExteriorClean" Type="Boolean" Nullable="false" />
-          <Property Name="ExteriorCleanRemarks" Type="String" MaxLength="300" FixedLength="false" Unicode="false" />
-          <Property Name="VehicleTransmission" Type="Int64" Nullable="false" />
-          <Property Name="FuelLevel" Type="Int64" Nullable="false" />
-          <Property Name="VehicleTires" Type="Int64" Nullable="false" />
-          <Property Name="VehicleWindows" Type="Int64" Nullable="false" />
-          <Property Name="VehicleBrakes" Type="Int64" Nullable="false" />
-          <Property Name="VehicleCheckDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreatedBy" Type="Int64" Nullable="false" />
-          <Property Name="CreatedDate" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="ModifiedBy" Type="Int64" />
-          <Property Name="ModifiedDate" Type="DateTime" Precision="3" />
-          <Property Name="IsDeleted" Type="Boolean" Nullable="false" />
-          <Property Name="DeletedBy" Type="Int64" />
-          <Property Name="DeletedDate" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="GlobalCode" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Brakes" FromRole="WeeklyVehicleCheck" ToRole="GlobalCode" />
-          <NavigationProperty Name="GlobalCode1" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel" FromRole="WeeklyVehicleCheck" ToRole="GlobalCode" />
-          <NavigationProperty Name="GlobalCode2" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Tires" FromRole="WeeklyVehicleCheck" ToRole="GlobalCode" />
-          <NavigationProperty Name="GlobalCode3" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Transmission" FromRole="WeeklyVehicleCheck" ToRole="GlobalCode" />
-          <NavigationProperty Name="GlobalCode4" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Windows" FromRole="WeeklyVehicleCheck" ToRole="GlobalCode" />
         </EntityType>
         <EntityType Name="WorkAreaMaster">
           <Key>
@@ -5204,18 +4636,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_AssignInventory_InventoryMaster">
-          <End Type="workorderEMSModel.InventoryMaster" Role="InventoryMaster" Multiplicity="1" />
-          <End Type="workorderEMSModel.AssignInventory" Role="AssignInventory" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InventoryMaster">
-              <PropertyRef Name="InventoryID" />
-            </Principal>
-            <Dependent Role="AssignInventory">
-              <PropertyRef Name="InventoryID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_EmailLog_locationmaster">
           <End Type="workorderEMSModel.LocationMaster" Role="LocationMaster" Multiplicity="0..1" />
           <End Type="workorderEMSModel.EmailLog" Role="EmailLog" Multiplicity="*" />
@@ -5236,30 +4656,6 @@
               <PropertyRef Name="LocationId" />
             </Principal>
             <Dependent Role="EmployeeLocationMapping">
-              <PropertyRef Name="LocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InsurancePlanMaster_Insurance">
-          <End Type="workorderEMSModel.InsuranceMaster" Role="InsuranceMaster" Multiplicity="1" />
-          <End Type="workorderEMSModel.InsurancePlanMaster" Role="InsurancePlanMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="InsuranceMaster">
-              <PropertyRef Name="InsuranceId" />
-            </Principal>
-            <Dependent Role="InsurancePlanMaster">
-              <PropertyRef Name="InsuranceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_InventoryMaster_LocationMaster">
-          <End Type="workorderEMSModel.LocationMaster" Role="LocationMaster" Multiplicity="1" />
-          <End Type="workorderEMSModel.InventoryMaster" Role="InventoryMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="LocationMaster">
-              <PropertyRef Name="LocationId" />
-            </Principal>
-            <Dependent Role="InventoryMaster">
               <PropertyRef Name="LocationId" />
             </Dependent>
           </ReferentialConstraint>
@@ -5321,18 +4717,6 @@
             </Principal>
             <Dependent Role="LoginLog">
               <PropertyRef Name="LocationId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_RuleMaster_LocationRuleMapping">
-          <End Type="workorderEMSModel.RuleMaster" Role="RuleMaster" Multiplicity="1" />
-          <End Type="workorderEMSModel.LocationRuleMapping" Role="LocationRuleMapping" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="RuleMaster">
-              <PropertyRef Name="RuleID" />
-            </Principal>
-            <Dependent Role="LocationRuleMapping">
-              <PropertyRef Name="RuleID" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -5438,13 +4822,7 @@
           <Property Name="DeletedBy" Type="Int64" />
           <Property Name="DeletedDate" Type="DateTime" Precision="3" />
           <NavigationProperty Name="EMaintenanceSurveys" Relationship="workorderEMSModel.FK_EMaintenanceSurvey_GlobalCodes" FromRole="GlobalCode" ToRole="EMaintenanceSurvey" />
-          <NavigationProperty Name="InventoryMasters" Relationship="workorderEMSModel.FK_InventoryMaster_GlobalCodes_Type" FromRole="GlobalCode" ToRole="InventoryMaster" />
           <NavigationProperty Name="LocationMasters" Relationship="workorderEMSModel.FK_LocationMaster_GlobalCodes_SubType" FromRole="GlobalCode" ToRole="LocationMaster" />
-          <NavigationProperty Name="WeeklyVehicleChecks" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Brakes" FromRole="GlobalCode" ToRole="WeeklyVehicleCheck" />
-          <NavigationProperty Name="WeeklyVehicleChecks1" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel" FromRole="GlobalCode" ToRole="WeeklyVehicleCheck" />
-          <NavigationProperty Name="WeeklyVehicleChecks2" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Tires" FromRole="GlobalCode" ToRole="WeeklyVehicleCheck" />
-          <NavigationProperty Name="WeeklyVehicleChecks3" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Transmission" FromRole="GlobalCode" ToRole="WeeklyVehicleCheck" />
-          <NavigationProperty Name="WeeklyVehicleChecks4" Relationship="workorderEMSModel.FK_WeeklyVehicleCheck_GlobalCodes_Windows" FromRole="GlobalCode" ToRole="WeeklyVehicleCheck" />
           <NavigationProperty Name="QRCScanLogs" Relationship="workorderEMSModel.FK_QRCScanLog_GlobalCodes" FromRole="GlobalCode" ToRole="QRCScanLog" />
           <NavigationProperty Name="QRCScanLogs1" Relationship="workorderEMSModel.FK_QRCScanLog_GlobalCodesPermit" FromRole="GlobalCode" ToRole="QRCScanLog" />
           <NavigationProperty Name="DashboardWidgetSettings" Relationship="workorderEMSModel.FK_DashboardWidgetSetting_GlobalCodes" FromRole="GlobalCode" ToRole="DashboardWidgetSetting" />
@@ -5483,18 +4861,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_InventoryMaster_GlobalCodes_Type">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.InventoryMaster" Role="InventoryMaster" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="InventoryMaster">
-              <PropertyRef Name="ItemType" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_LocationMaster_GlobalCodes_SubType">
           <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="0..1" />
           <End Type="workorderEMSModel.LocationMaster" Role="LocationMaster" Multiplicity="*" />
@@ -5504,66 +4870,6 @@
             </Principal>
             <Dependent Role="LocationMaster">
               <PropertyRef Name="LocationSubType" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Brakes">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.WeeklyVehicleCheck" Role="WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleBrakes" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_FuelLevel">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.WeeklyVehicleCheck" Role="WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="FuelLevel" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Tires">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.WeeklyVehicleCheck" Role="WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleTires" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Transmission">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.WeeklyVehicleCheck" Role="WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleTransmission" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_WeeklyVehicleCheck_GlobalCodes_Windows">
-          <End Type="workorderEMSModel.GlobalCode" Role="GlobalCode" Multiplicity="1" />
-          <End Type="workorderEMSModel.WeeklyVehicleCheck" Role="WeeklyVehicleCheck" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="GlobalCode">
-              <PropertyRef Name="GlobalCodeId" />
-            </Principal>
-            <Dependent Role="WeeklyVehicleCheck">
-              <PropertyRef Name="VehicleWindows" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -8387,26 +7693,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="AssignInventories">
-            <EntityTypeMapping TypeName="workorderEMSModel.AssignInventory">
-              <MappingFragment StoreEntitySet="AssignInventory">
-                <ScalarProperty Name="AssginedQuantity" ColumnName="AssginedQuantity" />
-                <ScalarProperty Name="ReturnDate" ColumnName="ReturnDate" />
-                <ScalarProperty Name="DeletedOn" ColumnName="DeletedOn" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IssuedBy" ColumnName="IssuedBy" />
-                <ScalarProperty Name="IssueDate" ColumnName="IssueDate" />
-                <ScalarProperty Name="AssignedUserID" ColumnName="AssignedUserID" />
-                <ScalarProperty Name="InventoryID" ColumnName="InventoryID" />
-                <ScalarProperty Name="AssignInventoryID" ColumnName="AssignInventoryID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="DARDetails">
             <EntityTypeMapping TypeName="workorderEMSModel.DARDetail">
               <MappingFragment StoreEntitySet="DARDetails">
@@ -8446,23 +7732,6 @@
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
                 <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="DARId" ColumnName="DARId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="DashbordSettings">
-            <EntityTypeMapping TypeName="workorderEMSModel.DashbordSetting">
-              <MappingFragment StoreEntitySet="DashbordSetting">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="DisplaySettings" ColumnName="DisplaySettings" />
-                <ScalarProperty Name="UserID" ColumnName="UserID" />
-                <ScalarProperty Name="DisplayID" ColumnName="DisplayID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -8531,61 +7800,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="InsuranceMasters">
-            <EntityTypeMapping TypeName="workorderEMSModel.InsuranceMaster">
-              <MappingFragment StoreEntitySet="InsuranceMaster">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="InsuranceCompany" ColumnName="InsuranceCompany" />
-                <ScalarProperty Name="InsuranceId" ColumnName="InsuranceId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InsurancePlanMasters">
-            <EntityTypeMapping TypeName="workorderEMSModel.InsurancePlanMaster">
-              <MappingFragment StoreEntitySet="InsurancePlanMaster">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="InsurancePlan" ColumnName="InsurancePlan" />
-                <ScalarProperty Name="InsuranceId" ColumnName="InsuranceId" />
-                <ScalarProperty Name="InsurancePlanID" ColumnName="InsurancePlanID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="InventoryMasters">
-            <EntityTypeMapping TypeName="workorderEMSModel.InventoryMaster">
-              <MappingFragment StoreEntitySet="InventoryMaster">
-                <ScalarProperty Name="ItemOwnership" ColumnName="ItemOwnership" />
-                <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-                <ScalarProperty Name="DeletedOn" ColumnName="DeletedOn" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedOn" ColumnName="ModifiedOn" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedOn" ColumnName="CreatedOn" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="Quantity" ColumnName="Quantity" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ItemType" ColumnName="ItemType" />
-                <ScalarProperty Name="ItemCode" ColumnName="ItemCode" />
-                <ScalarProperty Name="ItemName" ColumnName="ItemName" />
-                <ScalarProperty Name="InventoryID" ColumnName="InventoryID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="LocationClientMappings">
             <EntityTypeMapping TypeName="workorderEMSModel.LocationClientMapping">
               <MappingFragment StoreEntitySet="LocationClientMapping">
@@ -8631,24 +7845,6 @@
                 <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="LocationName" ColumnName="LocationName" />
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="LocationRuleMappings">
-            <EntityTypeMapping TypeName="workorderEMSModel.LocationRuleMapping">
-              <MappingFragment StoreEntitySet="LocationRuleMapping">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="LocationID" ColumnName="LocationID" />
-                <ScalarProperty Name="VoilationCharges" ColumnName="VoilationCharges" />
-                <ScalarProperty Name="RuleID" ColumnName="RuleID" />
-                <ScalarProperty Name="RuleMappingId" ColumnName="RuleMappingId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -8754,25 +7950,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="MasterTimeZones">
-            <EntityTypeMapping TypeName="workorderEMSModel.MasterTimeZone">
-              <MappingFragment StoreEntitySet="MasterTimeZone">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="TimezoneName" ColumnName="TimezoneName" />
-                <ScalarProperty Name="TimeZoneValue" ColumnName="TimeZoneValue" />
-                <ScalarProperty Name="ClientTimeOffset" ColumnName="ClientTimeOffset" />
-                <ScalarProperty Name="TimezoneOffset" ColumnName="TimezoneOffset" />
-                <ScalarProperty Name="TimeZoneID" ColumnName="TimeZoneID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="PermissionDetails">
             <EntityTypeMapping TypeName="workorderEMSModel.PermissionDetail">
               <MappingFragment StoreEntitySet="PermissionDetails">
@@ -8808,25 +7985,6 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="RuleMasters">
-            <EntityTypeMapping TypeName="workorderEMSModel.RuleMaster">
-              <MappingFragment StoreEntitySet="RuleMaster">
-                <ScalarProperty Name="ProjectID" ColumnName="ProjectID" />
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="IsActive" ColumnName="IsActive" />
-                <ScalarProperty Name="VoilationCharges" ColumnName="VoilationCharges" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="RuleName" ColumnName="RuleName" />
-                <ScalarProperty Name="RuleID" ColumnName="RuleID" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="ServiceMasters">
             <EntityTypeMapping TypeName="workorderEMSModel.ServiceMaster">
               <MappingFragment StoreEntitySet="ServiceMaster">
@@ -8857,35 +8015,6 @@
                 <ScalarProperty Name="LocationId" ColumnName="LocationId" />
                 <ScalarProperty Name="UserID" ColumnName="UserID" />
                 <ScalarProperty Name="TrackId" ColumnName="TrackId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="WeeklyVehicleChecks">
-            <EntityTypeMapping TypeName="workorderEMSModel.WeeklyVehicleCheck">
-              <MappingFragment StoreEntitySet="WeeklyVehicleCheck">
-                <ScalarProperty Name="DeletedDate" ColumnName="DeletedDate" />
-                <ScalarProperty Name="DeletedBy" ColumnName="DeletedBy" />
-                <ScalarProperty Name="IsDeleted" ColumnName="IsDeleted" />
-                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
-                <ScalarProperty Name="ModifiedBy" ColumnName="ModifiedBy" />
-                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
-                <ScalarProperty Name="CreatedBy" ColumnName="CreatedBy" />
-                <ScalarProperty Name="VehicleCheckDate" ColumnName="VehicleCheckDate" />
-                <ScalarProperty Name="VehicleBrakes" ColumnName="VehicleBrakes" />
-                <ScalarProperty Name="VehicleWindows" ColumnName="VehicleWindows" />
-                <ScalarProperty Name="VehicleTires" ColumnName="VehicleTires" />
-                <ScalarProperty Name="FuelLevel" ColumnName="FuelLevel" />
-                <ScalarProperty Name="VehicleTransmission" ColumnName="VehicleTransmission" />
-                <ScalarProperty Name="ExteriorCleanRemarks" ColumnName="ExteriorCleanRemarks" />
-                <ScalarProperty Name="IsExteriorClean" ColumnName="IsExteriorClean" />
-                <ScalarProperty Name="InteriorCleanRemarks" ColumnName="InteriorCleanRemarks" />
-                <ScalarProperty Name="IsInteriorClean" ColumnName="IsInteriorClean" />
-                <ScalarProperty Name="CurrentMileage" ColumnName="CurrentMileage" />
-                <ScalarProperty Name="DamageToReportRemarks" ColumnName="DamageToReportRemarks" />
-                <ScalarProperty Name="DamageToReportImage" ColumnName="DamageToReportImage" />
-                <ScalarProperty Name="IsDamage" ColumnName="IsDamage" />
-                <ScalarProperty Name="VehicleID" ColumnName="VehicleID" />
-                <ScalarProperty Name="WeeklyVehicleCheckID" ColumnName="WeeklyVehicleCheckID" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

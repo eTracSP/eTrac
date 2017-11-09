@@ -19,7 +19,6 @@ namespace WorkOrderEMS.Data.EntityModel
             this.AdminLocationMappings = new HashSet<AdminLocationMapping>();
             this.EmailLogs = new HashSet<EmailLog>();
             this.EmployeeLocationMappings = new HashSet<EmployeeLocationMapping>();
-            this.InventoryMasters = new HashSet<InventoryMaster>();
             this.LocationClientMappings = new HashSet<LocationClientMapping>();
             this.LocationServices = new HashSet<LocationService>();
             this.LoginLogs = new HashSet<LoginLog>();
@@ -65,7 +64,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual ICollection<AdminLocationMapping> AdminLocationMappings { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
         public virtual ICollection<EmployeeLocationMapping> EmployeeLocationMappings { get; set; }
-        public virtual ICollection<InventoryMaster> InventoryMasters { get; set; }
         public virtual ICollection<LocationClientMapping> LocationClientMappings { get; set; }
         public virtual ICollection<LocationService> LocationServices { get; set; }
         public virtual ICollection<LoginLog> LoginLogs { get; set; }
