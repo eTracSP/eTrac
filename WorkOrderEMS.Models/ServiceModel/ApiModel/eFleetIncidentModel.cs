@@ -12,6 +12,10 @@ namespace WorkOrderEMS.Models.ServiceModel
         public long UserId { get; set; }
         public long LocationID { get; set; }
     }
+    public class eFleetIncidentModelPMPending : ServiceBaseModel
+    {
+        public long VehicleID { get; set; }
+    }
     public class eFleetIncidentModel : ServiceBaseModel
     {
         public long VehicleID { get; set; }
@@ -27,5 +31,6 @@ namespace WorkOrderEMS.Models.ServiceModel
         //public string ActivityDetails { get; set; }
         //public long TaskType { get; set; }
         public string LocationName { get; set; }
+        public string DriverName { get; set; }
     }
 }
