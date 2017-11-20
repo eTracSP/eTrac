@@ -331,6 +331,64 @@ namespace WorkOrderEMS.Controllers.QRCSetup
             // return RedirectToAction("Index","QRCSetup");
         }
 
+        [HttpGet]
+        public ActionResult Edit(string qr)
+        {
+            long Totalrecords = 0;
+            eTracLoginModel ObjLoginModel = null;
+            try
+            {
+                if (Session["eTrac"] != null)
+                { ObjLoginModel = (eTracLoginModel)(Session["eTrac"]); }
+
+                if (!string.IsNullOrEmpty(qr))
+                {
+                    ViewBag.UpdateMode = true;
+                    qr = Cryptography.GetDecryptedData(qr, true);
+                    ViewBag.Country = _ICommonMethod.GetAllcountries();
+                    ViewBag.PurchType = _ICommonMethod.GetGlobalCodeDataList("PURCHASETYPE");
+
+                    if (ObjLoginModel != null && (ObjLoginModel.UserRoleId == Convert.ToInt64(UserType.GlobalAdmin) || ObjLoginModel.UserRoleId == Convert.ToInt64(UserType.ITAdministrator)))
+                    {
+                        //ViewBag.ManagerList = _IGlobalAdmin.GetAllITAdministratorList(0, 1, 1000, "UserEmail", "asc", "", Convert.ToInt64(UserType.Manager), out Totalrecords);
+                        ViewBag.LocationList = _IGlobalAdmin.GetAllLocationNew();
+                        ViewBag.AdministratorList = _IGlobalAdmin.GetAllITAdministratorList(0, 0, 1, 1000, "UserEmail", "asc", "", (UserType.Administrator.ToString()), out Totalrecords);
+                    }
+                    else if (ObjLoginModel != null && (ObjLoginModel.UserRoleId == Convert.ToInt64(UserType.Administrator)))
+                    {
+                        ViewBag.LocationList = _IGlobalAdmin.GetAllLocationNew();
+                        //ViewBag.AdministratorList = _IGlobalAdmin.GetAllITAdministratorList(0, 1, 1000, "UserEmail", "asc", "", Convert.ToInt64(UserType.Manager), out Totalrecords);
+                        ViewBag.AdministratorList = _ICommonMethod.GetManagersBYLocationId(ObjLoginModel.LocationID);
+                    }
+
+                    //QRCModel ObjQRCModel = _IQRCSetup.GetGlobalCodeForCategories();
+                    QRCModel ObjQRCModel = _IQRCSetup.GetQrcById(Convert.ToInt64(qr));
+                    ObjQRCModel.EncryptLastQRC = Cryptography.GetEncryptedData(ObjQRCModel.QRCId.ToString(), true);
+
+
+                    ObjQRCModel.UpdateMode = true;
+
+                    if (ObjQRCModel != null && ObjQRCModel.Allotedto != null)
+                    {
+                        ViewBag.LocationByAdmin = _ICommonMethod.GetLocationByAdminId(ObjQRCModel.Allotedto);
+                    }
+
+                    return View("Index", ObjQRCModel);
+                }
+                else
+                {
+                    ViewBag.AlertMessageClass = new AlertMessageClass().Danger;
+                    ViewBag.Message = Result.DoesNotExist;
+                }
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Message = ex.Message;
+                ViewBag.AlertMessageClass = ObjAlertMessageClass.Danger;
+            }
+            return View("Index");
+        }
+
         public ActionResult ListQRC()
         {
             try

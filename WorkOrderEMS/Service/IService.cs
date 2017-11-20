@@ -305,6 +305,22 @@ namespace WorkOrderEMS
 
         #endregion For Image Upload
 
+        //#region For GT-Tracker
+        //[OperationContract]
+        //[WebInvoke(Method = "POST",
+        //            RequestFormat = WebMessageFormat.Json,
+        //            ResponseFormat = WebMessageFormat.Json,
+        //            BodyStyle = WebMessageBodyStyle.Bare)]
+        //ServiceResponseModel<ServiceVehicleRegistration> GetQrcDetailsGtTracker(ServiceQrcModelGtTrackerModel objServiceQrcModelGtTracker);
+
+        //[OperationContract]
+        //[WebInvoke(Method = "POST",
+        //            RequestFormat = WebMessageFormat.Json,
+        //            ResponseFormat = WebMessageFormat.Json,
+        //            BodyStyle = WebMessageBodyStyle.Bare)]
+        //ServiceResponseModel<string> SaveInfractionDetails(ServiceQrcModelGtTrackerModel objServiceQrcModelGtTrackerModel);
+        //#endregion For GT-Tracker
+
         #region For Push Notification
 
         [OperationContract]
@@ -315,6 +331,17 @@ namespace WorkOrderEMS
         ServiceResponseModel<string> SendPushNotification(ServicePushModel objServicePushModel);
 
         #endregion For Push Notification
+
+        //#region for Rule Master
+
+        //[OperationContract]
+        //[WebInvoke(Method = "POST",
+        //            RequestFormat = WebMessageFormat.Json,
+        //            ResponseFormat = WebMessageFormat.Json,
+        //            BodyStyle = WebMessageBodyStyle.Bare)]
+        //ServiceResponseModel<List<RuleMasterModelList>> GetListofRuleByLocation(RuleMasterModelList objRuleMasterModelList);
+
+        //#endregion for Rule Master
 
         //Dummy Web Service For testing
         [OperationContract]

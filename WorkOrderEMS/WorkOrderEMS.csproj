@@ -380,12 +380,9 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
-    <Compile Include="Service\IService.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Service\IService.cs" />
     <Compile Include="Service\Service.svc.cs">
       <DependentUpon>Service.svc</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>

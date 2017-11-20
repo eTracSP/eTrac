@@ -693,7 +693,8 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 ObjQRCMasterRepository = new QRCMasterRepository();
                 ObjUserRepository = new UserRepository();
                 QRCMaster ObjQRCMaster = ObjQRCMasterRepository.GetSingleOrDefault(q => q.QRCID == qrcId && q.LocationId == locationid && q.IsDeleted == false);
-                if (ObjQRCMaster == null)
+                //if (ObjQRCMaster == null)
+                if (ObjQRCMaster.QRCID == 0)//Added by Bhushan on 20th of November, 2017 for above cond always false due to createddate. If result not exist need to check qrcid
                 { throw new Exception("Record not found."); }
 
                 //if (ObjQRCMaster.QRCTYPE == Convert.ToInt64(QrcType.Vehicle, CultureInfo.InvariantCulture)) { }

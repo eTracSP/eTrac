@@ -1072,47 +1072,6 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllActiveUser_Result>("SP_GetAllActiveUser", requestedByParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, textSearchParameter, locationIDParameter, userTypeParameter, totalRecords);
         }
     
-        public virtual ObjectResult<ssp_GetQRCDetails_Result> ssp_GetQRCDetails(Nullable<long> qRCID, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string qRCSearch, Nullable<long> qRCTYPE, Nullable<long> locationId, Nullable<long> userID, ObjectParameter totalRecords)
-        {
-            var qRCIDParameter = qRCID.HasValue ?
-                new ObjectParameter("QRCID", qRCID) :
-                new ObjectParameter("QRCID", typeof(long));
-    
-            var pageIndexParameter = pageIndex.HasValue ?
-                new ObjectParameter("PageIndex", pageIndex) :
-                new ObjectParameter("PageIndex", typeof(int));
-    
-            var sortColumnNameParameter = sortColumnName != null ?
-                new ObjectParameter("SortColumnName", sortColumnName) :
-                new ObjectParameter("SortColumnName", typeof(string));
-    
-            var sortOrderByParameter = sortOrderBy != null ?
-                new ObjectParameter("SortOrderBy", sortOrderBy) :
-                new ObjectParameter("SortOrderBy", typeof(string));
-    
-            var numberOfRowsParameter = numberOfRows.HasValue ?
-                new ObjectParameter("NumberOfRows", numberOfRows) :
-                new ObjectParameter("NumberOfRows", typeof(int));
-    
-            var qRCSearchParameter = qRCSearch != null ?
-                new ObjectParameter("QRCSearch", qRCSearch) :
-                new ObjectParameter("QRCSearch", typeof(string));
-    
-            var qRCTYPEParameter = qRCTYPE.HasValue ?
-                new ObjectParameter("QRCTYPE", qRCTYPE) :
-                new ObjectParameter("QRCTYPE", typeof(long));
-    
-            var locationIdParameter = locationId.HasValue ?
-                new ObjectParameter("LocationId", locationId) :
-                new ObjectParameter("LocationId", typeof(long));
-    
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ssp_GetQRCDetails_Result>("ssp_GetQRCDetails", qRCIDParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, qRCSearchParameter, qRCTYPEParameter, locationIdParameter, userIDParameter, totalRecords);
-        }
-    
         public virtual ObjectResult<ssp_SendEmailForBrakeNotFunctional_Result> ssp_SendEmailForBrakeNotFunctional(Nullable<long> brakesWorkOrderId, Nullable<long> locationId)
         {
             var brakesWorkOrderIdParameter = brakesWorkOrderId.HasValue ?
@@ -1788,6 +1747,47 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("WebDateTime", typeof(System.DateTime));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("sp_GetWebDashboardDetails", userIdParameter, locationIdParameter, fromDateParameter, toDateParameter, webDateTimeParameter);
+        }
+    
+        public virtual ObjectResult<ssp_GetQRCDetails_Result> ssp_GetQRCDetails(Nullable<long> qRCID, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string qRCSearch, Nullable<long> qRCTYPE, Nullable<long> locationId, Nullable<long> userID, ObjectParameter totalRecords)
+        {
+            var qRCIDParameter = qRCID.HasValue ?
+                new ObjectParameter("QRCID", qRCID) :
+                new ObjectParameter("QRCID", typeof(long));
+    
+            var pageIndexParameter = pageIndex.HasValue ?
+                new ObjectParameter("PageIndex", pageIndex) :
+                new ObjectParameter("PageIndex", typeof(int));
+    
+            var sortColumnNameParameter = sortColumnName != null ?
+                new ObjectParameter("SortColumnName", sortColumnName) :
+                new ObjectParameter("SortColumnName", typeof(string));
+    
+            var sortOrderByParameter = sortOrderBy != null ?
+                new ObjectParameter("SortOrderBy", sortOrderBy) :
+                new ObjectParameter("SortOrderBy", typeof(string));
+    
+            var numberOfRowsParameter = numberOfRows.HasValue ?
+                new ObjectParameter("NumberOfRows", numberOfRows) :
+                new ObjectParameter("NumberOfRows", typeof(int));
+    
+            var qRCSearchParameter = qRCSearch != null ?
+                new ObjectParameter("QRCSearch", qRCSearch) :
+                new ObjectParameter("QRCSearch", typeof(string));
+    
+            var qRCTYPEParameter = qRCTYPE.HasValue ?
+                new ObjectParameter("QRCTYPE", qRCTYPE) :
+                new ObjectParameter("QRCTYPE", typeof(long));
+    
+            var locationIdParameter = locationId.HasValue ?
+                new ObjectParameter("LocationId", locationId) :
+                new ObjectParameter("LocationId", typeof(long));
+    
+            var userIDParameter = userID.HasValue ?
+                new ObjectParameter("UserID", userID) :
+                new ObjectParameter("UserID", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ssp_GetQRCDetails_Result>("ssp_GetQRCDetails", qRCIDParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, qRCSearchParameter, qRCTYPEParameter, locationIdParameter, userIDParameter, totalRecords);
         }
     }
 }

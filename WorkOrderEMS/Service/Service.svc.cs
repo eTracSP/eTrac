@@ -59,6 +59,7 @@ namespace WorkOrderEMS.Service
                     serviceresponse.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
                     serviceresponse.Message = CommonMessage.InvalidUser();
                 }
+
             }
             catch (Exception ex)
             {
@@ -2620,6 +2621,81 @@ namespace WorkOrderEMS.Service
 
         #endregion For ImageUpload
 
+        //#region For GT-Tracker
+        ///// <summary>Get QRCID Details for GT Tracker Vehicle
+        ///// <CreatedBy>Bhushan Dod</CreatedBY>
+        ///// <CreatedFor>GetQRCIDdetailsForVehicle</CreatedFor>
+        ///// <CreatedOn>March-12-2015</CreatedOn>
+        ///// </summary>
+        ///// <param name="ObjServiceQRCElevatorModel"></param>
+        ///// <returns></returns>
+        //public ServiceResponseModel<ServiceVehicleRegistration> GetQrcDetailsGtTracker(ServiceQrcModelGtTrackerModel objServiceQrcModelGtTracker)
+        //{
+        //    VehicleRegistrationManager ObjVehicleRegistrationManager = new VehicleRegistrationManager();
+        //    ServiceResponseModel<ServiceVehicleRegistration> objServiceResponseModel = new ServiceResponseModel<ServiceVehicleRegistration>();
+        //    try
+        //    {
+
+        //        if (objServiceQrcModelGtTracker != null && objServiceQrcModelGtTracker.ServiceAuthKey != null)
+        //        {
+        //            objServiceResponseModel = ObjVehicleRegistrationManager.GetQRCDetailsForGtTracker(objServiceQrcModelGtTracker);
+        //        }
+        //        else
+        //        {
+        //            objServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+        //            objServiceResponseModel.Message = CommonMessage.InvalidUser();
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        objServiceResponseModel.Message = ex.Message;
+        //        objServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.ExeptionResponse, CultureInfo.CurrentCulture);
+        //        objServiceResponseModel.Data = null;
+        //    }
+
+        //    return objServiceResponseModel;
+        //}
+
+        ///// <summary>Save New GT Tracker Infraction
+        ///// <CreatedBy>Bhushan Dod</CreatedBY>
+        ///// <CreatedFor>Save Infraction Details</CreatedFor>
+        ///// <CreatedOn>April-07-2015</CreatedOn>
+        ///// </summary>
+        ///// <param name="ObjServiceQRCElevatorModel"></param>
+        ///// <returns></returns>
+        //public ServiceResponseModel<string> SaveInfractionDetails(ServiceQrcModelGtTrackerModel objServiceQrcModelGtTrackerModel)
+        //{
+        //    InfractionManager ObjInfractionManager = new InfractionManager();
+        //    ServiceResponseModel<string> ObjServiceResponseModel = new ServiceResponseModel<string>();
+        //    try
+        //    {
+
+        //        if (objServiceQrcModelGtTrackerModel != null && objServiceQrcModelGtTrackerModel.ServiceAuthKey != null && objServiceQrcModelGtTrackerModel.UserId > 0)
+        //        {
+        //            ServiceResponseModel<string> ObjRespnse = ObjInfractionManager.SaveInfraction(objServiceQrcModelGtTrackerModel);
+        //            ObjServiceResponseModel.Response = ObjRespnse.Response;
+        //            ObjServiceResponseModel.Message = ObjRespnse.Message;//CommonMessage.MessageLogout();
+        //        }
+        //        else
+        //        {
+        //            ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+        //            ObjServiceResponseModel.Message = CommonMessage.InvalidUser();
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ObjServiceResponseModel.Message = ex.Message;
+        //        ObjServiceResponseModel.Response = Convert.ToInt32(ServiceResponse.ExeptionResponse, CultureInfo.CurrentCulture);
+        //        ObjServiceResponseModel.Data = null;
+        //    }
+
+        //    return ObjServiceResponseModel;
+        //}
+
+        //#endregion For GT-Tracker
+
         #region For Push Notification
         /// <summary>Push Notification
         /// <CreatedFor>Send Notification when manager login through mobile</CreatedFor>
@@ -2653,6 +2729,39 @@ namespace WorkOrderEMS.Service
             return serviceresponse;
         }
         #endregion For Push Notification
+
+        //#region For RuleMaster
+
+        //public ServiceResponseModel<List<RuleMasterModelList>> GetListofRuleByLocation(RuleMasterModelList objRuleMasterModelList)
+        //{
+        //    ServiceResponseModel<List<RuleMasterModelList>> serviceresponse = new ServiceResponseModel<List<RuleMasterModelList>>();
+        //    RuleManager objRuleManager = new RuleManager();
+        //    try
+        //    {
+        //        if (objRuleMasterModelList != null && objRuleMasterModelList.ServiceAuthKey != null && objRuleMasterModelList.LocationId != null)
+        //        {
+
+        //            serviceresponse = objRuleManager.GetListOfAllRule(objRuleMasterModelList);
+        //        }
+        //        else
+        //        {
+
+        //            serviceresponse.Response = Convert.ToInt32(ServiceResponse.FailedResponse, CultureInfo.CurrentCulture);
+        //            serviceresponse.Message = CommonMessage.WrongParameterMessage();
+        //        }
+
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        serviceresponse.Message = ex.Message;
+        //        serviceresponse.Response = Convert.ToInt32(ServiceResponse.ExeptionResponse, CultureInfo.CurrentCulture);
+        //        serviceresponse.Data = null;
+        //    }
+
+        //    return serviceresponse;
+        //}
+
+        //#endregion For RuleMaster
 
         #region for Tracking Employee Idle
 
@@ -2763,4 +2872,6 @@ namespace WorkOrderEMS.Service
             return ObjServiceResponseModel;
         }
     }
+
+
 }
