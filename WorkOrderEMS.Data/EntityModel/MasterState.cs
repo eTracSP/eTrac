@@ -31,7 +31,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<long> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedDate { get; set; }
     
-        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
         public virtual MasterCountry MasterCountry { get; set; }
+        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
     }
 }

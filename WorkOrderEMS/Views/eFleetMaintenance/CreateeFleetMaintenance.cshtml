@@ -88,7 +88,7 @@
                                     {
                                         <option value="@Vn.VehicleNumber" data-vid="@Vn.VehicleID"
                                                 @if (Vn.VehicleNumber == Model.VehicleNumber) { @: selected="selected"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
                                             @Vn.VehicleNumber
                                         </option>
                                     }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
@@ -114,7 +114,7 @@
                                     {
                                         <option value="@Vn.GlobalCodeId" data-vid="@Vn.CodeName"
                                                 @if (Vn.GlobalCodeId == Model.MaintenanceType) { @: selected="selected"
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }>
                                             @Vn.CodeName
                                         </option>
                                     }  @*data-codeid="@Vn.QRCodeID"*@ @*will use when QRCodeID Needed*@
@@ -130,50 +130,50 @@
                     </div>
                     @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true && Model.MaintenanceType == 445)
                     {
-                        <div class="top-row" id="IssueDetailsShow" style="margin-top:-10px">
+                        <div class="top-row" id="IssueDetailsShowEdi" style="margin-top:-10px">
                             <label style="margin-left:40px; ">Scheduled PM</label><br><br>
-                            @if (ViewBag.RemainderMetricDesc != null)
-                            {
-                                <ul class="filter">
-                                    @foreach (var rmd in ViewBag.RemainderMetricDesc)
-                                    {
-                                    <li>
-                                        @if (rmd.PmID == Model.PmID)
+                            <ul class="filter">
+                                <li>
+                                    <input type="radio" id='@Model.PmID' value="@Model.ReminderMetricDesc" name="ScheduledPM" data-vid="@Model" checked="checked" /><span>&nbsp;&nbsp;</span>@Model.ReminderMetricDesc
+                                </li>
+                            </ul>
+                            @*@if (ViewBag.RemainderMetricDesc != null)
+                                {
+                                    <ul class="filter">
+                                        @foreach (var rmd in ViewBag.RemainderMetricDesc)
                                         {
-                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" data-vid="@rmd.VehicleID" checked="checked" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
-                                        }
-                                        else
-                                        {
-                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /> <span>&nbsp;&nbsp;</span> @rmd.ReminderMetricDesc
-                                        }
+                                            <li>
+                                                @if (rmd.PmID == Model.PmID)
+                                                {
+                                                    <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM" data-vid="@rmd.VehicleID" checked="checked" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                                }
+                                                else
+                                                {
+                                                    <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /> <span>&nbsp;&nbsp;</span> @rmd.ReminderMetricDesc
+                                                }
+                                            </li>
 
-                                        @*<input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" name="ScheduledPM"
-                                            @if (rmd.PmID == Model.PmID) { @: checked="checked" />  @rmd.ReminderMetricDesc*@
-                                        @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
-                                    </li>
-                                   
-                                    }
-                                    </ul>
-                                    }
-</div>
+                                        }
+                                        </ul>
+                                    }*@
+                        </div>
                     }
                     else
                     {
                         <div class="top-row" id="IssueDetailsShow" style="display:none;margin-top:-10px">
-                            <label style="margin-left:40px; ">Scheduled PM</label><br><br>
-                            @if (ViewBag.RemainderMetricDesc != null || Model.MaintenanceType == 445)
-                            {
-                                <ul class="filter">
-                                    @foreach (var rmd in ViewBag.RemainderMetricDesc)
-                                    {
-                                        <li class="@rmd.PmID">
-                                            <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
-                                        </li>
-                                        @*@Html.RadioButtonFor(model => model.ReminderMetricDesc, rmd.PmID, new { @id = "ReminderMetricDesc", @value = @rmd.PmID })*@
+                            @*<label style="margin-left:40px; ">Scheduled PM</label><br><br>
+                                @if (ViewBag.RemainderMetricDesc != null || Model.MaintenanceType == 445)
+                                {
+                                    <ul class="filter">
+                                        @foreach (var rmd in ViewBag.RemainderMetricDesc)
+                                        {
+                                            <li class="@rmd.PmID">
+                                                <input type="radio" id='@rmd.PmID' value="@rmd.ReminderMetricDesc" data-vid="@rmd.VehicleID" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>@rmd.ReminderMetricDesc
+                                            </li>
 
-                                    }
-                                </ul>
-                            }
+                                        }
+                                    </ul>
+                                }*@
                         </div>
                     }
                     @if (ViewBag.UpdateMode != null && ViewBag.UpdateMode == true || Model.MaintenanceType == 445)
@@ -313,12 +313,7 @@
 @* Validation when no fields are filled then text box border will red *@
 <script>
     $(document).ready(function () {
-        $('input[type="radio"]').click(function () {
-            var result = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').val());
-            document.getElementById('ReminderMetricDesc').value = result;
-            var pmid = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').attr('id'));
-            document.getElementById('PmID').value = pmid;
-        });
+
         //Attach change event to textbox
         $("#MaintenanceType").change(function () {
             //Check if value is empty or not
@@ -503,88 +498,145 @@
         return true;
     }
     function BindVehicleID() {
-        debugger
+
         var vid = $('#VehicleNumber').find('option:selected').attr('data-vid');
         // var codeId = $('#VehicleNumber').find('option:selected').attr('data-codeid');
         // var vid = $(this).find('selected').attr('data-vid');
         $('#VehicleID').val(parseInt(vid));
         //$('#QRCodeID').val(codeId);
-    }
-    function sum() {
-        var txtFirstNumberValue = document.getElementById('PartsCost').value;
-        var txtSecondNumberValue = document.getElementById('LabourCost').value;
-        var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
-        var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
-        if (!isNaN(result)) {
-            document.getElementById('TotalCost').value = result;
-        }
-    }
-    function BindSchedulePM() {
-        //$('[data-vid]').each(function () {
-        //    debugger
-        //    var vid = $('#VehicleID').val();
-        //    var $this = $(this);
-        //    if (vid[$this.data('id')]) {
-        //        $this.remove();
-        //    }
-        //    else {
-        //        found[$this.data('id')] = true;
-        //    }
-        //});
-        if ($('#MaintenanceType').val() == 445) {
-            debugger
-            var vid = $('#VehicleID').val();
-            $('#IssueDetailsShow ul li').each(function (i, v) {
+        debugger;
+        var data = { "VehicleNumber" : $("#VehicleNumber").val() };
+
+        @*$.ajax({
+            type: "POST",
+            url: '@Url.Action("GetPendingPM", "eFleetMaintenance")',
+            //datatype: 'json',
+            //contentType: 'application/json',
+            data: { "VehicleNumber": VehicleNumber},
+            success: function (data) {
                 debugger
-                var idli = $(this).attr('class');
-                var radio = $('.' + idli).find('input').attr('data-vid');
-                if (radio != vid) {
-                    $('.' + idli).remove();
-                    //$('#' + radio).parent('li').remove();
-                }
+                toastr.success(data.message);
+            },
+            error: function (err) {
+                debugger;
+                alert("error:")
+            }
+        });*@
 
-            });          
-            $('#IssueDetailsShow ul li').each(function (i, v) {
-                debugger
-                var idliedit = $(this).attr('class');
-                var radioedit = $('.' + idliedit).find('input').attr('data-vid');
-                if (radioedit != vid) {
-                    $('.' + idliedit).remove();
-                    //$('#' + radio).parent('li').remove();
-                }
-
-            });
-            $("#IssueDetailsShow").show();
-            $("#brfordate").show();
-            // $("#IssueDetailsShowonRadioSelected").show();
-            // $("#IssueDetailsHide").hide();
-        } else {
-            $("#IssueDetailsShow").hide();
-            $("#brfordate").hide();
-            //  $("#IssueDetailsShowonRadioSelected").hide();
-        }
-
-    }
-    $(function () {
-        $("#MaintenanceDate").datepicker({
-            format: "mm/dd/yyyy",
-            startDate: new Date(),
-            maxDate:2
+        $.ajax({
+            type: 'GET',
+                            url: '@Url.Action("GetPendingPM", "eFleetMaintenance")',
+                            // url: $_HostPrefix + 'GlobalAdmin/GetDashboardHeadCount',
+                            async: false,
+                            data: data,
+                            contentType: "application/json",
+                            success: function (elementJSON) {
+                                debugger
+                                if (elementJSON != null && elementJSON != "")
+                                {
+                                    debugger
+                                    var dataJSON = elementJSON;
+                                    var pendingPM = '';
+                                    pendingPM = '<label style="margin-left:40px;">Scheduled PM</label><br><br><ul class="filter">'
+                                    var i = 0;
+                                    for (i = 0; (i < dataJSON.length); i++)
+                                    {
+                                        debugger
+                                        pendingPM += '<li><input type="radio" id="' + dataJSON[i].PmID + '" value="' + dataJSON[i].ReminderMetricDesc + '" data-vid="' + dataJSON[i].VehicleID + '" name="ScheduledPM" /><span>&nbsp;&nbsp;</span>' + dataJSON[i].ReminderMetricDesc;
+                                    }
+                                    pendingPM += '</ul>';
+                                    $("#IssueDetailsShow").html(pendingPM);
+                                   // $("#IssueDetailsShow").append($('').val(pm.PmID).html(pm.ReminderMetricDesc))
+                                }
+                            },
+                            error: function (err) {
+                                debugger;
+                                alert("error:")
+                            }
         });
-        //$("#MaintenanceDate").datepicker({ defaultDate: -1 });
-        // $("input[type='text']").focus();
-        $("input[id='Miles']").blur();
-        $("input[id='TotalCost']").blur();
-        $("input[id='LabourCost']").blur();
-        $("input[id='PartsCost']").blur();
-        $("input[id='DaysOutOfService']").blur();
-        $("input[id='DriverName']").blur();
-        $("input[id='ReminderMetricDesc']").blur();
-        $("input[id='MaintenanceType']").blur();
-        $("input[id='Note']").blur();
-        $("select").blur();
-        $("#vehicleNumber").focus();
-        $("#MaintenanceDate").blur();
-    });
+        $('input[type="radio"]').click(function () {
+            debugger
+            var result = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').attr('value'));
+            document.getElementById('ReminderMetricDesc').value = result;
+            var pmid = ($('input[name="ScheduledPM"]:checked', '#Maintenance_form').attr('id'));
+            document.getElementById('PmID').value = pmid;
+        });
+    }
+        function sum() {
+            var txtFirstNumberValue = document.getElementById('PartsCost').value;
+            var txtSecondNumberValue = document.getElementById('LabourCost').value;
+            var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
+            var result = parseInt(txtFirstNumberValue) + parseInt(txtSecondNumberValue);
+            if (!isNaN(result)) {
+                document.getElementById('TotalCost').value = result;
+            }
+        }
+        function BindSchedulePM() {
+            //$('[data-vid]').each(function () {
+            //    debugger
+            //    var vid = $('#VehicleID').val();
+            //    var $this = $(this);
+            //    if (vid[$this.data('id')]) {
+            //        $this.remove();
+            //    }
+            //    else {
+            //        found[$this.data('id')] = true;
+            //    }
+            //});
+            if ($('#MaintenanceType').val() == 445) {
+                debugger
+                var vid = $('#VehicleID').val();
+                //$('#IssueDetailsShow ul li').each(function (i, v) {
+                //    debugger
+                //    var idli = $(this).attr('class');
+                //    var radio = $('.' + idli).find('input').attr('data-vid');
+                //    if (radio != vid) {
+                //        $('.' + idli).remove();
+                //        //$('#' + radio).parent('li').remove();
+                //    }
+
+                //});
+                //$('#IssueDetailsShowEdit ul li').each(function (i, v) {
+                //    debugger
+                //    var idliedit = $(this).attr('class');
+                //    var radioedit = $('.' + idliedit).find('input').attr('data-vid');
+                //    if (radioedit != vid) {
+                //        $('.' + idliedit).remove();
+                //        //$('#' + radio).parent('li').remove();
+                //    }
+
+                //});
+                $("#IssueDetailsShow").show();
+                $("#brfordate").show();
+                // $("#IssueDetailsShowonRadioSelected").show();
+                // $("#IssueDetailsHide").hide();
+            } else {
+                $("#IssueDetailsShow").hide();
+                $("#brfordate").hide();
+                //  $("#IssueDetailsShowonRadioSelected").hide();
+            }
+
+        }
+        $(function () {
+            $("#MaintenanceDate").datepicker({
+                format: "mm/dd/yyyy",
+                startDate: new Date(),
+                maxDate: 2
+            });
+            //$("#MaintenanceDate").datepicker({ defaultDate: -1 });
+            // $("input[type='text']").focus();
+            $("input[id='Miles']").blur();
+            $("input[id='TotalCost']").blur();
+            $("input[id='LabourCost']").blur();
+            $("input[id='PartsCost']").blur();
+            $("input[id='DaysOutOfService']").blur();
+            $("input[id='DriverName']").blur();
+            $("input[id='ReminderMetricDesc']").blur();
+            $("input[id='MaintenanceType']").blur();
+            $("input[id='Note']").blur();
+            $("select").blur();
+            $("#vehicleNumber").focus();
+            $("#MaintenanceDate").blur();
+        });
 </script>
 <script src="~/Scripts/eFleetVehicle/reg.js"></script>

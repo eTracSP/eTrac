@@ -1,7 +1,7 @@
 ﻿@using WorkOrderEMS.Helper;
 @model WorkOrderEMS.Models.eFleetPMModel
 @{
-    ViewBag.Title = "Create Preventative Maintenance";
+    ViewBag.Title = "Create Preventive Maintenance";
     Layout = "~/Views/Shared/_ManagerLayout.cshtml";
     long locationId = 0;
     long userType = 0;
@@ -47,7 +47,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Create Preventative Maintenance
+                Create Preventive Maintenance
             </div>
             <div class=" clearfix"></div>
             <div class="form">
@@ -544,10 +544,10 @@
         //    }
         //});
 
-        $('#ServiceDueDate').datepicker({           
+        $('#ServiceDueDate').datepicker({
             format: "mm/dd/yyyy",
             startDate: new Date()
-        })
+        });
         $("#ServiceDueDate").datepicker();
         $("select").blur();       
         //$("input[type='text']").focus();        

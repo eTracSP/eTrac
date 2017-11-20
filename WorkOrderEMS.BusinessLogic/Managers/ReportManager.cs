@@ -67,7 +67,7 @@ namespace WorkOrderEMS.BusinessLogic
         {
             try
             {
-                return objReportRepository.GetWorkOrderInProgressForLocation(LoginUserID,LocationID, FromDate, ToDate, WorkRequestProjectType, UserId, textSearch);
+                return objReportRepository.GetWorkOrderInProgressForLocation(LoginUserID, LocationID, FromDate, ToDate, WorkRequestProjectType, UserId, textSearch);
             }
             catch (Exception ex)
             {
@@ -107,20 +107,20 @@ namespace WorkOrderEMS.BusinessLogic
                 if (LocationId == 0)
                 {
                     lstAsset = objQRCMasterRepository.GetAll(r => r.IsDeleted == false).Select(e => new SelectListItem()
-                     {
-                         Value = Convert.ToString(e.QRCID, CultureInfo.InvariantCulture),
-                         Text = e.QRCName,
+                    {
+                        Value = Convert.ToString(e.QRCID, CultureInfo.InvariantCulture),
+                        Text = e.QRCName,
 
-                     }).ToList();
+                    }).ToList();
                 }
                 else
                 {
                     lstAsset = objQRCMasterRepository.GetAll(r => r.IsDeleted == false && r.LocationId == LocationId).Select(e => new SelectListItem()
-                   {
-                       Value = Convert.ToString(e.QRCID, CultureInfo.InvariantCulture),
-                       Text = e.QRCName,
+                    {
+                        Value = Convert.ToString(e.QRCID, CultureInfo.InvariantCulture),
+                        Text = e.QRCName,
 
-                   }).ToList();
+                    }).ToList();
                 }
 
 
@@ -137,7 +137,7 @@ namespace WorkOrderEMS.BusinessLogic
         {
             try
             {
-                return objReportRepository.GetWorkOrderIssuedListFixedTime(LoginUserID,LocationID, FromDate, ToDate, WorkRequestProjectType, textSearch);
+                return objReportRepository.GetWorkOrderIssuedListFixedTime(LoginUserID, LocationID, FromDate, ToDate, WorkRequestProjectType, textSearch);
             }
             catch (Exception ex)
             {
@@ -465,7 +465,7 @@ namespace WorkOrderEMS.BusinessLogic
                             Where(x => ((x.UserRegistration.FirstName + " " + x.UserRegistration.LastName) == userName)
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.QRCMaster.LocationId == LocationId)
                                                    && x.QRCMaster.GlobalCode5.CodeName == qrcName
-                                                  &&  (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
+                                                  && (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
                                                    && x.QRCMaster.ClientTypeID == null
                                                    ).Select(x => new ReportChart()
                                                    {
@@ -487,7 +487,7 @@ namespace WorkOrderEMS.BusinessLogic
                         if (tt.Cleaning.IsClean == false)
                         {
                             lstRoutine.Remove(filterlst);
-                        }                       
+                        }
                     }
                     if (filterlst.QrcType == (long)QrcType.Elevator && filterlst.QrcTypeName != null)
                     {
@@ -495,7 +495,7 @@ namespace WorkOrderEMS.BusinessLogic
                         if (tt.Cleaning.IsClean == false)
                         {
                             lstRoutine.Remove(filterlst);
-                        }                       
+                        }
                     }
                     if (filterlst.QrcType == (long)QrcType.GateArm && filterlst.QrcTypeName != null)
                     {
@@ -667,7 +667,7 @@ namespace WorkOrderEMS.BusinessLogic
 
             //maintaining flag  if interval date come then need to fetch record till midnight of todate day
             if (ToDate != null)
-            {              
+            {
                 if (ToDate.Value.ToLongTimeString() == "12:00:00 AM")
                     isUTCDay = false;
             }
@@ -687,7 +687,7 @@ namespace WorkOrderEMS.BusinessLogic
             {
                 List<ReportChart> lstRoutine = new List<ReportChart>();
                 try
-                {                   
+                {
                     //Converted to UTC because datetime in utc in db.
 
                     //_fromDate = _fromDate.ToClientTimeZoneinDateTimeReports();
@@ -724,15 +724,15 @@ namespace WorkOrderEMS.BusinessLogic
                 {
                     _fromDate = _fromDate.ConvertClientTZtoUTC();
                     _toDate = _toDate.ConvertClientTZtoUTC();
-                 //   bool isDateOnly = (_toDate.ToLongTimeString() == "12:00:00 AM") ? true : false;
+                    //   bool isDateOnly = (_toDate.ToLongTimeString() == "12:00:00 AM") ? true : false;
 
                     //_fromDate = _fromDate.ToClientTimeZoneinDateTimeReports();
                     //_toDate = _toDate.ToClientTimeZoneinDateTimeReports();
-                    
+
                     lstRoutine = _workorderEMSEntities.QRCScanLogs.Join(_workorderEMSEntities.QRCMasters, q => q.QRCID, u => u.QRCID, (q, u) => new { q, u }).
                         Where(x => ((UserId == 0 ? null : UserId) == null || x.q.ScanUserId == UserId)
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.q.LocationId == LocationId)
-                                                   &&  (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
+                                                   && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
                                                     && x.u.ClientTypeID == null
                                               ).GroupBy(x => x.q.QrcType).Select(x => new ReportChart()
                                               {
@@ -813,8 +813,8 @@ namespace WorkOrderEMS.BusinessLogic
                                                                 .Where(x => ((x.q.UserRegistration.FirstName + " " + x.q.UserRegistration.LastName) == userName)
                                                                     && ((LocationId == 0 ? null : LocationId) == null || x.q.LocationId == LocationId)
                                                                     && x.q.GlobalCode.CodeName == qrcName
-                                                                    &&  (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
-                            // && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
+                                                                    && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
+                                                   // && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
                                                    && x.u.ClientTypeID == null
                                                    ).Select(x => new ReportChart()
                                                    {
@@ -915,16 +915,16 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && x.q.GlobalCode.CodeName == qrcName
                                                    && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
                                                    && x.u.ClientTypeID == null).Select(x => new ReportChart()
-                {
-                    ScanId = x.q.QRCScanLogId,
-                    ScanUserId = x.q.ScanUserId,
-                    ScanUserName = x.q.UserRegistration.FirstName + " " + x.q.UserRegistration.LastName,
-                    CreatedDate = x.q.CreatedOn,
-                    QrcName = x.u.QRCName,
-                    QrCodeId = x.u.QRCodeID,
-                    QrcTypeName = x.u.QRCTypeDetails,
-                    QrcType = x.u.QRCTYPE,
-                    KeyName = x.q.GlobalCode.CodeName
+                                                   {
+                                                       ScanId = x.q.QRCScanLogId,
+                                                       ScanUserId = x.q.ScanUserId,
+                                                       ScanUserName = x.q.UserRegistration.FirstName + " " + x.q.UserRegistration.LastName,
+                                                       CreatedDate = x.q.CreatedOn,
+                                                       QrcName = x.u.QRCName,
+                                                       QrCodeId = x.u.QRCodeID,
+                                                       QrcTypeName = x.u.QRCTypeDetails,
+                                                       QrcType = x.u.QRCTYPE,
+                                                       KeyName = x.q.GlobalCode.CodeName
                                                    }).ToList();
 
                 foreach (var filterlst in lstRoutine.ToList())
@@ -991,7 +991,7 @@ namespace WorkOrderEMS.BusinessLogic
                     QrcName = x.QrcName,
                     QrCodeId = x.QrCodeId,
                     //RoutineDescription = (x.RoutineDescription == null) ? "Not Available" : x.RoutineDescription,
-                   KeyName = x.KeyName
+                    KeyName = x.KeyName
                 }).ToList();
 
                 //lstRoutine = TemplstRoutine.GroupBy(x => x.ScanUserId).Select(x => new ReportChart()
@@ -1062,7 +1062,7 @@ namespace WorkOrderEMS.BusinessLogic
                     var TemplstRoutine = _workorderEMSEntities.QRCMasterLogs.Where(x => ((UserId == 0 ? null : UserId) == null || x.UserId == UserId)
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.QRCMaster.LocationId == LocationId)
                                                    && x.QRCMaster.GlobalCode5.CodeName == name
-                                                    &&  (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
+                                                    && (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
                                                     && x.QRCMaster.ClientTypeID == null
                                                    ).ToList();
                     foreach (var filterlst in TemplstRoutine.ToList())
@@ -1180,7 +1180,7 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.u.LocationId == LocationId)
                                                    && (x.u.QRCTYPE == 36 || x.u.QRCTYPE == 38 || x.u.QRCTYPE == 39 || x.u.QRCTYPE == 40 || x.u.QRCTYPE == 41 ||
                                                        x.u.QRCTYPE == 42 || x.u.QRCTYPE == 43 || x.u.QRCTYPE == 44 || x.u.QRCTYPE == 45 || x.u.QRCTYPE == 101)
-                                                   &&  (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
+                                                   && (x.q.CreatedOn >= _fromDate && x.q.CreatedOn <= _toDate)
                                                     && x.u.ClientTypeID == null
                                               ).ToList();
                     foreach (var filterlst in TemplstRoutine.ToList())
@@ -1307,8 +1307,8 @@ namespace WorkOrderEMS.BusinessLogic
                     isUTCDay = false;
             }
             if (_fromDate != null && _toDate != null)
-            {                
-                    //if interval date come then need to fetch record till midnight of todate day
+            {
+                //if interval date come then need to fetch record till midnight of todate day
                 if ((_fromDate.Date != _toDate.Date) && (_toDate.ToLongTimeString() == "12:00:00 AM") && isUTCDay == false)
                 {
                     _toDate = _toDate.AddDays(1).Date;
@@ -1377,9 +1377,9 @@ namespace WorkOrderEMS.BusinessLogic
                         //This list Get all Trash name    
                         lstRoutineTrashName = extractXML.Where(x => x.Routine.TrashLevels == (listGlobalCodes.Where(m => m.CodeName == name && m.Category == "QRCTYPETRASHCAN").FirstOrDefault().GlobalCodeId))
                                        .GroupBy(x => new { x.QrcId }).Select(x => new ReportChart()
-                        {
-                            QrcName = listTrash.Where(f => f.QRCID == x.Key.QrcId).FirstOrDefault().QRCName
-                        }).ToList<ReportChart>();
+                                       {
+                                           QrcName = listTrash.Where(f => f.QRCID == x.Key.QrcId).FirstOrDefault().QRCName
+                                       }).ToList<ReportChart>();
                     }
                     foreach (var i in lstRoutineTrashName)
                     {
@@ -1448,13 +1448,13 @@ namespace WorkOrderEMS.BusinessLogic
                     if (extractXML.Count > 0)
                     {
                         lstRoutine = extractXML.GroupBy(x => x.Routine.TrashLevels).Select(x => new ReportChart()
-                            {
-                                QrcType = x.Key,
-                                QrcTypeCount = x.Count(),
-                                //ScanUserName = usertemp.Where(y=>y.UserId==x.Key).Select(z=>z.FirstName).ToString(),
-                                QrcTypeName = listGlobalCodes.Where(f => f.GlobalCodeId == x.Key).FirstOrDefault().CodeName,
-                                //.Select(c=>c.CodeName).ToString()
-                            }).ToList<ReportChart>();
+                        {
+                            QrcType = x.Key,
+                            QrcTypeCount = x.Count(),
+                            //ScanUserName = usertemp.Where(y=>y.UserId==x.Key).Select(z=>z.FirstName).ToString(),
+                            QrcTypeName = listGlobalCodes.Where(f => f.GlobalCodeId == x.Key).FirstOrDefault().CodeName,
+                            //.Select(c=>c.CodeName).ToString()
+                        }).ToList<ReportChart>();
                     }
                     return lstRoutine;
                 }
@@ -1505,7 +1505,7 @@ namespace WorkOrderEMS.BusinessLogic
             try
             {
 
-               // bool isDateOnly = (_toDate.ToLongTimeString() == "12:00:00 AM") ? true : false;
+                // bool isDateOnly = (_toDate.ToLongTimeString() == "12:00:00 AM") ? true : false;
                 //Converted to UTC because datetime in utc in db.
                 _fromDate = _fromDate.ConvertClientTZtoUTC();
                 _toDate = _toDate.ConvertClientTZtoUTC();
@@ -1537,7 +1537,7 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.QRCMaster.LocationId == LocationId)
                                                    && (x.QRCMaster.QRCName == trashname)
                                                    && (x.QRCMaster.QRCTYPE == (long)QrcType.TrashCan)
-                                                   &&  (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
+                                                   && (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
                                                    && x.QRCMaster.ClientTypeID == null
                                                    ).ToList();
 
@@ -1776,7 +1776,7 @@ namespace WorkOrderEMS.BusinessLogic
                         lstRoutine = extractXML.GroupBy(x => x.QRCName).Select(x => new ReportChart()
                         {
                             QrcName = x.Key,
-                            QrcNameCount = x.Count(),                           
+                            QrcNameCount = x.Count(),
                         }).ToList<ReportChart>();
                     }
                     return lstRoutine;
@@ -1844,7 +1844,7 @@ namespace WorkOrderEMS.BusinessLogic
                 var TemplstRoutine = _workorderEMSEntities.QRCMasterLogs.Where(x => ((UserId == 0 ? null : UserId) == null || x.UserId == UserId)
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.QRCMaster.LocationId == LocationId)
                                                    && (x.QRCMaster.QRCTYPE == (long)QrcType.TrashCan)
-                                                  &&  (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
+                                                  && (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
                                                    && x.QRCMaster.ClientTypeID == null
                                                    ).ToList();
 
@@ -1869,7 +1869,7 @@ namespace WorkOrderEMS.BusinessLogic
                             temp1.QrCodeId = filterlst.QRCMaster.QRCodeID;
                             temp.Add(temp1);
                         }
-                    }                 
+                    }
                 }
 
                 if (temp.Count > 0)
@@ -1969,21 +1969,21 @@ namespace WorkOrderEMS.BusinessLogic
                                                        }).ToList<QRCModel>();
 
                 qrcmaster = qrcmaster.Select(x => new QRCModel()
-                                                             {
-                                                                 QRCodeID = x.QRCodeID,
-                                                                 QRCName = x.QRCName,
-                                                                 QRCTYPECaption = x.QRCTYPECaption,
-                                                                 UserName = x.UserName,
-                                                                 CreatedDate = x.CreatedDate,
-                                                                 CreatedOn = x.CreatedDate.ToClientTimeZone(true), //    .ToString("MM'/'dd'/'yyyy hh:mm tt"),
-                                                                 SpecialNotes = x.SpecialNotes == null ? "Not Available" : x.SpecialNotes,
-                                                                 VendorName = x.VendorName == null ? "Not Available" : x.VendorName,
-                                                                 //AssetPicture = (x.AssetPicture == null) ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : (
-                                                                 //File.Exists(ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.AssetPicture)==false?
-                                                                 //ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.AssetPicture :ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png"),
-                                                                 AssetPicture = checkImageExists(x.AssetPicture, "Content/Images/ProjectLogo/"),
-                                                                 PurchaseTypeRemark = x.PurchaseTypeRemark
-                                                             }).ToList<QRCModel>();
+                {
+                    QRCodeID = x.QRCodeID,
+                    QRCName = x.QRCName,
+                    QRCTYPECaption = x.QRCTYPECaption,
+                    UserName = x.UserName,
+                    CreatedDate = x.CreatedDate,
+                    CreatedOn = x.CreatedDate.ToClientTimeZone(true), //    .ToString("MM'/'dd'/'yyyy hh:mm tt"),
+                    SpecialNotes = x.SpecialNotes == null ? "Not Available" : x.SpecialNotes,
+                    VendorName = x.VendorName == null ? "Not Available" : x.VendorName,
+                    //AssetPicture = (x.AssetPicture == null) ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : (
+                    //File.Exists(ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.AssetPicture)==false?
+                    //ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.AssetPicture :ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png"),
+                    AssetPicture = checkImageExists(x.AssetPicture, "Content/Images/ProjectLogo/"),
+                    PurchaseTypeRemark = x.PurchaseTypeRemark
+                }).ToList<QRCModel>();
 
                 return qrcmaster;
             }
@@ -2077,7 +2077,7 @@ namespace WorkOrderEMS.BusinessLogic
                     var TemplstRoutine = _workorderEMSEntities.QRCMasterLogs.Where(x => ((UserId == 0 ? null : UserId) == null || x.UserId == UserId)
                                                        && ((LocationId == 0 ? null : LocationId) == null || x.QRCMaster.LocationId == LocationId)
                                                        && (x.QRCMaster.QRCTYPE == (long)QrcType.Vehicle)
-                                                       &&(x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
+                                                       && (x.CreatedOn >= _fromDate && x.CreatedOn <= _toDate)
                                                        && x.QRCMaster.ClientTypeID == null
                                                        ).ToList();
 
@@ -2285,11 +2285,11 @@ namespace WorkOrderEMS.BusinessLogic
                     if (extractXML.Count > 0)
                     {
                         var checkout = extractXML.GroupBy(x => x.CheckingOut.IsDamage == true).Select(x => new ReportChart()
-                         {
-                             QrcTypeCount = x.Count(),
-                             QrcTypeName = "Check Out",
-                             KeyName = x.Key.ToString()
-                         }).ToList<ReportChart>();
+                        {
+                            QrcTypeCount = x.Count(),
+                            QrcTypeName = "Check Out",
+                            KeyName = x.Key.ToString()
+                        }).ToList<ReportChart>();
 
                         var weekcheckout = extractXML.GroupBy(x => x.VehicleCheck.IsDamage == true).Select(x => new ReportChart()
                         {
@@ -2360,18 +2360,18 @@ namespace WorkOrderEMS.BusinessLogic
                                                        CapturedPicture = x.q.LocationPicture
                                                    }).OrderByDescending(x => x.CreatedDate).ToList<ReportChart>();
                     var tmp = lstRoutine.Select(x => new ReportChart()
-                                           {
-                                               ScanUserId = x.ScanUserId,
-                                               ScanUserName = x.ScanUserName,
-                                               StrCreatedDate = x.CreatedDate.ToClientTimeZone(true), // ..ToString("MM'/'dd'/'yyyy hh:mm tt"),
-                                               QrcName = x.QrcName,
-                                               KeyName = x.KeyName,
-                                               CroppedPicture = checkImageExists(x.CroppedPicture, "Content/Images/ProjectLogo/"),//x.CroppedPicture == null ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.CroppedPicture,
-                                               CapturedPicture = checkImageExists(x.CapturedPicture, "Content/Images/ProjectLogo/"),//x.CapturedPicture == null ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.CapturedPicture,
-                                               QrcTypeName = x.QrcTypeName == null ? "N/A" : x.QrcTypeName,
-                                               CreatedDate = x.CreatedDate,
+                    {
+                        ScanUserId = x.ScanUserId,
+                        ScanUserName = x.ScanUserName,
+                        StrCreatedDate = x.CreatedDate.ToClientTimeZone(true), // ..ToString("MM'/'dd'/'yyyy hh:mm tt"),
+                        QrcName = x.QrcName,
+                        KeyName = x.KeyName,
+                        CroppedPicture = checkImageExists(x.CroppedPicture, "Content/Images/ProjectLogo/"),//x.CroppedPicture == null ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.CroppedPicture,
+                        CapturedPicture = checkImageExists(x.CapturedPicture, "Content/Images/ProjectLogo/"),//x.CapturedPicture == null ? ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/defaultImage.png" : ConfigurationManager.AppSettings["hostingPrefix"].ToString() + "Content/Images/ProjectLogo/" + x.CapturedPicture,
+                        QrcTypeName = x.QrcTypeName == null ? "N/A" : x.QrcTypeName,
+                        CreatedDate = x.CreatedDate,
 
-                                           }).ToList();
+                    }).ToList();
 
 
                     return tmp;
@@ -2390,11 +2390,11 @@ namespace WorkOrderEMS.BusinessLogic
                     var TemplstRoutine = _workorderEMSEntities.QRCMasters.Where(x => ((LocationId == 0 ? null : LocationId) == null || x.LocationId == LocationId)
                                          && x.ClientTypeID == null).GroupBy(x => x.QRCTYPE).
                                           Select(x => new ReportChart()
-                                               {
-                                                   QrcType = x.Key,
-                                                   QrcTypeCount = x.Count(),
-                                                   QrcTypeName = x.FirstOrDefault().GlobalCode5.CodeName//listGlobalCodes.Where(f => f.GlobalCodeId == x.Key).FirstOrDefault().CodeName,
-                                               }).ToList();
+                                          {
+                                              QrcType = x.Key,
+                                              QrcTypeCount = x.Count(),
+                                              QrcTypeName = x.FirstOrDefault().GlobalCode5.CodeName//listGlobalCodes.Where(f => f.GlobalCodeId == x.Key).FirstOrDefault().CodeName,
+                                          }).ToList();
                     return TemplstRoutine;
                 }
                 catch (Exception ex)
@@ -2424,11 +2424,11 @@ namespace WorkOrderEMS.BusinessLogic
             try
             {
                 ReportRepository objReport = new ReportRepository();
-               lstWorkOrder = objReport.GetWorkOrderAcceptedandCompleted(LoginUserID,LocationID, FromDate, ToDate, WorkRequestProjectType, PriorityLevel, UserId, textSearch).Select(r => new WorkOrderIssueedModel()
+                lstWorkOrder = objReport.GetWorkOrderAcceptedandCompleted(LoginUserID, LocationID, FromDate, ToDate, WorkRequestProjectType, PriorityLevel, UserId, textSearch).Select(r => new WorkOrderIssueedModel()
                 {
                     //AssignBy = r.AssignBy,
                     AssignTo = r.AssignTo,
-                   // CreatedDate = Convert.ToDateTime(r.CreatedDate).ToClientTimeZone(true),
+                    // CreatedDate = Convert.ToDateTime(r.CreatedDate).ToClientTimeZone(true),
                     CreatedDate = Convert.ToDateTime(r.CreatedDate).ToString("MM/dd/yyyy hh:mm tt"),
                     PriorityLevel = r.PriorityLevel,
                     ProblemDesc = r.ProblemDesc,
@@ -2640,7 +2640,7 @@ namespace WorkOrderEMS.BusinessLogic
                 {
                     _toDate = _toDate.AddDays(1).Date;
                 }
-            }   
+            }
             if (UserId == 0)
             {
                 UserId = null;
@@ -2872,7 +2872,7 @@ namespace WorkOrderEMS.BusinessLogic
                                                         || x.z.d.TaskType == (long)TaskTypeCategory.SnowRemoval
                                                         || x.z.d.TaskType == (long)TaskTypeCategory.TicketSpitterRepair
                                                         || x.z.d.TaskType == (long)TaskTypeCategory.MiscellaneousEvent)
-                        //|| x.z.d.TaskType == 280)
+                                              //|| x.z.d.TaskType == 280)
                                               ).ToList();
 
                     lstCodes = TemplstRoutine.GroupBy(x => x.z.d.TaskType).Select(x => new ReportChart()
@@ -3143,8 +3143,8 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && x.s.CodeName == qrcName
                                                     && (x.t.q.EndTime != null)
                                                    && (x.t.q.EndTime >= _fromDate && x.t.q.EndTime <= _toDate)
-                    // && (x.t.q.EndTime != null)
-                    //&& (isDateOnly == true ? (DbFunctions.TruncateTime(x.t.q.EndDate) >= _fromDate.Date && (DbFunctions.TruncateTime(x.t.q.EndDate) <= _toDate.Date)) : (x.t.q.EndDate >= _fromDate && x.t.q.EndDate <= _toDate))
+                                                   // && (x.t.q.EndTime != null)
+                                                   //&& (isDateOnly == true ? (DbFunctions.TruncateTime(x.t.q.EndDate) >= _fromDate.Date && (DbFunctions.TruncateTime(x.t.q.EndDate) <= _toDate.Date)) : (x.t.q.EndDate >= _fromDate && x.t.q.EndDate <= _toDate))
                                                    ).Select(x => new ReportChart()
                                                    {
                                                        ScanUserId = x.t.q.AssignToUserId.Value,
@@ -3182,7 +3182,7 @@ namespace WorkOrderEMS.BusinessLogic
         /// </summary>
         /// <param name="LocationId,UserId,FromDate,ToDate"></param>
         /// <returns></returns>
-        public List<ReportChart> GetIssuedWorkOrder(long? LocationId,long? UserId, DateTime? FromDate, DateTime? ToDate, string name)
+        public List<ReportChart> GetIssuedWorkOrder(long? LocationId, long? UserId, DateTime? FromDate, DateTime? ToDate, string name)
         {
             //Getting client date time. 
             var clientdt = DateTime.UtcNow.GetClientDateTimeNow();
@@ -3290,7 +3290,7 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && ((LocationId == 0 ? null : LocationId) == null || x.q.LocationID == LocationId)
                                                    && (x.q.AssignToUserId != null)
                                                    && (x.u.CodeName == name)
-                                                   &&  (x.q.CreatedDate >= _fromDate && x.q.CreatedDate <= _toDate)
+                                                   && (x.q.CreatedDate >= _fromDate && x.q.CreatedDate <= _toDate)
 
                                                    ).ToList();
 
@@ -3403,7 +3403,7 @@ namespace WorkOrderEMS.BusinessLogic
                                                    && x.s.CodeName == qrcName
                                                    && x.t.q.AssignToUserId != null
                                                    && (x.t.q.CreatedDate >= _fromDate && x.t.q.CreatedDate <= _toDate)
-                    // && (x.t.q.CreatedDate >= _fromDate && x.t.q.CreatedDate <= _toDate)
+                                                   // && (x.t.q.CreatedDate >= _fromDate && x.t.q.CreatedDate <= _toDate)
                                                    ).Select(x => new ReportChart()
                                                    {
                                                        ScanUserId = x.t.q.AssignToUserId.Value,

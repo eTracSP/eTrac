@@ -36,6 +36,27 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
             }
         }
         /// <summary>
+        /// Created By Ashwajit Bansod
+        /// Created Date:Nov-10-2017
+        /// Created for : To fetch the pending Preventative maintainence
+        /// </summary>
+        /// <param name="VehicleNumber"></param>
+        /// <param name="LocationID"></param>
+        /// <returns></returns>
+        public List<PendingPM> GetPendingPM(string VehicleNumber, long LocationID)
+        {
+            try
+            {
+                var objeFleetMaintenanceRepository = new eFleetMaintenanceRepository();
+                return objeFleetMaintenanceRepository.GetPendingPM(VehicleNumber, LocationID);
+            }
+            catch (Exception ex)
+            {
+                Exception_B.Exception_B.exceptionHandel_Runtime(ex, "public List<eFleetVehicleModel> GetVehicleNumber()", "Exception While Fetching all vehicle Number.", null);
+                throw;
+            }
+        }
+        /// <summary>
         /// Created By Ashwajit Bansod Dated : Sept-20-2017
         /// For Getting all Maintenance Type from Global Codes table
         /// </summary>
@@ -59,13 +80,12 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
         /// </summary>
         /// <param name="LocationID"></param>
         /// <returns></returns>
-       public List<PendingPM> GetAllPendingPMReminderDescription(long LocationID)
-        {         
-                List<PendingPM> lstReminderDescription = new List<PendingPM>();
+        public List<PendingPM> GetAllPendingPMReminderDescription(long LocationID)
+        {
+            List<PendingPM> lstReminderDescription = new List<PendingPM>();
 
-                try
+            try
             {
-
                 //lstReminderDescription = objworkorderEMSEntities.eFleetPreventativeMaintenances.Join(objworkorderEMSEntities.eFleetMaintenances, q => q.VehicleID, u => u.VehicleID, (q, u) => new { q, u }).
                 //                                    Where(x => x.q.IsCompleted == null && x.q.LocationID == LocationID && x.q.IsDeleted == false
                 //                                          && x.q.ServiceDueDate <= DateTime.UtcNow
@@ -77,7 +97,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 //                                                 VehicleID = s.q.VehicleID
                 //                                             }).ToList();
                 //return lstReminderDescription;
-                
+
                 lstReminderDescription = objworkorderEMSEntities.eFleetPreventativeMaintenances.Where(a => a.IsCompleted == null
                                                                                                   && a.LocationID == LocationID &&
                                                                                                    a.IsDeleted == false &&
@@ -110,9 +130,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                 var objeFleetMaintenance = new eFleetMaintenance();
                 var objeFleetMaintenanceRepository = new eFleetMaintenanceRepository();
                 var objeTracLoginModel = new eTracLoginModel();
-
-                
-
                 if (objeFleetMaintenanceModel.MaintenanceID == 0)
                 {
                     AutoMapper.Mapper.CreateMap<eFleetMaintenanceModel, eFleetMaintenance>();
@@ -120,19 +137,34 @@ namespace WorkOrderEMS.BusinessLogic.Managers.eFleet
                     objeFleetMaintenanceRepository.Add(objfleetMaintenanceMapper);
                     //objeFleetDriver.QRCCodeID = objeFleetMaintenanceModel.QRCCodeID + "EFD" + (objeFleetDriver.DriverID + 100).ToString();
                     objeFleetMaintenanceRepository.SaveChanges();
-                    objeFleetMaintenanceModel.Result = Result.Completed;
-                    if (objeFleetMaintenanceModel.Result == Result.Completed)
+                    if (objeFleetMaintenance.MaintenanceID > 0)
                     {
-                        #region Save DAR
-                        DARModel objDAR = new DARModel();
-                        objDAR.ActivityDetails = DarMessage.RegisterNeweFleetMaintenance(objeTracLoginModel.LocationNames);
-                        objDAR.LocationId = objeFleetMaintenanceModel.LocationID;
-                        objDAR.UserId = objeFleetMaintenanceModel.UserID;
-                        objDAR.CreatedBy = objeFleetMaintenanceModel.UserID;
-                        objDAR.CreatedOn = DateTime.UtcNow;
-                        objDAR.TaskType = (long)TaskTypeCategory.eFleetDriverSubmission;
-                        Result result = _ICommonMethod.SaveDAR(objDAR);
-                        #endregion Save DAR
+                        if (objeFleetMaintenance.MaintenanceType == 445 && objeFleetMaintenanceModel.PmID != null && objeFleetMaintenanceModel.PmID > 0)
+                        {
+                            var objeFleetPreventativeMaintenanceRepository = new eFleetPreventativeMaintenanceRepository();
+                            var pmData = objeFleetPreventativeMaintenanceRepository.GetAll(pm => pm.ID == objeFleetMaintenanceModel.PmID && pm.LocationID == objeFleetMaintenanceModel.LocationID && pm.IsDeleted == false).FirstOrDefault();
+                            if (pmData != null && pmData.ID > 0)
+                            {
+                                pmData.IsCompleted = true;
+                                pmData.CompletedBy = objeFleetMaintenanceModel.UserID;
+                                pmData.CompletedOn = DateTime.UtcNow;
+                                objeFleetPreventativeMaintenanceRepository.Update(pmData);
+                            }
+                        }
+                        //    objeFleetMaintenanceModel.Result = Result.Completed;
+                        if (objeFleetMaintenanceModel.Result == Result.Completed)
+                        {
+                            #region Save DAR
+                            DARModel objDAR = new DARModel();
+                            objDAR.ActivityDetails = DarMessage.RegisterNeweFleetMaintenance(objeTracLoginModel.LocationNames);
+                            objDAR.LocationId = objeFleetMaintenanceModel.LocationID;
+                            objDAR.UserId = objeFleetMaintenanceModel.UserID;
+                            objDAR.CreatedBy = objeFleetMaintenanceModel.UserID;
+                            objDAR.CreatedOn = DateTime.UtcNow;
+                            objDAR.TaskType = (long)TaskTypeCategory.eFleetDriverSubmission;
+                            Result result = _ICommonMethod.SaveDAR(objDAR);
+                            #endregion Save DAR
+                        }
                     }
                 }
                 //edit Data

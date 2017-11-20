@@ -17,23 +17,22 @@ namespace WorkOrderEMS.Data.EntityModel
         public LocationMaster()
         {
             this.AdminLocationMappings = new HashSet<AdminLocationMapping>();
+            this.eFleetDrivers = new HashSet<eFleetDriver>();
+            this.eFleetFuelings = new HashSet<eFleetFueling>();
+            this.eFleetMaintenances = new HashSet<eFleetMaintenance>();
+            this.eFleetPreventativeMaintenances = new HashSet<eFleetPreventativeMaintenance>();
+            this.eFleetVehicleIncidents = new HashSet<eFleetVehicleIncident>();
+            this.eFleetVehicleScanLogs = new HashSet<eFleetVehicleScanLog>();
             this.EmailLogs = new HashSet<EmailLog>();
             this.EmployeeLocationMappings = new HashSet<EmployeeLocationMapping>();
             this.LocationClientMappings = new HashSet<LocationClientMapping>();
+            this.WorkRequestAssignments = new HashSet<WorkRequestAssignment>();
             this.LocationServices = new HashSet<LocationService>();
             this.LoginLogs = new HashSet<LoginLog>();
             this.ManagerLocationMappings = new HashSet<ManagerLocationMapping>();
-            this.LoginLogs1 = new HashSet<LoginLog>();
-            this.QRCScanLogs = new HashSet<QRCScanLog>();
             this.QRCMasters = new HashSet<QRCMaster>();
-            this.WorkRequestAssignments = new HashSet<WorkRequestAssignment>();
-            this.eFleetVehicleScanLogs = new HashSet<eFleetVehicleScanLog>();
-            this.eFleetFuelings = new HashSet<eFleetFueling>();
-            this.eFleetPreventativeMaintenances = new HashSet<eFleetPreventativeMaintenance>();
-            this.eFleetVehicles = new HashSet<eFleetVehicle>();
-            this.eFleetDrivers = new HashSet<eFleetDriver>();
-            this.eFleetMaintenances = new HashSet<eFleetMaintenance>();
-            this.eFleetVehicleIncidents = new HashSet<eFleetVehicleIncident>();
+            this.QRCScanLogs = new HashSet<QRCScanLog>();
+            this.LoginLogs1 = new HashSet<LoginLog>();
         }
     
         public long LocationId { get; set; }
@@ -62,23 +61,22 @@ namespace WorkOrderEMS.Data.EntityModel
         public string LocationSubTypeDesc { get; set; }
     
         public virtual ICollection<AdminLocationMapping> AdminLocationMappings { get; set; }
+        public virtual ICollection<eFleetDriver> eFleetDrivers { get; set; }
+        public virtual ICollection<eFleetFueling> eFleetFuelings { get; set; }
+        public virtual ICollection<eFleetMaintenance> eFleetMaintenances { get; set; }
+        public virtual ICollection<eFleetPreventativeMaintenance> eFleetPreventativeMaintenances { get; set; }
+        public virtual ICollection<eFleetVehicleIncident> eFleetVehicleIncidents { get; set; }
+        public virtual ICollection<eFleetVehicleScanLog> eFleetVehicleScanLogs { get; set; }
         public virtual ICollection<EmailLog> EmailLogs { get; set; }
         public virtual ICollection<EmployeeLocationMapping> EmployeeLocationMappings { get; set; }
+        public virtual GlobalCode GlobalCode { get; set; }
         public virtual ICollection<LocationClientMapping> LocationClientMappings { get; set; }
+        public virtual ICollection<WorkRequestAssignment> WorkRequestAssignments { get; set; }
         public virtual ICollection<LocationService> LocationServices { get; set; }
         public virtual ICollection<LoginLog> LoginLogs { get; set; }
         public virtual ICollection<ManagerLocationMapping> ManagerLocationMappings { get; set; }
-        public virtual ICollection<LoginLog> LoginLogs1 { get; set; }
-        public virtual GlobalCode GlobalCode { get; set; }
-        public virtual ICollection<QRCScanLog> QRCScanLogs { get; set; }
         public virtual ICollection<QRCMaster> QRCMasters { get; set; }
-        public virtual ICollection<WorkRequestAssignment> WorkRequestAssignments { get; set; }
-        public virtual ICollection<eFleetVehicleScanLog> eFleetVehicleScanLogs { get; set; }
-        public virtual ICollection<eFleetFueling> eFleetFuelings { get; set; }
-        public virtual ICollection<eFleetPreventativeMaintenance> eFleetPreventativeMaintenances { get; set; }
-        public virtual ICollection<eFleetVehicle> eFleetVehicles { get; set; }
-        public virtual ICollection<eFleetDriver> eFleetDrivers { get; set; }
-        public virtual ICollection<eFleetMaintenance> eFleetMaintenances { get; set; }
-        public virtual ICollection<eFleetVehicleIncident> eFleetVehicleIncidents { get; set; }
+        public virtual ICollection<QRCScanLog> QRCScanLogs { get; set; }
+        public virtual ICollection<LoginLog> LoginLogs1 { get; set; }
     }
 }

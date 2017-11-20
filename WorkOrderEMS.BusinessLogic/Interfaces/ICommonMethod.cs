@@ -63,8 +63,6 @@ namespace WorkOrderEMS.BusinessLogic
         List<SelectListItem> GetGlobalCodeDataList(string category);
         List<LocationMasterModel> GetAllLocation();
         List<ServiceMasterModel> GetAllServices();
-        //List<SelectListItem> GetNotAssgnProject(string UserType, long ProjectId);
-        List<SelectListItem> GetWorkArea();
         List<SelectListItem> GetEmployeeProject(long projectId);
         //List<SelectListItem> GetAllAssetByWorkArea(long ProjectId, long WorkAreaId);
         //string GetAssetImage(long ProjectId, long AssetID);

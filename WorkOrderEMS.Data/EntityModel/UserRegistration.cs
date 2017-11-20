@@ -16,7 +16,6 @@ namespace WorkOrderEMS.Data.EntityModel
     {
         public UserRegistration()
         {
-            this.AddressMasters = new HashSet<AddressMaster>();
             this.AdminEmployeeMappings = new HashSet<AdminEmployeeMapping>();
             this.eFleetDrivers = new HashSet<eFleetDriver>();
             this.eFleetFuelings = new HashSet<eFleetFueling>();
@@ -35,6 +34,7 @@ namespace WorkOrderEMS.Data.EntityModel
             this.ManagerLocationMappings = new HashSet<ManagerLocationMapping>();
             this.QRCMasterLogs = new HashSet<QRCMasterLog>();
             this.QRCScanLogs = new HashSet<QRCScanLog>();
+            this.AddressMasters = new HashSet<AddressMaster>();
         }
     
         public long UserId { get; set; }
@@ -76,7 +76,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public string TimeZoneOffsetName { get; set; }
         public Nullable<System.DateTime> TokenExpiresOn { get; set; }
     
-        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
         public virtual ICollection<AdminEmployeeMapping> AdminEmployeeMappings { get; set; }
         public virtual ICollection<eFleetDriver> eFleetDrivers { get; set; }
         public virtual ICollection<eFleetFueling> eFleetFuelings { get; set; }
@@ -97,8 +96,9 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual ICollection<LoginLog> LoginLogs { get; set; }
         public virtual ICollection<LoginLog> LoginLogs1 { get; set; }
         public virtual ICollection<ManagerLocationMapping> ManagerLocationMappings { get; set; }
-        public virtual QRCMaster QRCMaster { get; set; }
         public virtual ICollection<QRCMasterLog> QRCMasterLogs { get; set; }
         public virtual ICollection<QRCScanLog> QRCScanLogs { get; set; }
+        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
+        public virtual QRCMaster QRCMaster { get; set; }
     }
 }

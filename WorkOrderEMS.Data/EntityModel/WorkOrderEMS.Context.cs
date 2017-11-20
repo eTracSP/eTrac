@@ -27,7 +27,6 @@ namespace WorkOrderEMS.Data.EntityModel
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<AddressMaster> AddressMasters { get; set; }
         public virtual DbSet<AdminEmployeeMapping> AdminEmployeeMappings { get; set; }
         public virtual DbSet<AdminLocationMapping> AdminLocationMappings { get; set; }
         public virtual DbSet<DARDetail> DARDetails { get; set; }
@@ -36,7 +35,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<EmployeeLocationMapping> EmployeeLocationMappings { get; set; }
         public virtual DbSet<ExceptionLog> ExceptionLogs { get; set; }
         public virtual DbSet<LocationClientMapping> LocationClientMappings { get; set; }
-        public virtual DbSet<LocationMaster> LocationMasters { get; set; }
         public virtual DbSet<LocationService> LocationServices { get; set; }
         public virtual DbSet<LoginLog> LoginLogs { get; set; }
         public virtual DbSet<ManagerEmployeeMapping> ManagerEmployeeMappings { get; set; }
@@ -47,11 +45,9 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<QRCMasterLog> QRCMasterLogs { get; set; }
         public virtual DbSet<ServiceMaster> ServiceMasters { get; set; }
         public virtual DbSet<TrackEmployeeStatu> TrackEmployeeStatus { get; set; }
-        public virtual DbSet<WorkAreaMaster> WorkAreaMasters { get; set; }
         public virtual DbSet<GlobalCode> GlobalCodes { get; set; }
         public virtual DbSet<QRCScanLog> QRCScanLogs { get; set; }
         public virtual DbSet<DashboardWidgetSetting> DashboardWidgetSettings { get; set; }
-        public virtual DbSet<QRCMaster> QRCMasters { get; set; }
         public virtual DbSet<TimeZone> TimeZones { get; set; }
         public virtual DbSet<WorkRequestAssignment> WorkRequestAssignments { get; set; }
         public virtual DbSet<eFleetVehicleMasterLog> eFleetVehicleMasterLogs { get; set; }
@@ -67,6 +63,9 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual DbSet<eFleetPassengerTrackingCount> eFleetPassengerTrackingCounts { get; set; }
         public virtual DbSet<HoursOfService> HoursOfServices { get; set; }
         public virtual DbSet<UserRegistration> UserRegistrations { get; set; }
+        public virtual DbSet<AddressMaster> AddressMasters { get; set; }
+        public virtual DbSet<LocationMaster> LocationMasters { get; set; }
+        public virtual DbSet<QRCMaster> QRCMasters { get; set; }
     
         public virtual ObjectResult<CommonQeriesByVijay_Result> CommonQeriesByVijay()
         {
@@ -434,39 +433,6 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetAllRoutinecheck_Result>("sp_GetAllRoutinecheck", userIdParameter, locationIdParameter, fromDateParameter, toDateParameter);
         }
     
-        public virtual ObjectResult<SP_GetAllRule_Result> SP_GetAllRule(Nullable<long> projectID, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, ObjectParameter totalRecords)
-        {
-            var projectIDParameter = projectID.HasValue ?
-                new ObjectParameter("ProjectID", projectID) :
-                new ObjectParameter("ProjectID", typeof(long));
-    
-            var operationParameter = operation != null ?
-                new ObjectParameter("operation", operation) :
-                new ObjectParameter("operation", typeof(string));
-    
-            var pageIndexParameter = pageIndex.HasValue ?
-                new ObjectParameter("PageIndex", pageIndex) :
-                new ObjectParameter("PageIndex", typeof(int));
-    
-            var sortColumnNameParameter = sortColumnName != null ?
-                new ObjectParameter("SortColumnName", sortColumnName) :
-                new ObjectParameter("SortColumnName", typeof(string));
-    
-            var sortOrderByParameter = sortOrderBy != null ?
-                new ObjectParameter("SortOrderBy", sortOrderBy) :
-                new ObjectParameter("SortOrderBy", typeof(string));
-    
-            var numberOfRowsParameter = numberOfRows.HasValue ?
-                new ObjectParameter("NumberOfRows", numberOfRows) :
-                new ObjectParameter("NumberOfRows", typeof(int));
-    
-            var textSearchParameter = textSearch != null ?
-                new ObjectParameter("TextSearch", textSearch) :
-                new ObjectParameter("TextSearch", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllRule_Result>("SP_GetAllRule", projectIDParameter, operationParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, textSearchParameter, totalRecords);
-        }
-    
         public virtual int SP_GetAllVerifiedManager(Nullable<long> userID, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, ObjectParameter totalRecords)
         {
             var userIDParameter = userID.HasValue ?
@@ -554,43 +520,6 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetAllWorkOrderAssignedToEmployee_Result>("SP_GetAllWorkOrderAssignedToEmployee", locationIDParameter, typeParameter, userIDParameter, filterParameter);
         }
     
-        public virtual int SP_GetAllWorkRequest(Nullable<long> projectID, Nullable<long> userID, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, ObjectParameter totalRecords)
-        {
-            var projectIDParameter = projectID.HasValue ?
-                new ObjectParameter("ProjectID", projectID) :
-                new ObjectParameter("ProjectID", typeof(long));
-    
-            var userIDParameter = userID.HasValue ?
-                new ObjectParameter("UserID", userID) :
-                new ObjectParameter("UserID", typeof(long));
-    
-            var operationParameter = operation != null ?
-                new ObjectParameter("operation", operation) :
-                new ObjectParameter("operation", typeof(string));
-    
-            var pageIndexParameter = pageIndex.HasValue ?
-                new ObjectParameter("PageIndex", pageIndex) :
-                new ObjectParameter("PageIndex", typeof(int));
-    
-            var sortColumnNameParameter = sortColumnName != null ?
-                new ObjectParameter("SortColumnName", sortColumnName) :
-                new ObjectParameter("SortColumnName", typeof(string));
-    
-            var sortOrderByParameter = sortOrderBy != null ?
-                new ObjectParameter("SortOrderBy", sortOrderBy) :
-                new ObjectParameter("SortOrderBy", typeof(string));
-    
-            var numberOfRowsParameter = numberOfRows.HasValue ?
-                new ObjectParameter("NumberOfRows", numberOfRows) :
-                new ObjectParameter("NumberOfRows", typeof(int));
-    
-            var textSearchParameter = textSearch != null ?
-                new ObjectParameter("TextSearch", textSearch) :
-                new ObjectParameter("TextSearch", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("SP_GetAllWorkRequest", projectIDParameter, userIDParameter, operationParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, textSearchParameter, totalRecords);
-        }
-    
         public virtual ObjectResult<SP_GetAllWorkRequestAssignment_Result> SP_GetAllWorkRequestAssignment(Nullable<long> workRequestAssignmentID, Nullable<long> requestedBy, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, Nullable<long> locationID, Nullable<long> userID, Nullable<System.DateTime> startDate, Nullable<System.DateTime> endDate, ObjectParameter totalRecords)
         {
             var workRequestAssignmentIDParameter = workRequestAssignmentID.HasValue ?
@@ -672,19 +601,6 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("LocationID", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetLocationDetailByLocationID_Result>("SP_GetLocationDetailByLocationID", locationIDParameter);
-        }
-    
-        public virtual ObjectResult<SP_GetRuleBYId_Result> SP_GetRuleBYId(Nullable<long> locationID, Nullable<long> ruleID)
-        {
-            var locationIDParameter = locationID.HasValue ?
-                new ObjectParameter("LocationID", locationID) :
-                new ObjectParameter("LocationID", typeof(long));
-    
-            var ruleIDParameter = ruleID.HasValue ?
-                new ObjectParameter("RuleID", ruleID) :
-                new ObjectParameter("RuleID", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetRuleBYId_Result>("SP_GetRuleBYId", locationIDParameter, ruleIDParameter);
         }
     
         public virtual ObjectResult<SP_GetUser_Result> SP_GetUser(Nullable<long> userID, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, ObjectParameter totalRecords)
@@ -1034,47 +950,6 @@ namespace WorkOrderEMS.Data.EntityModel
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<SP_GetEmployeeByLocation_Result>("SP_GetEmployeeByLocation", locationIDParameter);
         }
     
-        public virtual ObjectResult<string> SP_GetAllInventory(Nullable<long> projectID, string operation, Nullable<int> pageIndex, string sortColumnName, string sortOrderBy, Nullable<int> numberOfRows, string textSearch, Nullable<int> inventoryType, Nullable<int> itemOwnership, ObjectParameter totalRecords)
-        {
-            var projectIDParameter = projectID.HasValue ?
-                new ObjectParameter("ProjectID", projectID) :
-                new ObjectParameter("ProjectID", typeof(long));
-    
-            var operationParameter = operation != null ?
-                new ObjectParameter("operation", operation) :
-                new ObjectParameter("operation", typeof(string));
-    
-            var pageIndexParameter = pageIndex.HasValue ?
-                new ObjectParameter("PageIndex", pageIndex) :
-                new ObjectParameter("PageIndex", typeof(int));
-    
-            var sortColumnNameParameter = sortColumnName != null ?
-                new ObjectParameter("SortColumnName", sortColumnName) :
-                new ObjectParameter("SortColumnName", typeof(string));
-    
-            var sortOrderByParameter = sortOrderBy != null ?
-                new ObjectParameter("SortOrderBy", sortOrderBy) :
-                new ObjectParameter("SortOrderBy", typeof(string));
-    
-            var numberOfRowsParameter = numberOfRows.HasValue ?
-                new ObjectParameter("NumberOfRows", numberOfRows) :
-                new ObjectParameter("NumberOfRows", typeof(int));
-    
-            var textSearchParameter = textSearch != null ?
-                new ObjectParameter("TextSearch", textSearch) :
-                new ObjectParameter("TextSearch", typeof(string));
-    
-            var inventoryTypeParameter = inventoryType.HasValue ?
-                new ObjectParameter("InventoryType", inventoryType) :
-                new ObjectParameter("InventoryType", typeof(int));
-    
-            var itemOwnershipParameter = itemOwnership.HasValue ?
-                new ObjectParameter("ItemOwnership", itemOwnership) :
-                new ObjectParameter("ItemOwnership", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<string>("SP_GetAllInventory", projectIDParameter, operationParameter, pageIndexParameter, sortColumnNameParameter, sortOrderByParameter, numberOfRowsParameter, textSearchParameter, inventoryTypeParameter, itemOwnershipParameter, totalRecords);
-        }
-    
         public virtual ObjectResult<sp_GetQrcForExpirationDate_Result> sp_GetQrcForExpirationDate(Nullable<long> locationID, Nullable<int> expirationType)
         {
             var locationIDParameter = locationID.HasValue ?
@@ -1136,15 +1011,6 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("UserId", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetIdleStatusOfEmployee_Result>("sp_GetIdleStatusOfEmployee", locationIdParameter, userIdParameter);
-        }
-    
-        public virtual ObjectResult<ssp_GetExpiryDateOfVehicleRegistration_Result> ssp_GetExpiryDateOfVehicleRegistration(string parameter)
-        {
-            var parameterParameter = parameter != null ?
-                new ObjectParameter("Parameter", parameter) :
-                new ObjectParameter("Parameter", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ssp_GetExpiryDateOfVehicleRegistration_Result>("ssp_GetExpiryDateOfVehicleRegistration", parameterParameter);
         }
     
         public virtual ObjectResult<ssp_DeleteUser_Result> ssp_DeleteUser(Nullable<long> userID, Nullable<long> deletedBy)
@@ -1296,23 +1162,6 @@ namespace WorkOrderEMS.Data.EntityModel
                 new ObjectParameter("LocationId", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<ssp_GetAllTaskListByEmpID_Result>("ssp_GetAllTaskListByEmpID", serviceAuthKeyParameter, userIdParameter, fromDateParameter, toDateParameter, locationIdParameter);
-        }
-    
-        public virtual ObjectResult<sp_GetQrcDetailsForVehicle_Result> sp_GetQrcDetailsForVehicle(Nullable<long> qrcId, Nullable<long> userId, Nullable<long> locationId)
-        {
-            var qrcIdParameter = qrcId.HasValue ?
-                new ObjectParameter("QrcId", qrcId) :
-                new ObjectParameter("QrcId", typeof(long));
-    
-            var userIdParameter = userId.HasValue ?
-                new ObjectParameter("UserId", userId) :
-                new ObjectParameter("UserId", typeof(long));
-    
-            var locationIdParameter = locationId.HasValue ?
-                new ObjectParameter("LocationId", locationId) :
-                new ObjectParameter("LocationId", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<sp_GetQrcDetailsForVehicle_Result>("sp_GetQrcDetailsForVehicle", qrcIdParameter, userIdParameter, locationIdParameter);
         }
     
         public virtual ObjectResult<ssp_TimeZoneInfo_Result> ssp_TimeZoneInfo()

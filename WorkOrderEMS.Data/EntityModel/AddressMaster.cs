@@ -33,8 +33,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public bool IsDeleted { get; set; }
         public Nullable<long> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedDate { get; set; }
-        public Nullable<long> VendorID { get; set; }
-        public string Fax { get; set; }
     
         public virtual MasterCountry MasterCountry { get; set; }
         public virtual MasterState MasterState { get; set; }

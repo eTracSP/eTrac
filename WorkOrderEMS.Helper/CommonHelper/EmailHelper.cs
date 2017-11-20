@@ -358,26 +358,26 @@ namespace WorkOrderEMS.Helper
                         switch ((WorkOrderEMS.Helper.UserType)UserType)
                         {
                             case WorkOrderEMS.Helper.UserType.ITAdministrator:
-                                _mailHeading = "You are Registered as an IT Administrator.";
+                                _mailHeading = "You are registered as an IT Administrator.";
                                 break;
                             case WorkOrderEMS.Helper.UserType.Administrator:
-                                _mailHeading = "You are Registered as an Administrator.";
+                                _mailHeading = "You are registered as an Administrator.";
                                 break;
                             case WorkOrderEMS.Helper.UserType.Manager:
-                                _mailHeading = "You are Registered as a Manager.";
+                                _mailHeading = "You are registered as a Manager.";
                                 break;
                             case WorkOrderEMS.Helper.UserType.Employee:
-                                _mailHeading = "You are Registered as an Employee.";
+                                _mailHeading = "You are registered as an Employee.";
                                 break;
                             case WorkOrderEMS.Helper.UserType.Client:
-                                _mailHeading = "You are Registered as a Client.";
+                                _mailHeading = "You are registered as a Client.";
                                 break;
                             default: _mailHeading = "Welcome to eTrac.";
                                 break;
 
                         }
                         TemplatePath = ConfigurationManager.AppSettings["RegistrationMailTemplate"];
-                        Subject = "eTrac: ssYou have been registered in eTrac.";
+                        Subject = "eTrac: You have been registered in eTrac.";
                         strMailHeading = _mailHeading;
                         strMailBody = GetMailBody(TemplatePath);
                         strMailBody = strMailBody.Replace("##Logo", LogoPath);

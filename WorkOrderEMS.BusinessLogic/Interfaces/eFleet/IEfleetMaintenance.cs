@@ -21,5 +21,6 @@ namespace WorkOrderEMS.BusinessLogic.Interfaces.eFleet
         Result DeleteeFleetMaintenance(long maintenanceId, long loggedInUserId, string location);
         eDetailsMaintenance GetListeFleetMaintenanceDetails(long? UserId, int? pageIndex, int? numberOfRows, string sortColumnName, string sortOrderBy, long? locationId, string textSearch, string statusType);
         ServiceResponseModel<string> InsertMaintenance(eFleetMaintenanceModelForApiService objModel);
+        List<PendingPM> GetPendingPM(string VehicleNumber, long LocationID);
     }
 }

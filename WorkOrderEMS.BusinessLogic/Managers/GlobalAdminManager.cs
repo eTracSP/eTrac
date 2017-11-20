@@ -2586,8 +2586,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     return null;
                 }
             }
-
-
         }
 
         /// <summary>
@@ -2630,8 +2628,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
                            }
                            ).FirstOrDefault();
-
-
             }
 
             return objData;
@@ -2727,6 +2723,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
         ///  <CreatedFor>Verification for the location by manager</CreatedFor>
         /// </summary>
         /// <param name="verificationManagerId"></param>
+        /// <param name="locationId"></param>
         /// <returns></returns>
         public bool ManagerLocationApproval(long verificationManagerId, long locationId)
         {

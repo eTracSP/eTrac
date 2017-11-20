@@ -26,7 +26,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<long> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedOn { get; set; }
     
-        public virtual LocationMaster LocationMaster { get; set; }
         public virtual UserRegistration UserRegistration { get; set; }
+        public virtual LocationMaster LocationMaster { get; set; }
     }
 }

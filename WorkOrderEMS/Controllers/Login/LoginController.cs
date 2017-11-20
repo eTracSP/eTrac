@@ -151,17 +151,12 @@ namespace WorkOrderEMS.Controllers.Login
 
                             return RedirectToAction("Index", "Login");
                             break;
-
-
                     }
-
                 }
                 else
                 {
                     return View(objLoginSession);
                 }
-
-
             }
 
 
@@ -192,15 +187,9 @@ namespace WorkOrderEMS.Controllers.Login
             //    catch
             //    {
             //    }
-
-
-
-
             //}
 
             //ViewBag.Message = CommonMessage.SessionExpired();
-
-
         }
 
         [AllowAnonymous]

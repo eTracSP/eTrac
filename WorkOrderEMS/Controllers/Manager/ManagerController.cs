@@ -459,7 +459,7 @@ namespace WorkOrderEMS.Controllers.Manager
                 WorkRequestModel WorkRequestModel = new WorkRequestModel();
                 ViewBag.TaskType = _ICommonMethod.GetGlobalCodeDataList(Convert.ToString(GlobalCodename.TaskType));
                 ViewBag.TaskPriority = _ICommonMethod.GetGlobalCodeDataList(Convert.ToString(GlobalCodename.WorkPriority));
-                ViewBag.WorkArea = _ICommonMethod.GetWorkArea();
+                //ViewBag.WorkArea = _ICommonMethod.GetWorkArea();
 
                 return View("WorkRequest", WorkRequestModel);
             }
@@ -561,7 +561,7 @@ namespace WorkOrderEMS.Controllers.Manager
                 long ProjectID = (ObjLoginModel != null && ObjLoginModel.LocationID > 0) ? (ObjLoginModel.LocationID) : 0;
                 ViewBag.TaskType = _ICommonMethod.GetGlobalCodeDataList(Convert.ToString(GlobalCodename.TaskType));
                 ViewBag.TaskPriority = _ICommonMethod.GetGlobalCodeDataList(Convert.ToString(GlobalCodename.WorkPriority));
-                ViewBag.WorkArea = _ICommonMethod.GetWorkArea();
+               // ViewBag.WorkArea = _ICommonMethod.GetWorkArea();
                 ViewBag.AssignedToUser = _ICommonMethod.GetEmployeeProject(ProjectID);
 
                 if (!string.IsNullOrEmpty(id))

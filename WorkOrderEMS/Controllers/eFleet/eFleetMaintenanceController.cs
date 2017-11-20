@@ -146,6 +146,21 @@ namespace WorkOrderEMS.Controllers
             return View("CreateeFleetMaintenance", objeFleetMaintenance);
         }
         /// <summary>
+        /// Created By Ashwajit Bansod
+        /// Created Date:Nov-10-2017
+        /// Created for : To fetch the pending Preventative maintainence
+        /// </summary>
+        /// <param name="VehicleNumber"></param>
+        /// <returns></returns>
+        [HttpGet]
+        public JsonResult GetPendingPM(string VehicleNumber)
+        {
+            var objeTracLoginModel = new eTracLoginModel();
+            var PendingList = _IEfleetMaintenance.GetPendingPM(VehicleNumber, objeTracLoginModel.LocationID);
+            return Json(PendingList, JsonRequestBehavior.AllowGet); ;
+        }
+
+        /// <summary>
         /// Created By Ashwajit Bansod Dated : Sept-22-2017
         /// For creating a JQGrid List of Maintenance
         /// </summary>
@@ -226,8 +241,8 @@ namespace WorkOrderEMS.Controllers
                         row.cell[1] = efleetmaintenanceList.MaintenanceTypeList;
                         row.cell[2] = efleetmaintenanceList.MaintenanceDate.Value.ToString("dd/MM/yyyy");
                         row.cell[3] = efleetmaintenanceList.ReminderMetricDesc;
-                        row.cell[4] = efleetmaintenanceList.DaysOutOfService.ToString();                       
-                        row.cell[5] = efleetmaintenanceList.DriverName;                        
+                        row.cell[4] = efleetmaintenanceList.DaysOutOfService.ToString();
+                        row.cell[5] = efleetmaintenanceList.DriverName;
                         row.cell[6] = efleetmaintenanceList.TotalCost.ToString();
                         row.cell[7] = efleetmaintenanceList.Miles;
                         row.cell[8] = efleetmaintenanceList.Note;
@@ -270,7 +285,7 @@ namespace WorkOrderEMS.Controllers
                     var _eFleetMaintenanceModel = _IEfleetMaintenance.GeteFleetMaintenanceDetailsById(_maintenanceid);
                     ViewBag.VehicleNumber = _IEfleetMaintenance.GetVehicleNumber(ObjLoginModel.LocationID);
                     ViewBag.MaintenanceType = _IEfleetMaintenance.GetAllMaintenanceType();
-                    ViewBag.RemainderMetricDesc = _IEfleetMaintenance.GetAllPendingPMReminderDescription(ObjLoginModel.LocationID);
+                    // ViewBag.RemainderMetricDesc = _IEfleetMaintenance.GetAllPendingPMReminderDescription(ObjLoginModel.LocationID);
                     return View("CreateeFleetMaintenance", _eFleetMaintenanceModel);
                 }
                 else

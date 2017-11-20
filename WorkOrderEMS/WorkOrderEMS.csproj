@@ -22,6 +22,8 @@
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
+    <Use64BitIISExpress />
+    <WcfConfigValidationEnabled>True</WcfConfigValidationEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -364,7 +366,6 @@
     <Compile Include="GridListing\JqGridHandler\WorkRequestAssignmentList.ashx.cs">
       <DependentUpon>WorkRequestAssignmentList.ashx</DependentUpon>
     </Compile>
-    <Compile Include="Hubs\DataElement.cs" />
     <Compile Include="Hubs\NotificationAlertHub.cs" />
     <Compile Include="Hubs\NotificationAlertRepository.cs" />
     <Compile Include="Hubs\NotificationModel.cs" />
@@ -390,6 +391,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Readme\Elmah.txt" />
+    <Content Include="Content\bootstrap-datepicker3.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
@@ -1297,13 +1299,31 @@
     <Content Include="Content\eMaintenance\DisclaimerDownload\FileNotFound.png" />
     <Content Include="Content\font-awesome\css\font-awesome.css" />
     <Content Include="Content\font-awesome\css\font-awesome.min.css" />
+    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.svg" />
     <Content Include="Content\fonts\OpenSans-Semibold-webfont.svg" />
     <Content Include="Content\formwizard.css" />
     <Content Include="Content\Images\car_damage.png" />
+    <Content Include="Content\Images\clear.png" />
     <Content Include="Content\Images\constant\admin.png" />
     <Content Include="Content\Images\constant\car.png" />
     <Content Include="Content\Images\constant\client.png" />
+    <Content Include="Content\Images\constant\Code10-GateRepair.png" />
+    <Content Include="Content\Images\constant\Code11-CustomerVehicleLocate.png" />
+    <Content Include="Content\Images\constant\Code12-CustomerJumpStart.png" />
+    <Content Include="Content\Images\constant\Code13-Customertireinflation.png" />
+    <Content Include="Content\Images\constant\Code14-CustomerAssistance.png" />
+    <Content Include="Content\Images\constant\Code15-WorkBreak.png" />
+    <Content Include="Content\Images\constant\Code16-SpecialProject.png" />
+    <Content Include="Content\Images\constant\Code17-RoutineChecks.png" />
+    <Content Include="Content\Images\constant\Code18-SpaceCount.png" />
+    <Content Include="Content\Images\constant\Code19-LicensePlateInventory.png" />
+    <Content Include="Content\Images\constant\Code20-Emergency.png" />
+    <Content Include="Content\Images\constant\Code21-Facilitycleaning.png" />
+    <Content Include="Content\Images\constant\Code22-FacilitySpillResponse.png" />
+    <Content Include="Content\Images\constant\Code23-SnowRemoval.png" />
+    <Content Include="Content\Images\constant\Code24-TicketSpitterRepair.png" />
+    <Content Include="Content\Images\constant\Code25-MiscellaneousEvent.png" />
     <Content Include="Content\Images\constant\driver.png" />
     <Content Include="Content\Images\constant\ECashRenewal.jpg" />
     <Content Include="Content\Images\constant\emp.png" />
@@ -1330,11 +1350,8 @@
     <Content Include="Content\Images\DriverProfilePic\3_635636630759763372_index.jpg" />
     <Content Include="Content\Images\DriverProfilePic\no-profile-pic.jpg" />
     <Content Include="Content\Images\EnforcementPic\computer-desktop-backgrounds.jpg" />
+    <Content Include="Content\Images\EnforcementPic\defaultImage.png" />
     <Content Include="Content\Images\EnforcementPic\Infraction.jpg" />
-    <Content Include="Content\Images\FRSignature\1185_201506240432_5.jpg" />
-    <Content Include="Content\Images\FRSignature\1185_201506240442_5.jpg" />
-    <Content Include="Content\Images\FRSignature\1186_201506240637_231.jpg" />
-    <Content Include="Content\Images\FRSignature\1214_201506241447_231.jpg" />
     <Content Include="Content\Images\LocationLogo\actions_file_document_doc_new_paper.png" />
     <Content Include="Content\Images\LocationLogo\user_lock.png" />
     <Content Include="Content\Images\ProfilePic\index.jpg" />
@@ -1343,6 +1360,7 @@
     <Content Include="Content\Images\ProjectLogo\no-profile-pic.jpg" />
     <Content Include="Content\Images\ProjectLogo\no_img_found.png" />
     <Content Include="Content\Images\ProjectLogo\trash.jpg" />
+    <Content Include="Content\Images\QRCImage\DLSBS00055_7.png" />
     <Content Include="Content\Images\QRCVehicle\201502202022QRCVehicleDamage_10196.jpg" />
     <Content Include="Content\Images\Report\Assignedworkorder.png" />
     <Content Include="Content\Images\Report\checklist-3.png" />
@@ -1387,8 +1405,8 @@
     <Content Include="Content\Images\Report\workordericon.jpg" />
     <Content Include="Content\Images\Report\WorkOrderIssued.png" />
     <Content Include="Content\Images\VehicleImages\defaultImage.png" />
-    <Content Include="Content\Images\WorkRequest\201502031620EMSWorkOrder_10196.jpg" />
-    <Content Include="Content\Images\WorkRequest\201502031622EMSWorkOrder_10196.jpg" />
+    <Content Include="Content\Images\VehicleImages\no-Vehicle-pic.jpg" />
+    <Content Include="Content\Images\WorkRequest\no-asset-pic.png" />
     <Content Include="Content\JqGridCSS\DilogPopup.css" />
     <Content Include="Content\JqGridCSS\ui.jqgrid.css" />
     <Content Include="Content\Jquery-TimePicker\jquery-ui-timepicker-addon.css" />
@@ -1474,6 +1492,7 @@
     <Content Include="Content\toastr.min.css" />
     <Content Include="Content\VerticalVersion.css" />
     <Content Include="favicon.ico" />
+    <Content Include="fonts\flaticon.svg" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="fonts\helvetica-neue.css" />
     <Content Include="fonts\helvetica-neue.svg" />
@@ -1518,6 +1537,9 @@
     <Content Include="Images\eTrac450.png" />
     <Content Include="Images\etracblur450.png" />
     <Content Include="Images\headerbg_wht.png" />
+    <Content Include="Images\HighChartsImageForExport\00335944-7762-464c-8ad4-de8ee11a049e.png" />
+    <Content Include="Images\HighChartsImageForExport\0262c4a5-a7ee-47f1-92b9-b8c35e1bfe6c.png" />
+    <Content Include="Images\HighChartsImageForExport\0325ddf2-02ee-4daa-81cf-5d7c2b4885b3.png" />
     <Content Include="Images\icon1.png" />
     <Content Include="Images\icon2.png" />
     <Content Include="Images\icon3.png" />
@@ -1620,9 +1642,6 @@
     <Content Include="Content\font-awesome\less\variables.less" />
     <Content Include="GridListing\JqGridHandler\DARDetailsList.ashx" />
     <Content Include="GridListing\JqGridHandler\NotAssignedUsers.ashx" />
-    <Content Include="Content\eMaintenance\SurveyDownload\OucpDsIhMfg=.pdf" />
-    <Content Include="Content\eMaintenance\SurveyDownload\uN2IObZtYSs=.pdf" />
-    <Content Include="Content\eMaintenance\SurveyDownload\x+J8uDdngPo=.pdf" />
     <Content Include="Content\Dashboard\bootstrap\css\bootstrap.css.map" />
     <Content Include="Content\Dashboard\bootstrap\fonts\fontawesome-webfont.eot" />
     <Content Include="Content\Dashboard\bootstrap\fonts\fontawesome-webfont.ttf" />
@@ -1743,6 +1762,34 @@
     <Content Include="fonts\fontawesome-webfont.woff" />
     <Content Include="fonts\fontawesome-webfont.woff2" />
     <Content Include="Content\font-awesome\font\fontawesome-webfont.woff2" />
+    <Content Include="Content\eMaintenance\JumpStartsReport\JumpStarts20170405203943277.pdf" />
+    <Content Include="Content\eMaintenance\JumpStartsReport\JumpStarts20170405203943562.pdf" />
+    <Content Include="Content\eMaintenance\TireInflationReport\TireInflation20170520155110898.pdf" />
+    <Content Include="Content\font-awesome\fonts\FontAwesome.otf" />
+    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\font-awesome\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\font-awesome\less\animated.less" />
+    <Content Include="Content\font-awesome\less\bordered-pulled.less" />
+    <Content Include="Content\font-awesome\less\fixed-width.less" />
+    <Content Include="Content\font-awesome\less\larger.less" />
+    <Content Include="Content\font-awesome\less\list.less" />
+    <Content Include="Content\font-awesome\less\rotated-flipped.less" />
+    <Content Include="Content\font-awesome\less\stacked.less" />
+    <Content Include="Content\font-awesome\scss\font-awesome-ie7.scss" />
+    <Content Include="Content\font-awesome\scss\_animated.scss" />
+    <Content Include="Content\font-awesome\scss\_bootstrap.scss" />
+    <Content Include="Content\font-awesome\scss\_bordered-pulled.scss" />
+    <Content Include="Content\font-awesome\scss\_extras.scss" />
+    <Content Include="Content\font-awesome\scss\_fixed-width.scss" />
+    <Content Include="Content\font-awesome\scss\_larger.scss" />
+    <Content Include="Content\font-awesome\scss\_list.scss" />
+    <Content Include="Content\font-awesome\scss\_rotated-flipped.scss" />
+    <Content Include="Content\font-awesome\scss\_stacked.scss" />
+    <Content Include="fonts\flaticon.eot" />
+    <Content Include="fonts\flaticon.ttf" />
+    <Content Include="fonts\flaticon.woff" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\eTrac - FTP.pubxml" />
     <None Include="Properties\PublishProfiles\eTrac - Web Deploy.pubxml" />
@@ -1753,6 +1800,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+    <Content Include="ReportPDF\FullPageReport\DailyActivityReport\DailyActivityCode20170210131658247.pdf" />
+    <Content Include="ReportPDF\FullPageReport\eMaintenance\eTracAssignedWorkOrder20170414155828672.pdf" />
+    <Content Include="ReportPDF\FullPageReport\eScanner\QRCScan20170628231937763.pdf" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\common\bootstrap.js" />
     <Content Include="Scripts\common\bootstrap.min.js" />
@@ -1971,7 +2021,6 @@
     <Content Include="Views\GlobalAdmin\ListVerifiedManager.cshtml" />
     <Content Include="Views\Manager\ManagerProfile.cshtml" />
     <Content Include="Views\Employee\EmployeeProfile.cshtml" />
-    <Content Include="Views\GlobalAdmin\_AssignProject.cshtml" />
     <Content Include="Views\Manager\Employee.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
     <Content Include="Views\Manager\InviteEmployee.cshtml" />
@@ -2086,7 +2135,9 @@
     <Content Include="Views\eFleetVehicleIncidentReporting\ListeFleetVehicleIncident.cshtml" />
     <Content Include="Views\eFleetVehicleIncidentReporting\RegisterVehicleIncident.cshtml" />
     <Content Include="Views\eFleetPassengerTracking\CreateRoute.cshtml" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Views\eFleetPassengerTracking\ListPassengerTrackingRoute.cshtml" />
     <Content Include="Views\eFleetFueling\ListFueling.cshtml" />
     <None Include="Web.Debug.config">
@@ -2104,9 +2155,10 @@
     <Folder Include="Content\eFleetDocs\DriverImage\" />
     <Folder Include="Content\eFleetDocs\VehicleImage\" />
     <Folder Include="Content\eFleetDocs\VehicleIncident\" />
-    <Folder Include="Content\font-awesome\fonts\" />
+    <Folder Include="Content\eMaintenance\SurveyDownload\" />
     <Folder Include="Content\Images\DARSignature\" />
     <Folder Include="Content\Images\Default\" />
+    <Folder Include="Content\Images\FRSignature\" />
     <Folder Include="Content\Images\QRCParking\" />
     <Folder Include="Content\Images\RulesViolation\" />
     <Folder Include="Content\Images\VendorDocs\" />

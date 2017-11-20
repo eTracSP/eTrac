@@ -45,10 +45,10 @@ namespace WorkOrderEMS.Data.EntityModel
     
         public virtual GlobalCode GlobalCode { get; set; }
         public virtual GlobalCode GlobalCode1 { get; set; }
-        public virtual LocationMaster LocationMaster { get; set; }
         public virtual eFleetVehicle eFleetVehicle { get; set; }
         public virtual ICollection<eFleetMaintenance> eFleetMaintenances { get; set; }
         public virtual UserRegistration UserRegistration { get; set; }
         public virtual UserRegistration UserRegistration1 { get; set; }
+        public virtual LocationMaster LocationMaster { get; set; }
     }
 }

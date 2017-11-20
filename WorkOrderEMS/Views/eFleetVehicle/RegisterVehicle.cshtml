@@ -1,6 +1,6 @@
 ﻿@model WorkOrderEMS.Models.eFleetVehicleModel
 @{
-    ViewBag.Title = "Register Vehicle";
+    ViewBag.Title = "Vehicle";
     Layout = "~/Views/Shared/_ManagerLayout.cshtml";
     long locationId = 0;
     long userType = 0;
@@ -54,7 +54,7 @@
     <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                Create Vehicle
+                Register Vehicle
             </div>
             <div class=" clearfix"></div>
             <div class="form">
@@ -140,7 +140,7 @@
                         </div>
                         <div class="field-wrap">
                             <label>
-                                Expiration Date<span class="req">*</span>
+                                Registration Expiration Date<span class="req">*</span>
                             </label>
                             @Html.TextBoxFor(model => model.ExpirationDate, "{0:MM/dd/yyyy}", new { @id = "datepicker", @onkeydown = "return false;" })
                             <div class="errorspace">

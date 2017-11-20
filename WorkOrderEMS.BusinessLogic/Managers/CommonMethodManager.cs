@@ -26,9 +26,7 @@ namespace WorkOrderEMS.BusinessLogic.Managers
 
         GlobalAdminManager ObjGlobalAdminManager = new GlobalAdminManager();
         ServiceMasterRepository objServiceMasterRepository = new ServiceMasterRepository();
-        QRCMasterRepository ObjQRCMasterRepository;
-        //ProjectRepository objProjectRepository = new ProjectRepository();
-        WorkAreaMasterRepository objWorkAreaMasterRepository = new WorkAreaMasterRepository();        
+        QRCMasterRepository ObjQRCMasterRepository;        
         UserRepository ObjUserRepository;
         GlobalCodesRepository ObjGlobalCodesRepository;
         //AssetMasterRepository objAssetMasterRepository = new AssetMasterRepository();
@@ -255,9 +253,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                     CreatedBy = (createdBy.HasValue) ? createdBy.Value : 0,
                     CreatedDate = DateTime.UtcNow,
                     ModuleNameId = moduleId,
-                    //ProjectCategoryId = (PROJECTCATEGORYId.HasValue) ? (PROJECTCATEGORYId.Value) : 0,
-                    ProjectCategoryId = projectCategoryId,
-                    ProjectId = projectId,
                     QRCDefaultSize = qrcDefaultSizeId,
                     QRCTYPE = qrcTypeId,
                     SpecialNotes = specialNotes,
@@ -318,24 +313,6 @@ namespace WorkOrderEMS.BusinessLogic.Managers
                 throw;
             }
 
-        }
-        public List<SelectListItem> GetWorkArea()
-        {
-            try
-            {
-                List<SelectListItem> lstWorkArea = objWorkAreaMasterRepository.GetAll(w => w.IsDeleted == false).Select(t =>
-                    new SelectListItem()
-                    {
-                        Text = t.AreaName,
-                        Value = Convert.ToString(t.WorkAreaMasterID, CultureInfo.InvariantCulture)
-                    }).ToList();
-
-                return lstWorkArea;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
         public List<SelectListItem> GetEmployeeProject(long projectId)
         {

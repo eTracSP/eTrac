@@ -27,7 +27,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<System.DateTime> DeletedOn { get; set; }
         public string Action { get; set; }
     
-        public virtual QRCMaster QRCMaster { get; set; }
         public virtual UserRegistration UserRegistration { get; set; }
+        public virtual QRCMaster QRCMaster { get; set; }
     }
 }

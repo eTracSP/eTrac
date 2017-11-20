@@ -60,7 +60,7 @@ namespace WorkOrderEMS.Models
         public string Miles { get; set; }
 
         [Required(ErrorMessage = "Notes is required")]
-        [RegularExpression(@"^[a-zA-Z0-9]+$", ErrorMessage = "Special character not allowed")]
+        [RegularExpression(@"^[a-zA-Z0-9 /.]+$", ErrorMessage = "Special character not allowed")]
         public string Note { get; set; }
         public long CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }

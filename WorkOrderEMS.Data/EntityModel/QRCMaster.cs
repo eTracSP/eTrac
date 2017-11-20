@@ -26,9 +26,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public string SpecialNotes { get; set; }
         public long QRCDefaultSize { get; set; }
         public long QRCTYPE { get; set; }
-        public Nullable<long> ProjectId { get; set; }
         public long ModuleNameId { get; set; }
-        public Nullable<long> ProjectCategoryId { get; set; }
         public long CreatedBy { get; set; }
         public System.DateTime CreatedDate { get; set; }
         public Nullable<long> ModifiedBy { get; set; }
@@ -74,7 +72,6 @@ namespace WorkOrderEMS.Data.EntityModel
         public virtual GlobalCode GlobalCode3 { get; set; }
         public virtual GlobalCode GlobalCode4 { get; set; }
         public virtual GlobalCode GlobalCode5 { get; set; }
-        public virtual GlobalCode GlobalCode6 { get; set; }
         public virtual LocationMaster LocationMaster { get; set; }
         public virtual ICollection<QRCMasterLog> QRCMasterLogs { get; set; }
         public virtual ICollection<QRCScanLog> QRCScanLogs { get; set; }

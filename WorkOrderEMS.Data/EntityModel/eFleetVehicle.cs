@@ -64,7 +64,6 @@ namespace WorkOrderEMS.Data.EntityModel
     
         public virtual ICollection<eFleetFueling> eFleetFuelings { get; set; }
         public virtual ICollection<eFleetPreventativeMaintenance> eFleetPreventativeMaintenances { get; set; }
-        public virtual LocationMaster LocationMaster { get; set; }
         public virtual ICollection<eFleetVehicleMasterLog> eFleetVehicleMasterLogs { get; set; }
         public virtual ICollection<eFleetVehicleScanLog> eFleetVehicleScanLogs { get; set; }
         public virtual ICollection<eFleetMaintenance> eFleetMaintenances { get; set; }

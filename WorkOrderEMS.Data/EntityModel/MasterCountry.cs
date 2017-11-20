@@ -16,8 +16,8 @@ namespace WorkOrderEMS.Data.EntityModel
     {
         public MasterCountry()
         {
-            this.AddressMasters = new HashSet<AddressMaster>();
             this.MasterStates = new HashSet<MasterState>();
+            this.AddressMasters = new HashSet<AddressMaster>();
         }
     
         public int CountryID { get; set; }
@@ -32,7 +32,7 @@ namespace WorkOrderEMS.Data.EntityModel
         public Nullable<long> DeletedBy { get; set; }
         public Nullable<System.DateTime> DeletedDate { get; set; }
     
-        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
         public virtual ICollection<MasterState> MasterStates { get; set; }
+        public virtual ICollection<AddressMaster> AddressMasters { get; set; }
     }
 }
